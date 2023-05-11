@@ -1,5 +1,7 @@
 # An Introduction to World Machine
 
+https://help.world-machine.com/topics/manual/
+
 Unlike many other terrain editors that function like paint programs, World Machine operates on a procedural level. A World Machine world file doesn’t define a terrain, but the **steps** to create a terrain. This is the source of both its power and its complexity.
 
 与许多其他像绘图程序一样的地形编辑器不同，World Machine在程序层面上运行。World Machine世界文件并不定义地形，而是定义创建地形的步骤。这是它的能力和复杂性的来源。
