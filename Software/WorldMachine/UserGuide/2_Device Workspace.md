@@ -50,7 +50,7 @@ It is helpful to think in terms of creating, modifying or exporting data. Data i
 
 You will constantly be adding new devices to your world, so there are multiple ways to accomplish this. Choose the one that makes the most sense to you. The “Add from Search” option by pressing **TAB** is the most powerful.
 
-你将不断向你的世界添加新设备，所以有多种方法可以实现这一目标。选择一个对你来说最有意义的。按**TAB**的“从搜索中添加”选项是最强大的。
+你将不断向你的世界添加新设备，所以有多种方法可以实现这一目标。选择一个对你来说最有意义的。按**TAB**从搜索中添加”选项是最强大的。
 
 1. Select the device you want from the Devices menu:
 
@@ -268,27 +268,48 @@ You can access a list of device commands by right clicking on any device, or fro
  ![img](.\Image\Image-39.png)
 
 - **About this device:** A short description of what the device does.
-- **关于本设备:**设备功能的简短描述。
+
+  **关于本设备:**设备功能的简短描述。
+
 - **Set Name:** Renames the device.
-- **设置名称:**重命名设备名称。
+
+  **设置名称:**重命名设备名称。
+
 - **Set Properties**: Sets the properties of the device (same as double-clicking).
-- **设置属性**:设置设备属性(与双击相同)。
+
+  **设置属性**:设置设备属性(与双击相同)。
+
 - **Set Resolution**: Override the project resolution, or make this device [localspace](https://help.world-machine.com/topic/localspace/).
-- **设置分辨率**:覆盖项目分辨率，或将此设备设置为[localspace](https://help.world-machine.com/topic/localspace/)。
+
+  **设置分辨率**:覆盖项目分辨率，或将此设备设置为[localspace](https://help.world-machine.com/topic/localspace/)。
+
 - **Set output display hint:** Control how WM displays interprets the elevation data. See the **Display Hint** section below for more details.
-- **设置输出显示提示:**控制WM显示如何解释高程数据。请参阅下面的**显示提示**部分了解更多细节。
+
+  **设置输出显示提示:**控制WM显示如何解释高程数据。请参阅下面的**显示提示**部分了解更多细节。
+
 - **Lock Preview on Device: Freezes the preview** on the currently selected device.
-- **锁定预览设备:冻结预览**在当前选定的设备。
+
+  **锁定预览设备:冻结预览**在当前选定的设备。
+
 - **Bypass Device:** Bypassing a device temporarily makes the device perform no action. This can be very useful for judging the effects of a device on a network by toggling bypass mode on and off for that device.
-- **旁路设备:**暂时旁路设备使设备不做任何动作。这对于通过为该设备打开和关闭旁路模式来判断该设备对网络的影响非常有用。
+
+  **旁路设备:**暂时旁路设备使设备不做任何动作。这对于通过为该设备打开和关闭旁路模式来判断该设备对网络的影响非常有用。
+
 - **Disable Device:** Disables the device. A disabled device is grayed out, and will not be activated when the world is build. Any devices depending on its output will also fail to build. Selecting this again will re-enable the device.
-- **Disable Device:**禁用设备。被禁用的设备将显示为灰色，并且在构建世界时不会被激活。任何依赖其输出的设备也将无法构建。再次选择此选项将重新启用设备。
+
+  **Disable Device:**禁用设备。被禁用的设备将显示为灰色，并且在构建世界时不会被激活。任何依赖其输出的设备也将无法构建。再次选择此选项将重新启用设备。
+
 - **Disconnect Device:** Remove all wires from this device so that it is isolated from the rest of the network.
-- **断开设备:**从该设备上拆除所有电线，使其与网络的其余部分隔离。
+
+  **断开设备:**从该设备上拆除所有电线，使其与网络的其余部分隔离。
+
 - **Convert Devices into Macro**: Converts the selected device(s) to a macro. Any links leading into or out of the collection of selected devices are converted to macro ports. See Chapter 8: Macros for more information.
-- **将设备转换为宏**:将选定的设备转换为宏。任何进入或退出所选设备集合的链接都转换为宏端口。有关更多信息，请参见第8章:宏。
+
+  **将设备转换为宏**:将选定的设备转换为宏。任何进入或退出所选设备集合的链接都转换为宏端口。有关更多信息，请参见第8章:宏。
+
 - **Group selected:** Create a new group around the currently selected device(s). See Chapter 2.3 below for more information on groups.
-- **选择的组:**在当前选择的设备周围创建一个新组。有关组的更多信息，请参见下面的第2.3章。
+
+  **选择的组:**在当前选择的设备周围创建一个新组。有关组的更多信息，请参见下面的第2.3章。
 
 **Display Hints: 显示提示**
 

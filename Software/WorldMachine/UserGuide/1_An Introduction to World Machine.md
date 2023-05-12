@@ -8,7 +8,7 @@ Unlike many other terrain editors that function like paint programs, World Machi
 
 When working with World Machine, your mission is to determine the overall appearance and characteristics of the terrain, and then allow our algorithms to create and detail the appearance of your world. This way of working and thinking at a higher level compared to sculpting takes some getting used to, but the rewards are huge: You can create impressive terrains with relatively little work, and once you have created a terrain that you like, you can use the same world file with different random “seeds” to produce a different terrain entirely that retains the same feel.
 
-当使用World Machine时，你的任务是确定地形的整体外观和特征，然后允许我们的算法创建和详细描述你的世界外观。与雕刻相比，这种更高层次的工作和思考方式需要一些时间来适应，但回报是巨大的:你可以用相对较少的工作创造出令人印象深刻的地形，一旦你创造了一个你喜欢的地形，你可以使用带有不同随机“种子”的相同世界文件来产生完全保留相同感觉的不同地形。
+当使用World Machine时，你的任务是确定地形的整体外观和特征，然后允许我们的算法创建和详细描述你的世界外观。与雕刻相比，这种更高层次的工作和思考方式需要一些时间来适应，但回报是巨大的:你可以用相对较少的工作创造出令人印象深刻的地形，一旦你创造了一个你喜欢的地形，你可以使用带有不同随机“种子”的相同世界文件来产生完全不同但保留相同感觉的地形。
 
 ![img](.\Image\image-52.png)
 
