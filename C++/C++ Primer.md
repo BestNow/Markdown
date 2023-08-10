@@ -1105,3 +1105,587 @@ p = &ia[2];					// p指向ia的尾元素
 | +      | 加法     | expr + expr |
 | -      | 减法     | expr - expr |
 
+按照运算符优先级分组
+在除法运算中，如果两个运算对象的符号相同则商为正(如果不为 0的话)，否则商为负
+C++11 新标准则规定商一律向0取整(即直接切除小数部分)
+
+```c++
+21 % 6;		/* 结果是3 */		21 / 6;		/* 结果是3 */
+21 % 7;		/* 结果是0 */		21 / 7;		/* 结果是3 */
+-21 % -8;	/* 结果是-5 */		-21 / -8;	/* 结果是2 */
+21 % -5;	/* 结果是1 */		21 / -5;	/* 结果是-4 */
+```
+
+## 逻辑和关系运算符
+
+| 结合律 | 运算符 | 功能     | 用法           |
+| ------ | ------ | -------- | -------------- |
+| 右     | ！     | 逻辑非   | !expr          |
+| 左     | <      | 小于     | expr < expr    |
+| 左     | <=     | 小于等于 | expr <= expr   |
+| 左     | >      | 大于     | expr > expr    |
+| 左     | >=     | 大于等于 | expr >= expr   |
+| 左     | ==     | 相等     | expr == expr   |
+| 左     | !=     | 不相等   | expr != expr   |
+| 左     | &&     | 逻辑与   | expr && expr   |
+| 左     | \|\|   | 逻辑或   | expr \|\| expr |
+
+短路求值
+	对于逻辑与运算符来说，当且仅当左侧运算对象为真时才对右侧运算对象求值
+	对于逻辑或运算符来说，当且仅当左侧运算对象为假时才对右侧运算对象求值
+
+```c++
+//s是对常量的引用;元素既没有被拷贝也不会被改变
+for (const auto &s : text) {		// 对于text的每个元素
+    cout << s;						// 输出当前元素
+	//遇到空字符串或者以句号结束的字符串进行换行
+    if (s.empty() || s[s.size() - 1] == ‘.’)
+        cout << endl;
+	else
+		cout << " ";		//否则用空格隔开
+```
+
+## 赋值运算符
+
+赋值运算符的左侧运算对象必须是一个可修改的左值
+
+```c++
+int i = 0, j = 0, k = 0;		// 初始化而非赋值
+const int ci = i;				// 初始化而非赋值
+
+1024 = k;						// 错误:字面值是右值
+i + j = k;						// 错误:算术表达式是右值
+ci = k;							// 错误:ci是常量(不可修改的)左值
+
+
+// 赋值运算的结果是它的左侧运算对象，并且是一个左值
+// 结果的类型就是左侧运算对象的类型
+// 如果赋值运算符的左右两个运算对象类型不同，则右侧运算对象将转换成左侧运算对象的类型
+k = 0;								// 结果:类型是int，值是0
+k = 3.14159;						// 结果:类型是int，值是3
+
+k = {3.14};							// 错误:窄化转换
+vector<int> vi;						// 初始为空
+vi = {0,1,2,3,4,5,6,7,8,9};			// vi现在含有10个元素了，值从0到9
+
+// +=	-=	*=	/=	%=				// 算术运算符
+// <<=	>>=	&=	^=	|=				// 位运算符
+```
+
+赋值运算符满足右结合律
+赋值运算符优先级很低
+
+## 递增和递减运算符
+
+递增和递减运算符有两种形式:前置版本和后置版本
+前置版本：首先将运算对象加1(或减 1)，然后将改变后的对象作为求值结果
+后置版本：也会将运算对象加1(或减1)，求值结果是运算对象改变之前那个值的副本
+
+```c++
+// 该循环的行为是未定义的!
+while (beg != s.end() && !isspace(*beg))
+	*beg = toupper(*beg++); 	//错误:该赋值语句未定义
+//问题在于:赋值运算符左右两端的运算对象都用到了 beg，并且右侧的运算对象还改变了 beg 的值，所以该赋值语句是未定义的。
+```
+
+## 成员访问运算符
+
+ptr->mem等价于(*ptr).mem:
+
+```c++
+string s1 = "a string", *p = &s1;
+auto n = s1.size();					// 运行string对象s1的size成员
+n = (*p).size();					// 运行p所指对象的size成员
+n = p->size();						// 等价于(*p).size()
+
+//运行p的size成员，然后解引用size的结果，解引用运算符的优先级低于点运算符
+*p.size();							// 错误:p是一个指针，它没有名为size的成员
+```
+
+## 条件表达式
+
+cond ? expr1 : expr2;
+
+```c++
+finalgrade = (grade > 90) ? "high pass"
+	: (grade < 60) ? "fail" : "pass";
+```
+
+## 位运算符
+
+| 运算符 | 功能   | 用法           |
+| ------ | ------ | -------------- |
+| ~      | 位求反 | ~expr          |
+| <<     | 左移   | expr1 << expr2 |
+| >>     | 右移   | expr1 >> expr2 |
+| &      | 位与   | expr1 & expr2  |
+| ^      | 位异或 | expr1 ^ expr2  |
+| \|     | 位或   | expr1 \| expr2 |
+
+## sizeof运算符
+
+sizeof (type)
+sizeof expr
+
+```c++
+Sales_data data, *p;
+sizeof(Sales_data);				// 存储Sale_sdata类型的对象所占的空间大小
+sizeof data;					// data的类型的大小，即sizeof(Sales data)
+sizeof p;						// 指针所占的空间大小
+sizeof *p;						// p所指类型的空间大小，即sizeof(Sales data)
+sizeof data.revenue;			// Sales_data的revenue成员对应类型的大小
+sizeof Sales_data::revenue;		// 另一种获取revenue大小的方式
+```
+
+对char或者类型为**char**的表达式执行 sizeof 运算，结果得1
+对**引用类型**执行sizeof运算得到**被引用对象所占空间的大小**
+对**指针**执行sizeof运算得到**指针本身所占空间的大小**
+对**解引用指针**执行sizeof运算得到**指针指向的对象所占空间的大小**，**指针不需有效**
+对**数组**执行sizeof 运算得到**整个数组所占空间的大小**，等价于对数组中所有的元素各执行一次 sizeof运算并将所得结果求和
+	sizeof 运算**不会把数组转换成指针**来处理
+对**string对象**或vector对象执行sizeof运算只返回**该类型固定部分的大小**，不会计算对象中的元素占用了多少空间
+
+## 逗号运算符
+
+逗号运算符(comma operator)含有两个运算对象，按照从左向右的顺序依次求值
+
+```c++
+vector<int>::size_type cnt = ivec.size();
+//将把从size到1的值赋给ivec的元素
+for (vector<int>::size_type ix = 0; ix != ivec.size(); ++ix, --cnt)
+	ivec[ix] = cnt;
+```
+
+## 类型转换
+
+隐式转换：
+	在大多数表达式中，比 int 类型小的整型值首先提升为较大的整数类型
+	在条件中，非布尔值转换成布尔类型
+	初始化过程中，初始值转换成变量的类型；在赋值语句中，右侧运算对象转换成左侧运算对象的类型
+	如果算术运算或关系运算的运算对象有多种类型，需要转换成同一种类型
+	函数调用时也会发生类型转换
+
+### 算数转换
+
+```c++
+bool			flag;		char			cval;
+short			sval;		unsigned short	usval;
+int				ival;		unsigned int	uival;
+long			lval;		unsigned long	ulval;
+float			fval;		double			dval;
+
+3.14159L + 'a';		// 'a'提升成int，然后该int 值转换成long double
+dval + ival;		// ival转换成 double
+dval + fval;		// fval转换成 double
+ival = dval;		// dval转换成(切除小数部分后)int
+flag = dval;		// 如果dval是0，则flag是false，否则flag是true
+cval + fval;		// cval提升成int，然后该int值转换成float
+sval + cval;		// sval和cval都提升成int
+cval + lval;		// cval转换成long
+ival + ulval;		// ival转换成unsigned long
+usval + ival;		// 根据unsigned short和int所占空间的大小进行提升
+uival + lval;		// 根据unsigned int和long所占空间的大小进行转换
+```
+
+### 其他隐式类型转换
+
+**数组转换成指针**：在大多数用到数组的表达式中，数组自动转换成指向数组首元素的指针
+
+**指针的转换:**
+	常量整数值 0或者字面值nullptr 能转换成任意指针类型
+	指向任意非常量的指针能转换成void*
+	指向任意对象的指针能转换成const void*
+
+**转换成布尔类型：**如果指针否则转换结果是 true；或算术类型的值为0，转换结果是 false
+
+**转换成常量**：如果T是一种类型，我们就能将指向T的指针或引用分别转换成指向const T的指针或引用
+
+**类类型定义的转换：**类类型能定义由编译器自动执行的转换，不过编译器每次只能执行种类类型的转换
+
+### 显式转换
+
+虽然有时不得不使用强制类型转换，但这种方法本质上是非常危险的。
+cast-name: static_cast、dynamic_cast、const_cast 和 reinterpret_cast
+`cast-name<type>(expression);`
+
+**static_cast:**
+任何具有明确定义的类型转换，只要**不包含底层const**，都可以使用static_cast。
+
+```c++
+int i，j;
+double slope = i / j;
+
+// 进行强制类型转换以便执行浮点数除法
+double slope = static_cast<double>(j) / i;
+
+void* p = &d;			// 正确:任何非常量对象的地址都能存入 void*
+//正确:将void*转换回初始的指针类型
+double *dp = static_cast<double*>(p);
+```
+
+**const_cast:**
+const_cast只能改变运算对象的底层const，只有 const_cast 能改变表达式的常量属性
+使用其他形式的命名强制类型转换改变表达式的常量属性都将引发编译器错误
+不能用 const cast 改变表达式的类型:
+
+```c++
+const char *pc;
+char *p = const_cast<char*>(pc);		// 正确:但是通过p写值是未定义的行为
+
+const char *cp;
+char *q = static_cast<char*>(cp);		// 错误:static cast不能转换掉const性质
+static_cast<string>(cp);				// 正确:字符串字面值转换成string类型
+const_cast<string>(cp);					// 错误:const_cast 只改变常量属性
+```
+
+**reinterpret_cast：**
+reinterpret_cast通常为运算对象的位模式提供较低层次上的重新解释
+
+```c++
+int *ip;
+char *pc = reinterpret_cast<char*>(ip);
+// 必须牢记 pc 所指的真实对象是一个 int 而非字符，如果把 pc 当成普通的字符指针使用就可能在运行时发生错误
+string str(pc);		//可能导致异常的运行时行为
+```
+
+**旧式的强制类型转换**
+
+```c++
+type (expr);	// 函数形式的强制类型转换
+(type) expr;	// C语言风格的强制类型转换
+```
+
+## 运算符优先级表
+
+| 结合律 | 运算符        | 功能               | 用法                    |
+| ------ | ------------- | ------------------ | ----------------------- |
+| 左     | ::            | 全局作用域         | ::name                  |
+| 左     | ::            | 类作用域           | class::name             |
+| 左     | ::            | 命名空间作用域     | namespace::name         |
+|        |               |                    |                         |
+| 左     | .             | 成员选择           | object.member           |
+| 左     | ->            | 成员选择           | pointer->member         |
+| 左     | []            | 下标               | expr[expr]              |
+| 左     | ()            | 函数调用           | name(expr_list)         |
+| 左     | {}            | 类型构造           | type(expr_list)         |
+|        |               |                    |                         |
+| 右     | ++            | 后置递增运算       | lvalue++                |
+| 右     | --            | 后置递减运算       | lvalue--                |
+| 右     | typeid        | 类型ID             | typeid(type)            |
+| 右     | typeid        | 运行时类型ID       | typeid(expr)            |
+| 右     | explicit_cast | 类型转换           | `cast_name<type>(expr)` |
+|        |               |                    |                         |
+| 右     | ++            | 前置递增运算       | ++lvalue                |
+| 右     | --            | 前置递减运算       | --lvalue                |
+| 右     | ~             | 位求反             | ~expr                   |
+| 右     | !             | 逻辑非             | !expr                   |
+| 右     | -             | 一元负号           | -expr                   |
+| 右     | +             | 一元正号           | +expr                   |
+| 右     | *             | 解引用             | *expr                   |
+|        | &             | 取地址             | &lvalue                 |
+| 右     | ()            | 类型转换           | (type) expr             |
+| 右     | sizeof        | 对象的大小         | sizeof expr             |
+| 右     | sizeof        | 类型的大小         | sizeof(type)            |
+| 右     | sizeof...     | 参数包的大小       | sizeof...(name)         |
+| 右     | new           | 创建对象           | new type                |
+| 右     | new[]         | 创建数组           | new type[size]          |
+| 右     | delete        | 释放对象           | delete expr             |
+| 右     | delete[]      | 释放数组           | delete[] expr           |
+| 右     | noexcept      | 能否抛出异常       | noexcept(expr)          |
+|        |               |                    |                         |
+| 左     | ->*           | 指向成员选择的指针 | ptr->*ptr_to_member     |
+| 左     | .*            | 指向成员选择的指针 | obj.*ptr_to_member      |
+|        |               |                    |                         |
+| 左     | *             | 乘法               | expr * expr             |
+| 左     | /             | 除法               | expr / expr             |
+| 左     | %             | 取模(取余)         | expr % expr             |
+|        |               |                    |                         |
+| 左     | +             | 加法               | expr + expr             |
+| 左     | -             | 减法               | expr - expr             |
+|        |               |                    |                         |
+| 左     | <<            | 向左移位           | expr << expr            |
+| 左     | >>            | 向右移位           | expr >> expr            |
+|        |               |                    |                         |
+| 左     | <             | 小于               | expr < expr             |
+| 左     | <=            | 小于等于           | expr <= expr            |
+| 左     | >             | 大于               | expr > expr             |
+| 左     | >=            | 大于等于           | expr >= expr            |
+|        |               |                    |                         |
+| 左     | ==            | 相等               | expr == expr            |
+| 左     | !=            | 不相等             | expr != expr            |
+|        |               |                    |                         |
+| 左     | &             | 位与               | expr & expr             |
+|        |               |                    |                         |
+| 左     | ^             | 位异或             | expr ^ expr             |
+|        |               |                    |                         |
+| 左     | \|            | 位或               | expr \| expr            |
+|        |               |                    |                         |
+| 左     | &&            | 逻辑与             | expr && expr            |
+|        |               |                    |                         |
+| 左     | \|\|          | 逻辑或             | expr \|\| expr          |
+|        |               |                    |                         |
+| 右     | ? :           | 条件               | expr ? expr : expr      |
+|        |               |                    |                         |
+| 右     | =             | 赋值               | lvalue = expr           |
+|        |               |                    |                         |
+| 右     | *=、 /=、 %=  | 复合赋值           | lvalue += expr          |
+| 右     | +=、 -=       | 复合赋值           |                         |
+| 右     | <<=、 >>=     | 复合赋值           |                         |
+| 右     | &=、 \|=、 ^= | 复合赋值           |                         |
+|        |               |                    |                         |
+| 右     | throw         | 抛出异常           | throw expr              |
+|        |               |                    |                         |
+| 左     | ,             | 逗号               | expr, expr              |
+
+
+
+# 语句
+
+## 简单语句
+
+**复合语句**：指用花括号括起来的(可能为空的)语句和声明的序列，复合语句也被称作块 (block)
+
+## 语句作用域
+
+定义在控制结构当中的变量只在相应语句的内部可见，一旦语句结束，变量也就超出其作用范围了
+
+## 条件语句
+
+### if语句
+
+```c++
+if (condition)
+	statement
+else
+	statement2
+    
+const vector<string> scores = {"E"，"D"，"C"，"B"，"A"，"A++"};
+// 如果grade小于60，对应的字母是E;否则计算其下标
+string lettergrade;
+if (grade<60)
+	lettergrade = scores[0];
+else
+	lettergrade = scores[(grade - 50)/10];
+```
+
+**悬垂else**
+怎么知道某个给定的else是和哪个if匹配呢
+
+```c++
+//错误:实际的执行过程并非像缩进格式显示的那样;else 分支匹配的是内层if 语句
+if (grade % 10 >= 3)
+	if (grade % 10 > 7)
+        lettergrade += '+';			// 末尾是8或者9的成绩添加一个加号
+else
+	lettergrade += '-';				// 末尾是3、4、5、6或者7的成绩添加一个减号!
+```
+
+### switch 语句
+
+case标签必须是整型常量表达式
+
+```c++
+//为每个元音字母初始化其计数值
+unsigned aCnt =0, eCnt = 0, iCnt = 0, oCnt = 0, uCnt = 0;
+char ch;
+while (cin >> ch){
+    // 如果 ch 是元音字母，将其对应的计数值加 1
+    switch (ch){
+        case 'a':
+        	++aCnt;
+        	break;
+        case 'e':
+        	++eCnt;
+        	break;
+        case 'i':
+        	++iCnt;
+        	break;
+        case 'o':
+        	++oCnt;
+        	break;
+        case 'u':
+        	++uCnt;
+        	break;
+    }
+}
+
+unsigned vowelCnt = 0;
+switch (ch)
+{
+    //出现了a、e、i、o或u中的任意一个都会将vowelCnt的值加1
+    case 'a':
+    case 'e':
+    case 'i':
+    case 'o':
+    case 'u':
+        ++vowelCnt;
+        break;
+}
+```
+
+**default标签**
+如果没有任何一个 case 标签能匹配上 switch 表达式的值，程序将执行紧跟在 default 标签 (default label)后面的语句
+
+## 迭代语句
+
+### while语句
+
+```c++
+while (condition)
+	statement
+```
+
+### 传统for语句
+
+```c++
+for (init-statemen; condition; expression)
+	statement;
+    
+// 传统for循环的执行流程
+// 重复处理 s 中的字符直至我们处理完全部字符或者遇到了一个表示空白的字符
+for (decltype(s.size()) index = 0; index != s.size() && !isspace(s[index]); ++index)
+	s[index] = toupper(s[index]);		//将当前字符改成大写形式
+
+// for语句头中的多重定义
+// 记录下v的大小，当到达原来的最后一个元素后结束循环
+for (decltype(v.size()) i = 0, sz = v.size(); i != sz; ++i)
+	v.push_back(v[i]);
+
+// 省略for语句头中的某些部分
+auto begv.begin();// 什么也不做
+for(/*空语句 */; beg != v.end() && *beg >= 0; ++beg)
+    ;		// 什么也不做
+```
+
+### 范围for语句
+
+```c++
+for (declaration : expression)
+	statement
+```
+
+```c++
+vector<int> v= {0, 1, 2, 3, 4, 5};// 范围变量必须是引用类型，这样才能对元素执行写操作
+for (auto &r : v)				//对于v中的每一个元素
+    r *= 2;
+```
+
+### do while语句
+
+```c++
+do
+	statement
+while (condition);
+```
+
+## 跳转语句
+
+break、continue、goto、return
+
+### break
+
+break 语句(break statement)负责终止离它最近的while do while for或switch语句，并从这些语句之后的第一条语句开始继续执行。
+
+### continue
+
+continue语句(continue statement)终止最近的循环中的当前选代并立即开始下一次迭代。
+
+### goto
+
+goto语句(goto statement)的作用是从goto语句无条件跳转到同一函数内的另一条语句。
+
+```c++
+//向后跳过一个带初始化的变量定义是合法的
+begin:
+	int sz = get size();
+	if (sz <= 0){
+		goto begin;
+    }
+```
+
+## try语句块和异常处理
+
+- **throw表达式**(throw expression)，异常检测部分使用throw表达式来表示它遇到了无法处理的问题。我们说throw引发(raise)了异常。
+- **try语句块**(try block)，异常处理部分使用try语块处理异常。try语句块以关键字 try开始，并以一个或多个 **catch 子句**(catch clause)结束。try语句块中代码抛出的异常通常会被某个 catch 子句处理。因为 catch 子句“处理”异常，所以它们也被称作**异常处理代码**(exception handler)。
+- 一套**异常类**(exception class)，用于在throw 表达式和相关的catch子句之间传递异常的具体信息。
+
+### throw表达式
+
+```c++
+Sales_item iteml, item2;
+cin >> iteml >> item2;
+//首先检查item1和item2是否表示同一种书籍
+if (iteml.isbn() == item2.isbn()) {
+    cout << item1 + item2 << endl;
+    return 0; //表示成功
+} else {
+	cerr << "Data must refer to same ISBN" << endl;
+    return -1;//表示失败
+}
+
+//首先检查两条数据是否是关于同一种书籍的
+if (iteml.isbn() !=item2.isbn())
+	throw runtime error("Data must refer to same ISBN");
+//如果程序执行到了这里，表示两个ISBN是相同的
+cout << item1 + item2 << endl;
+```
+
+### try语句块
+
+```c++
+try {
+	program-statements
+} catch (exception-declaration) {
+    handler-statements
+} catch (exception-declaration) {
+    handler-statements
+} // ...
+```
+
+**编写处理代码**
+
+```c++
+while (cin >> iteml >> item2){
+    try {
+        // 执行添加两个Sales item 对象的代码
+        // 如果添加失败，代码抛出一个runtimeerror异常
+    } catch (runtime_error err) {
+        //提醒用户两个ISBN必须一致，询问是否重新输入
+        cout << err.what()
+            << "Try Again? Enter y or n" << endl;
+        char c;
+        cin >> c;
+        if (!cin || c == 'n')
+            break;	//跳出while循环
+    }
+}
+```
+
+### 标准异常
+
+- exception头文件定义了最通用的异常类exception。它只报告异常的发生，不提供任何额外信息。
+- stdexcept 头文件定义了几种常用的异常类。
+- new头文件定义了 bad_alloc 异常类型。
+- type_info头文件定义了 bad_cast 异常类型。
+
+| \<stdexcept\>定义的异常类 |                                               |
+| ------------------------- | --------------------------------------------- |
+| exception                 | 最常见的问题                                  |
+| runtime_error             | 只有在运行时才能检测出的问题                  |
+| range_error               | 运行时错误:生成的结果超出了有意义的值域范围   |
+| overflow_error            | 运行时错误:计算上溢                           |
+| underflow_error           | 运行时错误:计算下溢                           |
+| logic_error               | 程序逻辑错误                                  |
+| domain_error              | 逻辑错误:参数对应的结果值不存在               |
+| invalid_argument          | 逻辑错误:无效参数                             |
+| length_error              | 逻辑错误:试图创建一个超出该类型最大长度的对象 |
+| out_of_range              | 逻辑错误:使用一个超出有效范围的值             |
+
+异常类型只定义了一个名为 what 的成员函数，该函数没有任何参数，返回值是一个指向C 风格字符串的const char*。
+该字符串的目的是提供关于异常的一些文本信息。
+
+
+
+# 函数
+
+## 函数基础
