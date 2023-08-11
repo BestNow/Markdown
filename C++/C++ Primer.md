@@ -1689,3 +1689,402 @@ while (cin >> iteml >> item2){
 # 函数
 
 ## 函数基础
+
+函数(function)定义包括以下部分:
+	返回类型(return type)、函数名字、由0个或多个形参(parameter)组成的列表以及函数体。
+		形参以逗号隔开，形参的列表位于一对圆括号之内
+
+调用运算符的形式是一对圆括号
+	它作用于一个表达式，该表达式是函数或者指向函数的指针
+	圆括号之内是一个用逗号隔开的实参(argument)列表
+	调用表达式的类型就是函数的返回类型
+
+```c++
+// val的阶乘是 val * (val - l) * (val - 2) ... * (( val - (val - 1)) * 1)
+int fact(int val)
+{
+    int ret = 1;				// 局部变量，用于保存计算结果
+	while (val > 1)
+        ret *= val--;			// 把ret和val的乘积赋给ret，然后将val减1
+    return ret;					// 返回结果
+}
+
+// 调用函数
+int main()
+{
+    int j = fact(5);			// j等于120，即fact(5)的结果
+    cout << "5! is" << j << endl;
+    return 0;
+}
+
+// 形参和实参
+fact("hello");		// 错误:实参类型不正确
+fact();				// 错误:实参数量不足
+fact(42, 10, 0);	// 错误:实参数量过多
+fact(3.14);			// 正确:该实参能转换成int类型
+```
+
+
+
+### 局部对象
+
+- 名字的作用域是程序文本的一部分，名字在其中可见
+- 对象的生命周期是程序执行过程中该对象存在的一段时间
+
+**局部对象**：形参和函数体内部定义的变量
+**自动对象**：只存在于块执行期间的对象。当块的执行结束后，块中创建的自动对象的值变成未定义的
+**局部静态对象**：执行路径**第一次**经过对象定义语句时初始化，并且**直到程序终止才被销毁**，在此期间即使对象所在的函数结束执行也不会对它有影响
+
+```c++
+size_t count_calls()
+{
+	static size_t ctr = 0;			//调用结束后，这个值仍然有效
+    return ++ctr;    
+}
+
+int main()
+{
+	for (size_t i = 0; i != 10; ++i)
+        cout << count_calls() << endl;
+    return 0;
+}
+//这段程序将输出从1到10(包括10在内)的数字
+```
+
+
+
+### 函数声明
+
+函数的名字也必须在使用之前声明，函数只能定义一次，但可以声明多次
+函数声明无须函数体，用一个分号替代即可
+
+```c++
+// 我们选择beg和end作为形参的名字以表示这两个迭代器划定了输出值的范围
+void print(vector<int>::const_iterator beg, vector<int>::const_iterator end);
+```
+
+**在头文件中进行函数声明**
+定义函数的源文件应该把含有函数声明的头文件包含进来，编译器负责验证函数的定义和声明是否匹配。
+
+
+
+### 分离式编程
+
+为了允许编写程序时按照逻辑关系将其划分开来，C++语言支持分离式编译(separate compilation)
+分离式编译允许我们把程序分割到几个文件中去，每个文件独立编译
+
+### 编译和链接多个源文件
+
+.obj或.o文件
+链接器
+
+
+
+## 参数传递
+
+**引用传递**：形参是引用类型时，引用形参是它对应的实参的别名
+
+### 传值参数
+
+当初始化一个非引用类型的变量时，初始值被拷贝给变量。对变量的改动不会影响初始值
+
+**指针形参**
+	指针的行为和其他非引用类型一样
+	当执行指针拷贝操作时，拷贝的是指针的值
+	拷贝之后，两个指针是不同的指针
+
+```c++
+// 该函数接受一个指针，然后将指针所指的值置为 0
+void reset(int *ip)
+{
+    *ip = 0;			// 改变指针ip所指对象的值
+    ip = 0;				// 只改变了ip的局部拷贝，实参未被改变
+}
+
+int i = 42;
+reset(&i);				// 改变i的值而非的地址
+cout << "i = " << i << endl;		// 输出 i = 0
+```
+
+### 传引用参数
+
+```c++
+// 该函数接受一个int 对象的引用，然后将对象的值置为0
+void reset(int &i)		// i是传给 reset函数的对象的另一个名字
+{
+	i = 0;    			// 改变了所引对象的值
+}
+
+int j = 42;
+reset(j);							// j采用传引用方式，它的值被改变
+cout << "j = " << j << endl;		// 输出j = 0
+```
+
+**使用引用避免拷贝**
+
+```c++
+//比较两个string对象的长度
+bool isShorter(const string &s1, const string &s2)
+{
+	return s1.size() < s2.size();
+}
+```
+
+**使用引用形参返回额外信息**
+
+```c++
+// 返回s中c第一次出现的位置索引
+// 引用形参occurs负责统计c出现的总次数
+string::size_type find_char(const string &s, char c, string::size_type &occurs)
+{
+    auto ret = s.size();		// 第一次出现的位置(如果有的话)
+    occurs = 0;					// 设置表示出现次数的形参的值
+    for (decltype(ret) i = 0; i != s.size(); ++i)
+    {
+        if (s[i] == c){
+            if (ret == s.size())
+                ret = i;		// 记录c第一次出现的位置
+            ++occurs;			// 将出现的次数加1
+        }
+    }
+    return ret;					// 出现次数通过occurs 隐式地返回	
+}
+```
+
+### const形参和实参
+
+```c++
+void fcn(const int i) { /* fcn能够读取i，但是不能向i写值 */ }
+void fcn(const int i) { /*fcn能够读取i，但是不能向i写值 */ }
+void fcn(int i) { /* ...*/ } //错误:重复定义了fcn(int)
+```
+
+**指针或引用形参与const**
+
+```c++
+int i = 42;
+const int *cp = &i;			// 正确:但是cp不能改变i
+const int &r = i; 			// 正确:但是r不能改变i
+const int &r2 = 42;			// 正确
+int* p = cp;				// 错误:p的类型和cp的类型不匹配
+int &r3 = r;				// 错误:r3的类型和r的类型不匹配
+int &r4 = 42;				// 错误:不能用字面值初始化一个非常量引用
+
+int i = 0;
+const int ci = i;
+string::size_type ctr = 0;
+reset(&i);					// 调用形参类型是int*的reset函数
+reset(&ci);					// 错误:不能用指向const int 对象的指针初始化int*
+reset(i);					// 调用形参类型是int&的reset函数
+reset(ci);					// 错误:不能把普通引用绑定到const对象ci上
+reset(42);					// 错误:不能把普通应用绑定到字面值上
+reset(ctr);					// 错误:类型不匹配，ctr是无符号类型
+// 正确:findchar的第一个形参是对常量的引用
+find_char("Hello World!", 'o', ctr);
+```
+
+尽量使用常量引用
+
+
+
+### 数组形参
+
+不能以值传递的方式传递数组，可以把形参写成类似数组的形式
+
+```c++
+//尽管形式不同，但这三个print 函数是等价的
+//每个函数都有一个const int*类型的形参
+void print(const int*);			
+void print(const int[]);		// 可以看出来，函数的意图是作用于一个数组
+void print(const int[10]);		// 这里的维度表示我们期望数组含有多少元素，实际不一定
+
+int i = 0， j[2] = {0, 1};
+print(&i);			// 正确:&i的类型是int*
+print(j);			// 正确:j转换成int*并指向j[0]
+
+// 使用标记指定数组长度
+void print(const char *cp)
+{
+    if (cp)						// 若cp不是一个空指针
+        while(*cp)				// 只要指针所指的字符不是空字符
+            cout << *cp++;		// 输出当前字符并将指针向前移动一个位置
+}
+
+// 使用标准库规范
+void print(const int *beg, const int *end)
+{
+    // 输出beg到end之间(不含end)的所有元素
+    while (beg != end)
+        cout << *beg++ << endl;// 输出当前元素并将指针向前移动一个位置
+}
+
+// 显式传递一个表示数组大小的形参
+// const int ia[]等价于const int* ia
+// size 表示数组的大小，将它显式地传给函数用于控制对ia元素的访问
+void print(const int ia[], size_t size)
+{
+	for (size_t i = 0; i != size; ++i)
+    {
+        cout << ia[i] << endl;    
+    }
+}
+
+// 数组引用形参
+//正确:形参是数组的引用，维度是类型的一部分
+void print(int (&arr)[10])
+{
+	for (auto elem :arr)
+        cout << elem <<endl;    
+}
+
+// 传递多维数组
+// matrix 指向数组的首元素，该数组的元素是由10个整数构成的数组
+void print(int (*matrix)[10], int rowSize) { /*。。。*/ }
+//等价定义
+void print(int matrix[][10], int rowSize) { /*。。。*/ }
+//matrix的声明看起来是一个二维数组，实际上形参是指向含有10个整数的数组的指针
+```
+
+
+
+### main:处理命令行选项
+
+```c++
+int main(int argc, char *argv[]) { ... }
+// Or
+int main(int argc, char **argv) { ... }
+
+// prog -d -o ofile data0
+argv[0] = "prog"; // 或者argv[0]也可以指向一个空字符串
+argv[1] = "-d";
+argv[2] = "-o";
+argv[3] = "ofile";
+argv[4] = "data0";
+argv[5] = 0;
+```
+
+
+
+### 含有可变形参的函数
+
+**initializer_list形参**：initializer_list 是一种标准库类型，用于表示某种特定类型的值的数组
+
+| initializer_list提供的操作           | 说明                                                         |
+| ------------------------------------ | ------------------------------------------------------------ |
+| `initializer_list<T> Ist;`           | 默认初始化;T类型元素的空列表                                 |
+| `initializer_list<T> lst(a,b,c...};` | lst 的元素数量和初始值一样多; lst 的元素是对应初始值的副本; 列表中的元素是const |
+| `lst2(lst)`<br />`lst2 = lst`        | 拷贝或赋值一个initializer_list对象不会拷贝列表中的元素; 拷贝后原始列表和副本共享元素 |
+| `lst.size()`                         | 列表中的元素数量                                             |
+| `lst.begin()`                        | 返回指向lst中首元素的指针                                    |
+| `lst.end()`                          | 返回指向lst中尾元素下一位置的指针                            |
+
+```c++
+initializer_list<string> ls;			// initializer_list的元素类型是string
+initializer_list<int> li;				// initializer_list的元素类型是int
+
+void error_msg(initializer_list<string> il)
+{
+    for (auto beg = il.begin(); beg != il.end(); ++beg)
+        cout << *beg << " ";
+    cout << endl;
+}
+
+// expected和actual是string 对象
+if(expected != actual)
+	error_msg({"functionX", "expected", "actual"});
+else
+	error_msg({"functionX"，"okay"});
+```
+
+**省略符形参(varargs)**
+
+```c++
+void foo(parm list, ...);			// 形参声明后面的逗号是可选的
+void foo(...);
+```
+
+### 返回类型和return语句
+
+```c++
+return;
+return expression;
+```
+
+### 无返回值函数
+
+没有返回值的return语句只能用在返回类型是void的函数中
+
+```c++
+void swap(int &vl， int &v2)
+{
+    // 如果两个值是相等的，则不需要交换，直接退出
+	if (v1 == v2)
+        return;
+    // 如果程序执行到了这里，说明还需要继续完成某些功能
+    int tmp = v2;
+    v2 = v1;
+	v1 = tmp;
+    // 此处无须显式的return语句
+}
+```
+
+### 有返回值函数
+
+函数内的每条return语句必须返回一个值
+return语句返回值的类型必须与函数的返回类型相同，或者能隐式地转换成函数的返回类型
+
+```c++
+// 因为含有不正确的返回值，所以这段代码无法通过编译
+bool str_subrange(const string &str1, const string &str2)
+{
+    // 大小相同:此时用普通的相等性判断结果作为返回值
+    if (str1.size() == str2.size())
+        return str1 == str2;			//正确: ==运算符返回布尔值
+    // 得到较短string对象的大小
+    auto size = (str1.size() < str2.size()) ? str1.size() : str2.size();
+    // 检查两个string对象的对应字符是否相等，以较短的字符串长度为限
+    for(decltype(size) i = 0; i != size; ++i)
+    {
+        if( str1[i] != str2[i] )
+            return;				// 错误 #1:没有返回值，编译器将报告这一错误
+    }
+    
+    // 错误 #2:控制流可能尚未返回任何值就结束了函数的执行
+    // 编译器可能检查不出这一错误
+}
+```
+
+**值是如何返回的**
+	返回的值用于初始化调用点的一个临时量
+
+```c++
+//如果ctr的值大于1，返回word的复数形式
+string make_plural(size_t ctr, const string &word, const string &ending)
+{
+    return (ctr > 1) ? word + ending : word;
+}
+// 该函数的返回类型是string,意味着返回值将被拷贝到调用点。
+// 因此,该函数将返回word的副本或者一个未命名的临时string 对象，该对象的内容是 word和ending 的和。
+
+// 如果函数返回引用，则该引用仅是它所引对象的一个别名
+//  挑出两个string 对象中较短的那个，返回其引用
+const string &shorterString(const string &s1, const string &s2){
+    return s1.size() <= s2.size() ? s1 : s2;
+}
+```
+
+**禁止返回局部对象的引用或指针**
+
+```c++
+//严重错误:这个函数试图返回局部对象的引用
+const string &manip()
+{
+    string ret;
+    //以某种方式改变一下ret
+    if (!ret.empty())
+        return ret;			//错误:返回局部对象的引用!
+    else
+        return "Empty";		//错误:"Empty"是一个局部临时量
+}
+```
+
