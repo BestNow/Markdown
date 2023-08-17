@@ -1,4 +1,4 @@
-# 变量和基本类型
+![]()变量和基本类型
 
 ## 基本内置类型
 
@@ -2087,4 +2087,2026 @@ const string &manip()
         return "Empty";		//错误:"Empty"是一个局部临时量
 }
 ```
+
+**引用返回左值**
+
+```c++
+char &get_val(string &str， string::size_type ix)
+{
+	return str[ix];    	// get_val假定索引值是有效的
+}
+int main()
+{
+	string s("a value");
+	cout << s << endl;    	// 输出a value
+	get_val(s, 0) = 'A';    // 将s[0]的值改为A
+    cout << s << endl;		// 输出A value
+    return 0;
+}
+```
+
+**列表初始化返回值**
+
+```c++
+vector<string> process()
+{
+    // ...
+    // expected和actual是string对象
+	if(expected.empty())
+        return {};    		// 返回一个空vector对象
+    else if (expected == actual)
+        return {"functionX", "okay"}; // 返回列表初始化的vector对象
+    else
+        return {"functionX", expected, actual};
+}
+```
+
+**主函数的返回值**
+
+允许main函数没有 return语句直接结束
+如果控制到达了main函数的结尾处而且没有return语句，编译器将隐式地插入一条返回0的return语句
+
+```c++
+int main()
+{
+	if (some_failure)
+        return EXIT_FAILURE;		// 定义在cstdlib头文件中
+    else
+        return EXIT_SUCCESS;		// 定义在cstdlib头文件中
+}
+```
+
+**递归**
+
+```c++
+// 计算val的阶乘，即1 * 2 * 3 ... * val
+int factorial(int val)
+{
+    if (val > l)
+        return factorial(val - 1) * val;
+    return 1;
+}
+```
+
+### 返回数组指针
+
+函数不能返回数组，但是函数可以返回数组的指针或引用
+
+```c++
+int (*func(int i))[10];
+```
+
+- `func(inti)` 表示调用 func函数时需要一个int类型的实参
+- `(*func(int i))`意味着我们可以对函数调用的结果执行解引用操作
+- `(*func(int i))[10]`表示解引用func的调用将得到一个大小是10的数组
+- `int (*func(int i))[10]`表示数组中的元素是int类型
+
+**使用尾置返回类型**
+
+```c++
+// func 接受一个int 类型的实参，返回一个指针，该指针指向含有10个整数的数组
+auto func(int i) -> int(*)[10];
+```
+
+**使用decltype**
+
+```c++
+int odd[] = {1, 3, 5, 7, 9};
+int even[] = {0, 2, 4, 6, 8};
+// 返回一个指针，该指针指向含有 5个整数的数组
+decltype(odd) *arrPtr(int i)
+{
+    return (i % 2) ? &odd : &even;//返回一个指向数组的指针
+}
+```
+
+
+
+## 函数重载
+
+```c++
+void print(const char *cp);
+void print(const int *beg, const int *end);
+void print(const int ia[], size_t size);
+
+int j[2] ={0, 1};
+print("Hello World");			// 调用 print(const char*)
+print(j, end(j) - begin(j));	// 调用 print(const int*, size_t)
+print(begin(j), end(j));		// 调用 print(const int*, const int*)
+```
+
+**定义重载函数**
+
+```c++
+Record lookup(const Account&);		// 根据Account查找记录
+Record lookup(const Phone&);		// 根据Phone查找记录
+Record lookup(const Name&);			// 根据Name查找记录
+Account acct;
+Phone phone;
+Record r1 = lookup(acct);			// 调用接受Account的版本
+Record r2 = lookup(phone);			// 调用接受Phone的版本
+
+// 判断两个形参的类型是否相异
+//  每对声明的是同一个函数
+Record lookup(const Account &acct);
+Record lookup(const Account&);	//  省略了形参的名字
+typedef Phone Telno;
+Record lookup(const Phone&);
+Record lookup(const Telno&);	// Telno和Phone的类型相同
+
+// 重载和const形参
+//  一个拥有顶层const的形参无法和另一个没有顶层const的形参区分开来:
+Record lookup(Phone);
+Record lookup(const Phone);		// 重复声明了Record lookup(Phone)
+
+Record lookup(Phone*);
+Record lookup(Phone* const);	// 重复声明了Record lookup(Phone*)
+
+// 如果形参是某种类型的指针或引用，则通过区分其指向的是常量对象还是非常量对象可以实现函数重载，此时的const是底层的:
+// 对于接受引用或指针的函数来说，对象是常量还是非常量对应的形参不同
+// 定义了4个独立的重载函数
+Record lookup(Account&);			// 函数作用于Account的引用
+Record lookup(const Account&);		// 新函数，作用于常量引用
+
+Record lookup(Account*);			// 新函数，作用于指向Account的指针
+Record lookup(const Account*);		// 新函数，作用于指向常量的指针
+
+// const_cast和重载
+// const_cast在重载函数的情景中最有用
+//  比较两个string对象的长度，返回较短的那个引用
+const strinq &shorterString(const string &s1, const string &s2)
+{
+	return s1.size() <= s2.size() ? s1 : s2;    
+}
+// To
+string &shorterString(string &sl, string &s2)
+{
+    auto &r = shorterString(const_cast<const string&>(sl), 
+                            const_cast<const string&>(s2));
+    return const_cast<string&>(r);
+}
+```
+
+**调用重载函数**
+
+- 偏译器找到一个与实参最佳匹配(best match)的函数，并生成调用该函数的代码。
+- 找不到任何一个函数与调用的实参匹配，此时编译器发出无匹配(no match)的错误信息。
+- 有多于一个函数可以匹配,但是每一个都不是明显的最佳选择。此时也将发生错误称为二义性调用(ambiguous call)。
+
+### 重载与作用域
+
+```c++
+string read();
+void print(const string &);
+void print(double); // 重载print函数
+void fooBar(int ival)
+{
+    bool read = false;		// 新作用域:隐藏了外层的 read
+    string s = read();		// 错误:read是一个布尔值，而非函数
+	// 不好的习惯:通常来说，在局部作用域中声明函数不是一个好的选择
+    void print(int);		// 新作用域:隐藏了之前的 print
+	print("Value: ");		// 错误:print(const string &)被隐藏掉了
+    print(ival);			// 正确:当前print(int)可见
+    print(3.14);    		// 正确:调用print(int); print(double)被隐藏掉了
+}
+
+void print(const string &);
+void print(double);			// print函数的重载形式
+void print(int);			// print函数的另一种重载形式
+void fooBar2(int ival)
+{
+    print("Value:");		// 调用print(const string &)
+    print(ival);			// 调用print(int)
+    print(3.14);			// 调用print(double)
+}
+```
+
+
+
+## 特殊用途语言特征
+
+### 默认实参
+
+```c++
+typedef string::size_type sz;
+string screen(sz ht = 24, sz wid = 80, char backgrnd = ' ');
+
+// 使用默认实参调用函数
+string window;
+window = screen();				// 等价于screen(24, 80, ' ')
+window = screen(66);			// 等价于screen(66, 80, ' ')
+window = screen(66, 256);		// 等价于screen(66, 256, ' ')
+window = screen(66, 256, '#');	// 等价于screen(66, 256, '#')
+
+window = screen(, , '?');		// 错误:只能省略尾部的实参1
+window = screen('?');			// 调用screen('?', 80, ' ')
+```
+
+***在给定的作用域中一个形参只能被赋予一次默认实参，函数的后续声明只能为之前那些没有默认值的形参添加默认实参***
+
+```c++
+// 表示高度和宽度的形参没有默认值
+string screen(sz, sz, char = ' ');
+// 不能修改一个已经存在的默认值:
+string screen(sz, sz, char = '*');		// 错误:重复声明
+// 可以按照如下形式添加默认实参:
+string screen(sz = 24, sz = 80, char);	// 正确:添加默认实参
+
+// 默认实参初始值
+//  局部变量不能作为默认实参。除此之外，只要表达式的类型能转换成形参所需的类型，该表达式就能作为默认实参:
+// wd、def和ht的声明必须出现在函数之外
+sz wd = 80;
+char def = ' ';
+sz ht();
+string screen(sz = ht(), sz = wd, char = def);
+string window = screen();		// 调用 screen(ht(), 80, ' ')
+```
+
+
+
+### 内联函数和constexpr函数
+
+把内联函数和constexpr函数放在头文件内
+内联函数(inline)，通常就是将它在每个调用点上“内联地”展开
+
+```c++
+cout << shorterString(s1, s2) << endl;
+// 编译过程会展开成如下形式
+cout << (s1.size() < s2.size() ? s1 : s2) << endl;
+
+//内联说明只是向编译器发出的一个请求，编译器可以选择忽略这个请求
+```
+
+**constexpr函数**
+constexpr 函数(constexpr function)是指能用于常量表达式的函数。
+	函数的返回类型及所有形参的类型都得是字面值类型 
+	函数体中必须有且只有一条return语句
+constexpr函数被隐式地指定为内联函数
+constexpr函数不一定返回常量表达式
+
+```c++
+constexpr int new_sz() { return 42; }
+constexpr int foo = newsz();			// 正确:foo是一个常量表达式
+
+// 如果arg是常量表达式，则 scale(arg)也是常量表达式
+constexpr size_t scale(size_t cnt) { return new_sz() * cnt; }
+
+int arr[scale(2)];		// 正确:scale(2)是常量表达式
+int i = 2;				// 不是常量表达式
+int a2[scale(i)];		// 错误:scale(i)不是常量表达式
+```
+
+### 调试帮助
+
+**assert 预处理宏**
+
+首先对expr求值，如果表达式为假(即0)，assert 输出信息并终止程序的执行，如果为真，assert什么都不做
+
+```c++
+assert(expr);
+```
+
+**NDEBUG预处理变量**
+如果定义了NDEBUG,则assert 什么也不做
+默认状态下没有定义NDEBUG,此时assert 将执行运行时检查
+
+```c++
+void print(const int ia[], size_t size)
+{
+#ifndef NDEBUG
+    // __func__是编译器定义的一个局部静态变量，用于存放函数的名字
+    cerr << __func__ << ": array size is " << size << endl;
+#endif
+}
+// ...
+// __FILE__: 存放文件名的字符串字面值
+// __LINE__: 存放当前行号的整型字面值
+// __TIME__: 存放文件编译时间的字符串字面值
+// __DATE__: 存放文件编译日期的字符串字面值
+```
+
+## 函数匹配
+
+```c++
+void f();
+void f(int);
+void f(int, int);
+void f(double, double = 3.14);
+f(5.6);		// 调用void f(double, double)
+```
+
+**确定候选函数和可行函数**
+	与被调用的函数同名
+	其声明在调用点可见
+	寻找最佳匹配
+
+### 实参类型转换
+
+精确匹配
+	实参类型和形参类型相同
+	实参从数组类型或函数类型转换成对应的指针类型
+	向实参添加顶层const或者从实参中删除顶层const
+通过const转换实现的匹配
+通过类型提升实现的匹配
+通过算术类型转换实现的匹配
+通过类类型转换实现的匹配 
+
+**需要类型提升和算术类型转换的匹配**
+
+```c++
+void ff(int);
+void ff(short);
+ff('a');			// char提升成int;调用 f(int)
+
+void manip(long);
+void manip(float);
+manip(3.14);			//错误:二义性调用
+
+Record lookup(Account&);	// 函数的参数是Account的引用
+Record lookup(const Account&);	// 函数的参数是一个常量引用
+const Account a;
+Account b;
+
+lookup(a);			// 调用 lookup(const Account&)
+lookup(b);			// 调用 lookup(Account&)
+```
+
+## 函数指针
+
+函数指针指向的是函数而非对象
+
+```c++
+// 比较两个string对象的长度
+bool lengthCompare(const string &, const string &);
+
+// pf指向一个函数，该函数的参数是两个const string的引用，返回值是bool类型
+bool (*pf)(const string &, const string &);			//未初始化
+
+// 使用函数指针
+pf = lengthCompare;				// pf指向名为lengthCompare的函数
+pf = &lengthCompare;			// 等价的赋值语句:取地址符是可选的
+
+bool b1 = pf("hello", "goodbye");				// 调用engthCompare函数
+bool b2 = (*pf)("hello", "goodbye");			// 一个等价的调用
+bool b3 = lengthCompare("hello", "goodbye"); 	// 另一个等价的调用
+
+string::size_type sumLength(const string&, const string&);
+bool cstringCompare(const char*, const char*);
+pf = 0;					// 正确:pf不指向任何函数
+pf = sumLength;			// 错误:返回类型不匹配
+pf = cstringCompare;	// 错误:形参类型不匹配
+pf = lenqthCompare;		// 正确:函数和指针的类型精确匹配
+
+// 重载函数的指针
+void ff(int*);
+void ff(unsigned int);
+void (*pf1)(unsigned int) = ff;		// pf1指向 ff(unsigned)
+void (*pf2)(int) = ff;				// 错误:没有任何一个ff与该形参列表匹配
+double (*pf3)(int*) = ff;			// 错误:ff和pf3的返回类型不匹配
+
+// 函数指针形参
+// 第三个形参是函数类型，它会自动地转换成指向函数的指针
+void useBigger(const string &s1, const string &s2, bool pf(const string&, const string &));
+// 等价的声明：显式地将形参定义成指向函数的指针
+void useBigger(const string &s1, const string &s2, bool (*pf)(const string &, const string &));
+
+//自动将函数lengthCompare转换成指向该函数的指针
+useBigger(s1, s2, lengthCompare);
+
+
+// Func和Func2是函数类型
+typedef bool Func(const string&, const string&);
+typedef decltype(lengthCompare) Func2;				// 等价的类型
+// FuncP和FuncP2是指向函数的指针
+typedef bool(*FuncP)(const string&, const string&);
+typedef decltype(lengthCompare) *FuncP2;			// 等价的类型
+
+//useBigger的等价声明，其中使用了类型别名
+void useBigger(const string&, const string&, Func);
+void useBigger(const string&, const string&, FuncP2);
+
+// 返回指向函数的指针
+using F = int(int*，int);			// F是函数类型，不是指针
+using PF = int(*)(int*,int);		// PF是指针类型
+PF f1(int);							// 正确:PF是指向函数的指针，f1返回指向函数的指针
+F f1(int);							// 错误:F是函数类型，f1不能返回一个函数
+F *f1(int);							// 正确:显式地指定返回类型是指向函数的指针
+int (*f1(int))(int*, int);
+auto f1(int) -> int (*)(int*, int);
+
+//将auto和decltype用于函数指针类型
+string::size_type sumLength(const string&, const string&);
+string::size_type largerLength(const string&, const string&);
+// 根据其形参的取值，getFcn 函数返回指向 sumLength 或者largerLength 的指针
+decltype(sumLength) *getFcn(const string &);
+// 将 decltype 作用于某个函数时，它返回函数类型而非指针类型
+// 因此，我们显式地加上*以表明我们需要返回指针，而非函数本身
+```
+
+
+
+# 类
+
+类的基本思想是数据抽象(data abstraction)和封装(encapsulation)。
+	数据抽象是一种依赖于**接口**(interface)和**实现** (implementation)分离的编程(以及设计)技术
+
+类的接口包括用户所能执行的操作
+类的实现则包括
+	类的数据成员
+	负责接口实现的函数体
+	定义类所需的各种私有函数
+
+## 定义抽象数据类型
+
+### 设计Sales_data类
+
+Sales_data的接口应该包含以下操作:
+
+- 一个isbn成员函数，用于返回对象的ISBN编号
+- 一个combine成员函数，用于将一个 Sales_data 对象加到另一个对象上
+- 一个名为add的函数，执行两个Sales_data对象的加法
+- 一个read函数，将数据从istream读入到Sales_data对象中
+- 一个print函数，将Sales_data对象的值输出到ostream
+
+**使用改进的Sales_data类**
+
+```c++
+Sales_data total;				// 保存当前求和结果的变量
+if (read(cin, total)){			// 读入第一笔交易
+    Sales_data trans;			// 保存下一条交易数据的变量
+    while(read(cin, trans)) {	// 读入剩余的交易
+        if (total.isbn() == trans.isbn()) // 检查isbn
+            total.combine(trans);// 更新变量total当前的值
+        else {
+            print(cout, total) << endl;	// 输出结果
+            total = trans;				// 处理下一本书	
+        }
+    }
+    print(cout, total) << endl;			// 输出最后一条交易
+} else {								// 没有输入任何信息		
+    cerr << "No data?!" << endl;		// 通知用户
+}
+```
+
+
+
+### 定义改进的Sales_data类
+
+```c++
+struct Sales_data{
+    // 新成员:关于Sales_data对象的操作
+    std::string isbn() const { return bookNo; }
+    Sales_data& combine(const Sales_data&);
+    double avg_price() const;
+    
+	std::string bookNo;
+    unsigned units_sold = 0;
+    double revenue = 0.0;
+};
+// Sales_data的非成员接口函数
+Sales_data add(const Sales_data&, const Sales_data&);
+std::ostream &print(std::ostream&, const Sales_data&);
+std::istream &read(std::istream&, Sales_data&);
+
+//定义成员函数
+// const的作用是修改隐式this指针的类型
+// 默认情况下,this的类型是指向类类型非常量版本的常量指针
+// 紧跟在参数列表后面的 const 表示 this 是一个指向常量的指针。
+// 使用const的成员函数被称作常量成员函数(constmember function)。
+std::string isbn() const { return bookNo; }
+
+//在类外部定义成员函数
+double Sales_data::avg price() const {
+    if (units_sold)
+        return revenue / units_sold;
+    else
+        return 0;
+}
+
+Sales_data& Sales_data::combine(const Sales_data &rhs)
+{
+	units_sold += rhs.units_sold;			// 把rhs的成员加到this对象的成员上    
+    revenue += rhs.revenue;
+    return *this;							// 返回调用该函数的对象
+}
+
+```
+
+### 定义类相关的非成员函数
+
+```c++
+//输入的交易信息包括ISBN、售出总数和售出价格
+istream &read(istream &is, Sales_data &item)
+{
+    double price = 0;
+    is >> item.bookNo >> item.units_sold >> price;
+    item.revenue = price * item.units_sold;
+    return is;
+}
+
+ostream &print(ostream &os, const Sales_data &item)
+{
+	os << item.isbn() << " " << item.units_sold << " " << item.revenue << " " << item.avg_price();
+	return os;    
+}
+
+Sales_data add(const Sales_data &lhs, const Sales_data &rhs)
+{
+    Sales_data sum = lhs;		// 把lhs的数据成员拷贝给sum
+    sum.combine(rhs);			// 把rhs的数据成员加到sum当中
+    return sum;
+}
+
+```
+
+### 构造函数
+
+构造函数的名字和类名相同
+构造函数没有返回类型
+构造函数也有一个(可能为空的)参数列表和一个(可能为空的)函数体
+类可以包含多个构造函数，不同的构造函数之间必须在参数数量或参数类型上有所区别
+
+默认构造函数无须任何实参
+	如果存在类内的初始值，用它来初始化成员
+	否则，默认初始化该成员
+
+**定义Sales_data的构造函数**
+
+- 一个istream&，从中读取一条交易信息
+- 一个const string&，表示ISBN编号；一个unsigned，表示售出的图书数量;以及一个 double，表示图书的售出价格
+- 一个const string&，表示ISBN编号；编译器将赋予其他成员默认值
+- 一个空参数列表(即默认构造函数)，正如刚刚介绍的，既然我们已经定义了其他构造函数，那么也必须定义一个默认构造函数。
+
+```c++
+struct Sales_data{
+    //新增的构造函数
+	Sales_data() = default;
+    Sales_data(const std::string &s) : bookNo(s){}
+    Sales_data(const std::string &s, unsigned n, double p) : bookNo(s), units_sold(n), revenue(p*n){}
+    Sales_data(std::istream &);
+   	
+    //之前已有的其他成员
+    std::string isbn() const { return bookNo; }
+    Sales_data& combine(const Sales_data&);
+    double avg_price() const;
+    std::string bookNo;
+    unsigned units_sold = 0;
+    double revenue = 0.0;
+};
+```
+
+**= default的含义**
+	`Sales_data()=default;`
+如果 = default 在类的内部，则默认构造函数是内联的；如果它在类的外部，则该成员默认情况下不是内联的。
+
+**构造函数初始值列表**
+
+```c++
+Sales_data(const std::string &s) : bookNo(s) {}
+Sales_data(const std::string &s, unsigned n, double p) : 
+	bookNo(s), units_sold(n), revenue(p * n) {}
+```
+
+**在类外部定义构造函数**
+
+```c++
+Sales_data::Sales_data(std::istream &is)
+{
+    read(is, *this);	// read函数的作用是从is中读取一条交易信息然后
+    					// 存入this对象中
+}
+```
+
+### 拷贝、赋值和析构
+
+不主动定义这些操作，则编译器将合成它们
+
+**某些类不能依赖于合成的版本**
+
+## 访问控制与封装
+
+定义在public说明符之后的成员在**整个程序内可被访问**，public成员定义类的接口。
+定义在private说明符之后的成员可以**被类的成员函数访问**，但是**不能被使用该类的代码访问**，private部分封装了(即隐藏了)类的实现细节。
+
+```c++
+class Sales_data {
+public:						// 添加了访问说明符
+    Sales_data() = default;
+    Sales_data(const std::string &s, unsigned n, double p) : 
+    		bookNo(s), units_sold(n), revenue(p * n) { }
+    Sales_data(const std::string &s) : bookNo(s) { }
+    Sales_data(std::istream&);
+    
+    std::string isbn() const { return bookNo; }
+    Sales_data &combine(const Sales_data&);
+    
+private:					// 添加了访问说明符
+    double avg_price() const
+    	{ return units_sold ? revenue / units_sold : 0; }
+    std::string bookNo;
+    unsigned units_sold = 0;
+    double revenue = 0.0;
+};
+```
+
+**使用class或struct关键字**
+唯一的一点区别是，struct和class的默认访问权限不一样
+	如果我们使用**struct**关键字,则定义在第一个访问说明符之前的成员是**public**的
+	相反，如果我们使用**class**关键字，则这些成员是**private**的
+
+### 友元
+
+类可以允许其他类或者函数访问它的非公有成员，方法是令其他类或者函数成为它的友元(friend)
+友元声明只能出现在类定义的内部，但是在类内出现的具体位置不限
+友元不是类的成员也不受它所在区域访问控制级别的约束
+
+```c++
+class Sales_data {
+// 为Salesdata的非成员函数所做的友元声明
+friend Sales_data add(const Sales_data&, const Sales_data&);
+friend std::istream &read(std::istream&, Sales_data&);
+friend std::ostream &print(std::ostream&, const Sales_data&);
+
+// 其他成员及访问说明符与之前一致
+public:
+    Sales_data() = default;
+    Sales_data(const std::string &s, unsigned n, double p) :
+    	bookNo(s), units_sold(n), revenue(p * n) { }
+    Sales_data(const std::string &s) : bookNo(s) { } 
+    Sales_data(std::istream&);
+    std::string isbn() const { return bookNo; }
+    Sales_data &combine(const Sales_data&);
+
+private:
+    std::string bookNo;
+    unsiqned units_sold = 0;
+    double revenue = 0.0;
+};
+// Salesdata接口的非成员组成部分的声明
+Sales_data add(const Sales_data&, const Sales_data&);
+std::istream &read(std::istream&, Sales_data&);
+std::ostream &print(std::ostream&, const Sales_data&);
+```
+
+**友元的声明**
+友元的声明仅仅指定了访问的权限，而非一个通常意义上的函数声明
+如果希望类的用户能够调用某个友元函数，那么就必须在友元声明之外再专门对函数进行一次声明
+
+## 类的其他特性
+
+包括:
+
+> 类型成员
+> 类的成员的类内初始值
+> 可变数据成员
+> 内联成员函数
+> 从成员函数返回*this
+> 关于如何定义并使用类类型
+> 友元类的更多知识
+
+### 类成员再探
+
+```c++
+// 定义一个类型成员
+class Screen {
+public:
+    typedef std::string::size_type pos;
+
+private:
+    pos cursor = 0;
+    pos height = 0, width = 0;
+    std::string contents;
+};
+
+// Screen类的成员函数
+class Screen {
+public:
+    typedef std::string::size_type pos;
+    Screen() = default;//因为Screen有另一个构造函数, 所以本函数是必需的
+    
+    // cursor被其类内初始值初始化为0
+    Screen(pos ht, pos wd, char c) : height(ht), width(wd), contents(ht * wd, c) { }
+    char get() const 					// 读取光标处的字符
+    	{ return contents[cursor]; }	// 隐式内联	
+    inline char get(pos ht, pos wd) const;	// 显式内联
+    Screen &move(pos r, pos c);				// 能在之后被设为内联
+private:
+    pos cursor = 0;
+	pos height = 0, width = 0;
+    std::string contents;
+};
+
+// 能在类的外部用inline关键字修饰函数的定义:
+inline Screen &Screen::move(pos r, pos c)		// 可以在函数的定义处指定 inline
+{
+    pos row = r * width;						// 计算行的位置
+    cursor = row + c;							// 在行内将光标移动到指定的列
+    return *this;								// 以左值的形式返回对象
+}
+
+char Screen::get(pos r, pos c)const				// 在类的内部声明成inline
+{
+    pos row = r * width;						// 计算行的位置
+    return contents[row + c];					// 返回给定列的字符
+}
+```
+
+**可变数据成员**
+一个可变数据成员(mutable data member)永远不会是const，即使它是const对象的成员
+一个 const 成员函数可以改变一个可变成员的值
+
+```c++
+class Screen {
+public:
+	void some_member() const;
+private:
+    mutable size_t access_ctr;	// 即使在一个const对象内也能被修改
+	// 其他成员与之前的版本一致
+};
+
+void Screen::some_member() const
+{
+    ++access_ctr;		// 保存一个计数值，用于记录成员函数被调用的次数	
+    // 该成员需要完成的其他工作
+}
+```
+
+**类数据成员的初始值**
+C++11新标准中，最好的方式就是把这个默认值声明成一个类内初始值
+
+```c++
+class Window_mgr {
+private:
+    // 这个Window_mgr追踪的 Screen
+    // 默认情况下，一个Window_mgr包含一个标准尺寸的空白Screen
+    std::vector<Screen> screens{Screen(24, 80, ' ')};
+}
+// 当我们提供一个类内初始值时，必须以符号=或者花括号表示
+```
+
+### 返回*this的成员函数
+
+```c++
+class Screen {
+public:
+    Screen &set(char);
+    Screen &set(pos, pos, char);
+    // 其他成员和之前的版本一致
+};
+inline Screen &Screen::set(char c)
+{
+    contents[cursor] = c;		// 设置当前光标所在位置的新值
+    return *this;				// 将this对象作为左值返回
+}
+
+inline Screen &Screen::set(pos r, pos col, char ch)
+{
+    contents[r * width + col] = ch;			// 设置给定位置的新值
+    return *this;							// 将this对象作为左值返回
+}
+
+// 把光标移动到一个指定的位置，然后设置该位置的字符值
+myScreen.move(4, 0).set('#');
+```
+
+**基于const的重载**
+
+```c++
+class Screen {
+public:
+    // 根据对象是否是 const 重载了display函数
+    Screen &display(std::ostream &os)
+    	{ do_display(os); return *this; }
+    const Screen &display(std::ostream &os) const
+    	{ do_display(os); return *this; }
+    
+private:
+    // 该函数负责显示Screen的内容
+    void do_display(std::ostream &os) const { os << contents; }
+    // 其他成员与之前的版本一致
+};
+
+/*
+	display 函数各自返回解引用this 所得的对象
+	在非常量版本中，this 指向一个非常量对象，因此display 返回一个普通的(非常量)引用
+	而const成员则返回一个常量引用
+*/
+Screen myScreen(5, 3);
+const Screen blank(5, 3);
+myScreen.set('#').display(cout);	// 调用非常量版本
+blank.display(cout);				// 调用常量版本
+```
+
+### 类类型
+
+每个类定义了唯一的类型
+
+```c++
+struct First
+{
+	int memi;
+    int getMem();
+};
+struct Second {
+    int memi;
+    int getMem();
+};
+First obj1;
+Second obj2 = obj1;			// 错误:obj1和obj2的类型不同
+```
+
+**类的声明**
+	仅声明类而暂时不定义它
+	在它声明之后定义之前是一个不完全类型(incomplete type)
+
+只能在非常有限的情景下使用:
+	可以定义指向这种类型的指针或引用
+	也可以声明(但是不能定义)以不完全类型作为参数或者返回类型的函数。
+
+因为只有当类全部完成后类才算被定义，所以**一个类的成员类型不能是该类自己**
+	然而，一旦一个类的名字出现后，它就被认为是声明过了(但尚未定义)，因此**类允许包含指向它自身类型的引用或指针**
+
+```c++
+class Link_screen{
+    Screen window;
+    Link_screen *next;
+    Link_screen *prev;
+};
+```
+
+### 友元再探
+
+类可以把其他的类定义成友元
+也可以把其他类(之前已定义过的) 的成员函数定义成友元
+
+友元函数能定义在类的内部，这样的函数是隐式内联的
+
+```c++
+class Screen {
+    // Window_mgr的成员可以访问Screen类的私有部分
+    friend class Window_mgr;
+    // Screen类的剩余部分
+};
+
+class Window_mgr {
+public:
+    // 窗口中每个屏幕的编号
+    using ScreenIndex = std::vector<Screen>::size_type;
+    // 按照编号将指定的Screen重置为空白
+    void clear(ScreenIndex);
+private:
+    std::vector<Screen> screens{Screen(24, 80, ' ')};
+};
+
+/*
+	如果clear不是Screen的友元，下面的代码将无法通过编译
+	因为此时clear将不能访问Screen的height、width和contents成员
+*/
+void Window_mgr::clear(ScreenIndex i)
+{
+    // s是一个Screen的引用，指向我们想清空的那个屏幕
+    Screen &s = screens[i];
+    // 将那个选定的Screen重置为空白
+    s.contents = string(s.height * s.width, ' ');
+}
+
+// 令成员函数作为友元
+class Screen {
+    // Windowmgr::clear必须在Screen类之前被声明
+    friend void Window_mgr::clear(ScreenIndex);
+    // Screen类的剩余部分
+};
+//函数重载和友元
+// 如果一个类想把一组重载函数声明成它的友元，它需要对这组函数中的每一个分别声明:
+// 重载的storeOn函数
+//  Screen类把接受ostream&的storeOn函数声明成它的友元，但是接受BitMap&作为参数的版本仍然不能访问screen
+extern std::ostream& storeOn(std::ostream &, Screen &);
+extern BitMap& storeOn(BitMap&, Screen &);
+class Screen {
+    // storeOn的ostream版本能访问Screen对象的私有部分
+    friend std::ostream& storeOn(std::ostream &, Screen &);
+    // ....
+};
+
+//友元声明和作用域
+// 即使仅仅是用声明友元的类的成员调用该友元函数，它也必须是被声明过的:
+struct X {
+    friend void f() { /* 友元函数可以定义在类的内部 */ }
+    X() { f(); }		// 错误:f还没有被声明
+    void g();
+    void h();
+};
+
+void X::g() { return f(); }		// 错误:f还没有被声明
+void f();						// 声明那个定义在X中的函数
+void X::h() { return f(); }		// 正确:现在f的声明在作用域中了
+```
+
+## 类的作用域
+
+在类的作用域之外，普通的数据和函数成员只能由对象、引用或者指针使用成员访问运算符来访问
+对于类类型成员则使用作用域运算符访问
+不论哪种情况，跟在运算符之后的名字都必须是对应类的成员
+
+```c++
+//作用域和定义在类外部的成员
+// 因为编译器在处理参数列表之前已经明确了我们当前正位于window mgr类的作用域中所以不必再专门说明 ScreenIndex 是 Window_mgr 类定义的。
+void Window_mgr::clear(ScreenIndex i)
+{
+    Screen &s = screens[i];
+    s.contents = string(s.height * s.width，' ');
+}
+
+class Window_mgr {
+public:
+    //向窗口添加一个Screen，返回它的编号
+    ScreenIndex addscreen(const Screen&);
+    //其他成员与之前的版本一致
+};
+// 首先处理返回类型，之后我们才进入Window_mgr的作用域
+Window_mgr::ScreenIndex Window_mgr::addScreen(const Screen &s)
+{
+	screens.push_back(s);
+    return screens.size() - 1;    
+}
+```
+
+### 名字查找与类的作用域
+
+首先，编译成员的声明
+直到类全部可见后才编译函数体
+
+```c++
+typedef double Money;
+string bal;
+class Account {
+public:
+    Money balance() { return bal; }	// return Money bal
+private:
+    Money bal;
+    // ...
+};
+
+//类型名要特殊处理
+typedef double Money;
+class Account{
+public:
+    Money balance() { return bal; }		// 使用外层作用域的Money
+private:
+    typedef double Money;				// 错误:不能重新定义Money
+    Money bal;
+    // ...
+};
+
+```
+
+## 构造函数再探
+
+### 构造函数初始值列表
+
+```c++
+string foo = "Hello World!";		// 定义并初始化
+string bar;							// 默认初始化成空string对象
+bar = "Hello World!";				// 为bar赋一个新值
+
+//构造函数的初始值有时必不可少
+class ConstRef {
+public:
+    ConstRef(int ii);
+private:
+    int i;
+    const int ci;
+    int &ri;
+};
+// 错误:ci和ri必须被初始化
+ConstRef::ConstRef(int ii){//赋值:
+	i = ii;			// 正确
+    ci = ii;		// 错误:不能给 const 赋值
+    ri = i;			// 错误:ri没被初始化
+}
+// 正确:显式地初始化引用和const成员
+ConstRef::ConstRef(int ii) : i(i), ci(i), ri(i) {}
+
+//成员初始化顺序
+// 成员的初始化顺序与它们在类定义中的出现顺序一致
+//  最好用构造函数的参数作为成员的初始值
+class X {
+	int i;
+    int j;
+public:    
+	// 未定义的:i在之前被初始化
+    X(int val) : j(val), i(j) { }    
+};
+
+//默认实参和构造函数
+class Sales_data {
+public:
+    // 定义默认构造函数，令其与只接受一个string 实参的构造函数功能相同
+    Sales data(std::string s = "") : bookNo(s) {}
+    // 其他构造函数与之前一致
+    Sales_data(std::string s, unsigned cnt, double rev) : 
+    		bookNo(s), units_sold(cnt), revenue(rev * cnt) {}
+    Sales_data(std::istream &is) { read(is, *this); } 
+    // 其他成员与之前的版本一致
+};
+```
+
+### 委托构造函数
+
+它把它自己的一些(或者全部)职责委托给了其他构造函数
+
+```c++
+class Sales_data {
+public:
+	// 非委托构造函数使用对应的实参初始化成员
+    Sales_data(std::string s, unsigned cnt, double price) : 
+    	bookNo(s), units_sold(cnt), revenue(cnt * price) { }
+    // 其余构造函数全都委托给另一个构造函数
+    Sales_data() : Sales_data("", 0, 0) { }
+    Sales_data(std::string s) : Sales_data(s, 0, 0) {}
+    Sales_data(std::istream &is): Sales_data() { read(is, *this); }
+    // 其他成员与之前的版本一致
+};
+```
+
+### 默认构造函数的作用
+
+**使用默认构造函数**
+
+```c++
+Sales_data obj();				// 正确:定义了一个函数而非对象
+if (obj.isbn() == Primer_5th_ed.isbn()) //错误:ob是一个函数
+    return;
+
+// 定义一个使用默认构造函数进行初始化的对象
+Sales_data obj;
+```
+
+### 隐式的类类型转换
+
+如果构造函数**只接受一个实参**，则它实际上定义了转换为此类类型的隐式转换机制，有时我们把这种构造函数称作转换构造函数
+只允许一步类类型转换
+
+```c++
+string null_book = "9-999-99999-9";
+// 构造一个临时的Sales_data对象
+// 该对象的units_sold 和 revenue等于0，bookNo等于null_book
+item.combine(null_book);
+
+// 错误:需要用户定义的两种转换:
+// (1)把“g-999-99999-9”转换成string
+// (2)再把这个(临时的)string 转换成Sales_data
+item.combine("9-999-99999-9");
+
+//正确:显式地转换成string，隐式地转换成Sales_data
+item.combine(string("9-999-99999-9"));
+//正确:隐式地转换成string，显式地转换成Sales_data
+item.combine(Sales_data("9-999-99999-9"));
+
+//抑制构造函数的隐式转换
+// 声明为 explicit
+
+class Sales_data {
+public:
+    Sales_data() = default;
+    Sales_data(const std::string &s, unsigned n, double p) : 
+    	bookNo(s), units_sold(n), revenue(p * n) { }
+    explicit Sales_data(const std::strinq &s) : bookNo(s) { }
+    explicit Sales_data(std::istream&);
+    //其他成员与之前的版本一致
+};
+//  explicit构造函数只能用于直接初始化
+Sales_data item1(null_book);	//正确:直接初始化
+// 错误:不能将explicit构造函数用于拷贝形式的初始化过程
+Sales_data item2 = null_book;
+
+//正确:实参是一个显式构造的Salesdata对象
+item.combine(Sales_data(null_book));
+//正确:static_cast可以使用explicit的构造函数
+item.combine(static_cast<Sales_data>(cin));
+```
+
+### 聚合类
+
+聚合类(aggregate class)使得用户可以直接访问其成员，并且具有特殊的初始化语法形式。
+
+- 所有成员都是public的
+- 没有定义任何构造函数
+- 没有类内初始值
+- 没有基类，也没有virtual函数
+
+```c++
+struct Data{
+    int ival;
+    string s;  
+};
+// 可以提供一个花括号括起来的成员初始值列表，并用它初始化聚合类的数据成员
+// val1.ival = 0; val1.s = string("Anna")
+Data val1 = { 0, "Anna" };
+//初始值的顺序必须与声明的顺序一致
+// 错误:不能使用"Anna"初始化ival，也不能使用1024初始化s
+Data val2 = { "Anna", 1024 };
+```
+
+### 字面值常量类
+
+数据成员都是字面值类型的聚合类是字面值常量类
+
+如果不是聚合类，满足下面的要求也是字面值常量类：
+
+- 数据成员都必须是字面值类型
+- 类必须至少含有一个 constexpr 构造函数
+- 如果一个数据成员含有类内初始值，则内置类型成员的初始值必须是一条常量表达式
+  或者如果成员属于某种类类型，则初始值必须使用成员自己的constexpr构造函数
+- 类必须使用析构函数的默认定义，该成员负责销毁类的对象
+
+```c++
+class Debug {
+public:
+    // constexpr构造函数必须初始化所有数据成员，初始值或者使用constexpr 构造函数， 或者是一条常量表达式。
+    constexpr Debug(bool b = true) : hw(b), io(b), other(b) { }
+    constexpr Debug(bool h, bool i, bool o):
+		hw(h), io(i), other(o) { }
+    constexpr bool any() { return hw || io || other; }
+    void set_io(bool b){ io = b; }
+    void set_hw(bool b){ hw = b; }
+    void set_other(bool b){ hw = b;}
+private:
+    bool hw;					// 硬件错误，而非TO错误
+    bool io;					// IO错误
+    bool other;					// 其他错误
+};
+
+// constexpr构造函数用于生成constexpr对象以及constexpr函数的参数或返回类型:
+constexpr Debug io_sub(false, true, false);				// 调试 IO
+if (io_sub.any())										// 等价于if(true)
+    cerr << "print appropriate error messages" << endl;
+constexpr Debug prod(false);							// 无调试
+if (prod.any())											// 等价于if(false)
+	cerr << "print an error message" << endl;
+```
+
+## 类的静态成员
+
+```c++
+//声明静态成员
+class Account{
+public:
+    // 成员函数不用通过作用域运算符就能直接使用静态成员
+    void calculate() { amount += amount * interestRate; }
+    static double rate() { return interestRate; }
+    static void rate(double);
+private:
+    std::string owner;
+    double amount;
+    // 静态成员的类内初始化，要求静态成员必须是字面值常量类型 constexpr
+    static constexpr int period = 30;
+    double daily_tbl[period];	// period是常量表达式
+    static double interestRate;
+    static double initRate();
+};
+
+//使用类的静态成员
+double r;
+r = Account::rate();			// 使用作用域运算符访问静态成员
+
+Account ac1;
+Account *ac2 = &ac1;
+//调用静态成员函数rate的等价形式
+r = ac1.rate();				// 通过Account的对象或引用
+r = ac2->rate();			// 通过指向Account对象的指针
+
+// 当在类的外部定义静态成员时，不能重复static关键字
+void Account::rate(double newRate)
+{
+    interestRate = newRate;
+}
+// 定义并初始化一个静态成员
+double Account::interestRate = initRate();
+
+// 如果在类的内部提供了一个初始值，则成员的定义不能再指定一个初始值了
+//  一个不带初始值的静态成员的定义
+constexpr int Account::period;	// 初始值在类的定义内提供
+```
+
+**静态成员能用于某些场景，而普通成员不能**
+
+```c++
+// 静态数据成员可以是不完全类型
+//  静态数据成员的类型可以就是它所属的类类型
+class Bar
+{
+public:
+    // ...
+private:
+    static Bar mem1;		// 正确:静态成员可以是不完全类型
+    Bar *mem2;				// 正确:指针成员可以是不完全类型
+    Bar mem3;				// 错误:数据成员必须是完全类型
+};
+
+// 可以使用静态成员作为默认实参
+class Screen {
+public:
+	// bkground表示一个在类中稍后定义的静态成员
+    Screen& clear(char = bkground);
+private:
+    static const char bkground;
+};
+```
+
+
+
+# IO库
+
+## IO类
+
+`iostream `定义了用于读写流的基本类型
+`fstream`定义了读写命名文件的类型
+`sstream`定义了读写内存string对象的类型
+
+| 头文件     | 类型                                                         |
+| ---------- | ------------------------------------------------------------ |
+| `iostream` | istream，wistream从流读取数据<br />ostream，wostream向流写入数据<br />iostream，wiostream读写流 |
+| `fstream`  | ifstream，wifstream从文件读取数据<br />ofstream，wofstream向文件写入数据<br />fstream，wfstream读写文件 |
+| `sstream`  | istringstream，wistringstream从string读取数据<br />ostringstream，wostringstream向string写入数据<br />stringstream，wstrinqstream读写string |
+
+**IO类型间的关系**
+继承机制
+利用模板
+
+### IO对象无拷贝或赋值
+
+```c++
+ofstream out1, out2;
+out1 = out2;						// 错误:不能对流对象赋值
+ofstream print(ofstream);			// 错误:不能初始化ofstream参数
+out2 = print(out2);					// 错误:不能拷贝流对象
+
+// 进行IO操作的函数通常以引用方式传递和返回流
+// 读写一个IO对象会改变其状态，因此传递和返回的引用不能是 const 的
+```
+
+### 条件状态
+
+| IO库条件状态      | 说明                                                         |
+| ----------------- | ------------------------------------------------------------ |
+| strm::iostate     | strm是一种IO类型。是一种机器相关的类型，提供了表达条件状态的完整功能 |
+| strm::badbit      | strm::badbit用来指出流已崩溃                                 |
+| strm::failbit     | strm::failbit用来指出一个IO操作失败了                        |
+| strm::eofbit      | strm::eofbit用来指出流到达了文件结束                         |
+| strm::goodbit     | strm::goodbit用来指出流未处于错误状态。此值保证为零          |
+| s.eof()           | 若流s的eofbit置位，则返回true                                |
+| s.fail()          | 若流s的failbit或badbit置位，则返回true                       |
+| s.bad()           | 若流s的badbit置位，则返回true                                |
+| s.good()          | 若流s处于有效状态，则返回true                                |
+| s.clear()         | 将流s中所有条件状态位复位，将流的状态设置为有效。返回void    |
+| s.clear(flags)    | 根据给定的flags标志位，将流s中对应条件状态位复位。flags的类型为strm::iostate。返回void |
+| s.setstate(flags) | 根据给定的flags标志位，将流s中对应条件状态位置位。flags的类型为strm::iostate。返回void |
+| s.rdstate()       | 返回流s的当前条件状态，返回值类型为strm::iostate             |
+
+一个流一旦发生错误，其上后续的IO操作都会失败。只有当一个流处于无错状态时，我们才可以从它读取数据，向它写入数据。
+
+**查询流的状态**
+	badbit 表示系统级错误，如不可恢复的读写错误
+		通常情况下，一旦 badbit 被置位，流就无法再使用了
+	在发生可恢复错误后，failbit 被置位
+		如期望读取数值却读出一个字符等错误。这种问题通常是可以修正的，流还可以继续使用
+	如果到达文件结束位置，eofbit 和 failbit 都会被置位
+	goodbit 的值为0，表示流未发生错误
+	如果badbit、failbit和eofbit 任一个被置位，则检测流状态的条件会失败。
+
+**管理流的状态**
+
+```c++
+// 记住cin的当前状态
+auto old_state = cin.rdstate();				// 记住cin的当前状态
+cin.clear();								// 使cin有效
+process_input(cin);							// 使用cin
+cin.setstate(old_state);					// 将cin置为原有状态
+
+// 复位 failbit和badbit，保持其他标志位不变
+cin.clear(cin.rdstate() & ~ cin.failbit & ~cin.badbit);
+```
+
+### 管理输出缓冲
+
+每个输出流都管理一个缓冲区，用来保存程序读写的数据
+由于设备的写操作可能很耗时，允许操作系统将多个输出操作组合为单一的设备写操作可以带来很大的性能提升
+
+导致缓冲刷新(即，数据真正写到输出设备或文件)的原因：
+
+- 程序正常结束，作为main函数的return 操作的一部分，缓冲刷新被执行
+- 缓冲区满时，需要刷新缓冲，而后新的数据才能继续写入缓冲区
+- 可以使用操纵符如endl (参见1.2节，第6页)来显式刷新缓冲区
+- 在每个输出操作之后，可以用操纵符unitbuf设置流的内部状态，来清空缓冲区。
+  默认情况下，对cerr是设置unitbuf的，因此写到cerr的内容都是立即刷新的。
+- 一个输出流可能被关联到另一个流
+  在这种情况下，当读写被关联的流时，关联到的流的缓冲区会被刷新
+  例如，默认情况下，cin和cerr 都关联到cout。因此，读cin或写cerr都会导致cout 的缓冲区被刷新。
+
+**刷新输出缓冲区**
+
+```c++
+cout << "hi!" << endl;			// 输出hi和一个换行，然后刷新缓冲区
+cout << "hi!" << flush;			// 输出hi，然后刷新缓冲区，不附加任何额外字符
+cout << "hi!" << ends;			// 输出hi和一个空字符，然后刷新缓冲区
+
+//unitbuf操纵符
+cout << unitbuf;			// 所有输出操作后都会立即刷新缓冲区
+// 任何输出都立即刷新，无缓冲
+cout << nounitbuf;			// 回到正常的缓冲方式
+```
+
+**关联输入和输出流**
+当一个输入流被关联到一个输出流时，任何试图从输入流读取数据的操作都会先刷新关联的输出流。
+
+```c++
+cin >> ival;		// 导致cout的缓冲区被刷新
+```
+
+tie有两个重载的版本:
+	一个版本不带参数，返回指向输出流的指针。
+		如果本对象当前关联到一个输出流，则返回的就是指向这个流的指针
+		如果对象未关联到流，则返回空指针
+	第二个版本接受一个指向ostream 的指针，将自己关联到此ostream
+
+```c++
+cin.tie(&cout);		//仅仅是用来展示:标准库将cin和cout关联在一起
+// old_tie指向当前关联到cin的流(如果有的话)
+ostream *old_tie = cin.tie(nullptr);// cin不再与其他流关联
+// 将cin与cerr关联;这不是一个好主意，因为cin应该关联到cout
+cin.tie(&cerr);				// 读取cin会刷新cerr而不是cout
+cin.tie(old_tie);			// 重建cin和cout间的正常关联
+```
+
+## 文件输入输出
+
+头文件fstream定义了三个类型来支持文件IO:
+	fstream从一个给定文件读取数据
+	ofstream向一个给定文件写入数据
+	fstream可以读写给定文件
+
+| fstream特有的操作       | 说明                                                         |
+| ----------------------- | ------------------------------------------------------------ |
+| fstream fstrm;          | 创建一个未绑定的文件流。fstream是头文件fstream中定义的一个类型 |
+| fstream fstrm(s);       | 创建一个fstream，并打开名为s的文件。s可以是string类型或者是一个指向C风格字符串的指针<br />这些构造函数都是explicit的<br />默认的文件模式mode依赖于fstream的类型 |
+| fstream fstrm(s, mode); | 与前一个构造函数类似，但按指定mode打开文件                   |
+| fstrm.open(s)           | 打开名为s的文件，并将文件与 fstrm 绑定<br />s可以是一个string或一个指向C风格字符串的指针<br />默认的文件mode依赖于fstream的类型。返回void |
+| fstrm.close()           | 关闭与fstrm绑定的文件。返回void                              |
+| fstrm.is_open()         | 返回一个bool值，指出与fstrm关联的文件是否成功打开且尚未关闭  |
+
+### 使用文件流对象
+
+```c++
+ifstream in(ifile);	// 构造一个ifstream并打开给定文件
+ofstream out;		// 输出文件流未关联到任何文件
+
+//用fstream代替iostream&
+ifstream input(argv[1]);				// 打开销售记录文件
+ofstream output(argv[2]);				// 打开输出文件
+Sales_data total;						// 保存销售总额的变量
+if (read(input, total)) {				// 读取第一条销售记录
+    Sales_data trans;					// 保存下一条销售记录的变量
+    while (read(input, trans)) {		// 读取剩余记录
+        if (total.isbn() == trans.isbn())	// 检查isbn
+            total.combine(trans);			// 更新销售总额
+        else {
+            print(outputrtotal) << endl;	// 打印结果
+            total = trans;					// 处理下一本书
+        }
+    }
+    print(output, total) << endl;			// 打印最后一本书的销售额
+} else										// 文件中无输入数据
+    cerr << "No data?!" << endl;
+
+//成员函数open和close
+ifstream in(ifile);		// 构筑一个ifstream并打开给定文件
+ofstream out;			// 输出文件流未与任何文件相关联
+out.open(ifile + ".copy");	// 打开指定文件
+// 进行 open 是否成功的检测通常是一个好习惯:
+if (out)		//检查open是否成功
+	return;			//open成功，我们可以使用文件了
+
+// 一旦一个文件流已经打开，它就保持与对应文件的关联。
+// 为了将文件流关联到另外一个文件，必须首先关闭已经关联的文件。
+// 一旦文件成功关闭，我们可以打开新的文件:
+in.close();		//关闭文件
+in.open(ifile + "2");	//打开另一个文件
+
+//自动构造和析构
+// 对每个传递给程序的文件执行循环操作
+// 当一个fstream对象被销毁时，close会自动被调用
+for (auto p = argv + 1; p != argv + argc; ++p) {
+    ifstream input(*p);			// 创建输出流并打开文件
+     if (input){				// 如果文件打开成功，“处理”此文件
+         process(input);
+     } else
+         cerr << "couldn't open: " + string(*p);
+}	// 每个循环步input都会离开作用域，因此会被销毁
+```
+
+### 文件模式
+
+| 文件模式 |                              |
+| -------- | ---------------------------- |
+| in       | 以读方式打开                 |
+| out      | 以写方式打开                 |
+| app      | 每次写操作前均定位到文件末尾 |
+| ate      | 打开文件后立即定位到文件末尾 |
+| trunc    | 截断文件                     |
+| binary   | 以二进制方式进行IO           |
+
+指定文件模式有如下限制:
+
+- 只可以对ofstream或fstream对象设定out模式
+- 只可以对ifstream或fstream对象设定in模式
+- 只有当out也被设定时才可设定trunc模式
+- 只要 trunc 没被设定，就可以设定 app 模式
+  在app模式下，即使没有显式指定out 模式，文件也总是以输出方式被打开
+- 默认情况下，即使我们没有指定 trunc，以out 模式打开的文件也会被截断
+  为了保留以out 模式打开的文件的内容，我们必须同时指定 app 模式，这样只会将数据追加写到文件末尾
+  或者同时指定 in模式，即打开文件同时进行读写操作
+- ate和binary模式可用于任何类型的文件流对象，且可以与其他任何文件模式组合使用
+
+**以out模式打开文件会丢弃已有数据**
+
+```c++
+// 在这几条语句中，filel都被截断
+ofstream out("file1");		// 隐含以输出模式打开文件并截断文件
+ofstream out2("file1", ofstream::out);	// 隐含地截断文件
+ofstream out3("file1", ofstream::out | ofstream::trunc);
+// 为了保留文件内容，我们必须显式指定app模式
+ofstream app("file2", ofstream::app);	// 隐含为输出模式
+ofstream app2("file2", ofstream::out | ofstream::app);
+
+//每次调用open时都会确定文件模式
+ofstream out;			//未指定文件打开模式
+out.open("scratchpad");	//模式隐含设置为输出和截断
+out.close();			//关闭out，以便我们将其用于其他文件
+out.open("precious", ofstream::app);//模式为输出和追加
+out.close();
+```
+
+## string流
+
+istringstream从string 读取数据
+ostringstream向string 写入数据
+stringstream既可从string读数据也可向string写数据
+
+| stringstream特有的操作 | 说明                                                         |
+| ---------------------- | ------------------------------------------------------------ |
+| sstream strm;          | strm是一个未绑定的stringstream对象。sstream是头文件sstream中定义的一个类型 |
+| sstream strm(s);       | strm是一个sstream对象，保存strings的一个拷贝。此构造函数是explicit的 |
+| strm.str()             | 返回strm所保存的strinq的拷贝                                 |
+| strm.str(s)            | 将strings拷贝到strm中。返回void                              |
+
+### 使用istringstream
+
+```c++
+// 待录入数据
+// 名称 家庭电话 工作电话 移动电话
+// morgan 2015552368 8625550123
+// drew 9735550130
+// lee 6095550132 2015550175 8005550000
+
+struct PersonInfo {
+    string name;
+    vector<string> phones;
+};
+
+string line, word;	// 分别保存来自输入的一行和单词
+vector<PersonInfo> people;	// 保存来自输入的所有记录
+// 逐行从输入读取数据，直至cin 遇到文件尾(或其他错误)
+while (getline(cin, line)) {
+    PersonInfo info;	// 创建一个保存此记录数据的对象
+    istringstream record(line);	// 将记录绑定到刚读入的行
+    record >> info.name;		// 读取名字
+    while (record >> word)		// 读取电话号码
+        info.phones.push_back(word);  // 保持它们
+    people.push_back(info);		// 将此记录追加到people末尾
+}
+```
+
+### 使用ostringstream
+
+```c++
+for (const auto &entry : people){		// 对people中每一项
+    ostringstream formatted, badNums;	// 每个循环步创建的对象
+    for (const auto& nums : entry.phones) {// 对每个数
+		if (!valid(nums)){
+            badNums << " " << nums; //将数的字符串形式存入badNums
+        } else {
+            // 将格式化的字符串“写入”formatted
+            formatted << " " << format(nums);
+        }
+    }
+    if (badNums.str().empty())			// 没有错误的数
+        os << entry.name << " "			// 打印名字
+        	<< formatted.str() << endl;	// 和格式化的数
+    else								// 否则，打印名字和错误的数
+        cerr << "input error:" << entry.name 
+        		<< " invalid number(s) " << badNums.str() << endl;
+}
+```
+
+
+
+# 顺序容器
+
+顺序容器(sequential container)为程序员提供了控制元素存储和访问顺序的能力
+这种顺序不依赖于元素的值，而是与元素加入容器时的位置相对应
+
+## 顺序容器概述
+
+| 顺序容器类型 | 说明                                                         |
+| ------------ | ------------------------------------------------------------ |
+| vector       | 可变大小数组。支持快速随机访问。在尾部之外的位置插入或删除元素可能很慢 |
+| deque        | 双端队列。支持快速随机访问。在头尾位置插入/删除速度很快      |
+| list         | 双向链表。只支持双向顺序访问。在list中任何位置进行插入/删除操作速度都很快 |
+| forward_list | 单向链表。只支持单向顺序访问。在链表任何位置进行插入/删除操作速度都很快 |
+| array        | 固定大小数组。支持快速随机访问。不能添加或删除元素           |
+| string       | 与 vector 相似的容器，但专门用于保存字符。随机访问快。在尾部插入/删除速度快 |
+
+选择容器的基本原则:
+
+- 除非你有很好的理由选择其他容器，否则应使用 vector。
+- 如果你的程序有很多小的元素，且空间的额外开销很重要，则不要使用 list 或forward_list
+- 如果程序要求随机访问元素，应使用vector或deque
+- 如果程序要求在容器的中间插入或删除元素，应使用list或forward_list
+- 如果程序需要在头尾位置插入或删除元素，但不会在中间位置进行插入或删除操作，则使用 deque
+- 如果程序只有在读取输入时才需要在容器中间位置插入元素，随后需要随机访问元素，则
+  - 首先，确定是否真的需要在容器中间位置添加元素。当处理输入数据时，通常可以很容易地向 vector 追加数据，然后再调用标准库的 sort 函数来重排容器中的元素，从而避免在中间位置添加元素。
+  - 如果必须在中间位置插入元素，考虑在输入阶段使用 list，一旦输入完成，将list中的内容拷贝到一个 vector中。
+
+
+
+## 容器库概览
+
+某些操作是所有容器类型都提供的
+
+| 类型别名        | 说明                                                   |
+| --------------- | ------------------------------------------------------ |
+| iterator        | 此容器类型的迭代器类型                                 |
+| const_iterator  | 可以读取元素，但不能修改元素的迭代器类型               |
+| size_type       | 无符号整数类型，足够保存此种容器类型最大可能容器的大小 |
+| difference_type | 带符号整数类型，足够保存两个迭代器之间的距离           |
+| value_type      | 元素类型                                               |
+| reference       | 元素的左值类型; 与value_type&含义相同                  |
+| const_reference | 元素的const左值类型(即，const value_type&)             |
+
+| 构造函数          | 说明                                                      |
+| ----------------- | --------------------------------------------------------- |
+| C c;              | 默认构造函数，构造空容器                                  |
+| C c1(c2);         | 构造c2的拷贝c1                                            |
+| C c(b, e);        | 构造c，将迭代器b和e指定的范围内的元素拷贝到c(array不支持) |
+| C c{a, b, c ...}; | 列表初始化c                                               |
+
+| 赋值与swap           | 说明                                        |
+| -------------------- | ------------------------------------------- |
+| c1 = c2              | 将c1中的元素替换为c2中元素                  |
+| c1 = { a, b, c ... } | 将c1中的元素替换为列表中元素(不适用于array) |
+| a.swap(b)            | 交换a和b的元素                              |
+| swap(a, b)           | 与a.swap(b)等价                             |
+
+| 大小         | 说明                                     |
+| ------------ | ---------------------------------------- |
+| c.size()     | c中元素的数目(不支持forward list)        |
+| c.max_size() | c可保存的最大元素数目                    |
+| c.empty()    | 若c中存储了元素，返回false，否则返回true |
+
+| 添加/删除元素（不适用于array） | 说明                        |
+| ------------------------------ | --------------------------- |
+| c.insert(args)                 | 将args中的元素拷贝进c       |
+| c.emplace(inits)               | 使用inits构造c中的一个元素  |
+| c.erase(args)                  | 删除args指定的元素          |
+| c.clear()                      | 删除c中的所有元素，返回void |
+
+| 关系运算符   | 说明                           |
+| ------------ | ------------------------------ |
+| ==, !=       | 所有容器都支持相等(不等)运算符 |
+| <, <=, >, >= | 关系运算符(无序关联容器不支持) |
+
+| 获取迭代器           | 说明                                      |
+| -------------------- | ----------------------------------------- |
+| c.begin(), c.end()   | 返回指向c的首元素和尾元素之后位置的迭代器 |
+| c.cbegin(), c.cend() | 返回const_iterator                        |
+
+| 反向容器的额外成员（不支持forward_list） | 说明                                      |
+| ---------------------------------------- | ----------------------------------------- |
+| reverse_iterator                         | 按逆序寻址元素的迭代器                    |
+| const_reverse_iterator                   | 不能修改元素的逆序迭代器                  |
+| c.rbegin(), c.rend()                     | 返回指向c的尾元素和首元素之前位置的迭代器 |
+| c.crbegin(), c.crend()                   | 返回const_reverse_iterator                |
+
+### 迭代器
+
+**迭代器范围**
+两个迭代器通常被称为begin和end，或者是first 和last(可能有些误导)，它们标记了容器中元素的一个范围。
+这种元素范围被称为左闭合区间 (left-inclusive interval)，其标准数学描述为 [begin，end)
+
+**使用左闭合范围蕴含的编程假定**
+
+- 如果begin与end相等，则范围为空
+- 如果begin与end 不等，则范围至少包含一个元素，且 begin 指向该范围中的第一个元素
+- 我们可以对begin递增若干次，使得begin == end
+
+```c++
+while (begin != end) {   
+    *begin = val;			// 正确:范围非空，因此begin指向一个元素
+    ++begin;				// 移动迭代器，获取下一个元素
+} 
+```
+
+### 容器类型成员
+
+```c++
+//显式使用类名
+// iter是通过list<string>定义的一个迭代器类型
+list<string>::iterator iter;
+// count是通过vector<int>定义的一个difference_type类型
+vector<int>::difference_type count;
+```
+
+### begin和end成员
+
+```c++
+list<string> a = {"Milton", "Shakespeare", "Austen"};
+auto it1 = a.begin();	// list<strinq>::iterator
+auto it2 = a.rbegin();	// list<string>;:reverse_iterator
+auto it3 = a.cbegin();	// list<string>::const_iterator
+auto it4 = a.crbegin();	// list<string>::const_reverse_@iterator
+
+//显式指定类型
+list<string>::iterator it5 = a.begin();
+list<string>::const_iterator it6 = a.begin(); 
+// 是iterator还是 const_iterator依赖于a的类型
+auto it7 = a.begin();	// 仅当a是const时，it7是const_iterator
+auto it8 = a.cbeqin();	// it8是const_iterator
+```
+
+### 容器定义和初始化
+
+|  容器定义和初始化                             | 说明                                                         |
+| --------------------------------------- | ------------------------------------------------------------ |
+| C c;                                    | 默认构造函数。如果c是一个array，则c中元素按默认方式初始化；否则c为空 |
+| C c1(c2);<br />C c1 = c2; | c1初始化为c2的拷贝。c1和c2必须是相同类型(即，它们必须是相同的容器类型，且保存的是相同的元素类型；对于array类型，两者还必须具有相同大小) |
+| C c{a, b, c...}<br />C c = {a, b, c...} | c初始化为初始化列表中元素的拷贝。列表中元素的类型必须与c的元素类型相容。对于array类型，列表中元素数目必须等于或小于array的大小，任何遗漏的元素都进行值初始化(参见3.3.1节，第88页) |
+| C c(b,e)                                | c初始化为迭代器b和e指定范围中的元素的拷贝。范围中元素的类型必须与c的元素类型相容(array不适用) |
+|  | 只有顺序容器 (不包括array)的构造函数才能接受大小参数 |
+| C seq(n) | seq 包含 n个元素，这些元素进行了值初始化;此构造函数是explicit的。(string 不适用) |
+| C seq(n, t) | seq包含n个初始化为值t的元素 |
+
+**将一个容器初始化为另一个容器的拷贝**
+可以直接拷贝整个容器，或者(array除外)拷贝由一个迭代器对指定的元素范围
+
+```c++
+// 每个容器有三个元素，用给定的初始化器进行初始化
+list<string> authors = {"Milton", "Shakespeare", "Austen"};
+vector<const char*> articles = {"a", "an", "the"};
+list<string> list2(authors);		// 正确:类型匹配
+deque<string> authList(authors);	// 错误:容器类型不匹配
+vector<string> words(articles);		// 错误:容器类型必须匹配
+// 正确:可以将const char*元素转换为string
+forward_list<string> words(articles.beqin(), articles.end());
+
+// 拷贝元素，直到(但不包括)it 指向的元素
+deque<string> authList(authors.begin(), it);
+
+//列表初始化
+// 每个容器有三个元素，用给定的初始化器进行初始化
+list<string> authors = {"Milton", "Shakespearer", "Austen"};
+vector<const char*> articles = {"a", "an", "the"};
+
+//与顺序容器大小相关的构造函数
+vector<int> ivec(10, -1);			// 10个int元素，每个都初始化为-1
+list<string> svec(10, "hi!");		// 10个strings;每个都初始化为"hi!"
+forward_list<int> ivec(10);			// 10个元素，每个都初始化为 0
+deque<string> svec(10);				// 10个元素，每个都是空string
+
+//标准库array具有固定的大小
+// 标准库 array 的大小也是类型的一部分。当定义一个array 时，除了指定元素类型，还要指定容器大小:
+array<int, 42>			//类型为:保存42个int的数组
+array<string, 10>		//类型为:保存10个string的数组
+
+array<int, 10>::size_type i;		// 数组类型包括元素类型和大小
+array<int>::size_type j;			// 错误:array<int>不是一个类型
+
+array<int, 10> ial;			//10个默认初始化的int
+array<int, 10> ia2 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};	//列表初始化
+array<int, 10> ia3 = {42}; 			//a3[0]为42，剩余元素为0
+
+int digs[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+int cpy[10] = digs;					// 错误:内置数组不支持拷贝或赋值
+array<int, 10> digits = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+array<int, 10> copy = digits;		// 正确:只要数组类型匹配即合法
+```
+
+### 赋值和swap
+
+```c++
+// 将c1的内容替换为c2中元素的拷贝
+c1 = c2;
+cl = {a, b, c};		//赋值后，c1大小为3
+
+array<int, 10> a1 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+array<int, 10> a2 = {0};		// 所有元素值均为0
+a1 = a2; 						// 替换a1中的元素
+a2 = {0};						// 错误:不能将一个花括号列表赋予数组
+```
+
+| 容器赋值运算                  | 说明                                                         |
+| ----------------------------- | ------------------------------------------------------------ |
+| c1 = c2                       | 将c1中的元素替换为c2中元素的拷贝。c1和c2必须具有相同的类型   |
+| c = {a, b, c...}              | 将c1中元素替换为初始化列表中元素的拷贝(array不适用)          |
+| swap{c1, c2}<br />c1.swap(c2) | 交换c1和c2中的元素。c1和c2必须具有相同的类型。swap通常比从c2向c1拷贝元素快得多 |
+|                               | assign 操作不适用于关联容器和array                           |
+| seq.assign(b, e)              | 将 seq中的元素替换为迭代器b和e所表示的范围中的元素。迭代器b和e不能指向seq中的元素 |
+| seq.assign(il)                | 将seq中的元素替换为初始化列表il中的元素                      |
+| seq.assign(n, t)              | 将seq中的元素替换为n个值为t的元素                            |
+
+
+
+```c++
+//使用assign（仅顺序容器）
+list<string> names;
+vector<const char*> oldstyle;
+names = oldstyle;			// 错误:容器类型不匹配
+// 正确:可以将const char*转换为string
+names.assign(oldstyle.cbegin(), oldstyle.cend());
+
+// 等价于slist1.clear();后跟slistl.insert(slist1.begin(), 10, "Hiya!");
+list<string> slist1(1);		// 1个元素，为空string
+slist1.assign(10, "Hiya!"); // 10个元素，每个都是“Hiya!”
+
+//使用swap
+// swap 只是交换了两个容器的内部数据结构
+//  但是，swap两个array 会真正交换它们的元素
+vector<string> svec1(10);//10个元素的vector
+vector<string> svec2(24);//24个元素的vector
+swap(svec1, svec2);
+```
+
+### 容器大小操作
+
+成员函数size返回容器中元素的数目
+empty当size为0时返回布尔值 true，否则返回 false
+max_size返回一个大于或等于该类型容器所能容纳的最大元素数的值
+
+forward_list支持max_size和empty，但不支持size
+
+### 关系运算符
+
+- 如果两个容器具有相同大小且所有元素都两两对应相等，则这两个容器相等:否则两个容器不等。
+- 如果两个容器大小不同，但较小容器中每个元素都等于较大容器中的对应元素，则较小容器小于较大容器
+- 如果两个容器都不是另一个容器的前缀子序列，则它们的比较结果取决于第一个不相等的元素的比较结果。
+
+```c++
+vector<int> v1 = {1, 3, 5, 7, 9, 12};
+vector<int> v2 = {1, 3, 9};
+vector<int> v3 = {1, 3, 5, 7};
+vector<int> v4 = {1, 3, 5, 7, 9, 12};
+v1 < v2;		// true: v1和v2在元素[2]处不同: v1[2]小于等于v2[2]
+v1 < v3;		// false; 所有元素都相等，但v3中元素数目更少
+v1 == v4;		// true;每个元素都相等，且v1和v4大小相同
+v1 == v2;		// false;v2元素数目比v1少
+
+//容器的关系运算符使用元素的关系运算符完成比较
+// 容器的相等运算符实际上是使用元素的==运算符实现比较的
+// 其他关系运算符是使用元素的<运算符
+// 如果元素类型不支持所需运算符，那么保存这种元素的容器就不能使用相应的关系运算。
+```
+
+## 顺序容器操作
+
+### 向顺序容器添加元素
+
+这些操作会改变容器的大小;array不支持这些操作
+forward_list有自己专有版本的insert和emplace
+forward_list不支持push_back和emplace_back
+vector和string不支持push_front和emplace_front
+
+| 向顺序容器添加元素的操作                   |                                                              |
+| ------------------------------------------ | ------------------------------------------------------------ |
+| c.push_back(t)<br />c.emplace_back(args)   | 在c的尾部创建一个值为t或由args创建的元素。返回void           |
+| c.push_front(t)<br />c.emplace_front(args) | 在c的头部创建一个值为t或由args创建的元素。返回void           |
+| c.insert(p, t)<br />c.emplace(p, args)     | 在迭代器p指向的元素之前创建一个值为t或由args创建的元素。返回指向新添加的元素的迭代器 |
+| c.insert(p, n, t)                          | 在迭代器p指向的元素之前插入n个值为的元素。返回指向新添加的第一个元素的迭代器;若n为0，则返回p |
+| c.insert(p, b, e)                          | 将迭代器b和e指定的范围内的元素插入到迭代器p指向的元素之前。b和e不能指向c中的元素。返回指向新添加的第一个元素的迭代器;若范围为空，则返回p |
+| c.insert(p, il)                            | il是一个花括号包围的元素值列表。将这些给定值插入到迭代器p指向的元素之前。返回指向新添加的第一个元素的迭代器若列表为空，则返回p |
+
+emplace_front、emplace和emplace_back，这些操作**构造**而不是拷贝元素.
+
+### 访问元素
+
+包括array在内的每个顺序容器都有一个 front 成员函数
+除forward_list之外的所有顺序容器都有一个 back 成员函数
+这两个操作分别返回首元素和尾元素的引用:
+
+```c++
+//在解引用一个迭代器或调用 front或back之前检查是否有元素
+if(!c.empty()) {
+    // val和val2是c中第一个元素值的拷贝
+    auto val = *c.begin(), val2 = c.front();
+    // va13和val4是c中最后一个元素值的拷贝
+    auto last = c.end();
+    auto val3 = *(--last);	// 不能递减forward_list选代器
+    auto va14 = c.back(); 	// forward_list不支持
+}
+```
+
+at和下标操作只适用于string、vector、deque和array
+back不适用于forward_list
+
+| 在顺序容器中访问元素的操作 |                                                              |
+| -------------------------- | ------------------------------------------------------------ |
+| c.back()                   | 返回c中尾元素的引用。若c为空，函数行为未定义                 |
+| c.front()                  | 返回c中首元素的引用。若c为空，函数行为未定义                 |
+| c[n]                       | 返回c中下标为n的元素的引用,n是一个无符号整数。若n >= csize()则函数行为未定义 |
+| c.at(n)                    | 返回下标为n的元素的引用。如果下标越界，则抛出 out_of_range异常 |
+
+### 删除元素
+
+forward_list有特殊版本的erase
+forward_list不支持pop_back; vector和string不支持pop_front
+
+|               | 顺序容器的删除操作                                           |
+| ------------- | ------------------------------------------------------------ |
+| c.pop_back()  | 删除c中尾元素。若c为空，则函数行为未定义。函数返回void       |
+| c.pop_front() | 删除c中首元素。若c为空，则函数行为未定义。函数返回void       |
+| c.erase(p)    | 删除迭代器p所指定的元素，返回一个指向被删元素之后元素的迭代器，若p指向尾元素，则返回尾后 (off-the-end)迭代器。若p是尾后迭代器，则函数行为未定义 |
+| c.erase(b, e) | 删除迭代器b和e所指定范围内的元素。返回一个指向最后一个被删元素之后元素的迭代器，若e本身就是尾后迭代器，则函数也返回尾后迭代器 |
+| c.clear()     | 删除c中的所有元素。返回void                                  |
+
+
+
+```c++
+// pop_front和pop_back成员函数
+while (!ilist.empty()) {
+    process(ilist.front());		// 对ilist的首元素进行一些处理
+    ilist.pop_front();			// 完成处理后删除首元素
+}
+
+//从容器内部删除一个元素
+list<int> lst = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+auto it = lst.begin();
+while (it != lst.end())
+    if(*it % 2)		//若元素为奇数
+        it = lst.erase(it); //删除此元素
+	else
+        ++it;
+
+//删除多个元素
+// 删除两个迭代器表示的范围内的元素
+// 返回指向最后一个被删元素之后位置的迭代器
+elem1 = slist.erase(eleml, elem2);		//调用后，eleml==elem2
+slist.clear();	//删除容器中所有元素
+slist.erase(slist.begin(), slist.end());//等价调用
+```
+
+### 特殊的forward_list操作
+
+![forward_list的特殊操作](\Picture\forward_list的特殊操作.png)
+
+一个forward_list 中添加或删除元素的操作是通过改变给定元素之后的元素来完成的。
+
+| 在forwardlist中插入或删除元素的操作                          |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Ist.before_begin()<br />lst.cbefore_begin()                  | 返回指向链表首元素之前不存在的元素的迭代器。此迭代器不能解引用。cbefore_begin()返回一个const_iterator |
+| lst.insert_after(p, t)<br />lst.insert_after(p, n, t)<br />lst.insert_after(p, b, e)<br />lst.insert_after(p, il) | 在迭代器p之后的位置插入元素。t 是一个对象，n 是数量b和e是表示范围的一对迭代器(b和e不能指向lst内)，il是一个花括号列表。返回一个指向最后一个插入元素的迭代器。如果范围为空，则返回p。若p为尾后迭代器，则函数行为未定义 |
+| emplace_after(p, args)                                       | 使用args在p指定的位置之后创建一个元素。返回一个指向这个新元素的迭代器。若p为尾后迭代器，则函数行为未定义 |
+| lst.erase_after(p)<br />Ist.erase_after(b, e)                | 删除p指向的位置之后的元素，或删除从b之后直到(但不包含)e之间的元素。返回一个指向被删元素之后元素的迭代器，若不存在这样的元素，则返回尾后迭代器。如果p指向lst的尾元素或者是一个尾后迭代器，则函数行为未定义 |
+
+```c++
+forward_list<int> flst = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+auto prev = flst.before_begin();		// 表示flst的“首前元素”
+auto curr = flst.begin();				// 表示flst中的第一个元素
+while (curr != flst.end()) {			// 仍有元素要处理
+    if (*curr % 2)						// 若元素为奇数
+        curr = flst.erase_after(prev);	// 删除它并移动curr
+    else {
+        prev = curr;					// 移动迭代器curr，指向下一个元素，prev指向
+        ++curr;							// curr 之前的元素
+    }
+}
+```
+
+### 改变容器大小
+
+```c++
+list<int> ilist(10, 42);		// 10个int:每个的值都是42
+ilist.resize(15);				// 将5个值为0的元素添加到ilist的末尾
+ilist.resize(25, -1);			// 将10个值为-1的元素添加到 ilist的末尾
+ilist.resize(5);				// 从ilist末尾删除20个元素
+```
+
+| 顺序容器大小操作 |                                                              |
+| ---------------- | ------------------------------------------------------------ |
+| c.resize(n)      | 调整c的大小为n个元素。若n<c.size()，则多出的元素被丢弃。若必须添加新元素，对新元素进行值初始化 |
+| c.resize(n, t)   | 调整c的大小为n个元素。任何新添加的元素都初始化为值t          |
+
+**容器操作可能使迭代器失效**
+
+## vector对象是如何增长的
+
+当不得不获取新的内存空间时，vector和string 的实现通常会分配比新的空间需求更大的内存空间
+容器预留这些空间作为备用，可用来保存更多的新元素
+
+shrink_to_fit只适用于vector、string和deque
+capacity和reserve只适用于vector和string
+
+| 容器大小管理操作  |                                           |
+| ----------------- | ----------------------------------------- |
+| c.shrink_to_fit() | 请将capacity()减少为与size()相同大小      |
+| c.capacity()      | 不重新分配内存空间的话，c可以保存多少元素 |
+| c.reserve(n)      | 分配至少能容纳n个元素的内存空间           |
+
+```c++
+vector<int> ivec;
+// size应该为0;capacity的值依赖于具体实现
+cout << "ivec: size: " << ivec.size()
+    << " capacity: " << ivec.capacity() << endl;
+//向ivec添加24个元素
+for (vector<int>::size_type ix = 0; ix != 24; ++ix)
+    ivec.push_back(ix);
+
+//size应该为24;capacity应该大于等于24，具体值依赖于标准库实现
+cout << "ivec:size: " << ivec.size() 
+    << "capacity: " << ivec,capacity() << endl;
+
+// ivec: size: 0 capacity: 0
+// ivec: size: 24 capacity: 32
+```
+
+
+
+## 额外的string操作
+
+| 构造string的其他方法     | (n、len2和pos2都是无符号值)                                  |
+| ------------------------ | ------------------------------------------------------------ |
+| string s(cp, n)          | s是cp指向的数组中前n个字符的拷贝。此数组至少应该包含n个字符  |
+| string s(s2, pos2)       | s是strings2从下标pos2开始的字符的拷贝。若pos2>s2size()，构造函数的行为未定义 |
+| string s(s2, pos2, len2) | s是string s2从下标pos2开始len2个字符的拷贝若pos2>s2.size()，构造函数的行为未定义。不管len2的值是多少，构造函数至多拷贝s2.size()-pos2个字符 |
+
+```c++
+const char *cp = "HelloWorld!!!!";		// 以空字符结束的数组
+char noNull[] = {'H', 'i'};				// 不是以空字符结束
+string s1(cp);			// 拷贝cp中的字符直到遇到空字符;s1=="Hello World!!!"
+
+string s2(noNul1, 2);		// 从noNull拷贝两个字符;s2=="Hi"
+string s3(noNull);			// 未定义:noNull不是以空字符结束
+string s4(cp+6, 5);			// 从cp[6]开始拷贝5个字符;s4=="World"
+string s5(s1, 6, 5);		// 从s1[6]开始拷贝5个字符;s5=="World"
+string s6(s1, 6);			// 从s1[6]开始拷贝，直至sl末尾;s6=="World!!!"
+string s7(s1, 6, 20);		// 正确，只拷贝到s1末尾;s7=="World!!!"
+string s8(s1, 16);			// 抛出一个out_of_range异常
+
+//substr操作
+string s("helloworld");
+string s2 = s.substr(0, 5);		// s2 = hello
+string s3 = s.substr(6);		// s3 = world
+string s4 = s.substr(6, 11);	// s4 = world
+string s5 = s.substr(12);		// 抛出一个out_of_range异常
+```
+
+| 子字符串操作     |                                                              |
+| ---------------- | ------------------------------------------------------------ |
+| s.substr(pos, n) | 返回一个string，包含s中从pos 开始的n个字符的拷贝。pos的默认值为0。n的默认值为s.size() - pos，即拷贝从pos开始的所有字符 |
+
+### 改变string的其他方法
+
+| 修改string的操作       |                                                              |
+| ---------------------- | ------------------------------------------------------------ |
+| s.insert(pos, args)    | 在pos之前插入args指定的字符。pos可以是一个下标或一个选代器。接受下标的版本返回一个指向s的引用:接受迭代器的版本返回指向第一个插入字符的迭代器 |
+| s.erase(pos, len)      | 删除从位置pos开始的len个字符。如果len被省略，则删除从pos开始直至s末尾的所有字符。返回一个指向s的引用 |
+| s.assign(args)         | 将s中的字符替换为args指定的字符。返回一个指向s的引用         |
+| s.append(args)         | 将args追加到s。返回一个指向s的引用                           |
+| s.replace(range, args) | 删除s中范围range内的字符，替换为args指定的字符。range或者是一个下标和一个长度，或者是一对指向s的迭代器。返回一个指向s的引用 |
+
+### string搜索操作
+
+| string搜索操作            |                                               |
+| ------------------------- | --------------------------------------------- |
+| s.find(args)              | 查找s中args第一次出现的位置                   |
+| s.rfind(args)             | 查找s中args最后一次出现的位置                 |
+| s.find_first_of(args)     | 在s中查找args中任何一个字符第一次出现的位置   |
+| s.find_last_of(args)      | 在s中查找args中任何一个字符最后一次出现的位置 |
+| s.find_first_not_of(args) | 在s中查找第一个不在args中的字符               |
+| s.find_last_not_of(args)  | 在s中查找最后一个不在args中的字符             |
+
+### compare函数
+
+根据s是等于、大于还是小于参数指定的字符串，s.compare返回0、正数或负数
+
+### 数值转换
+
+| string和数值之间的转换                                       |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| to_string(val)                                               | 组重载函数，返回数值val的string表示。val可以是任何算术类型(参见2.1.1节，第30页)。对每个浮点类型和int或更大的整型，都有相应版本的tostring。与往常一样，小整型会被提升 |
+| stoi(s, p, b)<br />stol(s, p, b)<br />stoul(s, p, b)<br />stoll(s, p, b)<br />stoull(s, p, b) | 返回s的起始子串(表示整数内容)的数值,返回值类型分别是intlong、unsignedlong、long long、unsigned long long。b表示转换所用的基数，默认值为10。p是size_t指针，用来保存s中第一个非数值字符的下标，p默认为0，即，函数不保存下标 |
+| stof(s, p)<br />stod(s, p)<br />stold(s, p)                  | 返回s的起始子串(表示浮点数内容)的数值，返回值类型分别是float、double或long double。参数p的作用与整数转换函数中一样 |
+
+## 容器适配器
+
+本质上，一个适配器是一种机制，能使某种事物的行为看起来像另外一种事物一样
+一个容器适配器接受一种已有的容器类型，使其行为看起来像一种不同的类型
 
