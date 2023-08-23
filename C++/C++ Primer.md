@@ -1,4 +1,4 @@
-![]()变量和基本类型
+# 变量和基本类型
 
 ## 基本内置类型
 
@@ -3746,15 +3746,15 @@ auto it8 = a.cbeqin();	// it8是const_iterator
 
 ### 容器定义和初始化
 
-|  容器定义和初始化                             | 说明                                                         |
+| 容器定义和初始化                        | 说明                                                         |
 | --------------------------------------- | ------------------------------------------------------------ |
 | C c;                                    | 默认构造函数。如果c是一个array，则c中元素按默认方式初始化；否则c为空 |
-| C c1(c2);<br />C c1 = c2; | c1初始化为c2的拷贝。c1和c2必须是相同类型(即，它们必须是相同的容器类型，且保存的是相同的元素类型；对于array类型，两者还必须具有相同大小) |
+| C c1(c2);<br />C c1 = c2;               | c1初始化为c2的拷贝。c1和c2必须是相同类型(即，它们必须是相同的容器类型，且保存的是相同的元素类型；对于array类型，两者还必须具有相同大小) |
 | C c{a, b, c...}<br />C c = {a, b, c...} | c初始化为初始化列表中元素的拷贝。列表中元素的类型必须与c的元素类型相容。对于array类型，列表中元素数目必须等于或小于array的大小，任何遗漏的元素都进行值初始化(参见3.3.1节，第88页) |
 | C c(b,e)                                | c初始化为迭代器b和e指定范围中的元素的拷贝。范围中元素的类型必须与c的元素类型相容(array不适用) |
-|  | 只有顺序容器 (不包括array)的构造函数才能接受大小参数 |
-| C seq(n) | seq 包含 n个元素，这些元素进行了值初始化;此构造函数是explicit的。(string 不适用) |
-| C seq(n, t) | seq包含n个初始化为值t的元素 |
+|                                         | 只有顺序容器 (不包括array)的构造函数才能接受大小参数         |
+| C seq(n)                                | seq 包含 n个元素，这些元素进行了值初始化;此构造函数是explicit的。(string 不适用) |
+| C seq(n, t)                             | seq包含n个初始化为值t的元素                                  |
 
 **将一个容器初始化为另一个容器的拷贝**
 可以直接拷贝整个容器，或者(array除外)拷贝由一个迭代器对指定的元素范围
@@ -4109,4 +4109,1296 @@ string s5 = s.substr(12);		// 抛出一个out_of_range异常
 
 本质上，一个适配器是一种机制，能使某种事物的行为看起来像另外一种事物一样
 一个容器适配器接受一种已有的容器类型，使其行为看起来像一种不同的类型
+
+| 所有容器适配器都支持的操作和类型 |                                                              |
+| -------------------------------- | ------------------------------------------------------------ |
+| size_type                        | 一种类型，足以保存当前类型的最大对象的大小                   |
+| value_type                       | 元素类型                                                     |
+| container_type                   | 实现适配器的底层容器类型                                     |
+| A a;                             | 创建一个名为a的空适配器                                      |
+| A a(c);                          | 创建一个名为a的适配器，带有容器c的一个拷贝                   |
+| 关系运算符                       | 每个适配器都支持所有关系运算符:==、!=、<、<=、>和>=这些运算符返回底层容器的比较结果 |
+| a.empty()                        | 若a包含任何元素，返回false，否则返回true                     |
+| a.size()                         | 返回a中的元素数目                                            |
+| swap(a, b)<br />a.swap(b)        | 交换a和b的内容，a和b必须有相同类型，包括底层容器类型也必须相同 |
+
+```c++
+//定义一个适配器
+stack<int> stk(deq);		//从deq拷贝元素到stk
+
+// 在vector上实现的空栈
+stack<string, vector<string>> str_stk;
+// strstk2在vector上实现，初始化时保存svec的拷贝
+stack<string, vector<string>> str_stk2(svec);
+
+//栈适配器
+stack<int> intStack;//空栈
+//填满栈
+for (size_t ix = 0; ix != 10; ++ix)
+    intStack.push(ix);				// intStack保存0到9十个数
+while (!intStack.empty()){ 			// intStack 中有值就继续循环
+    int value = intStack.top();
+    //使用栈顶值的代码
+    intStack.pop();					// 弹出栈顶元素，继续循环
+}
+```
+
+栈默认基于deque实现，也可以在 list或vector之上实现
+
+| 栈的单独操作                       |                                                              |
+| ---------------------------------- | ------------------------------------------------------------ |
+| s.pop()                            | 删除栈顶元素，但不返回该元素值                               |
+| s.push(item)<br />s.emplace (args) | 创建一个新元素压入栈顶，该元素通过拷贝或移动item而来，或者由args构造 |
+| s.top()                            | 返回栈顶元素，但不将元素弹出栈                               |
+
+queue默认基于deque实现，priority_queue默认基于vector实现
+queue也可以用list或vector实现，priority_queue 也可以用deque实现
+
+| 队列的单独操作                    |                                                              |
+| --------------------------------- | ------------------------------------------------------------ |
+| q.pop()                           | 返回queue的首元素或priority_queue的最高优先级的元素但不删除此元素 |
+| q.front()<br />q.back()           | 返回首元素或尾元素，但不删除此元素<br />只适用于queue        |
+| q.top()                           | 返回最高优先级元素，但不删除该元素<br />只适用于priority_queue |
+| q.push(item)<br />q.emplace(args) | 在queue末尾或priority_queue中恰当的位置创建一个元素，其值为item，或者由args构造 |
+
+
+priority_queue 允许我们为队列中的元素建立优先级。新加入的元素会排在所有优先级比它低的已有元素之前。
+
+
+# 泛型算法
+
+称它们为“算法”，
+	是因为它们实现了一些经典算法的公共接口，如排序和搜索
+
+称它们是“泛型的”
+	是因为它们可以用于不同类型的元素和多种容器类型(不仅包括标准库类型，如 vector 或lst，还包括内置的数组类型)，以及我们将看到的，还能用于其他类型的序列
+
+## 泛型算法分类
+
+### 只读算法
+
+```c++
+// 对vec中的元素求和，和的初值是0
+int sum = accumulate(vec.cbegin(), vec.cend(), 0);
+
+string sum = accumulate(v.cbegin(), v.cend(), string(""));
+// 错误:const char*上没有定义+运算符
+string sum = accumulate(v.cbegin(), v.cend(), "");
+
+// roster2中的元素数目应该至少与roster1一样多
+equal(roster1.cbegin(), roster1.cend(), roster2.cbegin());
+```
+
+### 写容器元素的算法
+
+```c++
+fill(vec.begin(), vec.end(), 0);// 将每个元素重置为0
+// 将容器的一个子序列设置为10
+fill(vec.begin(), vec.begin() + vec.size() / 2, 10);
+
+vector<int> vec;		// 空vector
+// 使用vec，赋予它不同值
+fill_n(vec.begin(), vec.size(), 0);	// 将所有元素重置为0
+
+vector<int>vec;	// 空向量
+// 灾难:修改 vec中的10个(不存在)元素
+fill_n(vec.begin(), 10, 0);
+
+// back_inserter接受一个指向容器的引用，返回一个与该容器绑定的插入迭代器。
+// 当我们通过此迭代器赋值时，赋值运算符会调用push_back将一个具有给定值的元素添加到容器中:
+vector<int> vec;	// 空向量
+auto it = back_inserter(vec);	// 通过它赋值会将元素添加到vec中
+*it = 42;		// vec中现在有一个元素，值为42
+
+vector<int> vec;	// 空向量
+// 正确:backinserter 创建一个插入迭代器，可用来向vec添加元素
+fill_n(back_inserter(vec), 10, 0);	// 添加10个元素到vec
+
+//拷贝算法
+int al[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+int a2[sizeof(a1) / sizeof(*a1)];	// a2与al大小一样
+// ret指向拷贝到a2的尾元素之后的位置
+auto ret = copy(begin(a1), end(a1), a2);	// 把a1的内容拷贝给a2
+
+// 将所有值为0的元素改为 42
+replace(ilst.begin(), ilst.end(), 0, 42);
+
+// 使用back_inserter按需要增长目标序列
+// 此调用后，ilst并未改变，ivec包含ilst的一份拷贝，不过原来在ilst中值为0的元素在ivec中都变为42
+replace_copy(ilst.cbegin(), ilst.cend(), back_inserter(ivec), 0, 42);
+```
+
+### 重排容器元素的算法
+
+```c++
+// Input: the quick red fox jumps over the slow red turtle
+// Output：fox jumps over quick red slow the turtle
+void elimDups(vector<string> &words)
+{
+    // 按字典序排序 words，以便查找重复单词
+    sort(words.begin(), words.end());
+    // unique重排输入范围，使得每个单词只出现一次
+    // 排列在范围的前部，返回指向不重复区域之后一个位置的迭代器
+    auto end_unique = unique(words.begin(), words.end());
+    // 使用向量操作erase删除重复单词
+    words.erase(end_unique, words.end());
+}
+```
+
+## 定制操作
+
+谓词：
+	谓词是一个可调用的表达式，其返回结果是一个能用作条件的值
+	标准库算法所使用的谓词分为两类:
+		一元谓词(unary predicate，意味着它们只接受单一参数)
+		二元谓词(binary predicate，意味着它们有两个参数)
+	接受谓词参数的算法对输入序列中的元素调用谓词，因此，元素类型必须能转换为谓词的参数类型
+
+```c++
+// 比较函数，用来按长度排序单词
+bool isShorter(const string &sl, const string &s2)
+{
+    return sl.size() < s2.size();
+}
+
+// 按长度由短至长排序words
+sort(words.begin(), words.end(), isShorter);
+
+//排序算法
+elimDups(words);//将words按字典序重排，并消除重复单词
+// 按长度重新排序，长度相同的单词维持字典序
+stable_sort(words.begin(), words.end(), isShorter);
+for (const auto &s : words) //无须拷贝字符串
+    cout << s << " ";	//打印每个元素，以空格分隔
+cout << endl;
+```
+
+### lambda 表达式
+
+一个lambda表达式表示一个可调用的代码单元。
+我们可以将其理解为一个未命名的内联函数。
+与任何函数类似，一个 lambda 具有一个返回类型、一个参数列表和一个函数体。
+但与函数不同，lambda可能定义在函数内部。一个lambda表达式具有如下形式
+
+```c++
+[capture list](parameter list) -> return type { function body }
+// capture list(捕获列表)是一个lambda所在函数中定义的局部变量的列表(通常为空);
+// return type、parameter list和function body与任何普通函数一样，分别表示返回类型参数列表和函数体。
+// 与普通函数不同，lambda 必须使用尾置返回来指定返回类型。
+
+// 可以忽略参数列表和返回类型，但必须永远包含捕获列表和函数体
+auto f = []{ return 42; };
+cout << f() << endl;	// 打印42
+
+//向lambda传递参数
+[](const string &a, const string &b)
+	{ return a.size() < b.size(); }
+
+// 按长度排序，长度相同的单词维持字典序
+stable_sort(words.begin(), words.end(), 
+            [](const string &a, const string &b) 
+            	{ return a.size() < b.size(); });
+
+[sz](const string &a)
+	{ return a.size() >= sz; };
+//错误:sz未捕获
+[](const string &a)
+	{ return a.size() >= sz; };
+// 获取一个迭代器，指向第一个满足size()>=sz的元素
+auto wc = find_if(words.begin(), words.end(),
+                  [sz](const string &a)
+                  	{ return a.size() >= sz; });
+
+//for_each算法
+// 打印长度大于等于给定值的单词，每个单词后面接一个空格
+for_each(wc, words.end(),
+         [](const string &s) { cout << s << " ";});
+cout << endl;
+
+//完整的biggies
+void biggies(vector<string> &words, 
+             vector<string>::size_type sz)
+{
+    elimDups(words);// 将words按宇典序排序，删除重复单词
+    // 按长度排序，长度相同的单词维持字典序
+    stable_sort(words.begin(), words.end(),
+                [](const string &a, const string &b)
+                { return a.size() < b.size(); });
+    // 获取一个迭代器，指向第一个满足size()>= sz的元素
+    auto wc = find_if(words.begin(), words.end(),
+                      [sz](const string &a)
+                      { return a.size() >= sz; });
+    // 计算满足size >= sz的元素的数目
+    auto count = words.end() - wc;
+    cout << count << make_plural(count, "word", "s")
+        << " of length " << sz << " or longer" << endl;
+    // 打印长度大于等于给定值的单词，每个单词后面接一个空格
+    for_each(wc, words.end(),
+             [](const string &s) { cout << s << " "; });
+    cout << endl;
+}
+```
+
+### lambda 捕获和返回
+
+```c++
+// 值捕获
+void fcn1()
+{
+    size_t v1 = 42;		// 局部变量
+    // 将v1拷贝到名为f的可调用对象
+    auto f = [v1] { return v1; };
+    v1 = 0;
+    auto j = f();	// j为42；f保存了我们创建它时v1的拷贝
+}
+
+// 引用捕获
+// 采用引用方式捕获一个变量，就必须确保被引用的对象在 lambda 执行的时候是存在的。
+void fcn2()
+{
+    size_t v1 = 42;	// 局部变量
+    // 对象f2包含v1的引用
+    auto f2 = [&vl] { return v1; };
+    v1 = 0;
+    auto j = f2();	// j为0; f2保存v1的引用，而非拷贝
+}
+
+void biggies(vector<string> &words,
+             vector<string>::size_type sz,
+             ostream &os = cout, char c = '')
+{
+    // 与之前例子一样的重排 words 的代码
+    // 打印 count的语句改为打印到os
+    for_each(words.begin(), words.end(), 
+             [&os, c] (const string &s) { os << s << c; });
+}
+
+//隐式捕获
+// &告诉编译器采用捕获引用方式，=则表示采用值捕获方式
+// sz为隐式捕获，值捕获方式
+wc = find_if(words.begin(), words.end(), 
+             [=](const string &s)
+             { return s.size() >= sz; });
+
+void biggies(vector<string> &words, 
+             vector<string>::size_type sz,
+             ostream &os = cout, char c = ' ')
+{
+    // 其他处理与前例一样
+    // os隐式捕获，引用捕获方式;c显式捕获，值捕获方式
+    for_each(words.begin(), words.end(), 
+             [&, c](const string &s){ os << s << c; });
+    // os显式捕获，引用捕获方式;c隐式捕获，值捕获方式
+    for_each(words.begin(), words.end(),
+             [=, &os](const string &s) { os << s << c; });
+}
+```
+
+| lambda捕获列表       | 说明                                                         |
+| -------------------- | ------------------------------------------------------------ |
+| []                   | 空捕获列表。lambda不能使用所在函数中的变量。一个lambda只有捕获变量后才能使用它们 |
+| [names]              | names是一个逗号分隔的名字列表，这些名字都是lambda所在函数的局部变量。默认情况下，捕获列表中的变量都被拷贝。名字前如果使用了&，则采用引用捕获方式 |
+| [&]                  | 隐式捕获列表，采用引用捕获方式。lambda体中所使用的来自所在函数的实体都采用引用方式使用 |
+| [=]                  | 隐式捕获列表，采用值捕获方式。lambda体将拷贝所使用的来自所在函数的实体的值 |
+| [&, identifier_list] | identifier_list是一个逗号分隔的列表，包含0个或多个来自所在函数的变量。这些变量采用值捕获方式，而任何隐式捕获的变量都采用引用方式捕获。identifier_list中的名字前面不能使用& |
+| [=, identifier_list] | identifier_list中的变量都采用引用方式捕获，而任何隐式捕获的变量都采用值方式捕获。identifier_list中的名字不能包括this，且这些名字之前必须使用& |
+
+```c++
+//可变lambda
+// 如果希望能改变个被捕获的变量的值，就必须在参数列表首加上关键字 mutable
+void fcn3()
+{
+    size_t v1 = 42;	//	局部变量
+    // f可以改变它所捕获的变量的值
+    auto f = [v1] () mutable { return ++v1; }
+    v1 = 0;
+    autoj = f();//j为43
+}
+
+void fcn4()
+{
+    size_t v1 = 42;		// 局部变量
+    // v1是一个非const变量的引用
+    // 可以通过f2中的引用来改变它
+    auto f2 = [&v1]{ return ++v1; };
+    v1 = 0;
+    auto j = f2();		// j为1
+}
+
+//指定lambda返回类型
+// 无须指定返回类型，因为可以根据条件运算符的类型推断出来
+transform(vi.begin(), vi.end(), vi.begin(), 
+          [](int i) { return i < 0 ? -i : i; });
+// 错误:不能推断lambda的返回类型, 编译器推断这个版本的lambda返回类型为void，但它返回了一个int值
+transform(vi.begin(), vi.end(), vi.begin(), 
+          [](int i){ if (i < 0) return -i; else return i; });
+// 需要为一个lambda定义返回类型时，必须使用尾置返回类型
+transform(vi.begin(), vi.end(), vi.begin(), 
+          [](int i) -> int
+          { if(i < 0) return -i; else return i; });
+```
+
+### 参数绑定
+
+```c++
+bool check_size(const string &s, string::size_type sz)
+{
+    return s.size() >= sz;
+}
+// 使用标准库bind可以将check_size传入check_size中
+
+//标准库bind函数
+auto newCallable = bind(callable, arg_list);
+// newCallable 本身是一个可调用对象，arg_list是一个号分隔的参数列表，对应给定的callable 的参数
+// 当我们调用newCallable时，newCallable会调用callable，并传递给它arg_list中的参数
+// arg_list中的参数可能包含形如_n的名字，其中n是一个整数，这些参数是“占位符”
+
+//绑定check_size的sz参数
+// check6是一个可调用对象，接受一个string类型的参数
+// 并用此string和值6来调用check_size
+auto check6 = bind(check_size, _1, 6);
+string s = "hello";
+bool b1 = check6(s);		// check6(s)会调用check_size(s, 6)
+
+auto wc = find_if(words.begin(), words.end(),
+                  [sz](const string &a) { });
+// To
+auto wc = find_if(words.begin(), words.end(), 
+                  bind(check_size, _1, sz));
+
+
+//使用placeholders名字
+// _1对应的using 声明为:
+using std::placeholders::_1;
+
+using namespace std::placeholders;
+
+//bind参数
+// g是一个有两个参数的可调用对象
+auto g = bind(f, a, b, _2, c, _1);
+g(_1, _2);
+// To
+f(a, b, _2, c, _1);
+// 用bind重排参数顺序
+// 按单词长度由短至长排序
+sort(words.begin(), words.end(), isShorter);
+// 按单词长度由长至短排序
+sort(words.begin(), words.end(), bind(isShorter, _2, _1));
+
+//绑定引用参数
+// os是一个局部变量，引用一个输出流
+// c是一个局部变量，类型为char
+for_each(words.begin(), words.end(), 
+         [&os, c](const string &s) { os << s << c; } );
+// lambda To
+ostream &print(ostream &os, const string &s, char c)
+{
+    return os << s << c;
+}
+// 不能直接用bind来代替os的捕获
+// 错误:不能拷贝oS
+for_each(words.begin(), words.end(), bind(print, os, 1, ' '));
+// To Right，使用标准库ref函数
+for_each(words.begin(), words.end(),
+         bind(print, ref(os), _1, ' '));
+```
+
+
+
+## 再探迭代器
+
+| 迭代器分类 | 说明                                                         |
+| ---------- | ------------------------------------------------------------ |
+| 插入迭代器 | 这些选代器被绑定到一个容器上，可用来向容器插入元素           |
+| 流迭代器   | 这些迭代器被绑定到输入或输出流上，可用来遍历所关联的IO流     |
+| 反向选代器 | 这些迭代器向后而不是向前移动。除了forward_list之外的标准库容器都有反向迭代器 |
+| 移动迭代器 | 这些专用的迭代器不是拷贝其中的元素，而是移动它们             |
+
+### 插入迭代器
+
+它接受一个容器，生成一个迭代器，能实现向给定容器添加元素
+
+| 插入迭代器操作  |                                                              |
+| --------------- | ------------------------------------------------------------ |
+| it = t          | 在it指定的当前位置插入值t<br />假定c是it绑定的容器，依赖于插入迭代器的不同种类，此赋值会分别调用 c.push_back(t)、c.push_front(t)或c.insert(t, p)，其中p为传递给inserter的迭代器位置 |
+| *it, ++it, it++ | 这些操作虽然存在，但不会对it做任何事情。每个操作都返回it     |
+
+| 插入器类型     |                                                              |
+| -------------- | ------------------------------------------------------------ |
+| back_inserter  | 创建一个使用push_back的选代器                                |
+| front_inserter | 创建一个使用push_front的迭代器                               |
+| inserter       | 创建一个使用 insert 的迭代器。<br />此函数接受第二个参数，这个参数必须是一个指向给定容器的迭代器。<br />元素将被插入到给定迭代器所表示的元素之前。 |
+
+调用 inserter(c, iter)，得到一个迭代器
+使用它时，会将元素插入到 iter 原来所指向的元素之前的位置
+
+```c++
+*it = val;
+// Equals
+it = c.insert(it, val);	// it指向新加入的元素
+++it;			// 递增it使它指向原来的元素
+
+list<int> lst = {1, 2, 3, 4};
+list<int> lst2, lst3;	//空list
+//拷贝完成之后，lst2包含 4 3 2 1
+copy(lst.cbegin(), lst.cend(), front_inserter(lst2));
+//拷贝完成之后，lst3包含 1 2 3 4
+copy(lst.cbegin(), lst.cend(), inserter(lst3, lst3.begin()));
+```
+
+
+
+### iostream迭代器
+
+| 分类             |                    |
+| ---------------- | ------------------ |
+| istream_iterator | 读取输入流         |
+| ostream_iterator | 向一个输出流写数据 |
+
+```c++
+//istream_iterator操作
+// istream_iterator要读取的类型必须定义了输入运算符
+istream iterator<int> int_it(cin);		// 从cin读取int
+istream iterator<int> int_eof;			// 尾后迭代器
+ifstream in("afiler");
+istream_iterator<string> str_it(in);	// 从"afile"读取字符串
+
+// 用istream_iterator从标准输入读取数据，存入一个vector的例子
+
+istream_iterator<int> in_iter(cin); 		// 从cin读取int
+istream_iterator<int> eof;					// istream尾后迭代器
+while (in_iter != eof)						// 当有数据可供读取时
+    // 后置递增运算读取流，返回迭代器的旧值
+    // 解引用迭代器，获得从流读取的前一个值
+    vec.push_back(*in_iter++);
+// 后置递增运算会从流中读取下一个值，向前推进，但返回的是迭代器的旧值。迭代器的旧值包含了从流中读取的前一个值，对迭代器进行解引用就能获得此值。
+
+istream_iterator<int> in_iter(cin), eof;		// 从cin读取int
+vector<int> vec(in_iter, eof);					// 从选代器范围构造vec
+```
+
+| istream_iterator 操作       | 说明                                                         |
+| --------------------------- | ------------------------------------------------------------ |
+| istream_iterator<T> in(is); | in从输入流is读取类型为T的值                                  |
+| istream_iterator<T> end;    | 读取类型为T的值的istream_iterator迭代器表示尾后位置          |
+| in1 == in2<br />in1 != in2  | in1和in2必须读取相同类型。如果它们都是尾后迭代器，或绑定到相同的输入，则两者相等 |
+| *in                         | 返回从流中读取的值                                           |
+| in->mem                     | 与(*in).mem的含义相同                                        |
+| ++in, in++                  | 使用元素类型所定义的>>运算符从输入流中读取下一个值。与以往一样,前置版本返回一个指向递增后迭代器的引用，后置版本返回旧值 |
+
+```c++
+istream_iterator<int> in(cin), eof;
+cout << accumulate(in, eof, 0) << endl;
+// Input: 
+// 23 109 45 89 6 34 12 90 34 23 56 23 8 89 23
+// Output:
+// 664
+```
+
+| ostream_iterator 操作           |                                                              |
+| ------------------------------- | ------------------------------------------------------------ |
+| ostream_iterator<T> out(os);    | out将类型为T的值写到输出流os中                               |
+| ostream_iterator<T> out(os, d); | out将类型为T的值写到输出流os中，每个值后面都输出一个d。d指向一个空字符结尾的字符数组 |
+| out = val                       | 用<<运算符将val写入到out所绑定的ostream中。val的类型必须与out可写的类型兼容 |
+| *out, ++out, out++              | 这些运算符是存在的，但不对out 做任何事情。每个运算符都返回out |
+
+```c++
+ostream_iterator<int> out_iter(cout, " ");
+
+for (auto e : vec)
+    *out_iter++ =e;	// 赋值语句实际上将元素写到cout
+cout << endl;
+// Or
+for (auto e : vec)
+    out_iter = e;	// 赋值语句将元素写到 cout
+cout << endl;
+// Or
+copy(vec.begin(), vec.end(), out_iter);
+cout << endl;
+
+//使用流迭代器处理类类型
+istream_iterator<Sales_item> item_iter(cin), eof;
+ostream_iterator<Sales_item> out_iter(cout, "\n");
+// 将第一笔交易记录存在sum 中，并读取下一条记录
+Sales_item sum = *itemiter++;
+while (itemiter != eof) {
+    // 如果当前交易记录(存在item_iter中)有着相同的ISBN号
+    if (item_iter->isbn() == sum.isbn())
+        sum += *item_iter++;		// 将其加到 sum 上并读取下一条记录
+    else {
+        out_iter = sum;				// 输出sum当前值
+        sum = *item_iter++;			// 读取下一条记录
+    }
+}
+out_iter = sum;						// 记得打印最后一组记录的和
+```
+
+
+
+### 反向迭代器
+
+除了forward_list之外，其他容器都支持反向选代器
+
+
+
+## 泛型算法结构
+
+| 迭代器类别     |                                      |
+| -------------- | ------------------------------------ |
+| 输入迭代器     | 只读，不写;单遍扫描，只能递增        |
+| 输出迭代器     | 只写，不读:单遍扫描，只能递增        |
+| 前向迭代器     | 可读写;多遍扫描，只能递增            |
+| 双向迭代器     | 可读写;多遍扫描，可递增递减          |
+| 随机访问迭代器 | 可读写，多遍扫描，支持全部迭代器运算 |
+
+### 5类迭代器
+
+输入迭代器(input iterator):可以读取序列中的元素。一个输入迭代器必须支持：
+
+- 用于比较两个迭代器的相等和不相等运算符(==、!=)
+- 用于推进迭代器的前置和后置递增运算(++)
+- 用于读取元素的解引用运算符(\*)：解引用只会出现在赋值运算符的右侧
+- 箭头运算符(->)，等价于(*it).member，即，解引用迭代器，并提取对象的成员
+
+
+
+输出迭代器(output iterator):可以看作输入选代器功能上的补集一-只写而不读元素。输出迭代器必须支持：
+
+- 用于推进迭代器的前置和后置递增运算(++)
+- 解引用运算符(*)，只出现在赋值运算符的左侧（向一个已经解引用的输出选代器赋值，就是将值写入它所指向的元素）
+
+
+
+前向迭代器(forward iterator):可以读写元素。这类迭代器只能在序列中沿一个方向移动
+	前向迭代器支持所有输入和输出迭代器的操作，而且可以多次读写同一个元素
+	算法replace要求前向迭代器，forward_list 上的选代器是前向迭代器
+
+
+
+双向迭代器 (bidirectional iterator):可以正向/反向读写序列中的元素
+	除了支持所有前向迭代器的操作之外，双向迭代器还支持前置和后置递减运算符(--)
+	算法 reverse要求双向迭代器，除了 forward_list 之外，其他标准库都提供符合双向迭代器要求的迭代。
+
+
+
+随机访问迭代器(random-access iterator):提供在常量时间内访问序列中任意元素的能力。此类迭代器支持双向迭代器的所有功能，此外还支持的操作:
+
+- 用于比较两个迭代器相对位置的关系运算符(<、<=、>和>=)
+- 迭代器和一个整数值的加减运算(+、+=、-和-=)，计算结果是迭代器在序列中前进(或后退)给定整数个元素后的位置
+- 用于两个迭代器上的减法运算符(-)，得到两个迭代器的距离
+- 下标运算符(iter[n])，与*(iter[n])等价
+
+
+
+### 算法形参模式
+
+```c++
+alg(beg, end, other args);
+alg(beg, end, dest, other args);
+alg(beg, end, beg2, other args);
+alg(beg, end, beg2, end2, other args);
+```
+
+
+
+## 特定容器算法
+
+| list和forward_list成员函数版本的算法      | 这些操作都返回void                                           |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| lst.merge(lst2)<br/>Ist.merge(lst2, comp) | 将来自lst2的元素合并入lst。lst和lst2都必须是有序的。元素将从Ist2中删除。在合并之后，lst2变为空。第一个版本使用<运算符:第二个版本使用给定的比较操作 |
+| lst.remove(val)<br />lst.remove_if(pred)  | 调用erase删除掉与给定值相等(==)或令一元谓词为真的每个元素    |
+| lst.reverse()                             | 反转 lst 中元素的顺序                                        |
+| lst.sort()<br/>Ist.sort(comp)             | 使用<或给定比较操作排序元素                                  |
+| Ist.unique()<br />Ist.unique(pred)        | 调用erase删除同一个值的连续拷贝。第一个版本使用==；第二个版本使用给定的二元谓词 |
+
+
+
+lst.splice(args) 或 flst.splice_after(args) 
+
+| list和forward_list的splice成员函数的参数 |                                                              |
+| ---------------------------------------- | ------------------------------------------------------------ |
+| (p, Ist2)                                | p是一个指向lst中元素的迭代器，或一个指向 flst 首前位置的迭代器。函数将lst2的所有元素移动到1st中p之前的位置或是flst中p之后的位置。将元素从lst2中删除。Ist2的类型必须与lst或flst相同，且不能是同一个链表 |
+| (p, Ist2, p2)                            | p2是一个指向lst2中位置的有效的迭代器。将p2指向的元素移动到lst中，或将p2之后的元素移动到flst中。lst2可以是与lst或flst相同的链表 |
+| (p, Ist2, b, e)                          | b和e必须表示lst2中的合法范围。将给定范围中的元素从lst2移动到lst或flst。lst2与lst(或flst)可以是相同的链表，但p不能指向给定范围中元素 |
+
+
+
+# 关联容器
+
+关联容器支持高效的关键字查找和访问。
+两个主要的关联容器(associative-container)类型是map和set。
+	map 中的元素是一些关键字-值 (key-value)对:关键字起到索引的作用，值则表示与索引相关联的数据。
+	set 中每个元素只包含一个关键字：set 支持高效的关键字查询操作一一检查一个给定关键字是否在 set 中。
+
+| 关联容器类型         |                                  |
+| -------------------- | -------------------------------- |
+| 按关键字有序保存元素 |                                  |
+| map                  | 关联数组;保存关键字-值对         |
+| set                  | 关键字即值，即只保存关键字的容器 |
+| multimap             | 关键字可重复出现的map            |
+| multiset             | 关键字可重复出现的set            |
+| 无序集合             |                                  |
+| unordered_map        | 用哈希函数组织的map              |
+| unordered_set        | 用哈希函数组织的set              |
+| unordered_multimap   | 哈希组织的map;关键字可以重复出现 |
+| unordered_multiset   | 哈希组织的set;关键字可以重复出现 |
+
+
+
+## 使用关联容器
+
+```c++
+//使用map
+// 统计每个单词在输入中出现的次数
+map<string, size_t> word_count; // string到size_t的空map
+string word;
+while (cin >> word)
+    ++word_count[word];			// 提取word的计数器并将其加 1
+for (const auto &w : word_count) // 对map中的每个元素
+    // 打印结果
+    cout << w.first << " occurs " << w.second
+    	<< ((w.second > 1) ? "times" : "time") << endl;
+
+//使用set
+// 统计输入中每个单词出现的次数
+map<string, size_t> word_count;			// string到size_t的空map
+set<string> exclude = {"The", "But", "And", "Or", "An", "A", 
+                       "the", "but", "and", "or", "an", "a"};
+string word;
+while (cin >> word)
+    // 只统计不在exclude中的单词
+    if (exclude.find(word) == exclude.end())
+        ++word_count[word];			// 获取并递增word的计数器
+
+```
+
+
+
+## 关联容器概述
+
+### 定义关联容器
+
+```c++
+map<string, size_t> word_count;			// 空容器
+// 列表初始化
+set<string> exclude = {"The", "But", "And", "Or", "An", "A", 
+                       "the", "but", "and", "or", "an", "a"};
+// 三个元素：authors将姓映射为名
+map<string, string> authors = {
+    {"Joyce", "James"},
+    {"Austen", "Jane"},
+    {"Dickens", "Charles"}
+};
+
+//初始化multimap或multiset
+// 定义一个有20个元素的 vector，保存0到9每个整数的两个拷贝
+vector<int> ivec;
+for (vector<int>::size_type i = 0; i != 10; ++i){
+    ivec.push_back(i);
+    ivec.push_back(i);		//每个数重复保存一次
+}
+// iset包含来自ivec的不重复的元素;miset包含所有 20个元素
+set<int> iset(ivec.cbegin(), ivec.cend());
+multiset<int> miset(ivec.cbegin(), ivec.cend());
+cout << ivec.size() << endl;		// 打印出20
+cout << iset.size() << endl;		// 打印出10
+cout << miset.size() << endl;		// 打印出20
+```
+
+### 关键字类型的要求
+
+有序容器的关键字类型：**严格弱序**，可以看作小于等于：
+
+- 两个关键字不能同时”小于等于"对方;如果 k1“小于等于”k2，那么k2绝不能“小于等于”k1
+- 如果k1“小于等于”k2，且k2“小于等于”k3，那么k1必须“小于等于”k3
+- 如果存在两个关键字，任何一个都不“小于等于”另一个，那么我们称这两个关键字是“等价”的。如果k1“等价于”k2，且k2“等价于”k3，那么k1 必须“等价于”k3。
+
+```c++
+// 使用关键字类型的比较函数
+bool compareIsbn(const Sales_data &lhs, const Sales_data &rhs)
+{
+    return lhs.isbn() < rhs.isbn();
+}
+
+// bookstore中多条记录可以有相同的ISBN
+// bookstore中的元素以ISBN的顺序进行排列
+multiset<Sales_data, decltype(compareIsbn)*> bookstore(compareIsbn);
+```
+
+### pair类型
+
+一个pair保存两个数据成员。类似容器，pair 是一个用来生成特定类型的模板。当创建一个 pair 时，我们必须提供两个类型名，pair 的数据成员将具有对应的类型两个类型不要求一样:
+
+```c++
+pair<string, string> anon;				// 保存两个string
+pair<string, size_t> word_count;		// 保存一个string和一个size_t
+pair<string, vector<int>> line;			// 保存string和vector<int>
+
+pair<string, string> author{"James", "Joyce"};
+// 打印结果
+cout << w.first << " occurs " << w.second
+    << ((w.second) > 1) ? "times" : "time" << endl;
+```
+
+| pair上的操作               |                                                              |
+| -------------------------- | ------------------------------------------------------------ |
+| pair<T1, T2> p;            | p是一个pair，两个类型分别为T1和T2的成员都进行了值初始化      |
+| pair<T1, T2> p(v1, v2)     | p是一个成员类型为T1和T2的pair；first和second成员分别用v1和v2进行初始化 |
+| pair<T1, T2> p = {v1, v2}; | 等价于p(v1, v2)                                              |
+| make_pair(v1, v2)          | 返回一个用v1和v2初始化的pair。pair的类型从v1和v2的类型推断出来 |
+| p.first                    | 返回p的名为first的(公有)数据成员                             |
+| p.second                   | 返回p的名为second的(公有)数据成员                            |
+| p1 relop p2                | 关系运算符(<、>、<=、>=)按字典序定义:例如，当p1.first<p2.first或!(p2.first <p1.first)&& p1.second < p2.second成立时，p1<p2为 true。关系运算利用元素的<运算符来实现 |
+| p1 == p2<br />p1 != p2     | 当first和second成员分别相等时，两个pair相等。相等性判断利用元素的==运算符实现 |
+
+```c++
+//创建pair对象的函数
+pair<string, int> process(vector<string> &v)
+{
+    //处理v
+    if (!v.empty())
+        return {v.back(), v.back().size()};  // 列表初始化
+    else
+        return pair<string, int>();// 隐式构造返回值
+}
+```
+
+
+
+## 关联容器操作
+
+| 关联容器额外的类型别名 |                                                              |
+| ---------------------- | ------------------------------------------------------------ |
+| key_type               | 此容器类型的关键字类型                                       |
+| mapped_type            | 每个关键字关联的类型;只适用于map                             |
+| value_type             | 对于set，与key_type相同<br />对于map，为pair<const key_type, mapped_type> |
+
+```c++
+set<string>::value_type v1;			// v1是一个string
+set<string>::key_type v2;			// v2是一个string
+map<string, int>::value_type v3;	// v3是一个pair<const string, int>
+map<string, int>::key_type v4;		// v4是一个string
+map<string, int>::mapped_type v5;	// v5是一个int
+//只有map类型(unordered_map、unordered_multimap、multimap和map)才定义了mapped_type
+```
+
+
+
+### 关联容器迭代器
+
+```c++
+// 获得指向word_count中一个元素的选代器
+auto map_it = word_count.begin();
+// *map_it是指向一个pair<const string, size_t>对象的引用
+cout << map_it->first;				// 打印此元素的关键字
+cout << " " << map_it->second;		// 打印此元素的值
+map_it->first = "new key";			// 错误:关键字是 const的
+++map_it->second;					// 正确:我们可以通过迭代器改变元素
+```
+
+```c++
+//set的迭代器是const的
+set<int> iset = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+set<int>::iterator set_it = iset.begin();
+if (set_it != iset.end()) {
+    *set_it = 42;				// 错误:set 中的关键字是只读的
+    cout << *set_it << endl;  	// 正确:可以读关键字
+} 
+
+//遍历关联容器
+// 获得一个指向首元素的迭代器
+auto map_it = word_count.cbegin();
+// 比较当前迭代器和尾后迭代器
+while (map_it != word_count.cend()) {
+    // 解引用迭代器，打印关键字-值对
+    cout << map_it->first << " occurs "
+        << map_it->second << "times" << endl;
+    ++map_it;	// 递增迭代器，移动到下一个元素
+}
+```
+
+### 添加元素
+
+```c++
+vector<int> ivec = {2, 4, 6, 8, 2, 4, 6, 8};			// ivec有8个元素
+set<int> set2;											// 空集合
+set2.insert(ivec.cbegin(), ivec.cend());				// set2有4个元素
+set2.insert({1, 3, 5, 7, 1, 3, 5, 7});					// set2现在有8个元素
+
+//向map中添加元素
+// 向word_count插入word的4种方法
+word_count.insert({word, 1});
+word_count.insert(make_pair(word, 1));
+word_count.insert(pair<string, size_t>(word, 1));
+word_count.insert(map<string, size_t>::value_type(word, 1));
+```
+
+| 关联容器insert操作                     |                                                              |
+| -------------------------------------- | ------------------------------------------------------------ |
+| c.insert(v)<br />c.emplace(args)       | v是value_type类型的对象；args用来构造一个元素<br />对于map和set，只有当元素的关键字不在c中时才插入(或构造)元素。函数返回一个 pair，包含一个迭代器，指向具有指定关键字的元素，以及一个指示插入是否成功的 bool值。<br />对于multimap和multiset，总会插入(或构造)给定元素，并返回一个指向新元素的迭代器 |
+| c.insert(b，e)<br />c.insert(il)       | b和e是迭代器，表示一个c::value_type类型值的范围;il是这种值的花括号列表。函数返回void<br />对于map和set，只插入关键字不在c中的元素。对于multimap和multiset，则会插入范围中的每个元素 |
+| c.insert(p，v)<br />c.emplace(p，args) | 类似insert(v)(或emplace(args))，但将选代器p作为一个提示，指出从哪里开始搜索新元素应该存储的位置。返回一个迭代器指向具有给定关键字的元素 |
+
+```c++
+//检查insert的返回值
+//统计每个单词在输入中出现次数的一种更烦琐的方法
+map<string, size_t> word_count;		// 从string到size_t的空map
+string word;
+while (cin >> word){
+    // 插入一个元素，关键字等于word，值为1;
+    // 若word已在word_count中，insert什么也不做
+    auto ret = word_count.insert({word, 1});
+    if (!ret.second)			// word已在word_count中
+        ++ret.first->second;	// 递增计数器
+}
+```
+
+### 删除元素
+
+```c++
+// 删除一个关键字，返回删除的元素数量
+if (word_count.erase(removal_word))
+    cout << "ok: " << removal_word << " removed\n";
+else cout << "oops: " << removal_word << " not found!\n";
+
+// 对允许重复关键字的容器，删除元素的数量可能大于1:
+auto cnt = authors.erase("Barth, John");
+
+```
+
+| 从关联容器删除元素 |                                                              |
+| ------------------ | ------------------------------------------------------------ |
+| c.erase(k)         | 从c中删除每个关键字为k的元素。返回一个size_type值，指出删除的元素的数量 |
+| c.erase(p)         | 从c中删除迭代器p指定的元素。p必须指向c中一个真实元素不能等于c.end()。返回一个指向p之后元素的选代器，若p指向c中的尾元素，则返回c.end() |
+| c.erase(b, e)      | 删除迭代器对b和e所表示的范围中的元素。返回e                  |
+
+
+
+### map的下标操作
+
+| map和unordered_map的下标操作 |                                                              |
+| ---------------------------- | ------------------------------------------------------------ |
+| c[k]                         | 返回关键字为k的元素;如果k不在c中，添加一个关键字为k的元素，对其进行值初始化 |
+| c.at(k)                      | 访问关键字为k的元素，带参数检查：若k不在中，抛出一个out_of_range异常 |
+
+```c++
+//使用下标操作的返回值
+cout << word_count["Anna"];		// 用Anna作为下标提取元素;会打印出1
+++word_count["Anna"];			// 提取元素，将其增 1
+cout << word_count["Anna"];		// 提取元素并打印它;会打印出2
+```
+
+
+
+### 访问元素
+
+```c++
+set<int> iset = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+iset.find(1);		// 返回一个迭代器，指向key == 1的元素
+iset.find(11);		// 返回一个迭代器，其值等于iset.end()
+iset.count(1);		// 返回1
+iset.count(11); 	// 返回0
+```
+
+lower_bound和upper_bound 不适用于无序容器
+下标和at操作只适用于非const的map和unordered_map
+
+| 在一个关联容器中查找元素的操作 |                                                              |
+| ------------------------------ | ------------------------------------------------------------ |
+| c.find(k)                      | 返回一个迭代器，指向第一个关键字为k的元素，若k不在容器中，则返回尾后迭代器 |
+| c.count(k)                     | 返回关键字等于k的元素的数量。对于不允许重复关键字的容器，返回值永远是0或1 |
+| c.lower_bound(k)               | 返回一个迭代器，指向第一个关键字不小于k的元素                |
+| c.upper_bound(k)               | 返回一个迭代器，指向第一个关键字大于k的元素                  |
+| c.equal_range(k)               | 返回一个迭代器pair，表示关键字等于k的元素的范围。若k不存在，pair的两个成员均等于c.end() |
+
+```c++
+//对map使用find代替下标操作
+if (word_count.find("foobar") == word_count.end())
+    cout << "foobar is not in the map" << endl;
+
+//在multimap或multiset中查找元素
+string searchitem("Alain de Botton");		// 要查找的作者
+auto entries = authors.count(search_item);	// 元素的数量
+auto iter = authors.find(search_item);		// 此作者的第一本书
+// 用一个循环查找此作者的所有著作
+while(entries)
+{
+    cout << iter->second << endl;			// 打印每个题目
+    ++iter;									// 前进到下一本书
+    --entries;								// 记录已经打印了多少本书
+}
+// Or
+for (auto beg = authors.lower_bound(search_item),
+     end = authors.upper_bound(search_item);
+     beg != end; ++beg)
+    cout << beg->second << endl;		// 打印每个题目
+
+//equal_range函数
+// authors和search item的定义，与前面的程序一样
+// pos保存迭代器对，表示与关键字匹配的元素范围
+for (auto pos = authors.equal_range(search_item);
+     pos.first != pos.second; ++pos.first)
+     cout << pos.first->second << endl;	// 打印每个题目
+```
+
+
+
+## 无序容器
+
+新标准定义了4个无序关联容器(unordered associative container)。这些容器不是使用比较运算符来组织元素，而是使用一个哈希函数 (hash function)和关键字类型的 == 运算符。
+
+```c++
+//使用无序容器
+// 统计出现次数，但单词不会按字典序排列
+unordered_map<string, size_t> word_count;
+string word;
+while(cin >> word)
+    ++word_count[word];			// 提取并递增word的计数器
+for (const auto &w : word_count) // 对map中的每个元素
+    // 打印结果
+    cout << w.first << " occurs " << w.second
+    	<< ((w.second > 1) ? " times" : " time") << endl;
+```
+
+| 无序容器管理操作       |                                                              |
+| ---------------------- | ------------------------------------------------------------ |
+| 桶接口                 |                                                              |
+| c.bucket_count(）      | 正在使用的桶的数目                                           |
+| c.max_bucket_count()   | 容器能容纳的最多的桶的数量                                   |
+| c.bucket_size(n)       | 第n个桶中有多少个元素                                        |
+| c.bucket(k)            | 关键字为k的元素在哪个桶中                                    |
+| 桶迭代                 |                                                              |
+| local_iterator         | 可以用来访问桶中元素的迭代器类型                             |
+| const_local_iterator   | 桶迭代器的const版本                                          |
+| c.begin(n), c.end(n)   | 桶n的首元素迭代器和尾后迭代器                                |
+| c.cbegin(n), c.cend(n) | 与前两个函数类似，但返回const_local_iterator                 |
+| 哈希策略               |                                                              |
+| c.load_factor()        | 每个桶的平均元素数量，返回float值                            |
+| c.max_load_factor()    | c试图维护的平均桶大小，返回float值。c会在需要时添加新的桶，以使得load_factor <= max_load_factor |
+| c.rehash(n)            | 重组存储，使得bucket_count >= n且bucket_count > size / max_load_factor |
+| c.reserve(n)           | 重组存储，使得c可以保存n个元素且不必rehash                   |
+
+```c++
+//无序容器对关键字类型的要求
+// 不能直接定义关键字类型为自定义类类型的无序容器
+//  必须提供我们自己的hash模板版本
+size_t hasher(const Sales_data &sd)
+{
+    return hash<string>()(sd.isbn());
+}
+bool eqOp(const Sales_data &lhs, const Sales_data &rhs)
+{
+    return lhs.isbn() == rhs.isbn();
+}
+using SD_multiset = unordered_multiset<Sales_data, 
+					decltype(hasher)*, decltype(egOp)* >;
+// 参数是桶大小、哈希函数指针和相等性判断运算符指针
+SD_multiset bookstore(42, hasher, eqOp);
+// 使用FooHash生成哈希值;Foo必须有==运算符
+unordered_set<Foo, decltype(FooHash)*> fooSet(10, FooHash);
+```
+
+
+
+# 动态内存
+
+除了静态内存和栈内存，每个程序还拥有一个内存池。
+这部分内存被称作自由空间(free store)或堆(heap)。
+程序用堆来存储动态分配(dynamically allocate)的对象一即那些在程序运行时分配的对象。
+动态对象的生存期由程序来控制，也就是说，当动态对象不再使用时，我们的代码必须显式地销毁它们。
+
+## 动态内存与智能指针
+
+new：在动态内存中为对象分配空间并返回一个指向该对象的指针，我们可以选择对对象进行初始化
+delete：接受一个动态对象的指针，销毁该对象，并释放与之关联的内存
+
+新的标准库提供了两种智能指针(smart pointer)类型来管理动态对象
+智能指针的行为类似常规指针，重要的区别是它负责自动释放所指向的对象
+	shared_ptr 允许多个指针指向同一个对象
+	unique_ptr 则“独占”所指向的对象
+标准库还定义了一个名为weak_ptr的伴随类，它是一种弱引用，指向shared_ptr所管理的对象
+这三种类型都定义在memory头文件中。
+
+### shared_ptr 类
+
+```c++
+shared_ptr<string> p1;		//shared_ptr，可以指向string
+shared_ptr<list<int>> p2;	//shared_ptr，可以指向int的list
+
+//如果p1不为空，检查它是否指向一个空string
+if (p1 && p1->empty())
+    *p1 = "hi";		// 如果p1指向一个空string，解引用p1，将一个新值赋予string
+```
+
+| shared_ptr和unique_ptr 都支持的操作    |                                                              |
+| -------------------------------------- | ------------------------------------------------------------ |
+| shared_ptr<T> sp<br />unique_ptr<T> up | 空智能指针，可以指向类型为T的对象                            |
+| p                                      | 将p用作一个条件判断，若p指向一个对象，则为 true              |
+| *p                                     | 解引用p，获得它指向的对象                                    |
+| p->mem                                 | 等价于(*p).mem                                               |
+| p.get()                                | 返回p中保存的指针。要小心使用，若智能指针释放了其对象，返回的指针所指向的对象也就消失了 |
+| swap(p, q)<br />p.swap(q)              | 交换p和q中的指针                                             |
+
+| shared_ptr独有的操作  |                                                              |
+| --------------------- | ------------------------------------------------------------ |
+| make_shared<T> (args) | 返回一个shared_ptr，指向一个动态分配的类型为T的对象。使用args初始化此对象 |
+| shared_ptr<T> p(q)    | p是shared_ptr q的拷贝；此操作会递增q中的计数器。q中的指针必须能转换为T* |
+| p = q                 | p和q都是shared_ptr，所保存的指针必须能相互转换<br />此操作会递减p的引用计数，递增q的引用计数<br />若p的引用计数变为0则将其管理的原内存释放 |
+| p.unique()            | 若p.use_count()为1，返回true;否则返回 false                  |
+| p.use_count()         | 返回与p共享对象的智能指针数量:可能很慢，主要用于调试         |
+
+```c++
+//make_shared函数
+// 指向一个值为42的int的shared_ptr
+shared_ptr<int> p3 = make_shared<int>(42);
+// p4指向一个值为”9999999999"的string
+shared_ptr<string> p4 = make_shared<string>(10, '9');
+// p5指向一个值初始化的int，即，值为0
+shared_ptr<int> p5 = make_shared<int>();
+
+// p6指向一个动态分配的空vector<string>
+auto p6 = make_shared<vector<string>>();
+//shared_ptr的拷贝和赋值
+auto p = make_shared<int>(42);	// p指向的对象只有p一个引用者
+auto q(p);				// p和q指向相同对象，此对象有两个引用者
+auto r = make_shared<int>(42);	// r指向的int只有一个引用者
+r = q;				// 给r赋值，令它指向另一个地址
+					// 递增q指向的对象的引用计数
+					// 递减r原来指向的对象的引用计数
+					// r 原来指向的对象已没有引用者，会自动释放
+
+//shared_ptr自动销毁所管理的对象
+// 析构函数(destructor)完成销毁工作
+```
+
+
+
+```c++
+//定义StrBlob类
+class StrBlob{
+public:
+    typedef std::vector<std::string>::size_type size_type;
+    StrBlob();
+    // 此构造函数可以接受一个初始化器的花括号列表
+    StrBlob(std::initializer_list<std::string> il);
+    size_type size() const { return data->size(); }
+    bool empty() const { return data->empty(); }
+    // 添加和删除元素
+    void push_back(const std::string &t) { data->push_back(t); }
+    void pop_back();
+    // 元素访问
+	std::string& front();
+    std::string& back();
+private:
+    std::shared_ptr<std;:vector<std::string>> data;
+    // 如果data[i]不合法，抛出一个异常
+    void check(size_type i, const std::string &msg) const;
+};
+
+//StrBlob构造函数
+StrBlob::StrBlob() : data(make_shared<vector<string>>()) { }
+StrBlob::StrBlob(initializer_list<string> il) : 
+	data(make_shared<vector<string>>(il)) { }
+
+void StrBlob::check(size type i, const string &msg) const 
+{
+    if (i >= data->size())
+        throw out_of_range(msg);
+}
+
+string& StrBlob::front()
+{
+    // 如果 vector为空，check会抛出一个异常
+    check(0, "front on empty StrBlob");
+    return data->front();
+}
+string& StrBlob::back()
+{
+    check(0，"back on empty StrBlob");
+    return data->back();
+}
+void StrBlob::pop_back()
+{
+    check(0, "popback on empty StrBlob");
+    data->pop_back();
+}
+```
+
+### 直接管理内存
+
+运算符new分配内存，delete释放new分配的内存
+
+```c++
+int *pi = new int;			// pi指向一个动态分配的、未初始化的无名对象
+string *ps = new string;	// 初始化为空string
+
+int *pi = new int(1024);	// pi指向的对象的值为1024
+string *ps = new string(10, '9');	// *ps为"9999999999"
+// vector有10个元素，值依次从0到9
+vector<int> *pv = new vector<int>{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+
+
+string *ps1 = new string;			// 默认初始化为空string
+string *ps = new string();			// 值初始化为空string
+int *pi1 = new int;					// 默认初始化;*pi1的值未定义
+int *pi2 = new int();				// 值初始化为0;*pi2为0
+
+auto p1 = new auto(obj);			// p指向一个与obj类型相同的对象
+									// 该对象用obj进行初始化
+auto p2 = new auto{ a, b, c };		// 错误:括号中只能有单个初始化器
+
+//动态分配的const对象
+// 分配并初始化一个const int
+const int *pci = new const int(1024);
+// 分配并默认初始化一个const的空string
+const string *pcs = new const string;
+
+//内存耗尽
+// 如果分配失败，new返回一个空指针
+int *p1 = new int;	// 如果分配失败，new抛出std::bad_alloc
+
+// 我们称这种形式的new为定位new(placement new)
+// 定位 new 表达式允许我们向 new 传递额外的参数
+// 如果将nothrow传递给new，我们的意图是告诉它不能抛出异常。如果这种形式的 new 不能分配所需内存，它会返回一个空指针。
+// bad_alloc和nothrow都定义在头文件new中。
+int *p2 = new(nothrow) int;	// 如果分配失败，new返回一个空指针
+
+//释放动态内存
+delete p;	// p必须指向一个动态分配的对象或是一个空指针
+
+//指针值和delete
+int i, *pi1 = &i, *pi2 = nullptr;
+double *pd = new double(33), *pd2 = pd;
+delete i;		// 错误:i不是一个指针
+delete pi1;		// 未定义:pi1指向一个局部变量
+delete pd;		// 正确
+delete pd2;		// 未定义:pd2 指向的内存已经被释放了
+delete pi2;		// 正确:释放一个空指针总是没有错误的
+
+// 虽然一个const对象的值不能被改变，但它本身是可以被销毁的
+const int *pci = new const int(1024);
+delete pci;	// 正确:释放一个const对象
+
+//动态对象的生存期直到被释放时为止
+// factory返回一个指针，指向一个动态分配的对象
+Foo* factory(T arg)
+{
+    // 视情况处理arg
+    return new Foo(arg);	// 调用者负责释放此内存
+}
+void use_factory(T arg)
+{
+    Foo *p = factory(arg);
+    // 使用p但不delete它
+    
+}//p离开了它的作用域，但它所指向的内存没有被释放!
+
+//delete之后重置指针值, 只是提供了有限的保护
+int *p(new int(42));		// p指向动态内存
+auto q = p;					// p和q指向相同的内存
+delete p;					// p和q均变为无效
+p = nullptr;				// 指出p不再绑定到任何对象
+```
+
+### shared_ptr和new结合使用
+
+```c++
+shared_ptr<double> p1;				// shared_ptr可以指向一个double
+shared_ptr<int> p2(new int(42));	// p2指向一个值为42的int
+
+// 接受指针参数的智能指针构造函数是explicit的
+shared_ptr<int> p1 = new int(1024);	// 错误:必须使用直接初始化形式
+shared_ptr<int> p2(new int(1024));	// 正确:使用了直接初始化形式
+
+shared_ptr<int> clone(int p) {
+    return new int(p);	// 错误:隐式转换为shared_ptr<int>
+}
+shared_ptr<int> clone(int p) {
+    return shared_ptr<int>(new int(p)); // 正确:显式地用int*创建shared_ptr<int>
+}
+```
+
+| 定义和改变shared_ptr的其他方法               |                                                              |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| shared_ptr<T> p(q)                           | p管理内置指针q所指向的对象;q必须指向new分配的内存，且能够转换为T*类型 |
+| shared_ptr<T> p(u)                           | p从unique_ptr u那里接管了对象的所有权；将u置为空             |
+| shared_ptr<T> p(q, d)                        | p接管了内置指针q所指向的对象的所有权，q必须能转换为T*类型。p将使用可调用对象d来代替delete |
+| shared_ptr<T> p(p2, d)                       | p是shared_ptr p2的拷贝，唯一的区别是p将用可调用对象d来代替delete |
+| p.reset()<br />p.reset(g)<br />p.reset(g, d) | 若p是唯一指向其对象的 shared_ptr，reset 会释放此对象。若传递了可选的参数内置指针q，会令 p指向q，否则会将p置为空。若还传递了参数d，将会调用d而不是 delete来释放q |
+
+```c++
+//不要混合使用普通指针和智能指针
+int *x(new int(1024));		// 危险:是一个普通指针，不是一个智能指针
+process(x);					// 错误:不能将int*转换为一个shared ptr<int>
+process(shared_ptr<int>(x));// 合法的，但内存会被释放!
+int j = *x;					// 未定义的:是一个空悬指针!
+
+//也不要使用get初始化另一个智能指针或为智能指针赋值
+shared_ptr<int> p(new int(42));	//引用计数为1
+int *q = p.get();		// 正确:但使用q时要注意，不要让它管理的指针被释放
+{
+    // 新程序块
+    // 未定义:两个独立的shared_ptr指向相同的内存
+    shared_ptr<int>(q);
+} // 程序块结束，q 被销毁，它指向的内存被释放
+int foo = *p;	// 未定义:p指向的内存已经被释放了
+
+
+shared_ptr p = new int(1024);	// 错误:不能将一个指针赋予
+p.reset(new int(1024)); 		// 正确:p指向一个新对象
+
+if(!p.unique())
+    p.reset(new string(*p));	// 我们不是唯一用户;分配新的拷贝
+*p += newVal;					// 现在我们知道自己是唯一的用户，可以改变对象的值
+```
+
+
+
+### 智能指针和异常
+
+```c++
+void f()
+{
+    shared_ptr<int> sp(new int(42));	// 分配一个新对象
+    // 这段代码抛出一个异常，且在f中未被捕获
+}	// 在函数结束时shared_ptr自动释放内存
+
+
+void f()
+{
+    int *ip = new int(42);		// 动态分配一个新对象
+    // 这段代码抛出一个异常，且在 f 中未被捕获
+    delete ip;	// 在退出之前释放内存
+}		// 如果在 new和delete 之间发生异常，且异常未在f中被捕获，则内存就永远不会被释放了。
+
+//使用我们自己的释放操作
+void end_connection(connection *p) { disconnect(*p); }
+void f(destination &d /*其他参数*/)
+{
+    connection c = connect(&d);
+    shared_ptr<connection> p(&c, end_connection);
+    // 使用连接
+    // 当f退出时(即使是由于异常而退出)，connection会被正确关闭
+}
+
+```
+
+
+
+### unique_ptr类
+
+unique_ptr“拥有”它所指向的对象
+与shared_ptr不同，某个时刻只能有一个unique_ptr指向一个给定对象
+当unique_ptr被销毁时，它所指向的对象也被销毁
+
+```c++
+unique_ptr<double> p1;			// 可以指向一个double的unique_ptr
+unique_ptr<int> p2(new int(42));// p2指向一个值为42的int
+
+// 由于一个unique_ptr拥有它指向的对象，因此unique_ptr不支持普通的拷贝或赋值操作:
+unique_ptr<string> p1(new string("Stegosaurus"));
+unique_ptr<string> p2(p1);		// 错误:unique_ptr不支持拷贝
+unique_ptr<string> p3;
+p3 = p2;			// 错误:unique_ptr不支持赋值
+```
 
