@@ -5190,7 +5190,7 @@ public:
 	std::string& front();
     std::string& back();
 private:
-    std::shared_ptr<std;:vector<std::string>> data;
+    std::shared_ptr<std::vector<std::string>> data;
     // 如果data[i]不合法，抛出一个异常
     void check(size_type i, const std::string &msg) const;
 };
@@ -5400,5 +5400,1185 @@ unique_ptr<string> p1(new string("Stegosaurus"));
 unique_ptr<string> p2(p1);		// 错误:unique_ptr不支持拷贝
 unique_ptr<string> p3;
 p3 = p2;			// 错误:unique_ptr不支持赋值
+```
+
+| unique_ptr操作                            |                                                              |
+| ----------------------------------------- | ------------------------------------------------------------ |
+| unique_ptr<T> u1<br />unique_ptr<T, D> u2 | 空unique_ptr,可以指向类型为T的对象。u1会使用delete来释放它的指针:u2会使用一个类型为D的可调用对象来释放它的指针 |
+| unique_ptr<T, D> u(d)                     | 空unique_ptr，指向类型为T的对象，用类型为D的对象d代替delete  |
+| u = nullptr                               | 释放u指向的对象，将u置为空                                   |
+| u.release()                               | u放弃对指针的控制权，返回指针，并将u置为空                   |
+| u.reset()                                 | 释放u指向的对象                                              |
+| u.reset(q)<br />u.reset(nullptr)          | 如果提供了内置指针q，令u指向这个对象;否则将u置为空           |
+
+```c++
+// 将所有权从p1(指向string Stegosaurus)转移给p2
+unique_ptr<string> p2(p1.release());	// release将p1置为空
+unique_ptr<string> p3(new string("Trex"));
+// 将所有权从p3转移给p2
+p2.reset(p3.release());	// reset释放了p2原来指向的内存
+
+p2.release();		// 错误:p2不会释放内存，而且我们丢失了指针
+auto p = p2.release(); // 正确，但我们必须记得delete(p)
+
+//传递unique_ptr参数和返回unique_ptr
+// 不能拷贝 unique ptr 的规则有一个例外:
+//  我们可以拷贝或赋值一个将要被销毁的unique ptr
+unique_ptr<int> clone(int p) {
+    // 正确:从int*创建一个unique_ptr<int>
+    return unique_ptr<int>(new int(p));
+}
+//  还可以返回一个局部对象的拷贝
+unique_ptr<int> clone(int p) {
+    unique_ptr<int> ret(new int (p));
+    // ... 
+    return ret;
+}
+//向unique_ptr传递删除器
+// p指向一个类型为 objT 的对象，并使用一个类型为 delT 的对象释放obiT 对象
+// 它会调用一个名为fcn的delT类型对象
+unique_ptr<objT, delT> p (new objT, fcn);
+
+
+void f(destination &d /*其他需要的参数 */)
+{
+    connection c = connect(&d);	// 打开连接
+    // 当p被销毁时，连接将会关闭
+    unique_ptr<connection, decltype(end_connection)*>
+        p(&c, end_connection);
+    // 使用连接
+    // 当f退出时(即使是由于异常而退出)，connection会被正确关闭
+}
+```
+
+
+
+### weak_ptr
+
+weak_ptr(见表12.5是一种不控制所指向对象生存期的智能指针，它指向由一个shared_ptr管理的对象。将一个 weak_ptr 绑定到一个 shared_ptr不会改变shared_ptr的引用计数。
+
+| weak_ptr          |                                                              |
+| ----------------- | ------------------------------------------------------------ |
+| weak_ptr<T> w     | 空weak_ptr可以指向类型为T的对象                              |
+| weak_ptr<T> w(sp) | 与shared_ptr sp指向相同对象的 weak_ptr。T必须能转换为sp 指向的类型 |
+| w = p             | p可以是一个shared_ptr 或一个 weak_ptr。赋值后w与p共享对象    |
+| w.reset()         | 将w置为空                                                    |
+| w.use_count()     | 与w共享对象的 shared_ptr的数量                               |
+| w.expired()       | 若w.use_count()为0，返回true，否则返回 false                 |
+| w.lock()          | 如果expired为true，返回一个空 shared_ptr;否则返回一个指向w的对象的shared_ptr |
+
+```c++
+auto p = make_shared<int>(42);
+weak_ptr<int> wp(p);	// wp 弱共享p; p的引用计数未改变
+
+if (shared_ptr<int> np = wp.lock()) { // 如果np不为空则条件成立
+	// 在if中，np与p共享对象
+}
+```
+
+
+
+```c++
+//核查指针类
+// 对于访问一个不存在元素的尝试，strBlobPtr 抛出一个异常
+class StrBlobPtr {
+public:
+    StrBlobPtr(): curr(0) { }
+    StrBlobPtr(StrBlob &a, size_t sz = 0):
+    	wptr(a.data), curr(sz) { }
+    std::string& deref() const;
+    StrBlobPtr& incr(); // 前缀递增
+private:
+    // 若检查成功，check 返回一个指向 vector的 shared_ptr
+    std::shared_ptr<std::vector<std::string>>
+        check(std::size_t, const std::string&) const;
+    // 保存一个weak_ptr，意味着底层 vector 可能会被销毁
+    std::weak_ptr<std::vector<std::string>> wptr;
+    std::size_t curr;// 在数组中的当前位置
+};
+
+std::shared_ptr<std::vector<std::string>>
+StrBlobPtr::check(std::size_t i, const std::string &msg) const
+{
+    auto ret = wptr.lock();	// vector还存在吗?
+    if (!ret)
+        throw std::runtime_error("unbound StrBlobPtr");
+    if (i >= ret->size())
+        throw std::out_of_range(msg);
+    return ret;//否则，返回指向 vector的 shared_ptr
+}
+
+std::string& StrBlobPtr::deref() const
+{
+    auto p = check(curr, "dereference past end");
+    return (*p)[curr]; // (*p)是对象所指向的 vector
+}
+
+// 前缀递增:返回递增后的对象的引用
+StrBlobPtr& StrBlobPtr::incr()
+{
+    // 如果curr已经指向容器的尾后位置，就不能递增它
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;	// 推进当前位置
+    return *this;
+}
+
+// 对于StrBlob中的友元声明来说，此前置声明是必要的
+class StrBlobPtr;
+class StrBlob {
+    friend class StrBlobPtr;
+    // 其他成员与之前声明相同
+    // 返回指向首元素和尾后元素的 StrBlobPtr
+    StrBlobPtr begin() { return StrBlobPtr(*this); }
+    StrBlobPtr end() 
+    {
+        auto ret = StrBlobPtr(*this, data->size());
+        return ret; 
+    }
+};
+```
+
+
+
+## 动态数组
+
+C++语言定义了另一种 new 表达式语法，可以分配并初始化一个对象数组
+标准库中包含一个名为allocator 的类，允许我们将分配和初始化分离
+	使用 allocator 通常会提供更好的性能和更灵活的内存管理能力
+
+### new和数组
+
+```c++
+// 调用get_size确定分配多少个int
+int *pia = new int[get_size()];	// pia指向第一个int
+
+typedef int arrT[42];		// arrT表示42个int的数组类型
+int *p = new arrT;			// 分配一个42个int的数组;p指向第一个int
+
+//分配一个数组会得到一个元素类型的指针
+
+//初始化动态分配对象的数组
+int *pia = new int[10];				// 10个未初始化的int
+int *pia2 = new int[10]();			// 10个值初始化为0的int
+string *psa = new string[10];		// 10个空string
+string *psa2 = new string[10]();	// 10个空string
+
+//C++11
+// 10个int 分别用列表中对应的初始化器初始化
+int *pia3 = new int[10]{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+//10个string，前4个用给定的初始化器初始化，剩余的进行值初始化
+string *psa3 = new string[10]{ "a", "an", "the", string(3, 'x')};
+
+//动态分配一个空数组是合法的
+// 错误:不能定义长度为0的数组
+char arr[0];
+char *cp = new char[0]; // 正确:但cp不能解引用
+
+//释放动态数组
+delete p;			// p必须指向一个动态分配的对象或为空
+delete [] pa;		// pa必须指向一个动态分配的数组或为空
+
+//智能指针和动态数组
+// up指向一个包含10个未初始化int的数组
+unique_ptr<int[]> up(new int[10]);
+up.release();	// 自动用delete[]销毁其指针
+```
+
+指向数组的 unique_ptr 不支持成员访问运算符(点和箭头运算符)。其他unique_ptr操作不变
+
+| 指向数组的unique_ptr  |                                                            |
+| --------------------- | ---------------------------------------------------------- |
+| unique_ptr<T[ ]> u    | u可以指向一个动态分配的数组，数组元素类型为 T              |
+| unique_ptr<T[ ]> u(p) | u指向内置指针p所指向的动态分配的数组。p 必须能转换为类型T* |
+| u[i]                  | 返回u拥有的数组中位置i处的对象<br />u必须指向一个数组      |
+
+```c++
+// 为了使用 shared_ptr，必须提供一个删除器
+shared_ptr<int> sp(new int[10], [](int *p) { delete[] p; } );
+sp.reset(); // 使用我们提供的lambda释放数组，它使用delete[]
+
+// shared_ptr不直接支持动态数组管理这一特性会影响我们如何访问数组中的元素:
+// shared_ptr未定义下标运算符，并且不支持指针的算术运算
+for (size_t i = 0; i != 10; ++i)
+    *(sp.get() + i) = i;	// 使用get获取一个内置指针
+```
+
+
+
+### allocator 类
+
+当分配一大块内存时，通常计划在这块内存上按需构造对象
+在此情况下，我们希望将内存分配和对象构造分离
+这意味着我们可以分配大块内存，但只在真正需要时才真正执行对象创建操作(同时付出一定开销)
+
+```c++
+string *const p = new string[n];		// 构造n个空string
+string s;
+string *q = p;							// q指向第一个string
+while (cin >> s && q != p + n)
+    *q++ = s;							// 赋予*q一个新值
+const size_t size = q - p;				// 记住我们读取了多少个string
+// 使用数组
+delete[] p;		// p指向一个数组;记得用delete[]来释放
+```
+
+**allocator 类**
+标准库allocator类定义在头文件memory 中，它帮助我们将内存分配和对象构造分离开来
+当一个allocator 对象分配内存时，它会根据给定的对象类型来确定恰当的内存大小和对齐位置
+
+```c++
+allocator<string> alloc;			// 可以分配string的allocator对象
+auto const p = alloc.allocate(n);	// 分配n个未初始化的string
+```
+
+| 标准库allocator类及其算法 |                                                              |
+| ------------------------- | ------------------------------------------------------------ |
+| allocator<T> a            | 定义了一个名为a的allocator 对象，它可以为类型为T的对象分配内存 |
+| a.allocate(n)             | 分配一段原始的、未构造的内存，保存n个类型为T的对象           |
+| a.deallocate(p, n)        | 释放从T*指针p中地址开始的内存，这块内存保存了n个类型为T的对象;p必须是一个先前由allocate返回的指针且n必须是p创建时所要求的大小。在调用deallocate之前，用户必须对每个在这块内存中创建的对象调用destroy |
+| a.construct(p, args)      | p必须是一个类型为T*的指针，指向一块原始内存;arg被传递给类型为T的构造函数，用来在p指向的内存中构造个对象 |
+| a.destroy(p)              | p为T*类型的指针,此算法对p指向的对象执行析构函数              |
+
+```c++
+//allocator分配未构造的内存
+auto q = p;	// q指向第一个未初始化的string
+alloc.construct(q++);	// *q为空字符串
+alloc.construct(q++, 10, 'c');	// *q为cccccccccc
+alloc.construct(q++, "hi");		// *q为hi
+cout << *p << endl; // 正确:使用string的输出运算符
+cout << *q << endl;	// 灾难：q指向未构造的内存！
+
+while (q != p)
+    alloc.destroy(--q);	// 释放构造的 string
+//Or
+alloc.deallocate(p, n);
+```
+
+**拷贝和填充未初始化内存的算法**
+
+| allocator算法                  |                                                              |
+| ------------------------------ | ------------------------------------------------------------ |
+| uninitialized_copy(b, e, b2)   | 从迭代器b和e指出的输入范围中拷贝元素到迭代器b2指定的未构造的原始内存中。b2指向的内存必须足够大，能容纳输入序列中元素的拷贝 |
+| uninitialized_copy_n(b, n, b2) | 从迭代器b指向的元素开始，拷贝n个元素到b2开始的内存中         |
+| uninitialized_fill(b, e, t)    | 在迭代器b和e指定的原始内存范围中创建对象，对象的值均为t的拷贝 |
+| uninitialized_fill_n(b, n, t)  | 从迭代器b指向的内存地址开始创建n个对象。b必须指向足够大的未构造的原始内存，能够容纳给定数量的对象 |
+
+```c++
+// 分配比vi中元素所占用空间大一倍的动态内存
+auto p = alloc.allocate(vi.size() * 2);
+// 通过拷贝 vi 中的元素来构造从p开始的元素
+auto q = uninitialized_copy(vi.begin(), vi.end(), p);
+// 将剩余元素初始化为 42
+uninitialized_fill_n(q, vi.size(), 42);
+```
+
+
+
+# 拷贝控制
+
+定义一个类时，我们显式地或隐式地指定在此类型的对象拷贝、移动、赋值和销毁时做什么
+
+- 拷贝构造函数(copy constructor)
+- 拷贝赋值运算符(copy-assignment operator)
+- 移动构造函数(move constructor)
+- 移动赋值运算符(move-assignment operator)
+- 析构函数(destructor)
+
+拷贝和移动构造函数定义了当用同类型的另一个对象初始化本对象时做什么
+拷贝和移动赋值运算符定义了将一个对象赋予同类型的另一个对象时做什么
+析构函数定义了当此类型对象销毁时做什么
+我们称这些操作为拷贝控制操作(copy control)
+
+## 拷贝、赋值与销毁
+
+### 拷贝构造函数
+
+如果一个构造函数的**第一个参数**是**自身类类型的引用**，且任何额外参数都有默认值则此构造函数是拷贝构造函数
+拷贝构造函数通常不应该是explicit的
+
+```c++
+class Foo {
+public:
+    Foo();				// 默认构造函数
+    Foo(const Foo&); 	// 拷贝构造函数
+    // ...
+}
+```
+
+**合成拷贝构造函数**
+合成拷贝构造函数用来阻止我们拷贝该类类型的对象
+而一般情况，合成的拷贝构造函数会将其参数的成员逐个拷贝到正在创建的对象中
+
+每个成员的类型决定了它如何拷贝:
+	对类类型的成员，会使用其拷贝构造函数来拷贝；内置类型的成员则直接拷贝
+	合成拷贝构造函数会逐元素地拷贝一个数组类型的成员
+		如果数组元素是类类型，则使用元素的拷贝构造函数来进行拷贝
+
+```c++
+// Sales_data类的合成拷贝构造函数等价于
+class Sales_data {
+public:
+    // 其他成员和构造函数的定义，如前
+    // 与合成的拷贝构造函数等价的拷贝构造函数的声明
+    Sales_data(const Sales_data&);
+private:
+    std::string bookNo;
+    int units_sold = 0;
+    double revenue = 0.0;
+};
+// 与Sales_data的合成的拷贝构造函数等价
+Sales_data::Sales_data(const Sales_data &orig) : 
+	bookNo(orig.bookNo), 			// 使用 string的拷贝构造函数
+	units_sold(orig.units_sold), 	// 拷贝orig.units_sold
+	revenue(orig.revenue)			// 拷贝orig.revenue
+    { }								// 空函数体
+
+//拷贝初始化
+// 当我们使用拷贝初始化 (copy initialization)时，
+// 要求编译器将右侧运算对象拷贝到正在创建的对象中，如果需要的话还要进行类型转换
+string dots(10, '.');					// 直接初始化
+string s(dots);							// 直接初始化
+string s2 = dots;						// 拷贝初始化
+string null_book = "9-999-99999-9";		// 拷贝初始化
+string nines = string(100, '9');		// 拷贝初始化
+```
+
+拷贝初始化何时发生：
+
+- 用=定义变量时会发生
+- 将一个对象作为实参传递给一个非引用类型的形参
+- 从一个返回类型为非引用类型的函数返回一个对象
+- 用花括号列表初始化一个数组中的元素或一个聚合类中的成员
+
+**为什么拷贝构造函数一定要是引用类型**
+如果其参数不是引用类型，则调用永远也不会成功：为了调用拷贝构造函数，我们必须拷贝它的实参，但为了拷贝实参，我们又需要调用拷贝构造函数，如此无限循环。
+
+
+
+### 拷贝赋值运算符
+
+```c++
+Sales_data trans, accum;
+trans = accum;		//使用Sales_data的拷贝赋值运算符
+```
+
+```c++
+class Foo {
+public:
+	Foo& operator=(const Foo&); // 赋值运算符
+	// ...
+};
+```
+
+为了与内置类型的赋值保持一致，赋值运算符通常返回**一个指向其左侧运算对象的引用**
+标准库通常要求保存在容器中的类型要具有赋值运算符，且其返回值是左侧运算对象的引用
+
+**合成拷贝赋值运算符**
+
+```c++
+//等价于Sales_data的合成拷贝赋值运算符
+Sales_data& Sales_data::operator=(const Sales_data &rhs)
+{
+    bookNo = rhs.bookNo;			// 调用string::operator=
+    units_sold = rhs.units_sold;	// 使用内置的int赋值
+    revenue = rhs.revenue;			// 使用内置的double赋值
+    return *this;					// 返回一个此对象的引用
+}
+```
+
+
+
+### 析构函数
+
+析构函数释放对象使用的资源，并销毁对象的非static数据成员
+由于析构函数不接受参数，因此它不能被重载。对一个给定类，只会有唯一一个析构函数
+在一个析构函数中，首先执行函数体，然后销毁成员
+成员按初始化顺序的逆序销毁
+
+```c++
+class Foo{
+public:
+    ~Foo();	// 析构函数
+    // ...
+};
+```
+
+```c++
+{
+    // 新作用域
+    // p和p2指向动态分配的对象
+    Sales_data *p = new Sales_data;			// p是一个内置指针
+    auto p2 = make_shared<Sales_data>();	// p2是一个shared_ptr
+    Sales_data item(*p);					// 拷贝构造函数将*p拷贝到item 中
+    vector<Sales_data> vec;					// 局部对象
+    vec.push_back(*p2);						// 拷贝p2指向的对象
+    delete p;								// 对p指向的对象执行析构函数
+}
+//退出局部作用域;对item、p2和vec调用析构函数
+//销毁p2会递减其引用计数;如果引用计数变为 0，对象被释放
+//销毁vec会销毁它的元素
+```
+
+
+
+### 三/五法则
+
+需要析构函数的类也需要拷贝和赋值操作
+需要拷贝操作的类也需要赋值操作，反之亦然
+
+所有五个拷贝控制成员应该看作一个整体:一般来说，如果一个类定义了任何一个拷贝操作，它就应该定义所有五个操作。如前所述，某些类必须定义拷贝构造函数、拷贝赋值运算符和析构函数才能正确工作。这些类通常拥有一个资源，而拷贝成员必须拷贝此资源。一般来说，拷贝一个资源会导致一些额外开销。在这种拷贝并非必要的情况下，定义了移动构造函数和移动赋值运算符的类就可以避免此问题。
+
+
+
+### 使用=default
+
+将拷贝控制成员定义为=default 来显式地要求编译器生成合成的版本
+
+```c++
+class Sales_data {
+public:
+    //拷贝控制成员;使用default
+    Sales_data() = default;
+    Sales_data(const Sales_data&) = default;
+    Sales_data& operator=(const Sales_data &);
+    ~Sales_data() = default;
+    //其他成员的定义，如前
+};
+// 不希望合成的成员是内联函数，应该只对成员的类外定义使用=default
+Sales_data& Sales_data::operator=(const Sales_datas&) = default;
+```
+
+
+
+### 阻止拷贝
+
+**定义删除的函数**
+虽然声明了它们，但不能以任何方式使用它们
+在函数的参数列表后面加上=delete 来指出我们希望将它定义为删除的
+析构函数不能是删除的成员
+合成的拷贝控制成员可能是删除的
+	如果一个类有数据成员不能默认构造、拷贝、复制或销毁则对应的成员函数将被定义为删除的
+
+```c++
+struct NoCopy {
+    NoCopy() = default;				// 使用合成的默认构造函数
+    NoCopy(const NoCopy&) = delete;	// 阻止拷贝
+    NoCopy &operator=(const NoCopy&) = delete;	// 阻止赋值
+    ~NoCopy() = default;			// 使用合成的析构函数
+	// 其他成员
+};
+
+//private 拷贝控制
+// 在新标准发布之前，类是通过将其拷贝构造函数和拷贝赋值运算符声明为 private的来阻止拷贝:
+class PrivateCopy {
+    //无访问说明符;接下来的成员默认为 private的
+    //拷贝控制成员是private的，因此普通用户代码无法访问
+    PrivateCopy(const PrivateCopys);
+    PrivateCopy &operator=(const PrivateCopys);
+    //其他成员
+public:
+    PrivateCopy() = default;	// 使用合成的默认构造函数
+    ~PrivateCopy();				// 用户可以定义此类型的对象，但无法拷贝它们
+};
+```
+
+
+
+## 拷贝控制和资源管理
+
+可以定义拷贝操作，使类的行为看起来像一个值或者像一个指针
+
+### 行为像值的类
+
+为了实现类值行为，HasPtr需要
+
+- 定义一个拷贝构造函数，**完成string的拷贝**，而不是拷贝指针
+- 定义一个析构函数来释放string
+- 定义一个拷贝赋值运算符来释放对象当前的 string，并从右侧运算对象拷贝string
+
+```c++
+class HasPtr{
+public:
+    HasPtr(const std::string &s = std::string()) :
+    	ps(new std::string(s)), i(0) { }
+    // 对ps指向的string，每个HasPtr对象都有自己的拷贝
+    HasPtr(const HasPtr &p) : 
+        ps(new std::string(*p.ps)), i(p.i) { }
+    HasPtr& operator=(const HasPtr &);
+    ~HasPtr() { delete ps; }
+private:
+    std;:string *ps;
+	int i;
+};
+
+//类值拷贝赋值运算符
+HasPtr& HasPtr::operator=(const HasPtr &rhs)
+{
+    auto newp = new string(*rhs.ps); // 拷贝底层string
+    delete ps;		// 释放旧内存
+    ps = newp;		// 从右侧运算对象拷贝数据到本对象
+    i = rhs.i;
+    return *this;	// 返回本对象
+}
+
+```
+
+
+
+### 定义行为像指针的类
+
+```c++
+//定义一个使用引用计数的类
+class HasPtr {
+public:
+    // 构造函数分配新的 string 和新的计数器，将计数器置为1
+    HasPtr(const std::string &s = std::string()):
+    	ps(new std::string(s)), i(0), use(new std::size_t(1)) { }
+    // 拷贝构造函数拷贝所有三个数据成员，并递增计数器
+    HasPtr(const HasPtr &p):
+    	ps(p.ps), i(p.i), use(p.use) { ++*use; }
+    HasPtr& operator=(const HasPtr&);
+    ~HasPtr();
+private:
+    std::string *ps;
+    int i;
+    std::size_t *use;	// 用来记录有多少个对象共享*ps的成员
+};
+
+HasPtr::~HasPtr()
+{
+    if (--*use == 0) {	// 如果引用计数变为0
+        delete ps;		// 释放string内存
+        delete use;		// 释放计数器内存
+    }
+}
+
+HasPtr& HasPtr::operator=(const HasPtr &rhs)
+{
+    ++*rhs.use;	// 递增右侧运算对象的引用计数
+    if (--*use == 0){	// 然后递减本对象的引用计数
+        delete ps;		// 如果没有其他用户
+        delete use;		// 释放本对象分配的成员
+    }
+    ps = rhs.ps;		// 将数据从rhs拷贝到本对象
+    i = rhs.i;
+    use = rhs.use;
+	return *this;		// 返回本对象
+}
+```
+
+
+
+## 交换操作
+
+管理资源的类通常还定义一个名为 swap 的函数
+对于那些与重排元素顺序的算法一起使用的类，定义swap是非常重要的
+这类算法在需要交换两个元素时会调用 swap
+
+```c++
+//swap示例
+HasPtr temp = v1;		// 创建v1的值的一个临时副本
+v1 = v2;				// 将v2的值赋予v1
+v2 = temp;				// 将保存的v1的值赋予v2
+```
+
+```c++
+//编写我们自己的swap函数
+class HasPtr{
+    friend void swap(HasPtr&, HasPtr&);
+};
+
+inline void swap(HasPtr &lhs, HasPtr &rhs)
+{
+    using std::swap;
+    swap(lhs.ps, rhs.ps);		// 交换指针，而不是string 数据
+    swap(lhs.i, rhs.i);			// 交换int成员
+}
+```
+
+每个 swap 调用应该都是未加限定的
+	即,每个调用都应该是 swap,而不是 std::swap
+如果存在类型特定的 swap 版本，其匹配程度会优于 std 中定义的版本
+
+```c++
+//在赋值运算符中使用swap
+// 注意 rhs 是按值传递的，意味着 HasPtr的拷贝构造函数
+// 将右侧运算对象中的string拷贝到rhs
+HasPtr& HasPtr::operator=(HasPtr rhs){
+    // 交换左侧运算对象和局部变量rhs的内容
+    swap(*this, rhs);		// rhs现在指向本对象曾经使用的内存
+    return *this;			// rhs被销毁，从而delete了rhs中的指针
+}
+```
+
+
+
+## 对象移动
+
+在其中某些情况下，对象拷贝后就立即被销毁了。在这些情况下，移动而非拷贝对象会大幅度提升性能
+
+### 右值引用
+
+所谓右值引用就是必须绑定到右值的引用
+我们通过&&而不是&来获得右值引用
+
+右值引用有一个重要的性质：**只能绑定到一个将要销毁的对象**。
+	因此，我们可以自由地将一个右值引用的资源“移动”到另一个对象中
+
+对于常规引用，不能将其绑定到要求转换的表达式、字面常量或是返回右值的表达式
+右值引用有着完全相反的绑定特性：
+	我们可以将一个右值引用绑定到这类表达式上
+	但不能将一个右值引用直接绑定到一个左值上
+
+```c++
+int i = 42;					
+int &r = i;					// 正确:r引用i
+int &&rr = i;				// 错误:不能将一个右值引用绑定到一个左值上
+int &r2 = i * 42;			// 错误:i*42是一个右值
+const int &r3 = i * 42;		// 正确:我们可以将一个const的引用绑定到一个右值上
+int &&rr2 = i * 42;			// 正确:将rr2绑定到乘法结果上
+```
+
+**左值持久;右值短暂**
+左值有持久的状态
+右值要么是字面常量，要么是在表达式求值过程中创建的临时对象
+
+**变量是左值**
+
+```c++
+int &&rr1 = 42;		// 正确:字面常量是右值
+int &&rr2 = rr1;	// 错误:表达式rr1是左值!
+```
+
+**标准库move函数**
+
+```c++
+int &&rr3 = std::move(rrl);	// ok
+// move 调用告诉编译器:我们有一个左值，但希望像一个右值一样处理它
+// 调用move就意味着承诺:除了对rr1赋值或销毁它外，我们将不再使用它
+// 在调用move之后，我们不能对移后源对象的值做任何假设
+```
+
+
+
+### 移动构造函数和移动赋值运算符
+
+移动构造函数的第一个参数是该类类型的一个引用
+	不同于拷贝构造函数的是，这个引用参数在移动构造函数中是一个右值引用
+	与拷贝构造函数一样，任何额外的参数都必须有默认实参
+
+```c++
+//移动构造函数
+// 必须在类头文件的声明中和定义中(如果定义在类外的话)都指定noexcept
+StrVec::StrVec(StrVec &&s) noexcept	// 移动操作不应抛出任何异常
+    // 成员初始化器接管s中的资源
+	: elements(s.elements), first_free(s.first_free), cap(s.cap)
+{
+    // 令s进入这样的状态-对其运行析构函数是安全的
+    s.elements = s.first_free = s.cap = nullptr;
+}
+```
+
+与拷贝构造函数不同，移动构造函数不分配任何新内存
+在接管内存之后，它将给定对象中的指针都置为 nullptr
+这样就完成了从给定对象的移动操作，此对象将继续存在
+移后源对象会被销毁，意味着将在其上运行析构函数
+
+```c++
+//移动赋值运算符
+StrVec &StrVec::operator=(StrVec &&rhs) noexcept
+{
+    // 直接检测自赋值
+    if (this != &rhs) {
+        free();						// 释放已有元素
+        elements = rhs.elements;	// 从rhs接管资源
+        first_free = rhs.first_free;
+        cap = rhs.cap;	
+        // 将rhs置于可析构状态
+        rhs.elements = rhs.first_free = rhs.cap = nullptr;
+    }
+    return *this;
+}
+```
+
+**移后源对象必须可析构**
+除了将移后源对象置为析构安全的状态之外
+移动操作还必须保证对象仍然是有效的
+	对象有效就是指可以安全地为其赋予新值或者可以安全地使用而不依赖其当前值
+	移动操作对移后源对象中留下的值没有任何要求
+因此，我们的程序不应该依赖于移后源对象中的数据
+
+**合成的移动操作**
+与拷贝操作不同，编译器根本不会为某些类合成移动操作
+	如果一个类定义了自己的拷贝构造函数、拷贝赋值运算符或者析构函数，编译器就不会为它合成移动构造函数和移动赋值运算符
+	只有当一个类没有定义任何自己版本的拷贝控制成员，且类的每个非static数据成员都可以移动时，编译器才会为它合成移动构造函数或移动赋值运算符
+
+```c++
+//编译器会为X和hasX合成移动操作
+struct X {
+    int i;			// 内置类型可以移动
+	std::string s;	// string定义了自己的移动操作
+};
+struct hasX{
+    X mem;	// X有合成的移动操作
+};
+X x, x2 = std::move(x);			// 使用合成的移动构造函数
+hasX hx, hx2 = std::move(hx);	// 使用合成的移动构造函数
+
+// 假定丫是一个类，它定义了自己的拷贝构造函数但未定义自己的移动构造函数
+struct hasY {
+    hasY() = default;
+    hasY(hasY&&) = default;
+    Y mem;// hasY将有一个删除的移动构造函数
+};
+hasY hy, hy2 = std::move(hy);	// 错误:移动构造函数是删除的
+```
+
+定义了一个移动构造函数或移动赋值运算符的类必须也定义自己的拷贝操作否则，这些成员默认地被定义为删除的。
+
+**移动右值，拷贝左值**
+
+```c++
+StrVec vl, v2;				
+vl = v2;					// v2是左值;使用拷贝赋值
+StrVec getVec(istream &);	// getVec 返回一个右值
+v2 = getVec(cin);			// getVec(cin)是一个右值;使用移动赋值
+```
+
+**但如果没有移动构造函数，右值也被拷贝**
+
+```c++
+class Foo {
+public:
+    Foo() = default;
+    Foo(const Foo&); // 拷贝构造函数
+    // 其他成员定义，但 Foo 未定义移动构造函数
+};
+Foo x;
+Foo y(x);				// 拷贝构造函数;x是一个左值
+Foo z(std::move(x));	// 拷贝构造函数，因为未定义移动构造函数
+```
+
+**拷贝并交换赋值运算符和移动操作**
+
+```c++
+class HasPtr {
+public:
+    // 添加的移动构造函数
+    HasPtr(HasPtr &&p) noexcept : ps(p.ps), i(p.i) { p.ps = 0; }
+    // 赋值运算符既是移动赋值运算符，也是拷贝赋值运算符
+    HasPtr& operator=(HasPtr rhs)
+        { swap(*this，rhs); return *this; }
+    // 其他成员的定义
+};
+
+hp = hp2;				// hp2是一个左值;hp2通过拷贝构造函数来拷贝
+hp = std::move(hp2);	// 移动构造函数移动 hp2
+```
+
+**移动迭代器**
+一个移动迭代器通过改变给定迭代器的解引用运算符的行为来适配此迭代器
+	与其他迭代器不同，移动迭代器的解引用运算符生成一个右值引用
+	一个其他的迭代器的解引用运算符返回一个指向元素的左值
+
+```c++
+void StrVec::reallocate()
+{
+    // 分配大小两倍于当前规模的内存空间
+    auto newcapacity = size() ? 2 * size() : 1;
+    auto first = alloc.allocate(newcapacity);
+    // 移动元素
+    auto last = uninitialized_copy(make_move_iterator(begin()),
+                                   make_move_iterator(end()),
+                                   first);
+    free();					// 释放旧空间
+    elements = first;		// 更新指针
+    first_free =last;
+    cap = elements + newcapacity;
+}
+```
+
+只有在确信算法在为一个元素赋值或将其传递给一个用户定义的函数后不再访问它时，才能将移动迭代器传递给算法。
+
+在移动构造函数和移动赋值运算符这些类实现代码之外的地方，只有当你确信需要进行移动操作且移动操作是安全的，才可以使用 std::move。
+
+
+
+### 右值引用和成员函数
+
+允许移动的成员函数通常使用与拷贝/移动构造函数和赋值运算符相同的参数模式
+	一个版本接受一个指向 const 的左值引用
+	第二个版本接受一个指向非const的右值引用
+
+```c++
+void push_back(const X&);	// 拷贝:绑定到任意类型的X
+void push_back(X&&);		// 移动:只能绑定到类型X的可修改的右值
+```
+
+当我们希望从实参“窃取”数据时，通常传递一个右值引用。为了达到这目的，实参不能是 const 的
+从一个对象进行拷贝的操作不应该改变该对象。因此，通常不需要定义一个接受一个(普通的)X&参数的版本
+
+```c++
+class StrVec {
+public:
+    void push_back(const std::string&);		// 拷贝元素
+    void push_back(std::string&&);			// 移动元素
+    // 其他成员的定义，如前
+};
+
+void StrVec::push_back(const string& s)
+{
+    chk_n_alloc();	// 确保有空间容纳新元素
+    // 在first_free指向的元素中构造s的一个副本
+    alloc.construct(first_free++, s);
+}
+
+void StrVec::push_back(string &&s)
+{
+    chk_n_alloc();	// 如果需要的话为 StrVec 重新分配内存
+    alloc.construct(first_free++, std::move(s));
+}
+
+StrVec vec;//空StrVec
+string s = "some string or another";
+vec.push_back(s);		// 调用push_back(const string&)
+vec.push_back("done");	// 调用push_back(string&&)
+```
+
+
+
+**右值和左值引用成员函数**
+
+```c++
+string s1 = "a value", s2 = "another";
+auto n = (s1 + s2).find('a');
+
+s1 + s2 = "wow!";	// 对两个string的连接结果一个右值，进行了赋值
+
+//希望强制左侧运算对象(即，this 指向的对象)是一个左值
+// 引用限定符(reference qualifier)
+class Foo{
+public:
+	Foo &operator=(const Foo&) &;// 只能向可修改的左值赋值
+    // Foo的其他参数    
+};
+
+Foo &Foo::operator=(const Foo &rhs) & 
+{
+    // 执行将rhs赋予本对象所需的工作
+    return *this;
+}
+
+Foo &retFoo();		// 返回一个引用;retFoo调用是一个左值
+Foo retVal();		// 返回一个值;retVal调用是一个右值
+Foo i, j;			// i和j是左值
+i = j;				// 正确:i是左值
+retFoo() = j;		// 正确:retFoo()返回一个左值
+retVal() = j;		// 错误:retVal()返回一个右值
+i = retVal();		// 正确:我们可以将一个右值作为赋值操作的右侧运算对象
+
+//一个函数可以同时用const 和引用限定。在此情况下,引用限定符必须跟随在const限定符之后:
+class Foo {
+public:
+    Foo someMem() & const;		// 错误:const 限定符必须在前
+    Foo anotherMem() const &;	// 正确:const限定符在前
+};
+```
+
+
+
+**重载和引用函数**
+引用限定符也可以区分重载版本
+
+```c++
+class Foo{
+public:
+    Foo sorted() &&;			// 可用于可改变的右值
+    Foo sorted() const &;		// 可用于任何类型的 Foo
+    // Foo的其他成员的定义
+private:
+    vector<int> data;
+};
+
+// 本对象为右值，因此可以原址排序
+Foo Foo::sorted() &&
+{
+    sort(data.begin(), data.end());
+    return *this;
+}
+
+// 本对象是 const 或是一个左值，哪种情况我们都不能对其进行原址排序
+Foo Foo::sorted() const & {
+    Foo ret(*this);		// 拷贝一个副本
+    sort(ret.data.begin(), ret.data.end());	// 排序副本
+    return ret;		// 返回副本
+}
+
+retVal().sorted();	// retVal()是一个右值，调用 Foo::sorted() &&
+retFoo().sorted();	// retFoo()是一个左值，调用 Foo::sorted() const &
+
+// 如果定义两个或两个以上具有相同名字和相同参数列表的成员函数，就必须对所有函数都加上引用限定符，或者所有都不加:
+class Foo {
+public:
+    Foo sorted() &&;
+    Foo sorted() const;		// 错误:必须加上引用限定符
+    // comp是函数类型的类型别名
+    // 此函数类型可以用来比较 int 值
+    using Comp = bool(const int&, const int&);
+    Foo sorted(Comp*);			// 正确:不同的参数列表
+    Foo sorted(Comp*) const;	// 正确:两个版本都没有引用限定符
+};
+```
+
+
+
+# 重载运算与类型转换
+
+重载的运算符是具有特殊名字的函数:它们的名字由关键字 operator 和其后要定义的运算符号共同组成
+和其他函数一样，重载的运算符也包含返回类型、参数列表以及函数体
+
+重载运算符函数的参数数量与该运算符作用的运算对象数量一样多。
+	一元运算符有个参数，二元运算符有两个
+如果一个运算符函数是成员函数，则它的第一个(左侧)运算对象绑定到隐式的this指针上，因此，成员运算符函数的(显式)参数数量比运算符的运算对象总数少一个
+
+对于一个运算符函数来说，它或者是类的成员，或者至少含有一个类类型的参数
+
+![](.\Picture\运算符.png)
+
+
+
+**直接调用一个重载的运算符函数**
+
+```c++
+// 一个非成员运算符函数的等价调用
+data1 + data2;				// 普通的表达式
+operator+(data1, data2);	// 等价的函数调用
+
+data1 += data2;				// 基于“调用”的表达式
+data1.operator+=(data2);	// 对成员运算符函数的等价调用
+```
+
+**使用与内置类型一致的含义**
+
+- 如果类执行IO操作，则定义移位运算符使其与内置类型的IO 保持一致。
+- 如果类的某个操作是检查相等性，则定义 operator==；如果类有了operator==，意味着它通常也应该有operator!=。
+- 如果类包含一个内在的单序比较操作，则定义 operator<；如果类有了operator<，则它也应该含有其他关系操作。
+- 重载运算符的返回类型通常情况下应该与其内置版本的返回类型兼容:逻辑运算符和关系运算符应该返回 bool，算术运算符应该返回一个类类型的值，赋值运算符和复合赋值运算符则应该返回左侧运算对象的一个引用。
+
+**赋值和复合赋值运算符**
+赋值运算符的行为与复合版本的类似:
+	赋值之后，左侧运算对象和右侧运算对象的值相等，并且运算符应该返回它左侧运算对象的一个引用
+
+
+
+## 输入和输出运算符
+
+### 重载输出运算符<<
+
+通常情况下，输出运算符的第一个形参是一个非常量 ostream 对象的引用
+	之所以ostream 是非常量是因为向流写入内容会改变其状态
+	而该形参是引用是因为我们无法直接复制一个ostream对象
+第二个形参一般来说是一个常量的引用，该常量是我们想要打印的类类型
+	第二个形参是引用的原因是我们希望避免复制实参
+	而之所以该形参可以是常量是因为(通常情况下)打印对象不会改变对象的内容
+为了与其他输出运算符保持一致，operator<<一般要返回它的ostream形参
+
+```c++
+//Sales_data的输出运算符
+ostream &operator<<(ostream &os, const Sales_data &item)
+{
+    os << item.isbn() << " " << item.units_sold << " " 
+        << item.revenue << " " << item.avg_price();
+    return os;
+}
+//输出运算符尽量减少格式化操作
+
+//输入输出运算符必须是非成员函数 IO运算符一般被声明为友元
+Sales_data data;
+data << cout;		// 如果operator<<是Sales_data的成员
+```
+
+
+
+### 重载输入运算符>>
+
+第一个形参是运算符将要读取的流的引用
+第二个形参是将要读入到的(非常量)对象的引用
+	因为输入运算符本身的目的就是将数据读入到这个对象中，所以必须是个非常量
+
+```c++
+istream &operator>>(istream &is, Sales_data &item)
+{
+    double price;		// 不需要初始化，因为我们将先读入数据到 price，之后才使用它
+	is >> item.bookNo >> item.units_sold >> price;
+	if (is)	    // 检查输入是否成功
+        item.revenue = item.units_sold * price;
+    else
+        item = Sales_data();	// 输入失败:对象被赋予默认的状态
+    return is;
+}
+
+//标示错误
+// 通常情况下,输入运算符只设置failbit。
+// 设置eofbit 表示文件耗尽
+// 而设置 badbit表示流被破坏
+// 最好的方式是由IO标准库自己来标示这些错误。
+```
+
+## 算术和关系运算符
+
+通常情况下，把算术和关系运算符定义成**非成员函数**以允许对左侧或右侧的运算对象进行转换
+因为这些运算符一般不需要改变运算对象的状态，所以形参都是常量的引用
+
+```c++
+//假设两个对象指向同一本书
+Sales_data operator+(const Sales_data &lhs, const Sales_data &rhs)
+{
+    Sales_data sum = lhs;		// 把lhs的数据成员拷贝给sum
+    sum += rhs;					// 将rhs加到sum中
+    return sum;
+}
+```
+
+### 相等运算符
+
+```c++
+bool operator==(const Sales data &lhs， const Sales data &rhs)
+{
+    return lhs.isbn() == rhs.isbn() && 
+        lhs.units_sold == rhs.units_sold && 
+        lhs.revenue == rhs.revenue;
+}
+bool operator!=(const Sales data &lhs, const Sales_data &rhs)
+{
+    return !(lhs == rhs);
+}
+```
+
+### 关系运算符
+
+定义顺序关系，令其与关联容器中对关键字的要求一致
+如果类同时也含有运算符的话，则定义一种关系令其与保持一致
+	特别是，如果两个对象是!=的，那么一个对象应该<另外一个
+
+## 赋值运算符
+
+一种运算符接受花括号内的元素列表作为参数
+
+```c++
+vector<string> v;
+v = {"a", "an", "the"};
+
+class StrVec {
+public:
+    StrVec &operator=(std::initializer_list<std::string>);
+    // ...
+};
+
+StrVec &StrVec::operator=(initializer_list<string> il)
+{
+    // alloc_n_copy分配内存空间并从给定范围内拷贝元素
+    auto data = alloc_n_copy(il.begin(), il.end());
+    free();		// 销毁对象中的元素并释放内存空间
+    elements = data.first;	// 更新数据成员使其指向新空间
+    first_free = cap = data.second;
+    return *this;
+}
+
+//复合赋值运算符
+// 作为成员的二元运算符:左侧运算对象绑定到隐式的 this 指针
+// 假定两个对象表示的是同一本书
+Sales_datas Sales_data;;operator+=(const Sales_data &rhs)
+{
+    units_sold += rhs.units_sold;
+    revenue += rhs.revenue;
+    return *this;
+}
+```
+
+
+
+## 下标运算符
+
+表示容器的类通常可以通过元素在容器中的位置访问元素，这些类一般会定义下标运算符operator[]
+下标运算符必须是成员函数
+
+下标运算符通常以所访问元素的引用作为返回值
+最好同时定义下标运算符的常量版本和非常量版本
+
+```c++
+class StrVec {
+public:
+    std::string& operator[](std::size_t n)
+    	{ return elements[n]; }
+    const std::string& operator[](std::size_t n) const
+    	{ return elements[n]; }
+private:
+    std::string *elements;	// 指向数组首元素的指针
+};
+
+// 假设svec是一个StrVec对象
+const StrVec cvec = svec;		// 把svec的元素拷贝到cvec中
+// 如果svec中含有元素，对第一个元素运行string的empty函数
+if (svec.size() && svec[0].empty()) {
+    svec[0] = "zero";		// 正确:下标运算符返回 string的引用
+    cvec[0] = "Zip";			// 错误:对 cvec取下标返回的是常量引用
+}
+```
+
+
+
+## 递增和递减运算符
+
+递增和递减运算符既有前置版本有后置版本
+
+```c++
+class StrBlobPtr {
+public:
+    // 前置递增和递减运算符
+    StrBlobPtr& operator++();		// 前置运算符
+    StrBlobPtr& operator--();		
+    // 其他成员和之前的版本一致
+    
+    // 后置版本接受一个额外的(不被使用)int类型的形参
+    StrBlobPtr operator++(int);		//后置运算符
+    StrBlobPtr operator--(int);
+};
+
+//前置版本:返回递增/递减对象的引用
+StrBlobPtr& StrBlobPtr::operator++()
+{
+    // 如果curr已经指向了容器的尾后位置，则无法递增它
+    check(curr, "increment past end of StrBlobPtr");
+    ++curr;				// 将curr在当前状态下向前移动一个元素
+    return *this;
+}
+StrBlobPtr& StrBlobPtr::operator--() {
+    // 如果curr是0，则继续递减它将产生一个无效下标
+    --curr;		// 将curr在当前状态下向后移动一个元素
+    check(curr, "decrement past begin of StrBlobPtr");
+    return *this;
+}
+
+//后置版本:递增/递减对象的值但是返回原值
+StrBlobPtr StrBlobPtr::operator++(int)
+{
+    // 此处无须检查有效性，调用前置递增运算时才需要检查
+    StrBlobPtr ret = *this; // 记录当前的值
+    ++*this;				// 向前移动一个元素，前置++需要检查递增的有效性
+	return ret;				// 返回之前记录的状态
+}
+StrBlobPtr StrBlobPtr::operator--(int)
+{
+    // 此处无须检查有效性，调用前置递减运算时才需要检查
+    StrBlobPtr ret = *this;		// 记录当前的值
+    --*this;					// 向后移动一个元素，前置--需要检查递减的有效性
+    return ret;					// 返回之前记录的状态
+}
+
+//显式地调用后置运算符
+StrBlobPtr p(a1);		// p指向al中的vector
+p.operator++(0);		// 调用后置版本的operator++
+p.operator++();			// 调用前置版本的operator++
 ```
 
