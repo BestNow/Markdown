@@ -6582,3 +6582,3552 @@ p.operator++(0);		// 调用后置版本的operator++
 p.operator++();			// 调用前置版本的operator++
 ```
 
+
+
+## 成员访问运算符
+
+在迭代器类及智能指针类中常常用到解引用运算符 (*)和箭头运算符(->)
+
+```c++
+class StrBlobPtr {
+public:
+    std::string& operator*() const 
+    { 
+        auto p = check(curr，"dereference past end");
+        return (*p)[curr];			// (*p)是对象所指的vector
+    }
+    std::string* operator->() const
+    {
+        // 将实际工作委托给解引用运算符
+        return & this->operator*();
+    }
+};
+
+StrBlob a1 = {"hi", "bye", "now"};
+StrBlobPtr p(a1);				// p指向a1中的vector
+*p = "okay";					// 给al的首元素赋值
+cout << p->size() << endl;		// 打印4，这是a1首元素的大小
+cout << (*p).size() << endl;	// 等价于p->size()
+
+//对箭头运算符返回值的限定
+// 箭头运算符永远不能丢掉成员访问这个最基本的含义
+// 对于形如point->mem的表达式来说，point必须是指向类对象的指针或者是一个重载了operator->的类的对象
+// 根据 point 类型的不同，point-mem 分别等价于:
+(*point).mem;				// point 是一个内置的指针类型
+point.operator()->mem;		// point 是类的一个对象
+```
+
+## 函数调用运算符
+
+如果类重载了函数调用运算符，则可以像使用函数一样使用该类的对象
+
+```c++
+struct absInt {
+    int operator()(int val) const {
+        return val < 0 ? -val : val;
+    } 
+};
+int i = -42;
+absInt absObj;				// 含有函数调用运算符的对象
+int ui = absObj(i);			// 将i传递给absObj.operator()
+
+//含有状态的函数对象类
+class PrintString {
+public:
+    PrintString(ostream &o = cout, char c = ' ') :
+    	os(o), sep(c) {}
+    void operator()(const string &s) const { os << s << sep; }
+private:
+    ostream &os;		// 用于写入的目的流
+    char sep;			// 用于将不同输出隔开的字符
+};
+PrintString printer;	// 使用默认值，打印到 cout
+printer(s);				// 在cout中打印s，后面跟一个空格
+PrintString errors(cerr, '\n');
+errors(s);				// 在cerr中打印s，后面跟一个换行符
+
+```
+
+### lambda是函数对象
+
+编译器将该表达式翻译成一个未命名类的未命名对象
+
+```c++
+// 根据单词的长度对其进行排序，对于长度相同的单词按照字母表顺序排序
+stable_sort(words.begin(), words.end(), 
+            [](const string &a, const string &b)
+            { return a.size() < b.size(); });
+// lambda函数等价于
+class ShorterString {
+public:
+    bool operator()(const string &s1, const string &s2) const
+    { return s1.size() < s2.size(); }
+};
+stable_sort(words.begin(), words.end(), ShorterString());
+```
+
+当一个lambda 表达式通过**引用**捕获变量时，将由**程序负责确保**lambda执行时引用所引的对象确实存在
+
+```c++
+//获得第一个指向满足条件元素的迭代器，该元素满足size() is >= sz
+auto wc = find_if(words.begin(), words.end(), 
+                  [sz](const string &a)
+                  	{ return a.size() >= sz; });
+
+class SizeComp {
+    SizeComp(size_t n) : sz(n) { }	// 该形参对应捕获的变量
+    // 该调用运算符的返回类型、形参和函数体都与lambda一致
+    bool operator()(const string &s) const  
+    	{ returns.size() >=sz; }
+private:
+    size_t sz;		// 该数据成员对应通过值捕获的变量
+};
+
+```
+
+
+
+### 标准库函数对象
+
+算术
+	plus<Type>
+	minus<Type>
+	multiplies<Type>
+	divides<Type>
+	modulus<Type>
+	negate<Type>
+
+关系
+	equal_to<Type>
+	not_equal_to<Type>
+	greater<Type>
+	greater_equal<Type>
+	less<Type>
+	less_equal<Type>
+
+逻辑
+	logical_and<Type>
+	logical_or<Type>
+	logical_not<Type>
+
+```c++
+//在算法中使用标准库函数对象
+//传入一个临时的函数对象用于执行两个string 对象的>比较运算
+sort(svec.begin(), svec.end(), greater<string>());
+```
+
+
+
+### 可调用对象与function
+
+可调用的对象
+	函数
+	函数指针
+	lambda 表达式
+	bind 创建的对象
+	重载了函数调用运算符的类
+
+```c++
+//不同类型可能具有相同的调用形式
+// 普通函数
+int add(int i,int j){ return i + j; }
+// lambda，其产生一个未命名的函数对象类
+auto mod = [](int i, int j) { return i % j; };
+// 函数对象类
+struct divide {
+    int operator()(int denominator, int divisor) {
+        return denominator / divisor;
+    } 
+};
+
+// 构建从运算符到函数指针的映射关系，其中函数接受两个int、返回一个int
+map<string, int(*)(int, int)> binops;
+//正确:add是一个指向正确类型函数的指针
+binops.insert({"+", add}); 		// {"+", add}是一个pair
+// mod是个lambda表达式，而每个lambda有它自己的类类型，该类型与存储在binops中的值的类型不匹配
+binops.insert({"%", mod});		// 错误:mod不是一个函数指针
+```
+
+**标准库function类型**
+
+| function的操作                                               |                                                              |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| function<T> f;                                               | f是一个用来存储可调用对象的空function，这些可调用对象的调用形式应该与函数类型T相同(即T是retType(args)) |
+| function<T> f(nullptr);                                      | 显式地构造一个空function                                     |
+| function<T> f(obj);                                          | 在f中存储可调用对象obi的副本                                 |
+| f                                                            | 将f作为条件:当f含有一个可调用对象时为真;否则为假             |
+| f(args)                                                      | 调用f中的对象，参数是args                                    |
+|                                                              | **定义为function<T>的成员的类型**                            |
+| result_type                                                  | 该function类型的可调用对象返回的类型                         |
+| argument_type<br />first_argument_type <br />second_argument_type | 当T有一个或两个实参时定义的类型。如果T只有一个实参则argument_type是该类型的同义词;如果T有两个实参则first_argument_type和second_argument_type分别代表两个实参的类型 |
+
+```c++
+function<int(int, int)> f1 = add;				// 函数指针
+function<int(int, int)> f2 = divide();			// 函数对象类的对象
+function<int(int, int)> f3 = [](int i, int j)	// lambda
+							{ return i * j };
+cout << f1(4, 2) << endl;	// 打印6
+cout << f2(4, 2) << endl;	// 打印2
+cout << f3(4, 2) << endl;	// 打印8
+
+// 列举了可调用对象与二元运算符对应关系的表格
+// 所有可调用对象都必须接受两个 int、返回一个 int
+// 其中的元素可以是函数指针、函数对象或者 lambda
+map<string, function<int(int, int)>> binops = {
+    {"+", add},									// 函数指针
+    {"-", std::minus<int>()},					// 标准库函数对象
+    {"/", divide()},							// 用户定义的函数对象
+    {"*", [](int i, int j) {return i * j;} },	// 未命名的lambda
+    {"%", mod} };								// 命名了的lambda对象
+
+binops["+"](10, 5);		// 调用add(10，5)
+binops["-"](10, 5);		// 使用minus<int>对象的调用运算符
+binops["/"](10, 5);		// 使用divide对象的调用运算符
+binops["*"](10, 5);		// 调用lambda函数对象
+binops["%"](10, 5);		// 调用lambda函数对象
+```
+
+
+
+**重载的函数与function**
+
+```c++
+int add(int i, int j) { return i + j; }
+Sales_data add(const Sales_data&, const Sales_data&);
+map<string, function<int(int, int)>> binops;
+binops.insert( {"+", add} );		// 错误：哪个add？
+
+int (*fp)(int, int) = add;			// 指针所指的 add是接受两个int的版本
+binops.insert( {"+", fp} );			// 正确:fp指向一个正确的add 版本
+//正确:使用lambda来指定我们希望使用的add版本
+binops.insert( {"+", [](int a, int b) {return add(a, b);} } );
+```
+
+
+
+## 重载、类型转换与运算符
+
+转换构造函数和类型转换运算符共同定义了**类类型转换**(class-type conversions)，这样的转换有时也被称作**用户定义的类型转换**(user-defined conversions)。
+
+### 类型转换运算符
+
+`operator type() const;`
+
+类型转换运算符既没有显式的返回类型，也没有形参,而且必须定义成类的成员函数
+类型转换运算符通常不应该改变待转换对象的内容，因此，类型转换运算符一般被定义成const成员
+
+```c++
+//定义含有类型转换运算符的类
+class SmallInt {
+public:
+    SmallInt(int i = 0) : val(i)
+    {
+        if(i < 0 || i > 255)
+            throw std::out_of_range("Bad SmallInt value");
+    }
+    operator int() const { return val; }
+private:
+    std::size_t val;
+};
+
+SmallInt si;
+si = 4;		// 首先将4隐式地转换成SmallInt，然后调用SmallInt::operator=
+si + 3;		// 首先将si隐式地转换成int，然后执行整数的加法
+
+class SmallInt;
+operator int(SmallInt&);			// 错误:不是成员函数
+class SmallInt {
+public:
+    int operator int() const;			// 错误:指定了返回类型
+    operator int(int = 0) const;		// 错误:参数列表不为空
+    operator int*() const {return 42;} 	// 错误:42不是一个指针
+};
+```
+
+**显式的类型转换运算符**
+
+```c++
+class SmallInt {
+public:
+    // 编译器不会自动执行这一类型转换
+    explicit operator int()const { return val; }
+    // 其他成员与之前的版本一致
+}
+
+SmallInt si = 3;		// 正确:SmallInt的构造函数不是显式的
+si + 3;					// 错误:此处需要隐式的类型转换，但类的运算符是显式的
+static_cast<int>(si) + 3;	// 正确:显式地请求类型转换
+```
+
+即如果表达式被用作条件，则编译器会将显式的类型转换自动应用于它
+	if、while及do语句的条件部分
+	for语句头的条件表达式
+	逻辑非运算符 (!)、逻辑或运算符 (||)、逻辑与运算符(&&)的运算对象
+	条件运算符(?:)的条件表达式
+
+
+
+### 避免有二义性的类型转换
+
+通常情况下，不要为类定义相同的类型转换，也不要在类中定义两个及两个以上转换源或转换目标是算术类型的转换。
+
+**实参匹配和相同的类型转换**
+
+```c++
+// 最好不要在两个类之间构建相同的类型转换
+struct B;
+struct A  {
+    A() = default;
+    A(const B&);		// 把一个B转换成A
+    // 其他数据成员
+};
+struct B {
+    operator A() const;	// 也是把一个B转换成A
+    //其他数据成员
+};
+A f(const A&);
+B b;
+A a = f(b); 	// 二义性错误:含义是f(B::operator A())
+				// 还是 f(A::A(const B&))?
+
+// 修改
+A a1 = f(b.operator A());	// 正确:使用B的类型转换运算符
+A a2 = f(A(b));				// 正确:使用A的构造函数
+```
+
+**二义性与转换目标为内置类型的多重类型转换**
+	如果类定义了一组类型转换，它们的转换源(或者转换目标)类型本身可以通过其他类型转换联系在一起，则同样会产生二义性的问题。
+
+```c++
+struct A {
+    A(int = 0);					// 最好不要创建两个转换源都是算术类型的类型转换
+    A(double);
+    operator int() const;
+    operator double() const;	// 最好不要创建两个转换对象都是算术类型的类型转换
+    // 其他成员
+};
+void f2(long double);
+A a;
+f2(a);	// 二义性错误:含义是f(A::operator int())
+		// 还是f(A::operator double())?
+long lg;
+A a2(lg);	// 二义性错误:含义是A::A(int)还是A::A(double)?
+
+short s = 42;
+// 把short提升成int优于把short转换成double
+A a3(s);	// 使用A::A(int)
+```
+
+当我们使用两个用户定义的类型转换时，如果转换函数之前或之后存在标准类型转换，则标准类型转换将决定最佳匹配到底是哪个。
+
+**重载函数与转换构造函数**
+
+```c++
+struct C {
+    C(int);
+    // 其他成员
+};
+struct D{
+    D(int);
+    // 其他成员
+};
+void manip(const C&);
+void manip(const D&);
+manip(10);		// 二义性错误:含义是manip(C(10))还是manip(D(10))
+manip(C(10));	// 正确:调用manip(const C&)
+```
+
+**重载函数与用户定义的类型转换**
+
+```c++
+struct E {
+	E(double);
+    // 其他成员
+};
+void manip2(const C&);
+void manip2(const E&);
+// 二义性错误:两个不同的用户定义的类型转换都能用在此处
+manip2(10);	// 含义是manip2(C(10))还是manip2(E(double(10)))
+```
+
+### 函数匹配与重载运算符
+
+表达式中运算符的候选函数集既应该包括成员函数，也应该包括非成员函数
+
+```c++
+class SmallInt {
+    friend SmallInt operator+(const SmallInt&, const SmallInt&);
+public:
+    SmallInt(int = 0);						// 转换源为int的类型转换
+    operator int() const { return val; }	// 转换目标为int的类型转换
+private:
+    std::size_t val;
+};
+SmallInt s1, s2;
+SmallInt s3 = s1 + s2;			// 使用重载的operator+
+int i = s3 + 0;					// 二义性错误
+```
+
+
+
+# 面向对象程序设计
+
+## OOP概述
+
+面向对象程序设计(object-oriented programming)的核心思想是数据抽象、继承和动态绑定。
+	通过使用数据抽象，可以将类的接口与实现分离
+	使用继承，可以定义相似的类型并对其相似关系建模
+	使用动态绑定，可以在一定程度上忽略相似类型的区别，而以统一的方式使用它们的对象
+
+```c++
+class Quote{
+public:
+	std::string isbn() const;
+	virtual double net_price(std::size_t n) const;
+};
+
+class Bulk_quote : public Quote{		// Bulk_quote继承了 Quote
+public:
+    double net price(std::size_t) const override;
+}; 
+```
+
+**动态绑定**
+
+```c++
+// 计算并打印销售给定数量的某种书籍所得的费用
+double print_total(ostream &os, const Quote &item, size_t n)
+{
+    // 根据传入item形参的对象类型调用Quote::net_price
+    // 或者Bulkquote::net_price
+    double ret =item.net_price(n);
+    os << "ISBN: " << item.isbn()		// 调用 Quote::isbn
+        << " #sold:" << n << " total due:" << ret << endl;
+    return ret;
+}
+
+// basic的类型是Quote;bulk的类型是Bulk_quote
+print_total(cout, basic, 20);		// 调用Quote的net_price
+print_total(cout, bulk, 20);		// 调用Bulk_quote的net_price
+```
+
+
+
+## 定义基类和派生类
+
+### 定义基类
+
+```c++
+class Quote {
+public:
+    Quote() = default;
+    Quote(const std::string &book, double sales_price):
+    	bookNo(book), price(sales_price){ }
+    std::string isbn() const { return bookNo; }
+    // 返回给定数量的书籍的销售总额
+    // 派生类负责改写并使用不同的折扣计算算法
+    virtual double net_price(std::size_t n) const
+    	{ return n * price; }
+    virtual ~Quote() = default; 	// 对析构函数进行动态绑定
+private:
+    std::string bookNo;				// 书籍的ISBN编号
+protected:
+    double price = 0.0;				// 代表普通状态下不打折的价格
+};
+```
+
+### 定义派生类
+
+```c++
+class Bulk_quote : public Quote{	// Bulk_quote继承自Quote
+public:
+    Bulk_quote()= default;
+    Bulk_quote(const std::string&, double, std::size_t, double);
+    // 覆盖基类的函数版本以实现基于大量购买的折扣政策
+    double net_price(std::size_t) const override;
+private:
+    std::size_t min_qty = 0;		// 适用折扣政策的最低购买量
+    double discount = 0.0;			// 以小数表示的折扣额
+};
+```
+
+派生类经常(但不总是)覆盖它继承的虚函数。如果派生类没有覆盖其基类中的某个虚函数，则该虚函数的行为类似于其他的普通成员，派生类会直接继承其在基类中的版本。
+
+C++11 新标准允许派生类显式地注明它使用某个成员函数覆盖了它继承的虚函数。具体做法是在形参列表后面、或者在const成员函数的const关键字后面、或者在引用成员函数的引用限定符后面添加一个关键字override。
+
+<img src=".\Picture\Bulk_quo对象的概念结构.png" style="zoom:50%;" />
+
+```c++
+Quote item;			// 基类对象
+Bulk_quote bulk;	// 派生类对象
+Quote *p = &item;	// p指向Quote对象
+p = &bulk;			// p指向bulk的Quote部分
+Quote &r = bulk;	// r绑定到bulk的Quote部分
+```
+
+**派生类构造函数**
+
+```c++
+Bulk_quote(const std::string& book, double p, std::sizet qty, double disc) :
+	Quote(book, p), min_qty(qty), discount(disc) { }
+//与之前一致
+```
+
+如果我们想将某个类用作基类，则该类必须已经定义而非仅仅声明
+
+**防止继承的发生**
+
+```c++
+class NoDerived final { /* */ }；		// NoDerived不能作为基类
+class Base {/* */};
+// Last是final的;我们不能继承Last
+class Last final : Base { /* */ };		// Last不能作为基类
+class Bad : NoDerived { /* */ };		// 错误:NoDerived是final的
+class Bad2 : Last{ /* */ };				// 错误:Last是final的
+```
+
+
+
+### 类型转换与继承
+
+**静态类型与动态类型**
+表达式的静态类型在编译时总是已知的，它是变量声明时的类型或表达式生成的类型
+动态类型则是变量或表达式表示的内存中的对象的类型，动态类型直到运行时才可知
+
+不存在从基类向派生类的隐式类型转换
+
+```c++
+Quote base;
+Bulk_quote* bulkP = &base;	// 错误:不能将基类转换成派生类
+Bulk_quote& bulkRef = base;	// 错误:不能将基类转换成派生类
+
+Bulk_quote bulk;
+Quote *itemP = &bulk;		// 正确:动态类型是Bulk_quote
+Bulk_quote *bulkP = itemP;	// 错误:不能将基类转换成派生类
+```
+
+dynamic cast请求一个类型转换，该转换的安全检查将在运行时执行
+已知某个基类向派生类的转换是安全的，则可以使用static_cast来强制覆盖掉编译器的检查工作
+
+```c++
+Bulk_quote bulk;	// 派生类对象
+Quote item(bulk);	// 使用 Quote::Quote(const Quote&)构造函数
+item = bulk;		// 调用 Quote::operator=(const Quote&)
+```
+
+
+
+## 虚函数
+
+**对虚函数的调用可能在运行时才被解析**
+
+```c++
+Quote base("0-201-82470-1", 50);
+print_total(cout, base, 10);		// 调用Quote::net_price
+Bulk_quote derived("0-201-82470-1", 50, 5, .19);
+print_total(cout, derived, 10);		// 调用Bulk_quote::net_price
+
+base = derived;			// 把derived的Quote部分拷贝给base
+base.net_price(20);		// 调用Quote::net_price
+```
+
+> C++的多态性
+> 把具有继承关系的多个类型称为多态类型，因为我们能使用这些类型的“多种形式”而无须在意它们的差异。引用或指针的静态类型与动态类型不同这一事实正是C++语言支持多态性的根本所在。
+
+**派生类中的虚函数**
+一旦某个函数被声明成虚函数，则在所有派生类中它都是虚函数。
+
+**final和override说明符**
+使用 override 标记了某个函数，但该函数并没有覆盖已存在的虚函数，此时编译器将报错:
+
+```c++
+struct B {
+    virtual void f1(int) const;
+    virtual void f2();
+    void f3();
+};
+
+struct D1 : B{
+    void f1(int) const override;		// 正确:f1与基类中的f1匹配
+    void f2(int) override;				// 错误:B没有形如f2(int)的函数
+    void f3() override;					// 错误:f3不是虚函数
+    void f4() override;					// 错误:B没有名为f4的函数
+};
+```
+
+把某个函数指定为 final，如果我们已经把函数定义成 final了，则之后任何尝试覆盖该函数的操作都将引发错误:
+
+```c++
+struct D2 : B{
+    //从B继承f2()和f3()，覆盖f1(int)
+    void f1(int) const final;	//	不允许后续的其他类覆盖f1(int)
+};
+struct D3 : D2 {
+    void f2();				// 正确:覆盖从间接基类B继承而来的f2
+    void f1(int) const;		//错误:D2已经将f2声明成final
+};
+
+```
+
+**虚函数与默认实参**
+如果某次函数调用使用了默认实参，则该实参值由本次调用的静态类型决定。
+	如果我们通过基类的引用或指针调用函数，则使用基类中定义的默认实参，即使实际运行的是派生类中的函数版本也是如此。此时，传入派生类函数的将是基类函数定义的默认实参。
+
+**回避虚函数的机制**
+
+```c++
+// 强行调用基类中定义的函数版本而不管 baseP 的动态类型到底是什么
+double undiscounted = baseP->Quote::net_price(42);
+```
+
+该调用将在编译时完成解析
+
+
+
+## 抽象基类
+
+**纯虚函数**
+
+```c++
+// 用于保存折扣值和购买量的类，派生类使用这些数据可以实现不同的价格策略
+class Disc_quote : public Quote {
+public:
+    Disc_quote() = default;
+    Disc_quote(const std::string& book, double price, 
+		std::size_t qty, double disc) : 
+    		Quote(book, price), 
+    		quantity(qty), discount(disc) { }
+    double net_price(std::size_t) const = 0;
+protected:
+    std::size_t quantity = 0;		// 折扣适用的购买量
+    double discount = 0.0;			// 表示折扣的小数值
+};
+```
+
+**含有纯虚函数的类是抽象基类**
+含有(或者未经覆盖直接继承)纯虚函数的类是抽象基类 (abstract base class)
+抽象基类负责定义接口，而后续的其他类可以覆盖该接口
+不能(直接)创建一个抽象基类的对象
+
+```c++
+// Disc quote声明了纯虚函数，而 Bulk_quote将覆盖该函数
+Disc_quote discounted;			// 错误:不能定义Disc_quote的对象
+Bulk_quote bulk;				// 正确:Bulk_quote中没有纯虚函数
+```
+
+**派生类构造函数只初始化它的直接基类**
+
+```c++
+// 当同一书籍的销售量超过某个值时启用折扣
+// 折扣的值是一个小于1的正的小数值，以此来降低正常销售价格
+class Bulk_quote : public Disc_quote {
+public:
+    Bulk_quote() = default;
+    
+    // 派生类构造函数只初始化它的直接基类
+    Bulk_quote(const std::string& book, double price,
+               std::size_t qty, double disc) :
+    	Disc_quote(book, price, qty, disc) { }
+    // 覆盖基类中的函数版本以实现一种新的折扣策略
+    double net_price(std::size_t) const override;
+};
+```
+
+## 访问控制与继承
+
+一个类使用 protected 关键字来声明那些它希望与派生类分享
+但是不想被其他公共访问使用的成员
+
+```c++
+// 公有、私有和受保护继承
+class Base {
+public:
+    void pub_mem();		// public成员
+protected:
+    int prot_mem;		// protected 成员
+private:
+    char priv_mem;		// private成员
+};
+
+struct Pub_Derv : public Base {
+    // 正确:派生类能访问 protected 成员
+    int f() { return prot_mem; }
+    // 错误:private成员对于派生类来说是不可访问的
+    char g() { return priv_mem; }
+};
+
+struct Priv_Derv : private Base {
+    // private不影响派生类的访问权限
+    int f1() const { return prot_mem; }
+};
+
+
+Pub_Derv d1;		// 继承自Base的成员是public的
+Priv_Derv d2;		// 继承自Base的成员是private的
+d1.pub_mem();		// 正确:pub_mem在派生类中是public的
+d2.pub_mem();		// 错误:pub_mem在派生类中是private的
+```
+
+**友元与继承**
+就像友元关系不能传递一样，友元关系同样也不能继承。
+
+**改变个别成员的可访问性**
+
+```c++
+class Base {
+public:
+    std::size_t size() const { return n; }
+protected:
+    std::size_t n;
+};
+
+class Derived : private Base {	// 注意:private继承
+public:
+    // 保持对象尺寸相关的成员的访问级别
+    using Base::size;
+protected:
+    using Base::n;
+};
+```
+
+**默认的继承保护级别**
+
+```c++
+class Base { /* ... */ };
+struct D1 : Base { /* ... */};	// 默认public继承
+class D2 : Base [ /* ... */ };	// 默认private继承
+```
+
+
+
+## 继承中的类作用域
+
+每个类定义自己的作用域，在这个作用域内我们定义类的成员。
+当存在继承关系时，派生类的作用域嵌套在其基类的作用域之内。
+如果一个名字在派生类的作用域内无法正确解析，则编译器将继续在外层的基类作用域中寻找该名字的定义。
+
+**在编译时进行名字查找**
+
+一个对象、引用或指针的静态类型决定了该对象的哪些成员是可见的
+即使静态类型与动态类型可能不一致，能使用哪些成员仍然是由静态类型决定的
+
+```c++
+class Disc_quote : public Quote {
+public:
+    std::pair<size_t, double> discount_policy() const 
+    	{ return {quantity, discount}; }	// 其他成员与之前的版本一致
+};
+
+Bulk_quote bulk;			
+Bulk_quote *bulkP = &bulk;	// 静态类型与动态类型一致
+Quote *itemP = &bulk;		// 静态类型与动态类型不一致
+bulkP->discount_policy();	// 正确:bulkP的类型是Bulk_quotet
+itemP->discount_policy();	// 错误:itemP的类型是Quote*
+```
+
+**名字冲突与继承**
+
+```c++
+struct Base {
+    Base():mem(0) { }
+protected:
+    int mem;
+};
+
+struct Derived : Base {
+    Derived(int i):mem(i) { }		// 用i初始化 Derived::mem
+    								// 返回 Derived::mem
+    int get_mem() { return mem; }	// Base::mem 进行跌认初始化
+protected:
+	int mem;		// 隐藏基类中的mem
+};
+// 通过作用域运算符来使用隐藏的成员
+struct Derived : Base {
+    int get_base_mem() { return Base::mem; }
+    //...
+};
+```
+
+**名字查找先于类型检查**
+
+```c++
+struct Base {
+    int memfcn();
+};
+struct Derived : Base {
+    int memfcn(int);	// 隐藏基类的memfcn
+};
+Derived d;Base b;
+b.memfcn();		// 调用 Base::memfcn
+d.memfcn(10);	// 调用 Derived::memfcn
+d.memfcn();		// 错误:参数列表为空的 memfcn 被隐藏了
+d.Base::memfcn();// 正确:调用 Base::emfcn
+```
+
+**虚函数与作用域**
+
+```c++
+class Base {
+public:
+    virtual int fcn();
+};
+class D1 : public Base {
+public:
+    // 隐藏基类的fcn，这个fcn不是虚函数
+    // D1继承了Base::fcn()的定义
+    int fcn(int);		// 形参列表与Base中的 fcn 不一致
+    virtual void f2();	// 是一个新的虚函数，在 Base 中不存在
+};
+class D2 : public D1 {
+public:
+    int fcn(int);		// 是一个非虚函数，隐藏了 DI::fcn(int)
+    int fcn();			// 覆盖了 Base的虚函数 fcn
+    void f2();			// 覆盖了 D1的虚函数 f2
+};
+
+Base bobj; D1 dlobj; D2 d2obj;
+Base *bp1 = &bobj, *bp2= &dlobj, *bp3 = &d2obj;
+bp1->fcn();		// 虚调用，将在运行时调用 Base::fcn
+bp2->fcn();		// 虚调用，将在运行时调用 Base::fcn
+bp3->fcn();		// 虚调用，将在运行时调用 D2::fcn
+
+D1 *dlp = &dlobj; D2 *d2p = &d2obj;
+bp2->f2();		// 错误:Base没有名为 f2的成员
+dlp->f2();		// 虚调用，将在运行时调用 D1::f2()
+d2p->f2();		// 虚调用，将在运行时调用 D2::f2()
+
+Base *p1 = &d2obj; D1 *p2 = &d2bj; D2 *p3 = &d2obj;
+p1->fcn(42);		// 错误:Base中没有接受一个int的fcn
+p2->fcn(42);		// 静态绑定，调用D1::fcn(int)
+p3->fcn(42);		// 静态绑定，调用D2::fcn(int)
+```
+
+
+
+## 构造函数与拷贝控制
+
+### 虚析构函数
+
+通过在基类中将析构函数定义成虚函数以确保执行正确的析构函数版本:
+
+```c++
+class Quote {
+public:
+    // 如果我们删除的是一个指向派生类对象的基类指针，则需要虚析构函数
+    virtual ~Quote() = default;		// 动态绑定析构函数
+};
+```
+
+一个基类总是需要析构函数，而且它能将析构函数设定为虚函数
+该析构函数为了成为虚函数而令内容为空，我们显然无法由此推断该基类还需要赋值运算符或拷贝构造函数 
+
+**虚析构函数将阻止合成移动操作**
+
+
+
+### 合成拷贝控制与继承
+
+基类或派生类的合成拷贝控制成员的行为与其他合成的构造函数、赋值运算符或析构函数类似:
+	它们对类本身的成员依次进行初始化、赋值或销毁的操作。
+这些合成的成员还负责使用直接基类中对应的操作对一个对象的直接基类部分进行初始化、赋值或销毁
+
+```c++
+class B {
+public:
+    B();
+    B(const B&) = delete;
+    // 其他成员，不含有移动构造函数
+};
+class D : public B {
+    // 没有声明任何构造函数
+}; 
+
+D d;				// 正确:D的合成默认构造函数使用B的默认构造函数
+D d2(d);			// 错误:D的合成拷贝构造函数是被删除的
+D d3(std::move(d));	// 错误:隐式地使用D的被删除的拷贝构造函数
+
+//移动操作与继承
+class Quote {
+public:
+    Quote() = default;						// 对成员依次进行默认初始化
+    Quote(const Quote&) = default;			// 对成员依次拷贝
+    Quote(Quote &&) = default;				// 对成员依次拷贝
+    Quote& operator=(const Quote&) = default;	// 拷贝赋值
+    Quote& operator=(Quote&&) = default;		// 移动赋值
+    virtual ~Ouote() = default;
+    // 其他成员与之前的版本一致
+};
+```
+
+### 派生类的拷贝控制成员
+
+派生类的拷贝和移动构造函数在拷贝和移动自有成员的同时，也要拷贝和移动基类部分的成员
+派生类赋值运算符也必须为其基类部分的成员赋值
+
+析构函数只负责销毁派生类自己分配的资源
+对象的成员是被隐式销毁的
+派生类对象的基类部分也是自动销毁的
+
+```c++
+//定义派生类的拷贝或移动构造函数
+class Base { /* ... */ };
+class D : public Base {
+public:
+	// 默认情况下，基类的默认构造函数初始化对象的基类部分
+    // 要想使用拷贝或移动构造函数，我们必须在构造函数初始值列表中
+    // 显式地调用该构造函数
+	D(const D& d) : Base(d)			//拷贝基类成员
+					/*D的成员的初始值*/ 	{ /* ... */ }
+    D(D&& d) : Base(std::move(d))	//移动基类成员
+					/*D的成员的初始值*/	{ /* ... */ }
+};
+
+//派生类赋值运算符
+// Base::operator=(const Base&)不会被自动调用
+D &D::operator=(const D &rhs)
+{
+    Base::operator=(rhs);	// 为基类部分赋值
+    // 按照过去的方式为派生类的成员赋值
+    // 酌情处理自赋值及释放已有资源等情况
+    return *this;
+}
+
+//派生类析构函数
+class D: public Base {
+public:
+    // Base::~Base被自动调用执行
+    ~D(){ /*该处由用户定义清除派生类成员的操作 */ }
+};
+```
+
+当我们构建一个对象时，需要把对象的类和构造函数的类看作是同一个；对虚函数的调用绑定正好符合这种把对象的类和构造函数的类看成同一个的要求:对于析构函数也是同样的道理。
+
+如果构造函数或析构函数调用了某个虚函数，则我们应该执行与构造函数或析构函数**所属类型相对应**的虚函数版本。
+
+### 继承的构造函数
+
+一个类只初始化它的直接基类，出于同样的原因，一个类也只继承其直接基类的构造函数
+类不能继承默认、拷贝和移动构造函数
+如果派生类没有直接定义这些构造函数则编译器将为派生类合成它们
+
+```c++
+class Bulkquote : public Disc_quote {
+public:
+    using Disc_quote::Disc_quote;	// 继承Disc_quote的构造函数
+    // Or
+    Bulk_quote(const std::string& book, double price,
+               std::size_t qty, double disc) : 
+    	Disc_quote(book, price, qty, disc) { }
+    
+    double net_price(std::size_t) const;
+}; 
+```
+
+对于基类的每个构造函数，编译器都在派生类中生成一个形参列表完全相同的构造函数:
+
+```
+derived(parms) : base(args){}
+```
+
+一个构造函数的using声明不会改变该构造函数的访问级别
+using声明语句不能指定explicit或constexpr
+当一个基类构造函数含有默认实参时，这些实参并不会被继承
+	派生类将获得多个继承的构造函数，其中每个构造函数分别省略掉一个含有默认实参的形参
+
+
+
+## 容器与继承
+
+```c++
+vector<Quote> basket;
+basket.push_back(Quote("0-201-82470-1", 50));
+// 正确:但是只能把对象的Quote部分拷贝给 basket
+basket.push_back(Bulk_quote("0-201-54848-8", 50, 10, .25));
+// 调用Quote定义的版本，打印750，即15 * $50
+cout << basket.back().net_price(15) << endl;
+
+//在容器中放置(智能)指针而非对象
+vector<shared_ptr<Quote>> basket;
+basket.push_back(make_shared<Quote>("0-201-82470-1", 50));
+basket.push_back(make_shared<Bulk_quote>("0-201-54848-8", 50, 10, .25));
+// 调用Quote定义的版本;打印562.5，即在15 * $50中扣除掉折扣金额
+cout << basket.back()->net_price(15) << endl;
+```
+
+### 编写Basket类
+
+```c++
+class Basket{
+public:
+    // Basket 使用合成的默认构造函数和拷贝控制成员
+    void add_item(const std::shared_ptr<Quote> &sale)
+   		{ items.insert(sale); }
+    // 打印每本书的总价和购物篮中所有书的总价
+    double total_receipt(std::ostream&) const;
+    
+    void add_item(const Quote& sale);	// 拷贝给定的对象
+    void add_item(Quote&& sale);		// 移动给定的对象
+private:
+    // 该函数用于比较shared_ptr，multiset 成员会用到它
+    static bool compare(const std::shared ptr<Quote> &lhs, 
+                        const std::shared ptr<Quote> &rhs) 
+    	{ return lhs->isbn() < rhs->isbn(); }
+    // multiset保存多个报价，按照compare成员排序
+    std::multiset<std::shared_ptr<Quote>, decltype(compare)*> items { compaare };
+};
+
+double Basket::total_receipt(ostream &os) const
+{
+    double sum = 0.0;			// 保存实时计算出的总价格
+    // iter指向ISBN相同的一批元素中的第一个
+    // upper_bound返回一个迭代器，该迭代器指向这批元素的尾后位置
+    for (auto iter = items.cbegin(); 
+         iter != items.cend(); 
+         iter = items.upper_bound(*iter)) {
+        // 我们知道在当前的 Basket 中至少有一个该关键字的元素
+        // 打印该书籍对应的项目
+        sum += print_total(os, **iter, items.count(*iter));
+    }
+    os << "Total Sale: " << sum << endl;	 // 打印最终的总价格
+    return sum;
+}
+```
+
+
+
+# 模板与泛型编程
+
+一个模板就是一个创建类或函数的蓝图
+
+## 定义模板
+
+### 函数模板
+
+```c++
+template <typename T>
+int compare(const T &v1, const T &v2)
+{
+    if (v1 < v2) return -1;
+    if (v2 < v1) return 1;
+    return 0;
+}
+//实例化函数模板
+// 编译器(通常)用函数实参来为我们推断模板实参
+cout << compare(1, 0) << endl; // T为int
+
+//模板类型参数
+//可以将类型参数看作类型说明符，就像内置类型或类类型说明符一样使用
+// 正确:返回类型和参数类型相同
+template <typename T>T foo(T* p)
+{
+    T tmp = *p;		// tmp的类型将是指针p指向的类型
+    // ...
+    return tmp;
+}
+//类型参数前必须使用关键字class或typename
+// 错误:U之前必须加上class或typename
+template <typename T, U> T calc(const T&, const U&);
+// 正确:在模板参数列表中，typename和class没有什么不同
+template <typename T, class u> calc (const T&, const U&);
+
+//非类型模板参数
+// 非类型参数表示一个值而非一个类型
+// 非类型模板参数的模板实参必须是常量表达式
+template<unsigned N, unsigned M>
+int compare(const char (ap1)[N], const char (&p2)[M])
+{
+    return strcmp(p1, p2);
+}
+compare("hi", "mom");	// int compare(const char (&p1)[3], const char (&p2)[4])
+
+//inline和constexpr的函数模板
+// 正确:inline说明符跟在模板参数列表之后
+template <typename T> inline Tmin(const T&, const T&);
+// 错误:inline说明符的位置不正确
+inline template<typename T> Tmin(const T&, const T&);
+
+//编写类型无关的代码
+// 即使用于指针也正确的compare版本
+template <typename T>int compare(const T &vl， const T &v2)
+{
+    if (less<T>()(v1, v2)) return -1;
+    if (less<T>()(v2, v1)) return 1;
+    return 0;
+}
+```
+
+**模板编译**
+当编译器遇到一个模板定义时，它并不生成代码。
+只有当实例化出模板的一个特定版本时，编译器才会生成代码。
+
+函数模板和类模板成员函数的定义通常放在头文件中
+
+大多数编译错误在实例化期间报告
+
+
+
+### 类模板
+
+类模板(class template)是用来生成类的蓝图的
+为了使用类模板，必须在模板名后的尖括号中提供额外信息用来代替模板参数的模板实参列表
+
+```c++
+//定义类模板
+template <typename T>
+class Blob{
+public:
+    typedef T value_type;
+    typedef typename std::vector<T>::size_type size_type;
+    // 构造函数
+    Blob();
+    Blob(std::initializer_list<T> il);
+    // Blob中的元素数目
+    size_type size() const { return data->size(); }
+    bool empty() const{ return data->empty(); }
+    // 添加和删除元素
+    void push_back(const T &t) {data->push_back(t);}
+    // 移动版本
+    void push_back(T &&t) {data->push_back(std::move(t));} 
+    void pop_back();
+    // 元素访问
+    T& back();
+    T& operator[](size_type i);
+private:
+    std::shared_ptr<std::vector<T>> data;
+    // 若data[i]无效，则抛出msg
+    void check(size_type i, const std::string &msg) const;
+};
+template<typename T>
+Blob<T>::Blob(): data(std::make_shared<std::vector<T>>()) { }
+                                                          
+template <typename T>
+void Blob<T>::check(size_type i, const std::string &msg) const
+{
+    if(i >= data->size())
+        throw std::out_of_range(msg);
+}
+
+template <typename T>
+T& Blob<T>::back()
+{
+    check(0, "back onempty Blob");
+    return data->back();
+}
+
+template <typename T>
+T& Blob<T>::operator[](size_type i)
+{
+    // 如果i太大，check会抛出异常，阻止访问一个不存在的元素
+    check(i, "subscript out of range");
+    return (*data)[i];
+}
+
+template <typename T>
+void Blob<T>::pop_back()
+{
+    check(0, "pop back on empty Blob");
+    data->pop_back();
+}
+
+template<typename T>
+Blob<T>::Blob(std::initializer_list<T> il) : 
+	data(std::make_shared<std::vector<T>>(il)) { }
+
+//实例化类模板
+Blob<int> ia;						// 空Blob<int>
+Blob<int> ia2 = {0, 1, 2, 3, 4};	// 有5个元素的Blob<int>
+//下面的定义实例化出两个不同的 Blob类型
+Blob<string> names;	// 保存string的Blob
+Blob<double> prices;// 不同的元素类型
+
+// 实例化Blob<int>和接受initializer_list<int>的构造函数
+Blob<int> squares = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+// 实例化Blob<int>::size() const
+for (size_t i = 0; i != squares.size(); ++i)
+    squares[i] = i * i;	// 实例化Blob<int>::operator[](size_t)
+```
+
+**在类代码内简化模板类名的使用**
+
+```c++
+//若试图访问一个不存在的元素，BlobPtr 抛出一个异常
+template <typename T> class BlobPtr {
+public:
+    BlobPtr() : curr(0) {}
+    BlobPtr(Blob<T> &a, size_t sz = 0) : 
+    	wptr(a.data), curr(sz) { }
+    T& operator*() const
+    { 
+        auto p = check(curr, "dereference past end");
+        return (*p)[curr];	// (*p)为本对象指向的vector
+    }
+    BlobPtr& operator++();	// 前置运算符
+    BlobPtr& operator--();
+private:
+    // 若检查成功，check返回一个指向vector的shared_ptr
+    std::shared_ptr<std::vector<T>>
+        check(std::size_t, const std::string&) const;
+    // 保存一个weak_ptr，表示底层vector可能被销毁
+    std::weak_ptr<std::vector<T>> wptr;
+    std::size_t curr;		//数组中的当前位置
+};
+
+// 后置:递增/递减对象但返回原值
+template<typename T>
+BlobPtr<T> BlobPtr<T>::operator++(int)
+{
+    // 此处无须检查:调用前置递增时会进行检查
+    BlobPtr ret = *this;	// 保存当前值 
+    ++*this;				// 推进一个元素;前置++检查递增是否合法
+    return ret;				// 返回保存的状态
+}
+```
+
+**类模板和友元**
+
+```c++
+//前置声明，在 Blob中声明友元所需要的
+template <typename> class BlobPtr;
+template <typename> class Blob;//运算符==中的参数所需要的
+template <typename T>
+	bool operator==(const Blob<T>&, const Blob<T>&);
+
+template <typename> class Blob {
+    // 每个Blob 实例将访问权限授予用相同类型实例化的 BlobPtr 和相等运算符
+    friend class BlobPtr<T>;
+    friend bool operator==<T>
+        (const Blob<T>&, const Blob<T>&);
+};
+
+Blob<char> ca;	// BlobPtr<char>和operator==<char>都是本对象的友元
+Blob<int> ia;	// BlobPtr<int>和operator==<int>都是本对象的友元
+```
+
+**通用和特定的模板友好关系**
+一个类也可以将另一个模板的每个实例都声明为自己的友元，或者限定特定的实例为友元:
+
+```c++
+//前置声明，在将模板的一个特定实例声明为友元时要用到
+template <typename T> class Pal;
+
+class C {	// C是一个普通的非模板类
+    friend class Pal<C>;		// 用类C实例化的Pal是C的一个友元
+	// Pa12的所有实例都是C的友元:这种情况无须前置声明
+    template <typename T> friend class Pal2;
+};
+template <typename T> class C2 {	// C2本身是一个类模板
+    // C2的每个实例将相同实例化的 Pal声明为友元
+    friend class Pal<T>;	// Pal的模板声明必须在作用域之内
+    // Pal2的所有实例都是C2的每个实例的友元，不需要前置声明
+    template <typename X> friend class Pal2;
+    // Pal3是一个非模板类，它是C2所有实例的友元
+    friend class Pal3;	// 不需要Pal3的前置声明
+};
+```
+
+**令模板自己的类型参数成为友元**
+
+```c++
+template<typename Type>
+class Bar{
+    friend Type;	// 将访问权限授予用来实例化Bar的类型
+	//..
+};
+```
+
+**模板类型别名**
+
+```c++
+typedef Blob<string> StrBlob;
+// 由于模板不是一个类型，不能定义一个typedef引用一个模板。即，无法定义一个typedef引用Blob<T>
+template<typename T>using twin = pair<T, T>;
+twin<string> authors;			// authors是一个pair<string, string>
+twin<int> win_loss;				// win_loss是一个pair<int, int>
+twin<double> area;				// area是一个pair<double, double>
+
+template <typename T> using partNo = pair<T, unsigned>;
+partNo<string> books;	// books是一个pair<string，unsigned>
+partNo<Vehicle> cars;	// cars是一个pair<Vehicle，unsigned>
+partNo<Student> kids;	// kids是一个pair<Student，unsigned>
+```
+
+**类模板的static成员**
+
+```c++
+template <typename T> 
+class Foo {
+public:
+    static std::size_t count(){ return ctr; }	//其他接口成员
+private:
+    static std::size_t ctr;
+    //其他实现成员
+};
+template<typename T>
+size_t Foo<T>::ctr = 0;	//定义并初始化ctr
+
+//实例化static成员Foo<string>::ctr和Eoo<string>::count
+Foo<string> fs;
+//所有三个对象共享相同的Foo<int>::ctr和Foo<int>::count 成员
+Foo<int> fi, fi2, fi3;
+
+Foo<int> fi;						// 实例化Eoo<int>类和static数据成员ctr
+auto ct = Foo<int>::count(); 		// 实例化Foo<int>::count
+ct = fi.count();					// 使用Foo<int>::count
+ct = Foo::count();					// 错误:使用哪个模板实例的 count?
+```
+
+### 模板参数
+
+```c++
+template <typename Foo>
+Foo calc(const Foo& a, const Foo& b)
+{
+    Foo tmp = a;	// tmp的类型与参数和返回类型一样
+    // ..
+    return tmp;		// 返回类型和参数类型一样
+}
+```
+
+**模板参数与作用域**
+
+```c++
+typedef double A;
+template <typename A, typename B>
+void f(A a, B b)
+{
+    A tmp = a;		// tmp的类型为模板参数A的类型，而非double
+    double B;		// 错误:重声明模板参数B
+}
+//错误:非法重用模板参数名 V
+template <typename V, typename V>
+```
+
+**模板声明**
+
+```c++
+//声明但不定义compare和Blob
+template <typename T> int compare(const T&, const T&);
+template <typename T> class Blob;
+
+//3个calc都指向相同的函数模板
+template <typename T> T calc(const T&, const T&);//声明
+template <typename U> U calc(const U&, const U&);//声明
+//模板的定义
+template<typename Type>
+Type calc(const Type& a, const Type& b) { /*...*/ }
+```
+
+默认情况下，C++语言假定通过作用域运算符访问的名字**不是类型**
+如果希望使用一个模板类型参数的类型成员，就必须显式告诉编译器该名字是一个类型
+通过使用关键字typename来实现这一点:
+
+```c++
+// top函数期待一个容器类型的实参，它使用typename指明其返回类型并在c中没有元素时生成一个值初始化的元素返给调用者
+template<typename T>
+typename T::value_type top(const T& c)
+{
+    if (!c.empty())
+    	return c.back();
+    else
+    	return typename T::value_type();
+}
+```
+
+当我们希望通知编译器一个名字表示类型时，必须使用关键字 typename，而不能使用 class
+
+**默认模板实参**
+
+```c++
+// compare 有一个默认模板实参less<T>和一个默认函数实参F()
+template <typename T, typename F = less<T>>
+int compare(const T &v1, const T &v2, F f = F())
+{
+	if (f(v1, v2)) return -1;
+    if (f(v2, v1)) return 1;
+    return 0;
+}
+// 在这段代码中，为模板添加了第二个类型参数，名为 F，表示可调用对象的类型
+// 并定义了一个新的函数参数，绑定到一个可调用对象上
+
+bool i = compare(0, 42);	//使用less;i为-1
+// 结果依赖于item1和item2中的isbn
+Sales_data item1(cin), item2(cin);
+// 模板参数的类型从它们对应的函数实参推断而来
+// 在此调用中，T的类型被推断为Sales_data，F被推断为compareIsbn的类型
+bool j = compare(item1, item2, compareIsbn);
+```
+
+**模板默认实参与类模板**
+如果一个类模板为其所有模板参数都提供了默认实参，且我们希望使用这些默认实参，就必须在模板名之后跟一个空尖括号对:
+
+```c++
+template <class T = int>
+class Numbers {
+public:
+    Numbers(T v = 0): val(v) { }
+    // 对数值的各种操作
+private:
+    T val;
+}; // 默认为int
+Numbers<long double> lots_of_precision;
+Numbers<> average_precision;		// 空<>表示我们希望使用默认类型
+```
+
+### 成员模板
+
+一个类(无论是普通类还是类模板)可以包含本身是模板的成员函数。这种成员被称为成员模板(member template)。成员模板不能是虚函数。
+
+**普通(非模板)类的成员模板**
+
+```c++
+// 函数对象类，对给定指针执行delete
+class DebugDelete {
+public:
+    DebugDelete(std::ostream &s = std::cerr): os(s) { }
+    // 与任何函数模板相同，T 的类型由编译器推断
+    template <typename T> void operator()(T *p) const {
+        os << "deleting unique_ptr" << std::endl;	delete p;
+    }
+private:
+    std::ostream &os;
+};
+
+double* p = new double;
+DebugDelete d;	// 可像delete表达式一样使用的对象
+d(p);			// 调用DebugDelete::operator()(double*)，释放p
+int* ip = new int;
+// 在一个临时DebugDelete对象上调用operator()(int*)
+DebugDelete()(ip);
+
+// 销毁p指向的对象
+// 实例化DebugDelete::operator()<int>(int *)
+unique_ptr<int, DebugDelete> p(new int, DebugDelete());
+// 销毁sp指向的对象
+// 实例化DebugDelete::operator()<string>(string*)
+unique_ptr<string, DebugDelete> sp(new string, DebugDelete());
+// DebugDelete的成员模板实例化样例
+void DebugDelete::operator()(int *p) const { delete p; }
+void DebugDelete::operator()(string *p) const { delete p; }
+```
+
+**类模板的成员模板**
+
+```c++
+template <typename T>
+class Blob {
+    template <typename It> Blob(It b, It e);
+    //...
+};
+
+template <typename T>		// 类的类型参数
+template <typename It>		// 构造函数的类型参数
+Blob<T>::Blob(It b, It e) :
+	data(std::make_shared<std::vector<T>>(b, e)) { }
+
+//实例化与成员模板
+int ia[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+vector<long> vi = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+list<const char*> w = {"now", "is", "the", "time"};
+// 实例化Blob<int>类及其接受两个int*参数的构造函数
+Blob<int> a1(begin(ia), end(ia));
+//实例化Blob<int>类的接受两个vector<long>::iterator的构造函数
+Blob<int> a2(vi.begin(), vi.end());
+// 实例化Blob<string>及其接受两个list<const char*>::iterator参数的构造函数
+Blob<string> a3(w.begin(), w.end());
+```
+
+
+
+### 控制实例化
+
+当模板被使用时才会进行实例化这一特性意味着，相同的实例可能出现在多个对象文件中
+	当两个或多个独立编译的源文件使用了相同的模板
+	并提供了相同的模板参数时，每个文件中就都会有该模板的一个实例
+
+通过显式实例化(explicit instantiation)来避免这种开销
+
+```c++
+extern template declaration;	// 实例化声明
+template declaration;			// 实例化定义
+
+//实例化声明与定义
+// 可能有多个extern声明，但必须只有一个定义
+extern template class Blob<string>;	// 声明
+template int compare(const int&, const int&);		// 定义
+
+// Application.cc
+// 这些模板类型必须在程序其他位置进行实例化
+extern template class Blob<string>;
+extern template int compare(const int&, const int&);
+Blob<string> sal, sa2;	// 实例化会出现在其他位置
+// Blob<int>及其接受initializer_list的构造函数在本文件中实例化
+Blob<int> a1 = {0, 1,2, 3, 4, 5, 6, 7, 8, 9};	
+Blob<int> a2(al);	// 拷贝构造函数在本文件中实例化
+int i = compare(a1[0], a2[0]);	// 实例化出现在其他位
+
+// templateBuild.cc
+// 实例化文件必须为每个在其他文件中声明为extern的类型和函数提供一个(非extern)的定义
+template int compare(const int&, const int&);
+template class Blob<string>;	// 实例化类模板的所有成员
+```
+
+在一个类模板的实例化定义中，所用类型必须能用于模板的所有成员函数
+
+
+
+### 效率与灵活性
+
+**在运行时绑定删除器**
+在一个 shared_ptr 的生存期中，可以随时改变其删除器的类型
+可以使用一种类型的删除器构造一个shared_ptr，随后使用reset赋予此shared_ptr另一种类型的删除器
+
+**假定**shared_ptr将它管理的指针保存在一个成员p中，且删除器是通过一个名为del的成员来访问的，则shared_ptr的析构函数必须包含类似下面这样的语句:
+
+```c++
+// del的值只有在运行时才知道;通过一个指针来调用它
+del ? del(p) : delete p;	// del(p)需要运行时跳转到del的地址
+```
+
+**在编译时绑定删除器**
+由于删除器的类型是 unique_ptr 类型的一部分，因此删除器成员的类型在编译时是知道的，从而删除器可以直接保存在unique_ptr对象中
+
+```c++
+// del在编译时绑定;直接调用实例化的删除器
+del(p);		// 无运行时额外开销
+```
+
+
+
+## 模板实参推断
+
+从函数实参来确定模板实参的过程被称为模板实参推断(template argument deduction)
+
+### 类型转换与模板类型参数
+
+顶层 const 无论是在形参中还是在实参中都会被忽略
+const 转换：可以将一个非 const 对象的引用(或指针)传递给一个 const 的引用(或指针)形参
+数组或函数指针转换：如果函数形参不是引用类型，则可以对数组或函数类型的实参应用正常的指针转换
+	一个数组实参可以转换为一个指向其首元素的指针
+	一个函数实参可以转换为一个该函数类型的指针
+
+```c++
+template<typename T> Tfobj(T, T);					// 实参被拷贝
+template <typename T> T fref(const T&, const T&);	// 引用
+string s1("a value");
+const string s2("another value");
+fobj(s1, s2);		// 调用 fobj(string，string);const 被忽略
+fref(s1, s2);		// 调用 fref(const string&, const string&)
+					// 将s1转换为const是允许的
+int a[10]，b[42];
+fobj(a, b);			// 调用f(int*，int*)
+fref(a, b);			// 错误:数组类型不匹配
+```
+
+**使用相同模板参数类型的函数形参**
+
+```c++
+long lng;
+compare(lng, 1024);	// 错误:不能实例化compare(long, int)
+```
+
+```c++
+// 实参类型可以不同，但必须兼容
+template <typename A, typename B>
+int flexibleCompare(const A& vl, const B& v2)
+{
+    if (v1 < v2) return -1;
+    if (v2 < v1) return 1;
+    return 0;
+}
+
+long lng;
+flexibleCompare(lng, 1024);// 正确:调用flexibleCompare(long, int)
+```
+
+**正常类型转换应用于普通函数实参**
+如果函数参数类型不是模板参数，则对实参进行正常的类型转换
+
+```c++
+template <typename T>
+ostream &print(ostream &os, const T &obj)
+{
+    return os << obj;
+}
+print(cout, 42);		// 实例化print(ostream&, int)
+ofstream f("output");
+print(f, 10);			// 使用print(ostream&, int);将f转换为ostream&
+```
+
+### 函数模板显式实参
+
+在某些情况下，编译器无法推断出模板实参的类型
+其他一些情况下，希望允许用户控制模板实例化
+
+**指定显式模板实参**
+
+```c++
+// 编译器无法推断T1，它未出现在函数参数列表中
+template <typename T1, typename T2, typename T3>
+T1 sum(T2, T3);
+// T1是显式指定的，T2和T3是从函数实参类型推断而来的
+auto val3 = sum<long long>(i, lng);		// long long sum(int, long)
+
+// 糟糕的设计:用户必须指定所有三个模板参数
+template <typename T1, typename T2, typename T3>
+T3 alternative_sum(T2, T1);
+
+// 错误:不能推断前几个模板参数
+auto val3 = alternative_sum<long long>(i, lng);
+// 正确:显式指定了所有三个参数
+auto val2 = alternative_sum<long long, int, long>(i, lng);
+```
+
+**正常类型转换应用于显式指定的实参**
+
+```c++
+long lng;
+compare(lng, 1024);				// 错误:模板参数不匹配
+compare<long>(lng, 1024);		// 正确:实例化compare(long, long)
+compare<int>(lng, 1024);		// 正确:实例化compare(int, int)
+```
+
+### 尾置返回类型与类型转换
+
+编写一个函数，接受表示序列的一对迭代器和返回序列中一个元素的引用:
+
+```c++
+template <typename It>
+??? &fcn(It beg, It end)
+{
+    // 处理序列
+	return *beg;	// 返回序列中一个元素的引用
+}
+
+vector<int> vi = {1, 2, 3, 4, 5};
+Blob<string> ca = {"hi", "bye"};
+auto &i = fcn(vi.begin(), vi.end());	// fcn应该返回int&
+auto &s = fcn(ca.begin(), ca.end());	// fcn应该返回string&
+
+//尾置返回允许我们在参数列表之后声明返回类型
+template <typename It>
+auto fcn(It beg, It end) -> decltype(*beg)
+{
+    // 处理序列
+    return *beg;	// 返回序列中一个元素的引用
+}
+
+```
+
+
+
+**进行类型转换的标准库模板类**
+希望编写一个类似 fcn 的函数，但返回一个元素的值而非引用
+获得元素类型，可以使用标准库的类型转换(type transformation)模板
+
+`remove_reference<decltype(*beg)>::type`
+
+```c++
+//为了使用模板参数的成员，必须用 typename
+template <typename It>
+auto fcn2(It beg, It end) ->
+	typename remove_reference<decltype(*beg)>::type
+{
+    // 处理序列
+	return *beg;		// 返回序列中一个元素的拷贝
+}
+```
+
+|                      | 标准类型转换模板            |                   |
+| -------------------- | --------------------------- | ----------------- |
+| 对Mod<T>，其中Mod为  | 若T为                       | 则Mod<T>::type为  |
+| remove_reference     | X& 或 X&&<br />否则         | X<br />T          |
+| add_const            | X&、const X或函数<br />否则 | T<br />const T    |
+| add_lvalue_reference | X&<br />X&&<br />否则       | T<br />X&<br />T& |
+| add_rvalue_reference | X&或X&&<br />否则           | T<br />T&&        |
+| remove_pointer       | X*<br />否则                | X<br />T          |
+| add_pointer          | X&或X&&<br />否则           | X*<br />`T*`      |
+| make_signed          | unsigned X<br />否则        | X<br />T          |
+| make_unsigned        | 带符号类型<br />否则        | unsigend X<br />T |
+| remove_extent        | X[n]<br />否则              | X<br />T          |
+| remove_all_extents   | `X[n1][n2]...`<br />否则    | X<br />T          |
+
+例如，如果是一个指针类型，则remove_pointer<T>::type是T指向的类型
+如果T不是一个指针，则无须进行任何转换，从而 type 具有与T相同的类型
+
+### 函数指针和实参推断
+
+```c++
+//函数指针
+template <typename T> int compare(const T&, const T&);
+// pf1指向实例int compare(const int&, const int&)
+int (*pf1)(const int&, const int&) = compare;
+
+//实参推断
+// func的重载版本;每个版本接受一个不同的函数指针类型
+void func(int(*)(const string&, const string&));
+void func(int(*)(const int&, const int&));
+func(compare);		// 错误:使用compare的哪个实例?
+// 正确:显式指出实例化哪个compare版本
+func(compare<int>);		// 传递compare(const int&, const int&)
+```
+
+
+
+### 模板实参推断和引用
+
+```c++
+template <typename T> void f(T &p);
+```
+
+**从左值引用函数参数推断类型**
+当一个函数参数是模板类型参数的一个普通(左值)引用时(即，形如T&)
+	只能传递给它一个左值(如，一个变量或一个返回引用类型的表达式)
+
+实参可以是 const类型，也可以不是，如果实参是 const 的，则T将被推断为 const 类型
+
+```c++
+template <typename T> void f1(T&);		// 实参必须是一个左值
+//对f1的调用使用实参所引用的类型作为模板参数类型
+f1(i);		// i是一个int;模板参数类型T是int
+f1(ci); 	// ci是一个const int;模板参数T是const int
+f1(5);		// 错误:传递给一个&参数的实参必须是一个左值
+
+template <typename T> void f2(const T&);	// 可以接受一个右值
+// f2中的参数是const &;实参中的const是无关的
+// 在每个调用中，f2的函数参数都被推断为const int&
+f2(i);	// i是一个int;模板参数T是int
+f2(ci);	// ci是一个const int，但模板参数T是int
+f2(5);	// 一个const &参数可以绑定到一个右值;T是int
+```
+
+**从右值引用函数参数推断类型**
+
+```c++
+template <typename T> void f3(T&&);
+f3(42);			// 实参是一个int 类型的右值;模板参数T是int
+```
+
+**引用折叠和右值引用参数**
+通常我们不能将一个右值引用绑定到一个左值上
+但是，C++语言在正常绑定规则之外定义了两个例外规则，允许这种绑定
+
+	1. 将一个左值(如 i)传递给函数的右值引用参数，且此右值引用指向模板类型参数(如 T&&)时
+	编译器推断模板类型参数为实参的左值引用类型
+		因此，当我们调用f3(i)时，编译器推断T的类型为int&，而非int
+	1. 如果间接创建一个引用的引用，则这些引用形成了“折叠”。
+	在所有情况下(除了一个例外)，引用会折叠成一个普通的左值引用类型。
+	在新标准中，折叠规则扩展到右值引用
+		X& &、X& &&和X&& &都折叠成类型X&
+		例外：类型X&& &&折叠成 X&&
+
+​	**引用折叠只能应用于间接创建的引用的引用，如类型别名或模板参数**
+
+```c++
+f3(i);	// 实参是一个左值;模板参数T是int&
+f3(ci); // 实参是一个左值;模板参数是一个const int&
+
+// 无效代码，只是用于演示目的
+void f3<int&>(int& &&);	// 当T是int&时，函数参数为int& &&
+// To
+void f3<int&>(int&);	// 当T是int&时，函数参数折叠为int&
+```
+
+- 如果一个函数参数是指向模板参数类型的右值引用(如，T&&，则可以传递给它任意类型的实参
+- 如果将一个左值传递给这样的参数，则函数参数被实例化为一个普通的左值引用 (T&)
+
+**编写接受右值引用参数的模板函数**
+右值引用通常用于两种情况:模板转发其实参或模板被重载
+
+```c++
+template <typename T>
+void f3(T&& val)
+{
+    T t = val;		// 拷贝还是绑定一个引用?
+    t = fcn(t);		// 赋值只改变t还是既改变t又改变val?
+	if (val == t){ /* */ }	// 若T是引用类型，则一直为 true
+}
+
+template <typename T> void f(T&&);			// 绑定到非const右值
+template <typename T> void f(const T&); 	// 左值和const右值
+```
+
+
+
+### 理解std::move
+
+**std::move 是如何定义的**
+
+```c++
+// 在返回类型和类型转换中也要用到 typename
+template <typename T>
+typename remove_reference<T>::type&& move(T&& t)
+{
+    return static_cast<typename remove_reference<T>::type&&>(t);
+}
+string sl("hi!"), s2;
+s2 = std::move(string("bye!"));	// 正确:从一个右值移动数据
+s2 = std::move(s1);				// 正确:但在赋值之后，s1的值是不确定的
+```
+
+**std::move是如何工作的**
+
+```c++
+s2 = std::move(string("bye!"));	// 正确:从一个右值移动数据
+// - 推断出的T的类型为string
+// - 因此，remove_reference用 string 进行实例化
+// - remove_reference<string>的type成员是 string
+// - move的返回类型是string&&
+// - move的函数参数t的类型为string&&
+// Equal
+string&& move(string &&t)
+```
+
+```c++
+s2 = std::move(s1);				// 正确:但在赋值之后，s1的值是不确定的
+// - 推断出的T的类型为 string& (string 的引用，而非普通string)
+// - 因此，remove_reference用string&进行实例化
+// - remove_reference<string&>的type成员是string
+// - move的返回类型仍是string&&
+// - move的函数参数t实例化为string&&&，会折叠为string&
+// Equaal
+string&& move(string &t);
+// 这个实例的函数体返回static_cast<string&&>(t)
+// 在此情况下，t 的类型为 string&，cast将其转换为string&&。
+```
+
+**从一个左值static_cast到一个右值引用是允许的**
+
+
+
+### 转发
+
+某些函数需要将其一个或多个实参连同类型不变地转发给其他函数
+	在此情况下，需要保持被转发实参的所有性质，包括实参类型是否是 const 的以及实参是左值还是右值
+
+```c++
+// 接受一个可调用对象和另外两个参数的模板
+// 对“翻转”的参数调用给定的可调用对象
+// flip1是一个不完整的实现:顶层const 和引用丢失了
+template <typename F, typename T1, typename T2>
+void flip1(F f, T1 tl, T2 t2)
+{
+    f(t2, t1);
+}
+// 希望用它调用一个接受引用参数的函数时就会出现问题
+void f(int v1, int &v2) //注意v2是一个引用
+{
+    cout << v1 << " " << ++v2 << endl;
+}
+f(42, i);			// f改变了实参i
+// void flip1(void(*fcn)(int, int&), int t1, int t2);
+flip1(f, j, 42);	// 通过flip1调用f不会改变j
+```
+
+**定义能保持类型信息的函数参数**
+
+```c++
+template <typename F, typename T1, typename T2>
+void flip2(F f, T1 &&tl, T2 &&t2)
+{
+    f(t2, t1);
+}
+```
+
+这个版本的 flp2解决了一半问题。它对于接受一个左值引用的函数工作得很好，但不能用于接受右值引用参数的函数。例如:
+
+```c++
+void g(int &&i, int& j)
+{
+    cout << i <<  " " << j << endl;
+}
+flip2(g, i, 42);		// 错误:不能从一个左值实例化int&&
+```
+
+**在调用中使用std::forward保持类型信息**
+
+forward返回该显式实参类型的右值引用。即，forward<T>的返回类型是 T&&。
+
+通过其返回类型上的引用折叠，forward可以保持给定实参的左值/右值属性:
+
+```c++
+template <typename Type> intermediary(Type &&arg)
+{
+    finalFcn(std::forward<Type>(arg));
+    // ...
+}
+```
+
+当用于一个指向模板参数类型的右值引用函数参数(T&&)时，forward会保持实参类型的所有细节。
+
+```c++
+template <typename F, typename T1, typename T2>
+void flip(F f, T1 &&t1, T2 &&t2)
+{
+    f(std::forward<T2>(t2), std::forward<T1>(t1));
+}
+```
+
+
+
+## 重载与模板
+
+### 编写重载模板
+
+```c++
+// 打印任何我们不能处理的类型
+template <typename T> string debug_rep(const T &t)
+{
+    ostringstream ret;
+    ret << t;	// 使用T的输出运算符打印七的一个表示形式
+    return ret.str();	// 返回ret绑定的string的一个副本
+}
+
+// 打印指针的值，后跟指针指向的对象
+// 注意:此函数不能用于char*
+template <typename T> string debug_rep(T *p)
+{
+    ostringstream ret;
+    ret << "pointer:" << p;	// 打印指针本身的值
+    if(p)
+        ret << " " << debug_rep(*p);	// 打印p指向的值
+    else
+        ret << "null pointer"; 	// 或指出p为空
+    return ret.str();		// 返回ret绑定的string的一个副本
+}
+
+// 只有第一个版本的 debug rep 是可行的
+// 第二个 debug_rep 版本要求一个指针参数，但在此调用中我们传递的是一个非指针对象
+string s("hi");
+cout << debug_rep(s) << endl;
+// 第二个版本的 debug rep 的实例是此调用的精确匹配
+// 第一个版本的实例需要进行普通指针到 const 指针的转换。
+cout << debug rep(&s) << endl;
+
+// 根据重载函数模板的特殊规则，此调用被解析为debug_rep(T*)，即，更特例化的版本。
+const string *sp = &s;
+cout << debug_rep(sp) << endl;
+```
+
+**非模板和模板重载**
+
+```c++
+// 打印双引号包围的string
+string debug_rep(const string &s)
+{
+    return '"' + s + '"';
+}
+string s("hi");
+cout << debug_rep(s) << endl;
+// 当存在多个同样好的函数模板时，编译器选择最特例化的版本，编译器会选择非模板版本
+```
+
+**重载模板和类型转换**
+
+```c++
+cout << debug_rep("hi world!") << endl;	// 调用debug_rep(T*)
+// 对给定实参来说，两个模板都提供精确匹配
+// 第二个模板需要进行一次(许可的)数组到指针的转换，而对于函数匹配来说，这种转换被认为是精确匹配
+// 非模板版本是可行的，但需要进行一次用户定义的类型转换，因此它没有精确匹配那么好
+// 所以两个模板成为可能调用的函数
+// 与之前一样，T*版本更加特例化，编译器会选择它
+
+// 如果我们希望将字符指针按string 处理，可以定义另外两个非模板重载版本
+// 将字符指针转换为 string，并调用string 版本的debug_rep
+string debug_rep(char *p)
+{
+    return debug_rep(string(p));
+}
+string debug_rep(const char *p)
+{
+    return debug_rep(string(p));
+}
+```
+
+当有多个重载模板对一个调用提供同样好的匹配时，应选择最特例化的版本
+对于一个调用，如果一个非函数模板与一个函数模板提供同样好的匹配，则选择非模板版本
+在定义任何函数之前，记得声明所有重载的函数版本
+	这样就不必担心编译器由于未遇到希望调用的函数而实例化一个并非你所需的版本
+
+
+
+## 可变参数模板
+
+存在两种参数包:
+	模板参数包template parameter packet)，表示零个或多个模板参数
+	函数参数包(function parameter packet)，表示零个或多个函数参数
+
+用一个省略号来指出一个模板参数或函数参数表示一个包
+
+```c++
+// Args是一个模板参数包;rest 是一个函数参数包
+// Args表示零个或多个模板类型参数
+// rest表示零个或多个函数参数
+template <typename T, typename... Args>
+void foo(const T&t, const Args& ... rest);
+
+int i = 0; double d = 3.14; string s = "how now brown cow";
+foo(i, s, 42, d);		// 包中有三个参数
+foo(s, 42, "hi");		// 包中有两个参数
+foo(d, s);				// 包中有一个参数
+foo("hi");				// 空包
+// 分别调用
+void foo(const int&, const string&, const int&, const double&);
+void foo(const string&, const int&, const char[3]&);
+void foo(const double&, const string&);
+void foo(const char[3]&);
+
+//获取包中元素数目
+// 不会对其实参求值
+template<typename ... Args>
+void g(Args ... args)
+{
+    cout << sizeof...(Args) << endl;	// 类型参数的数目
+    cout << sizeof...(args) << endl;	// 函数参数的数目
+}
+```
+
+
+
+### 编写可变参数函数模板
+
+ 可变参数函数通常是递归的
+	第一步调用处理包中的第一个实参，然后用剩余实参调用自身
+	为了终止递归，我们还需要定义一个非可变参数的函数
+
+```c++
+// 用来终止递归并打印最后一个元素的函数
+// 此函数必须在可变参数版本的 print 定义之前声明
+template<typename T>
+ostream &print(ostream &os, const T &t)
+{
+    return os << t;		// 包中最后一个元素之后不打印分隔符
+}
+// 包中除了最后一个元素之外的其他元素都会调用这个版本的 print
+template <typename T, typename... Args>
+ostream &print(ostream &os, const T t, const Args&... rest)
+{
+    os << t << ", ";				// 打印第一个实参
+    return print(os, rest...);		// 递归调用，打印其他实参
+}
+```
+
+![](.\Picture\可变参数调用.png)
+
+
+
+### 包扩展
+
+对于一个参数包，除了获取其大小外，能对它做的唯一的事情就是扩展（expand）它。
+
+扩展一个包就是将它分解为构成的元素，对每个元素应用模式，获得扩展后的列表
+	通过在模式右边放一个省略号 (...)来触发扩展操作
+
+```c++
+template <typename T, typename... Args>
+ostream& print(ostream &os, const T &t, const Args&...rest)	// 扩展Args
+{
+	os << t << ", ";
+    return print(os, rest...);		// 扩展rest
+}
+
+// example
+// ostream& print(ostream&, const int&, const string&, const int&);
+print(cout, i, s, 42);		// 包中有两个参数
+```
+
+**理解包扩展**
+
+```c++
+//编写第二个可变参数函数，对其每个实参调用 debug_rep，然后调用print打印结果string
+// 在print调用中对每个实参调用 debug_rep
+template <typename... Args>
+ostream &errorMsg(ostream &os, const Args&... rest)
+{
+    // print(os, debug_rep(a1), debug_rep(a2), ...debug_rep(an)
+    return print(os, debug_rep(rest)...);
+}
+
+// print(cerr, debug_rep(fcnName), debug_rep(code.num()), 
+//		debug_rep(otherData), debug_rep("otherData"), debug_rep(item));
+errorMsg(cerr, fcnName, code.num(), otherData, "other", item);
+
+// 将包传递给debug_rep;	print(os, debug_rep(a1, a2, ..., an))
+// print(cerr, debug_rep(fcnName, code.num(), otherData, "otherData", item));
+print(os, debug_rep(rest...));	// 错误:此调用无匹配函数
+```
+
+
+
+### 转发参数包
+
+- 为了保持实参中的类型信息，必须将emplace_back 的函数参数定义为模板类型参数的右值引用
+- 当emplace_back将这些实参传递给 construct 时，我们必须使用forward来保持实参的原始类型
+
+```c++
+class StrVec {
+public:
+    template <class... Args> void emplace_back(Args&&...);
+};
+
+template<class...Args>
+inline void StrVec::emplace_back(Args&&... args)
+{
+    chk_n_alloc();	// 如果需要的话重新分配StrVec内存空间
+    alloc.construct(first_free++, std::forward<Args>(args)...);
+}
+
+StrVec svec;
+// StrVec::emplace_back(std::forward<int>(10), std::forward<char>(c))
+svec.emplace back(10, 'c');		// 将cccccccccc添加为新的尾元素
+```
+
+
+
+## 模板特例化
+
+当不能(或不希望)使用模板版本时，可以定义类或函数模板的个特例化版本。
+
+```c++
+// 第一个版本;可以比较任意两个类型
+template <typename T>
+int compare(const T&, const T&);
+// 第二个版本处理字符串字面常量
+template<size_t N, size_t M>
+int compare(const char (&)[N], const char (&)[M]);
+
+const char *pl = "hi", *p2 = "mom";
+compare(p1, p2);		// 调用第一个模板
+compare("hi", "mom");	// 调用有两个非类型参数的版本
+```
+
+**定义函数模板特例化**
+使用关键字 template 后跟一个空尖括号对(<>)。空尖括号指出我们将为原模板的所有模板参数提供实参:
+
+```c++
+// compare的特殊版本，处理字符数组的指针
+template<>
+int compare(const char* const &p1, const char* const &p2)
+{
+    return strcmp(p1, p2);
+}
+// 当定义一个特例化版本时，函数参数类型必须与一个先前声明的模板中对应的类型匹配
+// 希望定义此函数的一个特例化版本，其中为const char*。
+```
+
+**函数重载与模板特例化**
+一个特例化版本本质上是一个实例，而非函数名的一个重载版本
+一个非模板函数提供与函数模板同样好的匹配时，编译器会选择非模板版本
+
+**类模板特例化**
+
+```c++
+// 将为标准库hash模板定义一个特例化版本，可以用它来将 Sales_data 对象保存在无序容器中
+// 打开std命名空间，以便特例化 std::hash
+namespace std {
+template<>		// 正在定义一个特例化版本，模板参数为Sales_data
+struct hash<Sales_data>
+{
+    // 用来散列一个无序容器的类型必须要定义下列类型
+    typedef size_t result_type;
+    typedef Sales_data argument_type;	// 默认情况下，此类型需要== 
+    size_t operator()(const Sales_data& s) const;
+    // 我们的类使用合成的拷贝控制成员和默认构造函数
+};
+size_t hash<Sales_data>::operator()(const Sales_data& s) const
+{
+    return hash<string>()(s.bookNo) ^
+        hash<unsigned>()(s.units_sold) ^
+         hash<double>()(s.revenue);
+} 
+}// 关闭std命名空间;注意:右花括号之后没有分号
+
+template <class T> class std::hash;// 友元声明所需要的
+class Sales_data {
+	friend class std::hash<Sales_data>;
+    // 其他成员定义，如前
+};
+```
+
+
+
+**类模板部分特例化**
+一个类模板的部分特例化(partial specialization)本身是一个模板
+	使用它时用户还必须为那些在特例化版本中未指定的模板参数提供实参
+
+只能部分特例化类模板，而不能部分特例化函数模板。
+
+```c++
+// 原始的、最通用的版本
+template <class T> struct remove_reference {
+    typedef T type;
+}; 
+// 部分特例化版本，将用于左值引用和右值引用
+template <class T> struct remove_reference<T&> //左值引用
+	{ typedef T type; };
+template <class T> struct remove reference<T&&> //右值引用
+	{ typedef T type; };
+
+int i;
+// decltype(42)为int，使用原始模板
+remove_reference<decltype(42)>::type a;
+// decltype(i)为int&，使用第一个(T&)部分特例化版本
+remove_reference<decltype(i)>::type b;
+// decltype(std::move(i))为int&&，使用第二个(即T&&)部分特例化版本
+remove_reference<decltype(std::move(i))>::type c;
+```
+
+
+
+**特例化成员而不是类**
+
+```c++
+template <typename T> struct Foo {
+    Foo(const T &t = T()) : mem(t) { }
+    void Bar() { /* ...*/ }
+    T mem;
+    // Foo的其他成员
+};
+
+template<>		// 正在特例化一个模板
+void Foo<int>::Bar()	// 正在特例化Foo<int>的成员Bar
+{
+    // 进行应用于int 的特例化处理
+}
+
+Foo<string> fs;		// 实例化Foo<string>::Foo()
+fs.Bar();			// 实例化Foo<string>::Bar()
+Foo<int> fi;		// 实例化Eoo<int>::Foo()
+fi.Bar();			// 使用我们特例化版本的 Foo<int>::Bar()
+```
+
+
+
+# 标准库特殊设施
+
+## tuple类型
+
+不同 tuple 类型的成员类型不相同，可以有任意数量的成员
+
+| tuple支持的操作                              |                                                              |
+| -------------------------------------------- | ------------------------------------------------------------ |
+| `tuple<T1, T2, ..·, Tn> t;`                  | t是一个tuple，成员数为n，第i个成员的类型为 Ti。所有成员都进行值初始化 |
+| `tuple<T1, T2, ..., Tn> t(v1, v2, ..., vn);` | t是一个tuple，成员类型为 T1...Tn，每个成员用对应的初始值vi进行初始化。此构造函数是explicit 的 |
+| `make_tuple(v1, v2, ..., vn)`                | 返回一个用给定初始值初始化的 tuple。tuple的类型从初始值的类型推断 |
+| t1 == t2<br />t1 != t2                       | 当两个 tuple具有相同数量的成员且成员对应相等时两个tuple相等。这两个操作使用成员的==运算符来完成。一旦发现某对成员不等，接下来的成员就不用比较了 |
+| t1 relop t2                                  | tuple的关系运算使用字典序(参见9.2.7节第304页)。两个tuple必须具有相同数量的成员。使用<运算符比较t1的成员和t2中的对应成员 |
+| `get<i>(t)`                                  | 返回t的第个数据成员的引用:如果t是一个左值，结果是一个左值引用;否则，结果是一个右值引用。tuple的所有成员都是public的 |
+| `tuple_size<tupleType>::value`               | 一个类模板，可以通过一个 tuple类型来初始化。它有一个名为value的public constexpr static数据成员，类型为size_t，表示给定tuple类型中成员的数量 |
+| `tuple_element<i, tupleType>::type`          | 一个类模板，可以通过一个整型常量和一个 tuple 类型来初始化。它有一个名为 type的public成员，表示给定tuple类型中指定成员的类型 |
+
+### 定义和初始化tuple
+
+```c++
+tuple<sizet, size_t, size_t> threeD;		// 三个成员都设置为0
+tuple<string, vector<double>, int, list<int>>
+    someVal("constants", {3.14, 2.718}, 42, {0,1,2,3,4,5});
+
+tuple<size_t, size_t, size_t> threeD = {1, 2, 3};	// 错误
+tuple<size_t, size_t, size_t> threeD{1, 2, 3};		// 正确
+
+// 表示书店交易记录的 tuple，包含:ISBN、数量和每册书的价格
+auto item = make_tuple("0-999-78345-X", 3, 20.00);
+```
+
+**访问tuple的成员**
+使用一个名为 get的标准库函数模板
+	为了使用 get，必须指定一个显式模板实参，它指出想要访问第几个成员
+
+```c++
+auto book = get<0>(item);		// 返回item的第一个成员
+auto cnt = get<1>(item);		// 返回item的第二个成员
+auto price = get<2>(item) / cnt;// 返回item的最后一个成员
+get<2>(item) *= 0.8;			// 打折20号
+```
+
+**查询tuple成员的数量和类型**
+
+```c++
+typedef decltype(item) trans;		// trans是item的类型
+//返回trans类型对象中成员的数量
+size_t sz = tuple_size<trans>::value;	// 返回3
+// cnt的类型与item中第二个成员相同
+tuple_element<1, trans>::type cnt = get<1>(item);	// cnt是一个int
+```
+
+tuple_size有一个名为 value的public static数据成员，它表示给定tuple中成员的数量
+tuple_element 模板除了一个 tuple 类型外，还接受一个索引值
+	它有一个名为 type的 public 类型成员，表示给定 tuple 类型中指定成员的类型
+
+**关系和相等运算符**
+
+```c++
+tuple<string, string> duo("1", "2");
+tuple<size_t, size_t> twoD(1, 2);
+bool b = (duo == twoD);	// 错误:不能比较sizet和string
+tuple<size_t, size_t, size_t> threeD(1, 2, 3);
+b = (twoD < threeD);	// 错误：成员类型不同
+tuple<size_t, size_t> origin(0, 0);
+b = (origin < twoD);	// 正确：b为true
+```
+
+
+
+### 使用tuple返回多个值
+
+**返回tuple的函数**
+
+```c++
+// matches 有三个成员:一家书店的索引和两个指向书店vector元素的迭代器
+typedef tuple<vector<Sales_data>::size_type,
+	vector<Sales_data>::const_iterator, 
+	vector<Sales_data>::const_iterator> matches;
+
+// files保存每家书店的销售记录
+// findBook返回一个 vector，每家销售了给定书籍的书店在其中都有一项
+vector<matches> findBook(const vector<vector<Sales_data>> &files, const string &book)
+{
+    vector<matches> ret; // 初始化为空vector
+    // 对每家书店，查找与给定书籍匹配的记录范围(如果存在的话)
+    for (auto it = files.cbegin(); it != files.cend(); ++it) {
+        //查找具有相同ISBN的Sales_data范围
+        auto found = equal_range(it->cbegin(), it->cend(), book, compareIsbn);
+        if (found.first != found.second)	// 此书店销售了给定书籍
+            // 记住此书店的索引及匹配的范围
+            ret.push_back(make_tuple(it - files.cbegin(), 
+                                     found.first, found.second));
+    }
+    return ret;	// 如果未找到匹配记录的话，ret为空
+}
+```
+
+**使用函数返回的tuple**
+
+```c++
+void reportResults(istream &in, ostream &os, 
+                   const vector<vector<Sales data>> &files)
+{
+    string s;	// 要查找的书
+    while (in >> s) {
+        auto trans = findBook(files, s);	   // 销售了这本书的书店
+        if (trans.empty()) {
+            cout << s << "not found in any stores" << endl;
+            continue; // 获得下一本要查找的书
+        }
+        for (const auto &store : trans) // 对每家销售了给定书籍的书店
+            // get<n>返回store中tuple的指定的成员
+            os << " store " << get<0>(store) << " sales: " 
+            	<< accumulate(get<1>(store), get<2>(store), Sales_data(s))
+            	<< endl;
+    } 
+}
+```
+
+
+
+## bitset类型
+
+使得位运算的使用更为容易，并且能够处理超过最长整型类型大小的位集合
+
+### 定义和初始化bitset
+
+```c++
+bitset<32> bitvec(1u);		// 32位;低位为1，其他位为0
+```
+
+| 初始化bitset的方法                    |                                                              |
+| ------------------------------------- | ------------------------------------------------------------ |
+| `bitset<n> b;`                        | b有n位;每一位均为0。此构造函数是一个constexpr                |
+| `bitset<n> b(u); `                    | b是unsigned long long 值u的低n位的拷贝。如果n大于unsigned long long的大小,则b中超出unsigned long long 的高位被置为0。此构造函数是一个 constexpr |
+| `bitset<n> b(s, pos, m, zero, one);`  | b是strings从位置pos 开始m个字符的拷贝。s只能包含字符zero或one;如果s包含任何其他字符，构造函数会抛出invalid_argument异常。字符在b中分别保存为 zero和one。pos 默认为0，m 默认为 `string::npos`，zero 默认为'0'，one默认为'1' |
+| `bitset<n> b(cp, pos, m, zero, one);` | 与上一个构造函数相同，但从 cp 指向的字符数组中拷贝字符。如果未提供m，则cp必须指向一个C风格字符串。如果提供了m，则从cp开始必须至少有m个zero或one字符 |
+
+接受一个string或一个字符指针的构造函数是explicit的。在新标准中增加了为0和1指定其他字符的功能。
+
+**用unsigned值初始化bitset**
+
+```c++
+// bitvec1比初始值小;初始值中的高位被丢弃
+bitset<13> bitvec1(0xbeef); //二进制位序列为1111011101111
+// bitvec2比初始值大;它的高位被置为0
+bitset<20> bitvec2(0xbeef); //二进制位序列为00001011111011101111
+//在64位机器中，long long OULL是64个0比特，因此~0ULL是64个1
+bitset<128> bitvec3(~0ULL); //0~63位为1;63~127位为0
+```
+
+**从一个string 初始化 bitset**
+
+```c++
+bitset<32> bitvec4("1100");		// 2、3两位为1，其余为0
+
+string str("1111111000000011001101");
+bitset<32> bitvec5(str, 5, 4);				// 从str[5]开始的四个二进制位，1100
+bitset<32> bitvec6(str, str.size() - 4);	// 使用最后四个字符 1101
+```
+
+
+
+### bitset操作
+
+|                                 |                                                              |
+| ------------------------------- | ------------------------------------------------------------ |
+| b.any()                         | b中是否存在置位的二进制位                                    |
+| b.all()                         | b中所有位都置位了吗                                          |
+| b.none()                        | b中不存在置位的二进制位吗                                    |
+| b.count()                       | b中置位的位数                                                |
+| b.size()                        | 一个 constexpr函数，返回b中的位数                            |
+| b.test(pos)                     | 若 pos 位置的位是置位的，则返回 true，否则返回 false         |
+| b.set(pos, v)<br />b.set()      | 将位置pos处的位设置为 bool值v。默认为 true。如果未传递实参，则将b 中所有位置位 |
+| b.reset(pos)<br />b.reset()     | 将位置 pos 处的位复位或将 b 中所有位复位                     |
+| b.flip(pos)<br />b.flip()       | 改变位置 pos处的位的状态或改变b中每一位的状态                |
+| b[pos]                          | 访问b中位置 pos 处的位;如果b是 const 的，则当该位置位时 b[pos]返回一个bool值true，否则返回 false |
+| b.to_ulong()<br />b.to_ullong() | 返回一个unsigned long或一个unsigned long long值其位模式与b相同。如果b中位模式不能放入指定的结果类型则抛出一个overflow_error异常 |
+| b.to_string(zero, one)          | 返回一个string，表示b中的位模式。zero和one的默认值分别为0和1，用来表示b中的0和1 |
+| os << b                         | 将b中二进制位打印为字符1或0，打印到流os                      |
+| is >> b                         | 从is 读取字符存入b。当下一个字符不是1或0时，或是已经读入b.size()个位时，读取过程停止 |
+
+```c++
+bitset<32> bitvec(1u);				// 32位;低位为1，剩余位为0
+bool is_set = bitvec.any();			// true，因为有1位置位
+bool is_not_set = bitvec.none();	// false，因为有1位置位了
+bool all_set = bitvec.all();		// false，因为只有1位置位
+size_t onBits = bitvec.count();		// 返回1
+size_t sz = bitvec.size();			// 返回32
+bitvec.flip();						// 翻转bitvec中的所有位 
+bitvec.reset();						// 将所有位复位
+bitvec.set();						// 将所有位置位
+
+bitvec.flip(0);		// 翻转第一位
+bitvec.set(bitvec.size() - 1);	// 置位最后一位
+bitvec.set(0, 0);		// 复位第一位
+bitvec.reset(i);		// 复位第i位
+bitvec.test(0);			// 返回 false，因为第一位是复位的
+
+bitvec[0] = 0;			// 将第一位复位
+bitvec[31] = bitvec[0];	// 将最后一位设置为与第一位一样
+bitvec[0].flip();		// 翻转第一位
+~bitvec[0];				// 等价操作，也是翻转第一位
+bool b = bitvec[0];		// 将bitvec[0]的值转换为 bool类型
+```
+
+**提取bitset的值**
+
+```c++
+unsigned long ulong = bitvec3.to_ulong();
+cout << "ulong = " << ulong << endl;
+```
+
+**bitset的IO运算符**
+
+```c++
+bitset<16> bits;
+cin >> bits;	// 从cin读取最多16个0或1
+cout << "bits: " << bits << endl;	// 打印刚刚读取的内容
+```
+
+
+
+## 正则表达式
+
+## 随机数
+
+## IO库再探
+
+
+
+# 用于大型程序的工具
+
+## 异常处理
+
+异常处理(exception handling)机制允许程序中独立开发的部分能够在运行时就出现的问题进行通信并做出相应的处理。
+
+### 抛出异常
+
+当执行一个 throw时，跟在throw 后面的语句将不再被执行。相反，程序的控制权从throw 转移到与之匹配的catch 模块。该 catch 可能是同一个函数中的局部 catch,也可能位于直接或间接调用了发生异常的函数的另一个函数中。
+
+**栈展开**
+当throw出现在一个 try语句块 (try block)内时，检查与该try块关联的 catch 子句
+	如果找到了匹配的 catch，就使用该 catch 处理异常
+	如果这一步没找到匹配的catch 且该 try 语套在其他 try 块中，则继续检查与外层 try 匹配的catch 子句
+		如果还是找不到匹配的 catch，则退出当前的函数，在调用当前函数的外层函数中继续寻找。
+当找不到匹配的 catch时，程序将调用标准库函数 terminate，顾名思义，terminate 负责终止程序的执行过程。
+
+**栈展开过程中对象被自动销毁**
+
+
+
+### 捕获异常
+
+如果 catch 接受的异常与某个继承体系有关,则最好将该 catch的参数定义成引用类型
+
+**重新抛出**
+一条 catch 语句通过重新抛出(rethrowing)的操作将异常传递给另外一个catch 语句。
+这里的重新抛出仍然是一条throw语句，只不过不包含任何表达式:
+`throw;`
+
+```c++
+catch (my_error &eObj) {		// 引用类型
+	eObj.status = errCodes::severeErr;	// 修改了异常对象
+    throw;					// 异常对象的status 成员是severeErr
+} catch (other_error eObj) {	// 非引用类型
+    eObj.status = errCodes::badErr;	// 只修改了异常对象的局部副本
+    throw;					// 异常对象的 status 成员没有改变
+}
+```
+
+**捕获所有异常的处理代码**
+捕获所有异常 (catch-all)的处理代码，形如 catch(...)
+如果catch(...)与其他几个catch 语句一起出现，则 catch(..)必须在最后的位置
+	出现在捕获所有异常语句后面的 catch 语句将永远不会被匹配
+
+```c++
+void manip() {
+    try {
+        // 这里的操作将引发并抛出一个异常
+    }
+    catch (...) {
+        // 处理异常的某些特殊操作
+        throw;
+    }
+}
+```
+
+### 函数try 语句块与构造函数
+
+因为在初始值列表抛出异常时构造函数体内的 try 语句块还未生效
+	所以构造函数体内的 catch 语句无法处理构造函数初始值列表抛出的异常
+
+要想处理构造函数初始值抛出的异常，必须将构造函数写成函数 try 语句块
+
+这个 try 关联的 catch 既能处理构造函数体抛出的异常，也能处理成员初始化列表抛出的异常
+
+```c++
+template <typename T>
+Blob<T>::Blob(std::initializer list<T> il) try :
+	data(std::make_shared<std::vector<T>>(il)) {
+     	/*空函数体*/   
+} catch(const std::bad_alloc &e) { handle_out_of_memory(e); }
+```
+
+
+
+### noexcept异常说明
+
+在C++11新标准中，我们可以通过提供 noexcept 说明(noexcept specification)指定某个函数不会抛出异常。
+
+在 typedef 或类型别名中则不能出现 noexcept
+在成员函数中，noexcept 说明符需要跟在 const 及引用限定符之后，在 final、override 或虚函数的=0之前
+
+```c++
+void recoup(int) noexcept;	// 不会抛出异常
+void alloc(int);			// 可能抛出异常
+```
+
+**异常说明的实参**
+
+```c++
+void recoup(int) noexcept(true);		// recoup不会抛出异常
+void alloc(int) noexcept(false);		// alloc可能抛出异常
+```
+
+**noexcept 运算符**
+noexcept 运算符是一个一元运算符
+	它的返回值是一个 bool类型的右值常量表达式用于表示给定的表达式是否会抛出异常
+和 sizeof类似noexcept 也不会求其运算对象的值
+
+```c++
+noexcept(recoup(i)); // 如果recoup 不抛出异常则结果为 true;否则结果为 false
+noexcept(e);		// 当e调用的所有函数都做了不抛出说明且e 本身不含有 throw 语句时，表达式为true;否则noexcept(e)返回false
+
+void f() noexcept(noexcept(g()));	// f和g的异常说明一致
+```
+
+noexcept 有两层含义:
+	当跟在函数参数列表后面时它是异常说明符;
+	而当作为noexcept 异常说明的 bool实参出现时，它是一个运算符
+
+**异常说明与指针、虚函数和拷贝控制**
+函数指针及该指针所指的函数必须具有一致的异常说明
+
+```c++
+// recoup和pf1都承诺不会抛出异常
+void (*pf1)(int) noexcept = recoup;
+// 正确:recoup 不会抛出异常，pf2可能抛出异常，二者之间互不干扰
+void (*pf2)(int) = recoup;
+pf1 = alloc;// 错误:alloc可能抛出异常，但是 pf1已经说明了它不会抛出异常
+pf2 = alloc;// 正确:pf2和alloc都可能抛出异常
+```
+
+如果一个虚函数承诺了它不会抛出异常，则后续派生出来的虚函数也必须做出同样的承诺;与之相反，如果基类的虚函数允许抛出异常，则派生类的对应函数既可以允许抛出异常，也可以不允许抛出异常:
+
+```c++
+class Base {
+public:
+    virtual double f1(double) noexcept;	// 不会抛出异常
+    virtual int f2() noexcept(false);	// 可能抛出异常
+    virtual void f3();					// 可能抛出异常
+};
+
+class Derived : public Base{
+public:
+	double f1(double);			// 错误:Base::f1承诺不会抛出异常
+    int f2() noexcept(false);	// 正确:与Base::f2的异常说明一致
+    void f3() noexcept;			// 正确:Derived的f3做了更严格的限定 这是允许的
+};
+```
+
+
+
+### 异常类层次
+
+exption
+	bad_cast
+	runtime_error
+		overflow_error
+		underflow_error
+		range_error
+	logic_error
+		domain_error
+		invalid_argument
+		out_of_range
+		length_error
+	bad_alloc		
+
+**自定义异常类**
+
+```c++
+// 为某个书店应用程序设定的异常类
+class out_of_stock : public std::runtime_error {
+public:
+    explicit out_of_stock(const std::string &s) :
+    			std::runtime_error(s) { }
+};
+class isbn_mismatch : public std::logic_error {
+public:
+    explicit isbn_mismatch(const std::string &s):
+    	std::logic error(s) { }
+    isbn_mismatch(const std::string &s, 
+        	const std::string &lhs, const std::string &rhs):
+    	std::logic_error(s), left(lhs), right(rhs) { }
+    
+    const std::string left, right;
+};
+```
+
+**使用自定义异常类型**
+
+```c++
+// 如果参与加法的两个对象并非同一书籍，则抛出一个异常
+Sales data& Sales_data::operator+=(const Sales_data& rhs)
+{
+    if (isbn() != rhs.isbn())
+        throw isbn_mismatch("wrong isbns", isbn(), rhs.isbn());
+    units_sold += rhs.units_sold;
+    revenue += rhs.revenue;
+    return *this;
+}
+
+// 使用之前设定的书店程序异常类
+Sales dataitem1, item2, sum;
+while (cin >> iteml >>item2) {		// 读取两条交易信息
+    try {
+        sum = item1 + item2;		// 计算它们的和
+        // 此处使用sum
+    } catch (const isbn mismatch &e) {
+        cerr << e.what() << ": left isbn(" << e.left << 
+            ") right isbn(" << e.right << ")" << endl;
+    }   
+}
+```
+
+
+
+## 命名空间
+
+命名空间(namespace)为防止名字冲突提供了更加可控的机制。命名空间分割了全局命名空间，其中每个命名空间是一个作用域。通过在某个命名空间中定义库的名字，库的作者(以及用户)可以避免全局名字固有的限制。
+
+### 命名空间定义
+
+命名空间作用域后面无须分号。
+
+**每个命名空间都是一个作用域**
+**命名空间可以是不连续的**
+
+**全局命名空间**
+`::member_name`
+
+**内联命名空间**
+内联命名空间中的名字可以被外层命名空间直接使用
+	无须在内联命名空间的名字前添加表示该命名空间的前缀，通过外层命名空间的名字就可以直接访问它
+
+```c++
+inline namespace FifthEd {
+    // 该命名空间表示本书第 5版的代码
+}
+
+namespace FifthEd {		// 隐式内联
+	class Query_base{ /*..*/ };	// 其他与Query有关的声明
+}
+
+namespace FourthEd {
+    class Item_base { /*...*/ };
+    class Query_base{ /*...*/ };
+    // 本书第 4版用到的其他代码
+}
+
+// 因为 FifthEd 是内联的，所以形如 cplusplus primer::的代码可以直接获得FifthEd 的成员
+// 如果想使用早期版本的代码，则必须加上完整的外层命名空间名字，比如cplusplus_primer::FourthEd::Query_base。
+namespace cplusplus_primer{
+    #include "FifthEd.h"
+    #include "FourthEd.h"
+}
+```
+
+**未命名的命名空间**
+未命名的命名空间(unnamednamespace)是指关键字namespace后紧跟花括号括起来的一系列声明语句
+未命名的命名空间中定义的变量拥有静态生命周期：它们在第一次使用前创建，并且直到程序结束才销毁
+和其他命名空间不同，未命名的命名空间仅在特定的文件内部有效，其作用范围不会横跨多个不同的文件
+
+
+
+### 使用命名空间成员
+
+**命名空间的别名**
+
+```c++
+namespace cplusplus_primer { /* ... */ };
+namespace primer = cplusplus_primer;
+
+namespace Qlib = cplusplus_primer::QueryLib;
+Qlib::Query q;
+```
+
+**using声明:扼要概述**
+一条using声明(using declaration)语句一次只引入命名空间的一个成员
+using 声明语句声明的是一个名字，而非一个特定的函数
+
+```c++
+using NS::print(int);		// 错误:不能指定形参列表
+using NS::print;			// 正确:using声明只声明一个名字
+```
+
+**using 指示**
+using 指示以关键字using 开始，后面是关键字namespace 以及命名空间的名字
+
+```c++
+namespace libs_R_us {
+    extern void print(int);
+    extern void print(double);
+}
+// 普通的声明
+void print(const std::string &);
+//这个using指示把名字添加到 print 调用的候选函数集
+using namespace libs_R_us;
+// print调用此时的候选函数包括:
+// libs_R_us的print(int)
+// libs_R_us的print(double)
+// 显式声明的print(const std::string &)
+void fooBar(int ival)
+{
+    print("Value:");		// 调用全局函数print(const string &)
+    print(ival);			// 调用libsRus::print(int)
+}
+```
+
+**头文件与using声明或指示**
+头文件如果在其顶层作用域中含有 using 指示或using 声明，则会将名字注入到所有包含了该头文件的文件中
+
+### 类、命名空间与作用域
+
+**实参相关的查找与类类型形参**
+
+**查找与std::move和std::forward**
+
+**友元声明与实参相关的查找**
+一个另外的未声明的类或函数如果第一次出现在友元声明中，则我们认为它是最近的外层命名空间的成员
+
+```c++
+namespace A {
+	class C {
+		// 两个友元，在友元声明之外没有其他的声明
+        // 这些函数隐式地成为命名空间A的成员
+        friend void f2();				// 除非另有声明，否则不会被找到
+        friend void f(const C&);		// 根据实参相关的查找规则可以被找到
+    };
+}
+int main()
+{
+    A::C cobj;			
+    f(cobj);		// 正确:通过在A::C中的友元声明找到A::f
+    f2();			// 错误:A::f2没有被声明
+}
+```
+
+
+
+### 重载与命名空间
+
+**与实参相关的查找与重载**
+对于接受类类型实参的函数来说，其名字查找将在实参类所属的命名空间中进行
+
+```c++
+namespace NS {
+    class Quote{ /*...*/ };
+    void display(const Quote&) { /* ...*/ }
+}
+// Bulk_item的基类声明在命名空间NS中
+class Bulk_item : public NS::Quote { /* ...*/ };
+int main() {
+    Bulk_item book1;
+    display(book1);
+    return 0;
+} 
+```
+
+
+
+## 多重继承和虚继承
+
+### 多重继承
+
+```c++
+class Bear : public ZooAnimal
+class Panda : public Bear, public Endangered { /* ...*/ };
+```
+
+<img src=".\Picture\Panda对象结构.png" style="zoom:50%;" />
+
+**派生类构造函数初始化所有基类**
+
+```c++
+// 显式地初始化所有基类
+Panda::Panda(std::string name, bool onExhibit)
+    : Bear(name, onExhibit, "Panda"),
+	Endangered(Endangered::critical) { }
+// 隐式地使用 Bear 的默认构造函数初始化 Bear子对象
+Panda::Panda() : Endangered(Endangered::critic al) { }
+```
+
+**继承的构造函数与多重继承**
+如果从多个基类中继承了相同的构造函数(即形参列表完全相同),则程序将产生错误:
+
+```c++
+struct Base1 {
+    Base1() = default;
+    Base1(const std::string&);
+    Base1(std::shared_ptr<int>);
+};
+
+struct Base2 {
+    Base2() = default;
+    Base2(const std::string&);
+    Base2(int);
+};
+// 错误:D1试图从两个基类中都继承D1::D1(const string&)
+struct D1 : public Base1, public Base2{
+    using Base1::Base1;		// 从Basel继承构造函数
+	using Base2::Base2;		// 从Base2继承构造函数
+};
+
+// 如果一个类从它的多个基类中继承了相同的构造函数，则这个类必须为该构造函数定义它自己的版本:
+struct D2: public Basel, public Base2 {
+    using Base1::Base1;		// 从Basel继承构造函数
+    using Base2::Base2;		// 从Base2继承构造函数
+    // D2必须自定义一个接受 string 的构造函数
+    D2(const string &s): Base1(s), Base2(s) { }
+    D2() = default;		// 一旦D2定义了它自己的构造函数，则必须出现
+};
+```
+
+**析构函数与多重继承**
+
+析构函数的调用顺序正好与构造函数相反，
+	析构函数的调用顺序是~Panda、~Endangered、~Bear和~ZooAnimal
+
+### 类型转换与多个基类
+
+```c++
+// 接受 Panda的基类引用的一系列操作
+void print(const Bear&);
+void highlight(const Endangered&);
+ostream& operator<<(ostream&, const ZooAnimal&);
+Panda ying_yang("ying_yang");
+print(ying_yang);					// 把一个Panda对象传递给一个Bear的引用
+highlight(ying_yang);				// 把一个Panda对象传递给一个Endangered 的引用
+cout << ying_yang << endl;			// 把一个Panda对象传递给一个ZooAnimal的引用
+```
+
+
+
+### 多重继承下的类作用域
+
+要想避免潜在的二义性，最好的办法是在派生类中为该函数定义一个新版本。
+
+
+
+### 虚继承
+
+虚继承的目的是令某个类做出声明，承诺愿意共享它的基类
+	其中，共享的基类子对象称为虚基类(virtual base class)
+在这种机制下，不论虚基类在继承体系中出现了多少次，在派生类中都只包含唯一一个共享的虚基类子对象
+
+```c++
+// 关键字public和virtual的顺序随意
+class Raccoon : public virtual ZooAnimal { /*...*/ };
+class Bear : virtual public ZooAnimal { /*...*/ };
+
+class Panda : public Bear, public Raccoon, public Endangered { };
+```
+
+### 构造函数与虚继承
+
+在虚派生中，虚基类是由最低层的派生类初始化的
+虚基类总是先于非虚基类构造，与它们在继承体系中的次序和位置无关
+
+含有虚基类的对象的构造顺序与一般的顺序稍有区别:
+	首先使用提供给最低层派生类构造函数的初始值初始化该对象的虚基类子部分
+	接下来按照直接基类在派生列表中出现的次序依次对其进行初始化
+
+编译器按照直接基类的声明顺序对其依次进行检查，以确定其中是否含有虚基类
+	如果有，则先构造虚基类，然后按照声明的顺序逐一构造其他非虚基类。
+和往常一样，对象的销毁顺序与构造顺序正好相反
+
+
+
+# 特殊工具与技术
+
+## 控制内存分配
+
+应用程序需要重载 new 运算符和 delete 运算符以控制内存分配的过程
+
+### 重载 new 和 delete
+
+**使用new表达式**
+	第一步，new表达式调用一个名为operator new(或者operator new[])的标准库函数
+		该函数分配一块足够大的、原始的、未命名的内存空间以便存储特定类型的对象(或者对象的数组)
+	第二步，编译器运行相应的构造函数以构造这些对象，并为其传入初始值
+	第三步，对象被分配了空间并构造完成，返回一个指向该对象的指针
+
+**使用delete表达式**
+	第一步，对 sp 所指的对象或者 arr 所指的数组中的元素执行对应的析构函数
+	第二步,编译器调用名为operator delete(或者operator delete[])的标准库函数释放内存空间。
+
+如果应用程序希望控制内存分配的过程，则它们需要定义自己的operator new函数和operator delete 函数。
+
+**查找operator new**
+如果被分配(释放)的对象是类类型，则编译器首先在类及其基类的作用域中查找
+编译器在全局作用域查找匹配的函数
+	此时如果编译器找到了用户自定义的版本，则使用该版本执行 new 表达式或delete表达式
+使用标准库定义的版本
+
+**operator new 接口和operator delete 接口**
+
+```c++
+// 这些版本可能抛出异常
+void *operator new(size_t);				// 分配一个对象
+void *operator new[](size_t);			// 分配一个数组
+void *operator delete(void*) noexcept;	// 释放一个对象
+void *operator delete[](void*) noexcept;	// 释放一个数组
+
+// 这些版本承诺不会抛出异常
+void *operator new(size_t, nothrow_t&) noexcept;
+void *operator new[](size_t, nothrow_t&) noexcept;
+void *operator delete(void*, nothrow_t&) noexcept;
+void *operator delete[](void*, nothrow_t&) noexcept;
+```
+
+类型nothrow_t是定义在new头文件中的一个struct，在这个类型中不包含任何成员
+
+**operator new限制**
+对于operator new 函数或者 operator new[]函数来说，
+	它的返回类型必须是void*，第一个形参的类型必须是 size_t且该形参不能含有默认实参
+当为一个对象分配空间时使用operator new；为一个数组分配空间时使用operator new[]
+	当编译器调用operator new时，把存储指定类型对象所需的字节数传给size_t形参
+	当调用operator new[]时，传入函数的则是存储数组中所有元素所需的空间
+
+下面这个函数却无论如何不能被用户重载:
+
+```c++
+void *operator new(size_t, void*);	// 不允许重新定义这个版本
+```
+
+**operator delete限制**
+对于operator delete 函数或者operator delete[]函数：
+	返回类型必须是void，第一个形参的类型必须是 `void*`
+	执行一条delete 表达式将调用相应的operator函数，并用指向待释放内存的指针来初始化`void*`形参
+
+**malloc函数与free 函数**
+malloc函数接受一个表示待分配字节数的size_t，返回指向分配空间的指针或者返回0以表示分配失败
+free 函数接受一个 void*，它是malloc 返回的指针的副本free将相关内存返回给系统
+
+```c++
+void *operator new(size_t size) {
+    if (void *mem = malloc(size))
+        return mem;
+    else
+        throw bad_alloc();
+}
+void operator delete(void *mem) noexcept { free(mem); }
+```
+
+### 定位new表达式
+
+new 的这种形式为分配函数提供了额外的信息。我们可以使用定位 new 传递一个地址，此时定位 new的形式如下所示:
+
+```c++
+new (place_address) type
+new (place_address) type (initializers)
+new (place_address) type [size]
+new (place_address) type [size] { braced initializer list }
+```
+
+当仅通过一个地址值调用时，定位new 使用`operator new(size_t，void*)`“分配”它的内存
+	这是一个无法自定义的operator new版本
+该函数不分配任何内存，它只是简单地返回指针实参
+然后由 new 表达式负责在指定的地址初始化对象以完成整个工作
+	事实上，定位 new 允许在一个特定的、预先分配的内存地址上构造对象
+
+**显式的析构函数调用**
+调用析构函数可以清除给定的对象但是不会释放该对象所在的空间
+
+```c++
+string *sp = new string("a value");		// 分配并初始化一个string对象
+sp->~string();
+```
+
+
+
+## 运行时类型识别
+
+运行时类型识别(run-time type identification，RTTI)的功能由两个运算符实现:
+
+- typeid运算符，用于返回表达式的类型
+- dynamic_cast 运算符，用于将基类的指针或引用安全地转换成派生类的指针或引用
+
+### dynamic_cast运算符
+
+```c++
+dynamic_cast<type*>(e);
+dynamic_cast<type&>(e);
+dynamic_cast<type&&>(e);
+```
+
+type 必须是一个类类型，并且通常情况下该类型应该含有虚函数
+	在第一种形式中e必须是一个有效的指针
+	在第二种形式中e必须是一个左值
+	在第三种形式中，e不能是左值
+
+e 的类型必须符合以下三个条件中的任意一个
+	e的类型是目标 type 的公有派生类
+	e的类型是目标 type 的公有基类
+	e的类型就是目标ype 的类型
+如果符合，则类型转换可以成功。否则，转换失败
+
+如果一条 dynamic_cast 语句的转换目标是指针类型并且失败了，则结果为 0
+如果转换目标是引用类型并且失败了，则dynamic_cast 运算符将抛出一个bad_cast 异常
+
+**指针类型的dynamic_cast**
+
+```c++
+if (Derived *dp = dynamic_cast<Derived*>(bp))
+{
+    // 使用dp指向的Derived对象
+} else {	// bp指向一个Base对象
+    // 使用bp指向的Base对象
+}
+```
+
+**引用类型的dynamic_cast**
+
+```c++
+void f(const Base &b)
+{
+    try {
+        // 使用b引用的Derived对象
+        const Derived &d = dynamic_cast<const Derived&>(b);	
+    } catch (bad_cast) {
+        // 处理类型转换失败的情况
+    }
+}
+```
+
+
+
+### typeid运算符
+
+typeid 表达式的形式是 typeid(e)，其中e可以是任意表达式或类型的名字
+typeid操作的结果是一个常量对象的引用，该对象的类型是标准库类型 type_info或者type_info的公有派生类型
+type_info类定义在typeinfo头文件中
+
+typeid运算符可以作用于任意类型的表达式
+	顶层const被忽略
+	如果表达式是一个引用，则 typeid 返回该引用所引对象的类型
+	不过当 typeid作用于数组或函数时，并不会执行向指针的标准类型转换
+		也就是说，如果我们对数组 a 执行 typeid(a)，则所得的结果是数组类型而非指针类型
+
+**使用typeid运算符**
+
+```c++
+Derived *dp = new Derived;
+Base *bp = dp;			// 两个指针都指向 Derived对象
+// 在运行时比较两个对象的类型
+if (typeid(*bp) == typeid(*dp)) {
+    // bp和dp指向同一类型的对象
+}
+// 检查运行时类型是否是某种指定的类型
+if (typeid(*bp) == typeid(Derived)) {
+    // bp实际指向Derived对象
+}
+
+//下面的检查永远是失败的:bp的类型是指向 Base的指针
+if (typeid(bp) == typeid(Derived)) {
+    //此处的代码永远不会执行
+}
+```
+
+typeid是否需要运行时检查决定了表达式是否会被求值
+	只有当类型含有虚函数时编译器才会对表达式求值
+	反之，如果类型不含有虚函数，则typeid返回表达式的静态类型
+		编译器无须对表达式求值也能知道表达式的静态类型
+
+
+
+### 使用RTTI
+
+定义的相等运算符的形参是基类的引用，然后使用 typeid检查两个运算对象的类型是否一致
+	如果运算对象的类型不一致，则==返回 false:类型一致才调用equal 函数
+每个类定义的equal函数负责比较类型自己的成员
+	这些运算符接受 Base&形参，但是在进行比较操作前先把运算对象转换成运算符所属的类类型
+
+**类的层次关系**
+
+```c++
+class Base {
+    friend bool operator==(const Base&, const Base&);
+public:
+    // Base的接口成员
+protected:
+    virtual bool equal(const Bases) const;
+    // Base的数据成员和其他用于实现的成员
+};
+class Derived: public Base{
+public:
+    // Derived的其他接口成员
+protected:
+    bool equal(const Base&) const;
+    // Derived的数据成员和其他用于实现的成员
+};
+```
+
+**类型敏感的相等运算符**
+
+```c++
+bool operator==(const Base &lhs, const Base &rhs)
+{
+    //如果typeid不相同，返回false;否则虚调用equal
+    return typeid(lhs) == typeid(rhs) && lhs.equal(rhs);
+}
+```
+
+**虚equal函数**
+
+```c++
+bool Derived::equal(const Base &rhs) const
+{
+    // 我们清楚这两个类型是相等的，所以转换过程不会抛出异常
+    auto r = dynamic_cast<const Derived&>(rhs);
+    // 执行比较两个 Derived 对象的操作并返回结果
+}
+```
+
+**基类equal函数**
+
+```c++
+bool Base::equal(const Base &rhs) const
+{
+    // 执行比较 Base对象的操作
+}
+```
+
+### type_info类
+
+| type_info的操作 |                                                              |
+| --------------- | ------------------------------------------------------------ |
+| t1==t2          | 如果typeinfo对象t1和t2表示同一种类型，返回true;否则返四false |
+| t1 != t2        | 如果typeinfo对象t1和t2表示不同的类型，返回true;否则返false   |
+| t.name()        | 返回一个C风格字符串，表示类型名字的可打印形式。类型名字的生成方式因系统而异 |
+| t1.before(t2)   | 返回一个bool值，表示t1是否位于t2之前。before所采用的顺序关系是依赖于编译器的 |
+
+
+typeinfo类的name成员函数返回一个C风格字符串，表示对象的类型名字
+
+```c++
+int arr[10];
+Derived d;
+Base *p = &d;
+
+cout << typeid(42).name() << ", "
+    << typeid(arr).name() << ", " 
+    << typeid(Sales_data).name() << ", "
+    << typeid(std::string).name() << ", "
+    << typeid(p).name() << ", " 
+    << typeid(*p).name() << endl;
+// i, A10_i, 10Sales_data, Ss, P4Base, 7Derived 
+```
+
+
+
+## 枚举类型
+
+C++包含两种枚举:
+	限定作用域的
+	不限定作用域的
+
+C++11新标准引入了限定作用域的枚举类型(scoped enumeration)
+定义限定作用域的枚举类型的一般形式是:
+	首先是关键字enumclass(或者等价地使用enumstruct)，
+	随后是枚举类型名字以及用花括号括起来的以逗号分隔的枚举成员(enumerator)列表，最后是一个分号:
+
+```c++
+// 限定作用域的枚举类型
+enum class open_modes {input, output, append};
+
+// 不限定作用域的枚举类型
+enum color {red, yellow, green};
+// 未命名的、不限定作用域的枚举类型
+enum { floatPrec = 6, doublePrec = 10, double_doublePrec = 10};
+```
+
+**枚举成员**
+
+```c++
+enum color {red, yellow, green};			// 不限定作用域的枚举类型
+enum stoplight { red, yellow, green };		// 错误:重复定义了枚举成员
+enum class peppers { red, yellow, green };	// 正确:枚举成员被隐藏了
+
+color eyes = green;	// 正确:不限定作用域的枚举类型的枚举成员位于有效的作用域中
+peppers p = green;	// 错误:peppers的枚举成员不在有效的作用域中
+					// color::qreen在有效的作用域中，但是类型错误
+color hair = color::red;	// 正确:允许显式地访问枚举成员
+peppers p2 = peppers::red;	// 正确:使用pappers的red
+
+int i = color::red; 	// 正确:不限定作用域的枚举类型的枚举成员隐式地转换成int
+int j = peppers::red;	// 错误:限定作用域的枚举类型不会进行隐式转换
+```
+
+**指定enum大小**
+
+```c++
+enum intValues : unsigned long long {
+    charTyp = 255, 
+    shortTyp = 65535,
+    intTyp = 65535,
+    longTyp = 4294967295UL,
+    longlongTyp = 18446744073709551615ULL
+};
+```
+
+**枚举类型的前置声明**
+
+```c++
+//不限定作用域的枚举类型intValues的前置声明
+enum intValues : unsigned long long; 	// 不限定作用域的，必须指定成员类型
+enum class open_modes;					// 限定作用域的枚举类型可以使用默认成员类型 int
+```
+
+
+
+## 类成员指针
+
+```c++
+class Screen {
+public:
+    typedef std::string::size_type pos;
+    char get_cursor() const { return contents[cursor]; }
+    char get() const;
+    char get(pos ht, pos wd) const;
+private:
+    std::string contents;
+    pos cursor;
+    pos height, width;
+};
+```
+
+### 数据成员指针
+
+```c++
+// pdata可以指向一个常量(非常量)Screen对象的string 成员
+const string Screen::*pdata;
+pdata = &Screen::contents;
+auto pdata = &Screen::contents;
+
+//使用数据成员指针
+Screen myScreen, *pScreen = &myScreen;
+// .*解引用pdata以获得myScreen 对象的contents成员
+auto s = myScreen.*pdata;
+// ->*解引用pdata以获得pScreen 所指对象的contents成员
+s = pScreen->*pdata;
+
+//返回数据成员指针的函数
+class Screen {
+public:
+    // data是一个静态成员，返回一个成员指针
+    static const std::string Screen::*data()
+    	{ return &Screen::contents; }
+    // 其他成员与之前的版本一致
+};
+
+// data()返回一个指向Screen类的contents成员的指针
+// pdata 指向Screen 类的成员而非实际数据。要想使用pdata，必须把它绑定到Screen类型的对象上:
+const string Screen::*pdata = Screen::data();
+// 获得myScreen对象的contents成员
+auto s = myScreen.*pdata;
+```
+
+### 成员函数指针
+
+```c++
+// pmf 是一个指针，它可以指向 Screen的某个常量成员函数
+// 前提是该函数不接受任何实参，并且返回一个char
+auto pmf = &Screen::get_cursor;
+
+// 出于优先级的考虑，声明中Screen::*两端的括号必不可少
+char (Screen::*pmf2)(Screen::pos, Screen::pos) const;
+pmf2 = &Screen::get;
+
+// pmf指向一个Screen成员，该成员不接受任何实参且返回类型是char
+pmf = &Screen::get;	// 必须显式地使用取地址运算符
+pmf = Screen::get;	// 错误:在成员函数和指针之间不存在自动转换规则
+
+//使用成员函数指针
+Screen myScreen, *pScreen = &myScreen;
+// 通过pScreen所指的对象调用pmf所指的函数
+char c1 = (pScreen->*pmf)();
+// 通过myScreen 对象将实参0，0传给含有两个形参的get函数
+char c2 = (myScreen.*pmf2)(0, 0);
+
+//使用成员指针的类型别名
+// Action是一种可以指向Screen成员函数的指针，它接受两个pos实参，返回一个char
+using Action = char (Screen::*)(Screen::pos, Screen::pos) const;
+Action get = &Screen::get; // get指向Screen的get成员
+// action 接受一个Screen 的引用，和一个指向 Screen 成员函数的指针
+Screen& action(Screen&, Action = &Screen::get);
+Screen myScreen;
+//等价的调用:
+action(myScreen);				// 使用默认实参
+action(myScreen, get);			// 使用我们之前定义的变量 get
+action(myScreen, &Screen::get);	// 显式地传入地址
+```
+
+**成员指针函数表**
+
+```c++
+Class Screen {
+public:
+    // 其他接口和实现成员与之前一致
+    Screen& home();
+    Screen& forward();	// 光标移动函数
+    Screen& back();
+    Screen& up();
+    Screen& down();
+};
+
+class Screen {
+public:
+    // 其他接口和实现成员与之前一致
+    // Action是一个指针，可以用任意一个光标移动函数对其赋值
+    using Action = Screen& (Screen::*)();
+    // 指定具体要移动的方向
+    enum Directions{ HOME, FORWARD, BACK, UP,DOWN };
+    Screen& move(Directions);
+private:
+    static Action Menu[];		// 函数表
+};
+
+Screen& Screen::move(Directions cm) 
+{
+    // 运行this对象中索引值为cm的元素
+    return (this->*Menu[cm])(); // Menu[cm]指向一个成员函数
+}
+
+Screen::Action Screen::Menu[] = {
+    &Screen::home,
+    &Screen::forward,
+    &Screen::back,
+    &Screen:;up,
+    &Screen::down,
+};
+
+Screen myScreen;
+myScreen.move(Screen::HOME);	// 调用myScreen.home
+myScreen.move(Screen::DOWN);	// 调用myScreen.down
+```
+
+
+
+### 将成员函数用作可调用对象
+
+```c++
+auto fp = &string::empty;		// fp指向string的empty函数
+// 错误，必须使用.*或->*调用成员指针
+find_if(svec.begin(), svec.end(), fp);
+```
+
+**使用function生成一个可调用对象**
+
+```c++
+function<bool (const string&)> fcn = &string::empty;
+find_if(svec.begin(), svec.end(), fcn);
+
+// 假设it是find_if内部的迭代器，则*it 是给定范围内的一个对象
+if (fcn(*it))	{ } // 假设fcn是find_if内部的一个可调用对象的名字
+// To
+// 假设it是findif内部的迭代器，则*it 是给定范围内的一个对象
+if (((*it).*p)()) { }// 假设p是fcn内部的一个指向成员函数的指针
+
+vector<string*> pvec;
+function<bool (const string*)> fp = &string::empty;
+//fp接受一个指向string的指针，然后使用->*调用empty
+find_if(pvec.begin(), pvec.end(), fp);
+```
+
+**使用mem_fn生成一个可调用对象**
+通过使用标准库功能mem_fn来让编译器负责推断成员的类型
+
+```c++
+find_if(svec.begin(), svec.end(), mem_fn(&string::empty));
+
+auto f = mem_fn(&string::empty);	// f接受一个string或者一个string*
+f(*svec.begin());		// 正确:传入一个string对象，f使用*调用empty
+f(&svec[0]);			// 正确:传入一个string的指针,f使用->*调用empty
+```
+
+**使用bind生成一个可调用对象**
+
+```c++
+//选择范围中的每个string，并将其 bind到empty的第一个隐式实参上
+auto it = find_if(svec.begin(), svec.end(), bind(&string::empty, _1));
+auto f = bind(&string::empty, _1);
+f(*svec.begin());	// 正确:实参是一个string，f使用.*调用empty
+f(&svec[0]);		// 正确:实参是一个string的指针，f使用->*调用empty
+```
+
+
+
+## 嵌套类
+
+一个类可以定义在另一个类的内部,前者称为嵌套类或嵌套类型
+
+嵌套类的名字在外层类作用域中是可见的，在外层类作用域之外不可见
+嵌套类的名字不会和别的作用域中的同一个名字冲突
+
+嵌套类中成员的种类与非嵌套类是一样的
+嵌套类也使用访问限定符来控制外界对其成员的访问权限
+	外层类对嵌套类的成员没有特殊的访问权限
+	嵌套类对外层类的成员也没有特殊的访问权限
+
+嵌套类在其外层类中定义了一个类型成员
+该类型的访问权限由外层类决定
+	位于外层类 public 部分的嵌套类实际上定义了一种可以随处访问的类型
+	位于外层类 protected 部分的嵌套类定义的类型只能被外层类及其友元和派生类访问
+	位于外层类 private 部分的嵌套类定义的类型只能被外层类的成员和友元访问
+
+```c++
+//声明一个嵌套类
+class TextQuery {
+public:
+    class QueryResult;		// 嵌套类稍后定义
+};
+
+//在外层类之外定义一个嵌套类
+// QueryResult是TextQuery的成员，下面的代码负责定义QueryResult
+class TextQuery::QueryResult {
+    // 位于类的作用域内，因此我们不必对QueryResult 形参进行限定
+    friend std::ostream& print(std::ostream&, const QueryResult&);
+public:
+    // 无须定义QueryResult::line_no
+    // 嵌套类可以直接使用外层类的成员，无须对该成员的名字进行限定
+    QueryResult(std::string,
+               std::shared_ptr<std::set<line_no>>,
+               std::shared_ptr<std::vector<std::string>>); 
+};
+
+//定义嵌套类的成员
+// QueryResult类嵌套在TextQuery类中
+// 下面的代码为QueryResult类定义名为QueryResult的成员
+TextQuery::QueryResult::QueryResult(string s, 
+                                    shared_ptr<set<lineno>> p,
+                                    shared_ptr<vector<string>> f):
+	sought(s), lines(p), file(f) { }
+
+//嵌套类的静态成员定义
+int TextQuery::QueryResult::static_mem = 1024;
+
+// TextQuery的query成员可以直接使用名字QueryResult
+```
+
+
+
+## union:一种节省空间的类
+
+一个union可以有多个数据成员，但是在任意时刻只有一个数据成员可以有值
+分配给一个 union 对象的存储空间至少要能容纳它的最大的数据成员
+
+union不能含有引用类型的成员
+含有构造函数或析构函数的类类型也可以作为union的成员类型
+union可以为其成员指定public、protected和private 等保护标记
+	默认情况下，union 的成员都是公有的，这一点与struct相同
+
+**定义union**
+
+```c++
+// Token 类型的对象只有一个成员，该成员的类型可能是下列类型中的任意一种
+union Token{
+    //默认情况下成员是公有的
+    charc	cval;
+    int		ival;
+    double 	dval;
+};
+
+//使用union类型
+Token first_token = {'a'};		// 初始化cval成员
+Token last_token;				// 未初始化的Token对象
+Token *pt = new Token;			// 指向一个未初始化的 Token 对象的指针
+last_token.cval = 'z';
+pt->ival = 42;
+
+//匿名union
+union {		// 匿名union
+    char cval;
+	int ival;
+	double dval;
+};	// 定义一个未命名的对象，我们可以直接访问它的成员
+cval = 'c';	// 为刚刚定义的未命名的匿名union对象赋一个新值
+ival = 42;	// 该对象当前保存的值是 42
+```
+
+
+
+## 局部类
+
+类可以定义在某个函数的内部，我们称这样的类为局部类(local class)
+
+**局部类不能使用函数作用域中的变量**
+
+
+
+## 固有的不可移植的特性
+
+### 位域
+
+位域在内存中的布局是与机器相关的
+
+### volatile限定符
+
+> volatile的确切含义与机器有关，只能通过阅读编译器文档来理解。要想让使用了 volatile 的程序在移植到新机器或新编译器后仍然有效，通常需要对该程序进行某些改变
+
+当对象的值可能在程序的控制或检测之外被改变时，应该将该对象声明为 volatile
+关键字 volatile告诉编译器不应对这样的对象进行优化
+
+### 链接指示:extern"C"
+
+C++使用链接指示(linkage directive)指出任意非C++函数所用的语言
