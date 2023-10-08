@@ -53,7 +53,11 @@ $$
 
 $$
 \hat{a} \ \ \ \widehat{a} \ \ \ \stackrel{\rightarrow}{b} \ \ \ \stackrel{\leftarrow}{b} 
-\ \ \ \overline{c} \ \ \ \dot{d} \ \ \ \dot{a} \ \ \ \tilde{e} \ \ \ \widetilde{E}
+\ \ \ \overline{c} \ \ \ \dot{d} \ \ \ \dot{a} \ \ \ \tilde{e} \ \ \ \widetilde{E} \ \ \ A \sim B
+$$
+
+$$
+\sqrt{4} 
 $$
 
 
@@ -69,7 +73,7 @@ $$
 $$
 
 $$
- \begin{pmatrix}1 & 2 & 3 \\1 & 2 & 3 \\1 & 2 & 3 \\\end{pmatrix}
+\begin{pmatrix}1 & 2 & 3 \\1 & 2 & 3 \\1 & 2 & 3 \\\end{pmatrix}
 $$
 
 $$
