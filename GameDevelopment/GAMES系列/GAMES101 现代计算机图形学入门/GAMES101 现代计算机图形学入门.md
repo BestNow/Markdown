@@ -1132,6 +1132,58 @@ O(n) for n triangles (assuming constant coverage)
 
 
 
+## Shadows
+
+### Shadow mapping
+
+An lmage-space Algorithm
+	no knowledge of scene's geometry during shadowcomputation
+	must deal with aliasing artifacts
+一种图像空间算法
+	在阴影计算过程中不了解场景的几何形状
+	必须处理混叠工件
+
+Key idea:
+	the points NOT in shadow must be seen bothby the light and by the camera
+核心思想:
+	不在阴影中的点必须在光线和相机中都能看到
+
+#### Pass 1: Render from Light
+
+Depth image from light source
+<img src=".\Images\Render from Light.png" alt="Render from Light" style="zoom: 50%;" />
+
+#### Pass 2A: Render from Eye
+
+Standard image (with depth) from eye
+<img src=".\Images\Render from Eye.png" alt="Render from Eye" style="zoom: 50%;" />
+
+#### Pass 2B: Project to light
+
+Project visible points in eye view back to light source
+<img src=".\Images\Project to light.png" alt="Project to light" style="zoom: 50%;" />
+
+### Visualizing Shadow Mapping
+
+A fairly complex scene with shadows
+<img src=".\Images\Visualizing Shadow Mapping.png" alt="Visualizing Shadow Mapping" style="zoom: 50%;" />
+
+The scene from the light's point-of-view
+<img src=".\Images\The scene from the light's point-of-view.png" alt="The scene from the light's point-of-view" style="zoom: 50%;" />
+
+Comparing Dist(light, shading point) with shadow map
+<img src=".\Images\Visualizing Shadow Mapping1.png" alt="Visualizing Shadow Mapping" style="zoom: 50%;" />
+Green is where the distance(light,shading point) ≈ depth on the shadow map
+Non-green is where shadows should be
+绿色表示距离(光，阴影点) ≈ 在阴影图上的深度
+非绿色是阴影应该出现的地方
+
+### Hard shadows vs. soft shadows
+
+<img src=".\Images\Hard shadows vs. soft shadows.png" alt="Hard shadows vs. soft shadows" style="zoom: 70%;" align="left"/>
+
+
+
 # Shading
 
 The process of applying a material to an object.
@@ -1492,3 +1544,233 @@ Weighted average
 Mipmap hierarchy still helps
 Can handle irregular footprints
 <img src=".\Images\EWA filtering.png" alt="EWA filtering" style="zoom:75%;" />
+
+
+
+## Many Uses for Texturing
+
+In modern GPUs, texture = memory + range query (filtering)
+	General method to bring data to fragment calculations
+在现代gpu中，纹理=内存+范围查询(过滤)
+	将数据带入片段计算的一般方法
+
+Many applications
+	Environment lighting
+	Store microgeometry
+	Procedural textures
+	Solid modeling
+	Volume rendering
+许多应用程序
+	环境照明
+	商店microgeometry
+	程序上的纹理
+	坚实的建模
+	体绘制
+
+
+
+# Geometry
+
+## Many Ways to Represent Geometry
+
+Implicit
+	algebraic surface
+	level sets
+	distance functions
+隐式的
+	代数曲面
+	水平集
+	距离函数
+
+Explicit
+	point cloud
+	polygon mesh
+	subdivision,NURBS
+显式的
+	点云
+	多边形网格
+	细分,NURBS
+
+### Implicit
+
+Based on classifying points
+	Points satisfy some specified relationship
+	E.g. sphere: all points in 3D, where $x^2+y^2+z^2 = 1$
+基于分类点
+	点满足某种特定的关系
+
+<img src=".\Images\Implicit.png" alt="Implicit" style="zoom:75%;" />
+
+
+<img src=".\Images\Implicit1.png" alt="Implicit" style="zoom:75%;" />
+
+#### Distance Functions (implicit)
+
+Instead of Booleans, gradually blend surfaces together using
+Distance functions:
+	giving minimum distance (could be signed distance)from anywhere to object
+而不是布尔值，逐渐混合曲面在一起使用
+距离函数:
+	给出从任何地方到对象的最小距离(可以标记为距离)
+<img src=".\Images\Distance Function.png" alt="Distance Function" style="zoom:75%;" />
+
+<img src=".\Images\Distance Function1.png" alt="Distance Function" style="zoom:55%;" />
+Can blend any two distance functions d1, d2: 
+<img src=".\Images\Distance Function2.png" alt="Distance Function" style="zoom:55%;" />
+
+#### Level Set Methods (Also implicit)
+
+Closed-form equations are hard to describe complex shapes
+Alternative: store a grid of values approximating function
+封闭形式的方程很难描述复杂的形状
+备选方案:存储一个网格值逼近函数
+
+#### Fractals (implicit)
+
+Exhibit self-similarity, detail at all scales
+" Language" for describing natural phenomena
+Hard to control shape!
+展示自相似性，所有尺度的细节
+描述自然现象的“语言”
+难以控制形状!
+<img src=".\Images\Fractals.png" alt="Fractals" style="zoom:55%;" />
+
+Implicit Pros:
+	compact description (e.g., a function)
+	certain queries easy (inside object, distance to surface)
+	good for ray-to-surface intersection (more later)
+	for simple shapes, exact description / no sampling error
+	easy to handle changes in topology (e.g., fluid)
+
+Implicit Cons:
+	difficult to model complex shapes
+
+
+
+### Explicit
+
+All points are given directly or via parameter mapping
+所有的点都是直接或通过参数映射给出的
+
+<img src=".\Images\Explicit.png" alt="Explicit" style="zoom:55%;" />
+
+$f(u,v) =((2 + \cos u) \cos v,(2 + \cos u)\sin v, \sin u)$
+
+#### Point Cloud (Explicit)
+
+Easiest representation: list of points (x,y,z)
+Easily represent any kind of geometry
+Useful for L ARGE datasets (>> 1 point/pixel)
+Often converted into polygon mesh
+Difficult to draw in undersampled regions
+最简单的表示:点列表(x,y,z)
+很容易表示任何几何形状
+对大型数据集有用(>>1点/像素)
+通常转换成多边形网格
+在采样不足的区域难以绘制
+<img src=".\Images\Point Cloud.png" alt="Point Cloud" style="zoom:35%;" />
+
+#### Polygon Mesh (Explicit)
+
+Store vertices & polygons (often triangles or quads)
+Easier to do processing / simulation, adaptive sampling
+More complicated data structures
+Perhaps most common representation in graphics
+存储顶点和多边形(通常是三角形或四边形)
+更容易做处理/模拟，自适应采样
+更复杂的数据结构
+也许是图形中最常见的表示
+<img src=".\Images\Polygon Mesh.png" alt="Polygon Mesh" style="zoom:35%;" />
+
+#### The Wavefront Object File (.obj) Format
+
+Commonly used in Graphics research
+Just a text file that specifies vertices, normals, texture coordinates and their connectivities
+通常用于图形研究
+只是一个文本文件，指定顶点，法线，纹理坐标和它们的连接<img src=".\Images\obj.png" alt="Polygon Mesh" style="zoom:65%;" />
+
+
+
+## Curves
+
+### Bezier Curves
+
+#### Defining Cubic Bezier Curve With Tangents
+
+<img src=".\Images\Defining Cubic Bezier Curve With Tangents.png" alt="Defining Cubic Bezier Curve With Tangents" style="zoom:45%;" />
+
+<img src=".\Images\Bezier Curves.png" alt="Bezier Curves" style="zoom:45%;" />
+
+### Spline
+
+a continuous curve constructed so as to pass through a given setof points and have a certain number of continuous derivatives
+In short, a curve under control
+一种连续曲线，它通过一组给定的点，并有一定数量的连续导数
+简而言之，这是一条可控的曲线
+
+#### B-splines
+
+Short for basis splines
+Require more information than Bezier curves
+Satisfy all important properties that Bezier curves have (i.e superset)
+基样条的简称
+需要比贝塞尔曲线更多的信息
+满足贝塞尔曲线的所有重要性质(即超集)
+
+To learn more / deeper, you are welcome to refer toProf. Shi-Min Hu's course: https://www.bilibili.com/video/av66548502?from=search&seid=65256805876131485
+
+## Surfaces
+
+### Bezier Surfaces
+
+<img src=".\Images\Bezier Surface.png" alt="Bezier Surfaces" style="zoom:45%;" />
+
+## Subdivision
+
+### Loop Subdivision
+
+Common subdivision rule for triangle meshes
+First, create more triangles (vertices)
+Second, tune their positions
+
+Split each triangle into four
+<img src=".\Images\Split.png" alt="Split" style="zoom:45%;" />
+
+Assign new vertex positions according to weights-
+	New / old vertices updated differently
+
+### Catmull-Clark Subdivision (General Mesh)
+
+<img src=".\Images\Catmull-Clark Subdivision.png" alt="Catmull-Clark Subdivision (General Mesh).png" style="zoom:45%;" />
+Each subdivision step:
+	Add vertex in each face
+	Add midpoint on each edge
+	Connect all new vertices
+
+<img src=".\Images\Catmull-Clark Subdivision1.png" alt="Catmull-Clark Subdivision (General Mesh).png" style="zoom:45%;" />
+After one subdivision:
+	How many extraordinary vertices?
+	What are their degrees?
+	How many non-quad faces?
+
+## Mesh Simplification
+
+Goal: reduce number of mesh elements while maintaining the overall shape
+目标:在保持整体形状的同时减少网格元素的数量
+<img src=".\Images\Mesh Simplification.png" alt="Mesh Simplification" style="zoom:45%;" />
+
+### Collapsing An Edge
+
+Suppose we simplify a mesh using edge collapsing
+
+
+<img src=".\Images\Collapsing An Edge.png" alt="Collapsing An Edge" style="zoom:45%;" />
+
+Quadric Error Metrics
+	How much geometric error is introduced by simplification?
+	Not a good idea to perform local averaging of vertices
+	Quadric error: new vertex should minimize its sum of square distance (L2 distance) to previously related triangle planes!
+二次误差度量
+	化简会带来多少几何误差?
+	对顶点进行局部平均不是一个好主意
+	二次误差:新顶点到之前相关三角形平面的平方和(L2距离)应该最小化!
