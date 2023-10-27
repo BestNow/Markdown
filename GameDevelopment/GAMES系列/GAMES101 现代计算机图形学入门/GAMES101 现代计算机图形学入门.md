@@ -1763,7 +1763,6 @@ Goal: reduce number of mesh elements while maintaining the overall shape
 
 Suppose we simplify a mesh using edge collapsing
 
-
 <img src=".\Images\Collapsing An Edge.png" alt="Collapsing An Edge" style="zoom:45%;" />
 
 Quadric Error Metrics
@@ -1774,3 +1773,145 @@ Quadric Error Metrics
 	化简会带来多少几何误差?
 	对顶点进行局部平均不是一个好主意
 	二次误差:新顶点到之前相关三角形平面的平方和(L2距离)应该最小化!
+
+
+
+# Ray Tracing
+
+Rasterization couldn't handle global effects well
+	(Soft) shadows
+	And especially when the light bounces more than once
+栅格化不能很好地处理全局效果
+	(软)阴影
+	尤其是当光线反射不止一次的时候
+
+Ray tracing is accurate, but is very slow
+	Rasterization: real-time, ray tracing: offline
+	~10K CPU core hours to render one frame in production
+光线追踪是准确的，但速度很慢
+	光栅化:实时，光线追踪:离线
+	~10K CPU核心小时来渲染一帧
+
+## Basic Ray-Tracing Algorithm
+
+### Ray Casting - Shading Pixels (Local Only)
+
+Pinhole Camera Model
+<img src=".\Images\Pinhole Camera Model.png" alt="Pinhole Camera Model" style="zoom:45%;" />
+
+### Recursive(Whitted-Style) Ray Tracing
+
+<img src=".\Images\Recursive(Whitted-Style) Ray Tracing.png" alt="Recursive(Whitted-Style) Ray Tracing" style="zoom:45%;" />
+
+### Light Rays
+
+Three ideas about light rays
+
+1. Light travels in straight lines (though this is wrong)
+2. Light rays do not “collide" with each other if they cross(though this is still wrong)
+3. Light rays travel from the light sources to the eye (butthe physics is invariant under path reversal - reciprocity)
+
+关于光线的三个观点
+
+1. 光沿直线传播(虽然这是错误的)
+2. 光线交叉时不会相互“碰撞”(尽管这仍然是错误的)
+3. 光线从光源传播到眼睛(但物理是不变的路径反转-互惠)
+
+### Ray-Surface Intersection
+
+#### Ray Equation
+
+Ray is defined by its origin and a direction vector
+<img src=".\Images\Ray Equation.png" alt="Ray Equation" style="zoom:100%;" />
+
+$r(t) = o + td \ \ (0 ≤ t < \infty)$
+
+#### Plane Equation
+
+Plane is defined by normal vector and a point on plane
+<img src=".\Images\Plane Equation.png" alt="Plane Equation" style="zoom:60%;" />
+$p:(p-p')\cdot N = 0$
+$ax + by + cz + d = 0$
+
+#### Ray Intersection With Sphere
+
+Ray: $r(t) = o + td \ \ (0 ≤ t < \infty)$
+Sphere: $p:(p-c)^2 - R^2 = 0$
+Solve for intersection:$(o + td - c)^2 - R^2 = 0$
+<img src=".\Images\Ray Intersection.png" alt="Ray lntersection" style="zoom:100%;" />
+
+#### Ray Intersection With Implicit Surface
+
+Ray: $r(t) = o + td \ \ (0 ≤ t < \infty)$
+General implicit surface: $p:f(p) = 0$
+Substitute ray equation: $f(o+td) = 0$
+
+#### Ray lntersection With Triangle Mesh
+
+Rendering: visibility, shadows,lighting ...
+Geometry: inside/outside test
+渲染:可见性，阴影，照明…
+几何:内/外测试
+
+Let's break this down:
+	Simple idea: just intersect ray with each triangle
+	Simple, but slow (acceleration?)
+	Note: can have 0, 1 intersections(ignoring multiple intersections)
+让我们来分析一下:
+	简单的想法:让射线与每个三角形相交
+	简单，但慢(加速?)
+	注:可以有0,1个交叉口(忽略多个交叉口)
+
+#### Ray Intersection With Plane
+
+Ray equation: $r(t) = o + td, 0 ≤ t < \infty$
+Plane equation: $p:(p - p')\cdot N = 0$
+
+Solve for intersection
+	Set p = r(t) and solve for t
+	$(p - p') \cdot N = (o + td - p') \cdot N = 0$
+	$t = \frac{(p' - o)\cdot N}{d\cdot N} \\ $
+<img src=".\Images\Ray Intersection With Plane.png" alt="Ray Intersection With Plane" style="zoom:50%;" />
+
+#### Moller Trumbore Algorithm
+
+A faster approach, giving barycentric coordinate directly
+一个更快的方法，直接给出重心坐标
+
+### Bounding Volumes
+
+<img src=".\Images\Bounding Volumes.png" alt="Bounding Volumes" style="zoom:50%;" />
+
+#### Ray-Intersection With Box
+
+Understanding: box is the intersection of 3 pairs of slabs
+<img src=".\Images\Ray Intersection With Box.png" alt="Ray-Intersection With Box" style="zoom:50%;" />
+
+Specifically: We often use anAxis-AlignedBounding Box(AABB)(轴对齐包盒)
+i.e. any side of the BBis along either x, y, or zaxis
+具体来说:我们经常使用anAxis-AlignedBounding Box(AABB)(轴)
+也就是说，BBis沿着x, y或z轴的任何一边
+
+#### Ray Intersection with Axis-Aligned Box
+
+2D example;3D is the same! Compute intersections with slabsand take intersection of $t_{min}/t_{max}$ intervals
+<img src=".\Images\Ray Intersection With Axis-Aligned Box.png" alt="Ray Intersection With Axis-Aligned Box" style="zoom:50%;" />
+
+Recall: a box (3D) = three pairs of infinitely large slabs
+回想一下:一个盒子(3D) =三对无限大的板
+
+Key ideas
+	The ray enters the box only when it enters all pairs of slabs
+	The ray exits the box as long as it exits any pair of slabs
+关键思想
+	光线只有在进入所有对平板时才能进入盒子
+	射线离开盒子的时间和离开任何一对平板的时间一样长
+
+For each pair, calculate the tmin and tmax (negative is fine)
+对于每一对，计算tmin和tmax(负数也可以)
+
+For the 3D box, $t_{enter} = max\{t_{min}\}$,  $t_{exit} = min\{t_{max}\}$
+3D的盒子, $t_{enter} = max\{t_{min}\}$,  $t_{exit} = min\{t_{max}\}$
+
+lf $t_{enter}$< $t_{exit}$, we know the ray stays a while in the boxso they must intersect!) (not done yet, see the next slide)
+
