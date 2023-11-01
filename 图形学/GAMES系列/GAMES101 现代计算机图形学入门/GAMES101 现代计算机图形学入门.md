@@ -2,6 +2,10 @@
 
 https://www.bilibili.com/video/BV1X7411F744/?spm_id_from=333.337.search-card.all.click&vd_source=1b732552b2e7da5edcc8398add8181dd
 
+# 预备知识
+
+信号学、光学、[虎书](.\..\..\..\..\..\书籍\游戏相关\计算机图形学\Fundamentals of Computer Graphics 4th.pdf)
+
 # Overview
 
 ## What is Computer Graphics？
@@ -1915,3 +1919,115 @@ For the 3D box, $t_{enter} = max\{t_{min}\}$,  $t_{exit} = min\{t_{max}\}$
 
 lf $t_{enter}$< $t_{exit}$, we know the ray stays a while in the boxso they must intersect!) (not done yet, see the next slide)
 
+
+
+## Using AABBs to accelerate ray tracing
+
+### Uniform Spatial Partitions (Grids)
+
+统一空间分区(网格)
+
+#### Preprocess - Build Acceleration Grid
+
+预处理-构建加速网格
+<img src=".\Images\Preprocess - Build Acceleration Grid.png" alt="Preprocess - Build Acceleration Grid" style="zoom:50%;" />
+
+1. Find bounding box 查找边界框
+2. Create grid 创建网格
+3. Store each object in overlapping cells 将每个对象存储在重叠的单元格中
+
+
+<img src=".\Images\Ray-Scene Intersection.png" alt="Ray-Scene Intersection" style="zoom:50%;" />
+
+Step through grid in raytraversal order
+
+For each grid cell
+	Test intersection
+	with all objects
+	stored at that cell
+
+按光线遍历顺序步进网格
+
+对于每个网格单元
+	测试的十字路口
+	对所有对象
+	存储在那个单元格中
+
+
+
+<img src=".\Images\OneCell.png" alt="One Cell" style="zoom:20%;" /><img src=".\Images\Too many cells.png" alt="Too many cells" style="zoom:20%;" /><img src=".\Images\Heuristic.png" alt="Heuristic" style="zoom:20%;" />
+
+Heuristic:
+	#cells = C * #objs
+	C ≈ 27 in 3D
+
+
+
+### Spatial Partitions
+
+<img src=".\Images\Spatial Partitioning Examples.png" alt="Spatial Partitioning Examples" style="zoom:60%;" />
+
+
+
+## Obiect Partitions & Bounding Volume Hierarchy (BVH)
+
+### Bounaing Volume Hierarchy (BVH)
+
+<img src=".\Images\Bounaing Volume Hierarchy (BVH).png" alt="Bounaing Volume Hierarchy (BVH)" style="zoom:60%;" />
+
+Find bounding box
+Recursively split set ofobjects in two subsets
+Recompute the boundingbox of the subsets
+Stop when necessary
+Store objects in each leaf node
+查找边界框
+递归地将一组对象分成两个子集
+重新计算子集的边界框
+必要时停止
+在每个叶节点中存储对象
+
+
+
+## Basic radiometry 
+
+(辐射度量学)
+
+### Radiometry
+
+Measurement system and units for illumination
+Accurately measure the spatial properties of light
+	New terms: Radiant flux, intensity, irradiance, radiance
+照明测量系统和单位
+精确测量光的空间特性
+	新术语:辐射通量，强度，辐照度，辐射度
+
+**Why, What then How?**
+
+#### Radiant Energy and Flux(Power)
+
+Definition: Radiant energy is the energy of electromagnetic radiation. lt is measured in units of joules, and denoted by the symbol:
+定义:辐射能是电磁辐射的能量。Lt的单位是焦耳，用符号表示:
+$Q[J = Joule]$
+
+Definition: Radiant flux (power) is the energy emitted, reflected, transmitted or received, per unit time.
+定义:辐射通量(功率)是单位时间内发射、反射、发射或接收的能量。
+$\Phi = \frac{dQ}{dt}[W = Watt][lm = lumen]^*\\ $
+
+
+
+#### Important Light Measurements of Interest
+
+<img src=".\Images\Important Light Measurements of Interest.png" alt="Important Light Measurements of Interest" style="zoom:60%;" />
+
+
+
+#### Irradiance
+
+Definition: The irradiance is the power per (perpendicular/projected) unit area incident on a surface point.
+定义:辐照度是每(垂直/投影)单位面积入射到表面点上的功率
+
+$E(x) = \frac{d\varPhi(x)}{dA}\\$
+$[\frac{W}{m^2}] [\frac{lm}{m^2} = lux]\\$
+<img src=".\Images\Irradiance.png" alt="Irradiance" style="zoom:60%;" />
+
+#### Bidirectional Reflectance Distribution Function (BRDF)
