@@ -2031,3 +2031,110 @@ $[\frac{W}{m^2}] [\frac{lm}{m^2} = lux]\\$
 <img src=".\Images\Irradiance.png" alt="Irradiance" style="zoom:60%;" />
 
 #### Bidirectional Reflectance Distribution Function (BRDF)
+
+### Monte Carlo Integration
+
+
+
+# Materials and Appearances
+
+Material == BRDF
+
+## Diffuse / Lambertian Material(BRDF)
+
+## Glossy Material(BRDF)
+
+## Ideal Reflective / Refractive Material(BSDF*)
+
+## Perfect Specular Reflection
+
+## Specular Refraction
+
+## Snell's Window / Circle
+
+## Fresnel Reflection / Term
+
+## Microfacet BRDF
+
+## Isotropic / Anisotropic Materials(BRDFs)
+
+## Anisotropic BRDFs 
+
+## Measuring BRDFs
+
+## MERL BRDF Database
+
+
+
+# Advanced Topics in Rendering
+
+## Biased vs. Unbiased Monte Carlo Estimators
+
+## Bidirectional Path Tracing(BDPT)
+
+## Metropolis Light Transport (MLT)
+
+## Photon Mapping
+
+## Vertex Connection and Merging
+
+## Instant Radiosity (IR)
+
+
+
+# Advanced Appearance Modeling
+
+## Non-surface models
+
+Participating media
+
+Hair / fur / fiber (BCSDF)
+
+Granular materia
+
+## Surface models
+
+Translucent material (BSSRDF)
+
+Cloth
+
+Detailed material(non-statistical BRDF)
+
+## Procedural appearance
+
+
+
+# Cameras, Lenses and Light Fields
+
+
+
+# Light Field / Lumigraph
+
+
+
+# Color and Perception
+
+
+
+# Animation
+
+Keyframe animation
+
+Physical simulation
+
+Kinematics
+
+Rigging
+
+Motion Capture
+
+Single particle simulation
+	Explicit Euler method
+	Instability and improvements
+
+
+
+# Expand knowledge
+
+[《REAL-TIME RENDERING FOURTH EDITION》](.\..\..\..\..\..\书籍\游戏相关\渲染\Real Time Rendering 4th Edition.pdf)
+

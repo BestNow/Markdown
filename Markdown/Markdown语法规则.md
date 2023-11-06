@@ -1,5 +1,7 @@
 # 数学公式
 
+https://artofproblemsolving.com/wiki/index.php/LaTeX:Symbols
+
 ## 特殊符号
 
 $$
@@ -57,7 +59,8 @@ $$
 $$
 
 $$
-\sqrt{4} \ \ \ \  \bold{x} \ \ \ \ \frac{a}{b} \ \ \ \\ \frac{a}{b}\\
+\sqrt{4} \ \ \ \ \sqrt[3]{4} \ \ \ \  \bold{x} \ \ \ \ \frac{a}{b} \ \ \  \frac{a}{b}   \ \  \ 
+\in  \ \ \ \ \ni \ \ \ \ \bold{a} \ \ \ \ \Re
 $$
 
 
