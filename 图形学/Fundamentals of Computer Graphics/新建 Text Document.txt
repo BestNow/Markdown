@@ -1,15 +1,6 @@
-Images as Coded Debugging Output
-In many cases, the easiest channel by which to get debugging information out of a
-graphics program is the output image itself. If you want to know the value of some
-variable for part of a computation that runs for every pixel, you can just modify
-your program temporarily to copy that value directly to the output image and skip
-the rest of the calculations that would normally be done. For instance, if you
-suspect a problem with surface normals is causing a problem with shading, you
-can copy the normal vectors directly to the image (x goes to red, y goes to green,
-z goes to blue), resulting in a color-coded illustration of the vectors actually being
-used in your computation. Or, if you suspect a particular value is sometimes out
-of its valid range, make your program write bright red pixels where that happens.
-Other common tricks include drawing the back sides of surfaces with an obvious
-color (when they are not supposed to be visible), coloring the image by the ID
-numbers of the objects, or coloring pixels by the amount of work they took to
-compute.
+The eye position is a location that the eye “sees from.” If you think of graphics
+as a photographic process, it is the center of the lens. The gaze direction is any
+vector in the direction that the viewer is looking. The view-up vector is any vector
+in the plane that both bisects the viewer’s head into right and left halves and points
+“to the sky” for a person standing on the ground. These vectors provide us with
+enough information to set up a coordinate system with origin e and a uvw basis,

@@ -11,7 +11,7 @@ $$
 $$
 
 $$
-\delta \ \ \ \ \Delta \ \ \ \
+\delta \ \ \ \ \Delta \ \ \ \ \nabla \ \ \ \ \ 
 \epsilon \ \ \ \ \Epsilon \ \ \ \
 \zeta \ \ \ \ \Zeta \ \ \ \
 $$
