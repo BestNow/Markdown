@@ -5306,3 +5306,5316 @@ Figure 7.9. A projective transformation maps a square to a quadrilateral, preser
 
 For instance, the lower-right corner of the square at (1, 0) is represented by the homogeneous vector $[1\ 0\ 1]^T$ and transforms as follows: 
 例如，(1, 0) 处的正方形右下角由齐次向量 $[1\ 0\ 1]^T$ 表示，并变换如下：
+$$
+\begin{bmatrix}
+2 & 0 & -1 \\
+0 & 3 & 0 \\
+0 & \frac{2}{3} & \frac{1}{3}
+\end{bmatrix}
+\begin{bmatrix}
+1 \\
+0 \\
+1
+\end{bmatrix}
+= \begin{bmatrix}
+1 \\
+0 \\
+\frac{1}{3}
+\end{bmatrix}
+$$
+which represents the point $(1/ \frac{1}{3}, 0/\frac{1}{3})$, or $(3, 0)$. Note that if we use the matrix
+表示点 $(1/ \frac{1}{3}, 0/\frac{1}{3})$ 或 $(3, 0)$。 请注意，如果我们使用矩阵
+$$
+3\bold{M} = \begin{bmatrix}
+6 & 0 & -3 \\
+0 & 9 & 0 \\
+0 & 2 & 1
+\end{bmatrix}
+$$
+instead, the result is $[3\ 0\ 1]^T$, which also represents $(3, 0)$. In fact, any scalar multiple $c\bold{M}$ is equivalent: the numerator and denominator are both scaled by $c$, which does not change the result. 
+相反，结果是 $[3\ 0\ 1]^T$，它也代表 $(3, 0)$。 事实上，任何标量倍数 $c\bold{M}$ 都是等价的：分子和分母都按 $c$ 缩放，这不会改变结果。
+
+There is a more elegant way of expressing the same idea, which avoids treating the w-coordinate specially. In this view a 3D projective transformation is simply a 4D linear transformation, with the extra stipulation that all scalar multiples of a vector refer to the same point: 
+有一种更优雅的方式来表达相同的想法，从而避免特殊处理 w 坐标。 在此视图中，3D 投影变换只是 4D 线性变换，额外规定向量的所有标量倍数都指向同一点：
+$\bold{x} ∼ α\bold{x}\ for\ all\ α\ ≠\ 0.  $
+
+The symbol ∼ is read as “is equivalent to” and means that the two homogeneous vectors both describe the same point in space. 
+符号 ∼ 被理解为“等于”，意味着两个齐次向量都描述空间中的同一点。
+
+**Example.** In 1D homogeneous coordinates, in which we use 2-vectors to represent points on the real line, we could represent the point (1.5) using the homogeneous vector $[1.5\ 1]^T$, or any other point on the line $x = 1.5h$ in homogeneous space. (See Figure 7.10.)
+**示例。** 在一维齐次坐标中，我们使用 2 向量来表示实线上的点，我们可以使用齐次向量 $[1.5\ 1]^T$ 或任意向量来表示点 (1.5) 齐次空间中直线 $x = 1.5h$ 上的其他点。 （见图 7.10。）
+<img src=".\Images\Figure 7.10.png" alt="Figure 7.10" style="zoom:67%;" />
+Figure 7.10. The point $x = 1.5$ is represented by any point on the line $x = 1.5h$, such as points at the hollow circles. However, before we interpret $x$ as a conventional Cartesian coordinate, we first divide by $h$ to get $(x, h) = (1.5,1)$ as shown by the black point. 
+图 7.10. 点 $x = 1.5$ 由直线 $x = 1.5h$ 上的任意点表示，例如空心圆处的点。 然而，在我们将 $x$ 解释为传统的笛卡尔坐标之前，我们首先除以 $h$ 得到 $(x, h) = (1.5,1)$，如黑点所示。
+
+In 2D homogeneous coordinates, in which we use 3-vectors to represent points in the plane, we could represent the point $(-1, -0.5)$ using the homogeneous vector $[-2;\ -1;\ 2]^T$, or any other point on the line $\bold{x} = α[-1\ -0.5\ 1]^T$. Any homogeneous vector on the line can be mapped to the line’s intersection with the plane $w = 1$ to obtain its Cartesian coordinates. (See Figure 7.11.)
+在二维齐次坐标中，我们使用3向量来表示平面上的点，我们可以用齐次向量$[-2;\ -1;\ 2]^T$来表示点$(-1，-0.5)$，或者直线上的任何其他点$\bold{x} = α[-1\ -0.5\ 1]^T$。直线上的任何齐次向量都可以映射到直线与平面$w = 1$的交点，从而得到直线的笛卡尔坐标。(见图7.11)
+<img src=".\Images\Figure 7.10.png" alt="Figure 7.10" style="zoom:67%;" />
+Figure 7.11. A point in homogeneous coordinates is equivalent to any other point on the line through it and the origin, and normalizing the point amounts to intersecting this line with the plane $w = 1$. 
+图7.11. 齐次坐标中的一个点等价于直线上通过它和原点的任何其他点，将该点归一化等于将这条直线与平面$w = 1$相交。
+
+It’s fine to transform homogeneous vectors as many times as needed, without worrying about the value of the w-coordinate—in fact, it is fine if the wcoordinate is zero at some intermediate phase. It is only when we want the ordinary Cartesian coordinates of a point that we need to normalize to an equivalent point that has $w = 1$, which amounts to dividing all the coordinates by $w$. Once we’ve done this we are allowed to read off the (x, y, z)-coordinates from the first three components of the homogeneous vector.
+可以根据需要多次变换齐次向量，而不必担心 w 坐标的值 - 事实上，如果 w 坐标在某个中间阶段为零也很好。 只有当我们想要一个点的普通笛卡尔坐标时，我们才需要将其归一化为 $w = 1$ 的等效点，这相当于将所有坐标除以 $w$。 完成此操作后，我们就可以从齐次向量的前三个分量中读取 (x, y, z) 坐标。
+
+## 7.3 Perspective Projection 透视投影
+
+The mechanism of projective transformations makes it simple to implement the division by z required to implement perspective. In the 2D example shown in Figure 7.8, we can implement the perspective projection with a matrix transformation as follows: 
+投影转换的机制使得实现透视所需的除以z的方法变得简单。在图7.8所示的2D示例中，我们可以通过如下的矩阵变换来实现透视投影:
+$$
+\begin{bmatrix}
+y_s \\
+1
+\end{bmatrix}
+∼ \begin{bmatrix}
+d & 0 & 0 \\
+0 & 1 & 0
+\end{bmatrix}
+\begin{bmatrix}
+y \\
+z \\
+1
+\end{bmatrix}
+$$
+This transforms the 2D homogeneous vector $[y;\ z;\ 1]^T$ to the 1D homogeneous vector $[dy\ z]^T$, which represents the 1D point $(dy/z)$ (because it is equivalent to the 1D homogeneous vector $[dy/z 1]^T$. This matches Equation (7.5). 
+这将二维齐次向量$[y;\ z;\ 1]^T$变换为一维齐次向量$[dy\ z]^T$，它表示一维点$(dy/z)$(因为它等价于一维齐次向量$[dy/z]^T$)。这符合式(7.5)。
+
+For the “official” perspective projection matrix in 3D, we’ll adopt our usual convention of a camera at the origin facing in the $-z$ direction, so the distance of the point $(x, y, z)$ is $-z$. As with orthographic projection, we also adopt the notion of near and far planes that limit the range of distances to be seen. In this context, we will use the near plane as the projection plane, so the image plane distance is $-n$.
+对于3D中的“官方”透视投影矩阵，我们将采用通常的惯例，即在原点处面向$-z$方向设置摄像机，因此点$(x, y, z)$的距离为$-z$。与正射影一样，我们也采用了远近平面的概念，这限制了可以看到的距离范围。在这种情况下，我们将使用近平面作为投影平面，因此成像平面距离为$-n$。
+
+> Remember, n < 0. 
+> 请记住，n < 0。
+
+The desired mapping is then $y_s = (n/z)y$, and similarly for $x$. This transformation can be implemented by the perspective matrix:
+所需的映射是$y_s = (n/z)y$，对于$x$也是如此。这个变换可以通过透视矩阵来实现:
+$$
+\bold{P} = \begin{bmatrix}
+n & 0 & 0 & 0 \\
+0 & n & 0 & 0 \\
+0 & 0 & n + f & -fn \\
+0 & 0 & 1 & 0
+\end{bmatrix}
+$$
+The first, second, and fourth rows simply implement the perspective equation. The third row, as in the orthographic and viewport matrices, is designed to bring the z-coordinate “along for the ride” so that we can use it later for hidden surface removal. In the perspective projection, though, the addition of a non-constant denominator prevents us from actually preserving the value of z—it’s actually impossible to keep $z$ from changing while getting $x$ and $y$ to do what we need them to do. Instead we’ve opted to keep $z$ unchanged for points on the near or far planes. 
+第一行、第二行和第四行简单地实现了透视图方程。第三行，就像在正射影和视口矩阵中一样，旨在将z坐标“随驾而行”，以便我们可以稍后使用它来删除隐藏表面。然而，在透视投影中，非常数分母的加入阻止了我们实际保留z的值——实际上不可能在保持z不变的同时让x和y做我们需要它们做的事情。相反，我们选择保持近平面或远平面上的点$z$不变。
+
+> More on this later. 
+> 稍后会详细介绍。
+
+There are many matrices that could function as perspective matrices, and all of them nonlinearly distort the z-coordinate. This specific matrix has the nice properties shown in Figures 7.12 and 7.13; it leaves points on the $(z = n)$-plane entirely alone, and it leaves points on the $(z = f)$-plane while “squishing” them in $x$ and $y$ by the appropriate amount. The effect of the matrix on a point $(x, y, z)$ is
+有许多矩阵可以作为透视矩阵，它们都非线性地扭曲了z坐标。这个特定的矩阵具有如图7.12和7.13所示的良好性质;它将点完全单独留在$(z = n)$-平面上，并将点留在$(z = f)$-平面上，同时将它们适当地“压扁”到$x$和$y$中。矩阵对点$(x, y, z)$的影响是
+$$
+\bold{P}\begin{bmatrix}
+x \\ y \\ z \\1
+\end{bmatrix}
+= \begin{bmatrix} nx \\ ny \\ (n + f)z -fn \\ z  \end{bmatrix}
+∼ \begin{bmatrix} \frac{nx}{z} \\ \frac{ny}{z} \\ n + f- \frac{fn}{z} \\ 1 \end{bmatrix}
+$$
+<img src=".\Images\Figure 7.12.png" alt="Figure 7.12" style="zoom: 50%;" />
+Figure 7.12. The perspective projection leaves points on the $z = n$ plane unchanged and maps the large $z = f$ rectangle at the back of the perspective volume to the small $z = f$ rectangle at the back of the orthographic volume. 
+图7.12. 透视投影使$z = n$平面上的点保持不变，并将透视体后面的大$z = f$矩形映射到正射影体后面的小$z = f$矩形。
+
+<img src=".\Images\Figure 7.13.png" alt="Figure 7.13" style="zoom:67%;" />
+Figure 7.13. The perspective projection maps any line through the origin/eye to a line parallel to the z-axis and without moving the point on the line at $z = n$.
+图 7.13. 透视投影将通过原点/眼睛的任何线映射到与 z 轴平行的线，并且不移动线上 $z = n$ 处的点。
+
+As you can see, x and y are scaled and, more importantly, divided by $z$. Because both n and z (inside the view volume) are negative, there are no “flips” in $x$ and $y$. Although it is not obvious (see the exercise at the end of the chapter), the transform also preserves the relative order of $z$ values between $z = n$ and $z = f$, allowing us to do depth ordering after this matrix is applied. This will be important later when we do hidden surface elimination.
+正如你所看到的，x和y被缩放了，更重要的是，被除以z。因为n和z(在视图体积内)都是负的，所以$x$和$y$中没有“翻转”。虽然这并不明显(参见本章末尾的练习)，但变换也保留了$z$值在$z = n$和$z = f$之间的相对顺序，允许我们在应用该矩阵后进行深度排序。这在后面进行隐藏面消去时非常重要。
+
+Sometimes we will want to take the inverse of $\bold{P}$, for example, to bring a screen coordinate plus z back to the original space, as we might want to do for picking. The inverse is
+有时我们想取$\bold{P}$的逆，例如，将屏幕坐标+ z带回到原始空间，就像我们在选择时可能想做的那样。逆函数是
+$$
+\bold{P}^{-1} = \begin{bmatrix}
+\frac{1}{n} & 0 & 0 & 0 \\
+0 & \frac{1}{n} & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & -\frac{1}{fn} & \frac{n+f}{fn}
+\end{bmatrix}
+$$
+Since multiplying a homogeneous vector by a scalar does not change its meaning, the same is true of matrices that operate on homogeneous vectors. So we can write the inverse matrix in a prettier form by multiplying through by $nf$:
+由于一个齐次向量乘以一个标量不会改变它的意义，所以对于作用于齐次向量的矩阵也是如此。我们可以把逆矩阵写成更漂亮的形式通过乘以$nf$
+$$
+\bold{P}^{-1} = \begin{bmatrix}
+f & 0 & 0 & 0 \\
+0 & f & 0 & 0 \\
+0 & 0 & 0 & fn \\
+0 & 0 & -1 & n + f
+\end{bmatrix}
+$$
+This matrix is not literally the inverse of the matrix $\bold{P}$, but the transformation it describes is the inverse of the transformation described by $\bold{P}$. 
+这个矩阵并不是字面上的矩阵 $\bold{P}$ 的逆矩阵，但它描述的变换是 $\bold{P}$ 描述的变换的逆矩阵。
+
+Taken in the context of the orthographic projection matrix $\bold{M}_{orth}$ in Equation (7.3), the perspective matrix simply maps the perspective view volume (which is shaped like a slice, or frustum, of a pyramid) to the orthographic view volume (which is an axis-aligned box). The beauty of the perspective matrix is that once we apply it, we can use an orthographic transform to get to the canonical view volume. Thus, all of the orthographic machinery applies, and all that we have added is one matrix and the division by w. It is also heartening that we are not “wasting” the bottom row of our four by four matrices!
+在式(7.3)中的正交投影矩阵$\bold{M}_{north}$的上下文中，透视矩阵简单地将透视视图体(其形状类似于金字塔的切片或截锥体)映射到正交视图体(它是一个与轴对齐的盒子)。透视矩阵的美妙之处在于，一旦我们应用了它，我们就可以使用正交变换来获得规范视图体积。因此，所有的正字法机制都适用，我们所添加的只是一个矩阵和除以w。同样令人鼓舞的是，我们没有“浪费”我们的4 × 4矩阵的底部行!
+
+Concatenating $\bold{P}$ with $\bold{M}_{orth}$ results in the perspective projection matrix, 
+将$\bold{P}$与$\bold{M}_{north}$连接得到透视投影矩阵，
+$\bold{M}_{per} = \bold{M}_{orth}\bold{P}$
+
+One issue, however, is: How are $l,r,b,t$ determined for perspective? They identify the “window” through which we look. Since the perspective matrix does not change the values of $x$ and $y$ on the $(z = n)$-plane, we can specify $(l, r, b, t)$ on that plane.
+然而，有一个问题是:$ 1,r,b,t$是如何决定透视图的?它们确定了我们观看的“窗口”。由于透视矩阵不会改变$(z = n)$-平面上的$x$和$y$的值，因此我们可以在该平面上指定$(l, r, b, t)$。
+
+To integrate the perspective matrix into our orthographic infrastructure, we simply replace $\bold{M}_{orth}$ with $\bold{M}_{per}$, which inserts the perspective matrix $\bold{P}$ after the camera matrix $\bold{M}_{cam}$ has been applied but before the orthographic projection. So the full set of matrices for perspective viewing is
+要将透视矩阵集成到我们的正交基础结构中，我们只需将 $\bold{M}_{orth}$ 替换为 $\bold{M}_{per}$，这会在后面插入透视矩阵 $\bold{P}$ 相机矩阵 $\bold{M}_{cam}$ 已应用，但在正交投影之前。 所以透视观察的全套矩阵是
+$\bold{M} = \bold{M}_{vp}\bold{M}_{orth}\bold{P}\bold{M}_{cam}.  $
+
+The resulting algorithm is: 
+得到的算法是：
+
+> compute $\bold{M}_{vp}$
+> compute $\bold{M}_{per}$
+> compute $\bold{M}_{cam}$
+> $\bold{M} = \bold{M}_{vp}\bold{M}_{per}\bold{M}_{cam}$
+> for each line segment $(\bold{a}_i, \bold{b}_i)$ do
+> 	p = $\bold{M}\bold{a}_i$
+> 	q = $\bold{M}\bold{b}_i$
+> 	drawline$(x_p/w_p, y_p/w_p, x_q/w_q, y_q/w_q)$
+
+Note that the only change other than the additional matrix is the divide by the homogeneous coordinate $w$.
+注意，除了额外的矩阵之外，唯一的变化是除以齐次坐标w。
+
+Multiplied out, the matrix $\bold{M}_{per}$ looks like this: 
+乘出来，矩阵$\bold{M}_{per}$看起来像这样: 
+$$
+\bold{M}_{per} = \begin{bmatrix}
+\frac{2n}{r - l} & 0 & \frac{l + r}{l - r} & 0 \\
+0 & \frac{2n}{t - b} & \frac{b + t}{b - t} & 0 \\
+0 & 0 & \frac{f + n}{n - f} & \frac{2fn}{f - n} \\
+0 & 0 & 1 & 0 \\
+\end{bmatrix}
+$$
+This or similar matrices often appear in documentation, and they are less mysterious when one realizes that they are usually the product of a few simple matrices.
+这个或类似的矩阵经常出现在文档中，当人们意识到它们通常是几个简单矩阵的乘积时，它们就不那么神秘了。
+
+Example. Many APIs such as OpenGL (Shreiner, Neider, Woo, & Davis, 2004) use the same canonical view volume as presented here. They also usually have the user specify the absolute values of $n$ and $f$. The projection matrix for OpenGL is
+例子。 许多 API，例如 OpenGL（Shreiner、Neider、Woo 和 Davis，2004）使用与此处介绍的相同的规范视图体积。 他们通常还让用户指定 $n$ 和 $f$ 的绝对值。 OpenGL 的投影矩阵为 
+$$
+\bold{M}_{OpenGL} = \begin{bmatrix}
+\frac{2|n|}{r - l} & 0 & \frac{r + l}{r - l} & 0 \\
+0 & \frac{2|n|}{t - b} & \frac{t + b}{t - b} & 0 \\
+0 & 0 & \frac{|n| + |f|}{|n| - |f|} & \frac{2|f||n|}{|n| - |f|} \\
+0 & 0 & -1 & 0 \\
+\end{bmatrix}
+$$
+Other APIs send n and f to 0 and 1, respectively. Blinn (J. Blinn, 1996) recommends making the canonical view volume $[0, 1]^3$ for efficiency. All such decisions will change the the projection matrix slightly. 
+其他API分别将n和f发送到0和1。Blinn (J. Blinn, 1996)建议为提高效率而创建规范视图卷$[0,1]^3$。所有这些决定都会稍微改变投影矩阵。
+
+## 7.4 Some Properties of the Perspective Transform 透视变换的一些属性
+
+An important property of the perspective transform is that it takes lines to lines and planes to planes. In addition, it takes line segments in the view volume to line segments in the canonical volume. To see this, consider the line segment 
+透视变换的一个重要性质是它将线转换为线，将平面转换为平面。此外，它将视图卷中的线段转换为规范卷中的线段。为了理解这一点，考虑一下线段
+$\bold{q} + t(\bold{Q} - \bold{q})$
+
+When transformed by a 4 ×4 matrix $\bold{M}$, it is a point with possibly varying homogeneous coordinate: 
+当用4 ×4矩阵$\bold{M}$变换时，它是一个可能具有变化齐次坐标的点: 
+$\bold{M}{q} + t(\bold{M}\bold{Q} - \bold{M}\bold{q}) ≡ \bold{r} + t(\bold{R} - \bold{r}).  $
+
+The homogenized 3D line segment is 
+均质化 3D 线段为
+$$
+\frac{\bold{r} + t(\bold{R} − \bold{r})}{w_r + t(w_R − w_r)} \ \ \ \ (7.6)
+$$
+If Equation (7.6) can be rewritten in a form 
+若式(7.6)可以改写为
+$$
+\frac{\bold{r}}{w_r} + f(t)(\frac{\bold{R}}{w_R} - \frac{\bold{r}}{w_r}) \ \ \ \ \ (7.7)
+$$
+then all the homogenized points lie on a 3D line. Brute force manipulation of Equation (7.6) yields such a form with
+那么所有均匀化的点都在一条三维直线上。蛮力操作公式(7.6)产生这样的形式
+$$
+f(t) = \frac{w_Rt}{w_r + t(w_R − w_r)} \ \ \ \ \ (7.8)
+$$
+It also turns out that the line segments do map to line segments preserving the ordering of the points (Exercise 8), i.e., they do not get reordered or “torn.”
+结果还表明，线段确实映射到保持点的顺序的线段(练习8)，也就是说，它们不会被重新排序或“撕裂”。
+
+A byproduct of the transform taking line segments to line segments is that it takes the edges and vertices of a triangle to the edges and vertices of another triangle. Thus, it takes triangles to triangles and planes to planes. 
+将线段转换为线段的一个副产品是，它将一个三角形的边和顶点转换为另一个三角形的边和顶点。因此，它将三角形转换为三角形，将平面转换为平面。 
+
+## 7.5 Field-of-View 视场
+
+While we can specify any window using the (l, r, b, t) and n values, sometimes we would like to have a simpler system where we look through the center of the window. This implies the constraint that
+虽然我们可以使用(l, r, b, t)和n值指定任何窗口，但有时我们希望有一个更简单的系统，通过窗口的中心查看。这意味着约束条件
+$l = -r \\
+b = -t$
+
+If we also add the constraint that the pixels are square, i.e., there is no distortion of shape in the image, then the ratio of $r$ to $t$ must be the same as the ratio of the number of horizontal pixels to the number of vertical pixels: 
+如果我们还加上像素是正方形的约束，即图像中没有形状畸变，那么$r$与$t$的比值必须等于水平像素与垂直像素的比值:
+$\frac{n_x}{n_y} = \frac{r}{t} \\ $
+
+Once $n_x$ and $n_y$ are specified, this leaves only one degree of freedom. That is often set using the field-of-view shown as $θ$ in Figure 7.14. This is sometimes called the vertical field-of-view to distinguish it from the angle between left and right sides or from the angle between diagonal corners. From the figure we can see that
+一旦指定了$n_x$和$n_y$，就只剩下一个自由度了。这通常使用图7.14中显示的视场$θ$来设置。这有时被称为垂直视场，以区别于左右两边的角度或对角角之间的角度。从图中我们可以看到
+$\tan \frac{θ}{2} = \frac{t}{|n|}\\ $
+
+If $n$ and $θ$ are specified, then we can derive $t$ and use code for the more general viewing system. In some systems, the value of $n$ is hard-coded to some reasonable value, and thus we have one fewer degree of freedom. 
+如果指定了$n$和$θ$，那么我们可以导出$t$，并使用代码用于更一般的查看系统。在某些系统中，$n$的值被硬编码为某个合理的值，这样我们就少了一个自由度。
+
+## Frequently Asked Questions 常见问题
+
+### Is orthographic projection ever useful in practice? 正射影在实践中有用吗?
+
+It is useful in applications where relative length judgments are important. It can also yield simplifications where perspective would be too expensive as occurs in some medical visualization applications.
+它在相对长度判断很重要的应用程序中很有用。在某些医学可视化应用程序中，透视图的使用成本太高，而这种方法也可以简化透视图。
+
+### The tessellated spheres I draw in perspective look like ovals. Is this a bug? 我在透视图中画的镶嵌球体看起来像椭圆形。这是臭虫吗?
+
+No. It is correct behavior. If you place your eye in the same relative position to the screen as the virtual viewer has with respect to the viewport, then these ovals will look like circles because they themselves are viewed at an angle. 
+不。这是正确的行为。如果你把你的眼睛放在与屏幕相同的相对位置上，就像虚拟观看者相对于视口的位置一样，那么这些椭圆看起来就像圆圈，因为它们本身是在一个角度上被观看的。
+
+### Does the perspective matrix take negative z values to positive z values with a reversed ordering? Doesn’t that cause trouble? 透视矩阵是否以相反的顺序将负 z 值变为正 z 值？ 这不会带来麻烦吗？
+
+Yes. The equation for transformed z is 
+是的。 z 变换后的方程为
+$z' = n + f - \frac{fn}{z} \\ $
+
+So $z = +\epsilon$ is transformed to $z' = -∞$ and $z = -\epsilon$ is transformed to $z = ∞$. So any line segments that span $z = 0$ will be “torn” although all points will be projected to an appropriate screen location. This tearing is not relevant when all objects are contained in the viewing volume. This is usually assured by clipping to the view volume. However, clipping itself is made more complicated by the tearing phenomenon as is discussed in Chapter 8.
+因此 $z = +\epsilon$ 转换为 $z' = -∞$ 并且 $z = -\epsilon$ 转换为 $z = ∞$。 因此，尽管所有点都将投影到适当的屏幕位置，但跨越 $z = 0$ 的任何线段都将被“撕裂”。 当所有对象都包含在观看体积中时，这种撕裂是不相关的。 这通常通过剪切到视图体积来保证。 然而，如第 8 章中讨论的那样，撕裂现象使剪切本身变得更加复杂。
+
+### The perspective matrix changes the value of the homogeneous coordinate. Doesn’t that make the move and scale transformations no longer work properly? 透视矩阵改变齐次坐标的值。 这难道不会导致移动和规模转换不再正常进行吗？
+
+Applying a translation to a homogeneous point we have 
+将平移应用到齐次点我们有
+$$
+\begin{bmatrix}
+1 & 0 & 0 & t_x \\
+0 & 1 & 0 & t_y \\
+0 & 0 & 1 & t_z \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+\begin{bmatrix}
+hx \\ hy \\ hz \\ h
+\end{bmatrix}
+= \begin{bmatrix}
+hx + ht_x \\ hy + ht_y \\ hz + ht_z \\ h
+\end{bmatrix} \rightarrow{homogenize} 
+\begin{bmatrix}
+x + t_x \\
+y + t_y \\
+Z + t_z \\
+1
+\end{bmatrix}
+$$
+Similar effects are true for other transforms (see Exercise 5). 
+其他变换也有类似的效果（参见练习 5）。
+
+## Notes 注释
+
+Most of the discussion of viewing matrices is based on information in Real-Time Rendering (Akenine-M¨ oller et al., 2008), the OpenGL Programming Guide (Shreiner et al., 2004), Computer Graphics (Hearn & Baker, 1986), and 3D Game Engine Design (Eberly, 2000).
+大多数关于查看矩阵的讨论都是基于实时渲染（Akenine-Měller 等人，2008 年）、OpenGL 编程指南（Shreiner 等人，2004 年）、计算机图形学（Hearn & Baker，1986 年）中的信息 ）和 3D 游戏引擎设计（Eberly，2000）。
+
+## Exercises
+
+1.  Construct the viewport matrix required for a system in which pixel coordinates count down from the top of the image, rather than up from the bottom.
+   构建系统所需的视口矩阵，其中像素坐标从图像顶部向下计数，而不是从底部向上计数。
+2. Multiply the viewport and orthographic projection matrices, and show that the result can also be obtained by a single application of Equation (6.7). 
+   将视口矩阵和正交投影矩阵相乘，并表明结果也可以通过单独应用方程（6.7）来获得。
+3. Derive the third row of Equation (7.3) from the constraint that z is preserved for points on the near and far planes.
+   从近平面和远平面上的点保留 z 的约束导出方程（7.3）的第三行。
+4. Show algebraically that the perspective matrix preserves order of z values within the view volume.
+    用代数方式表明透视矩阵保留视图体积内 z 值的顺序。
+5. For a 4×4 matrix whose top three rows are arbitrary and whose bottom row is $(0, 0, 0, 1)$, show that the points $(x, y, z, 1)$ and $(hx, hy, hz, h)$ transform to the same point after homogenization.
+    对于一个 4×4 矩阵，其前三行是任意的，其底行是 $(0, 0, 0, 1)$，证明点 $(x, y, z, 1)$ 和 $(hx , hy, hz, h)$均质化后变换到同一点。
+6. Verify that the form of $\bold{M}^{−1}_p$ given in the text is correct.
+   验证文中给出的$\bold{M}^{−1}_p$的形式是否正确。
+7. Verify that the full perspective to canonical matrix $\bold{M}_{projection}$ takes $(r, t, n)$ to $(1, 1, 1)$.
+    验证规范矩阵 $\bold{M}_{projection}$ 的完整视角是否从 $(r, t, n)$ 变为 $(1, 1, 1)$。
+8. Write down a perspective matrix for $n = 1$, $f = 2$.
+   写出 $n = 1$、$f = 2$ 的透视矩阵。
+9. For the point $\bold{p} = (x, y, z, 1)$, what are the homogenized and unhomogenized results for that point transformed by the perspective matrix in Exercise 6?
+   对于点 $\bold{p} = (x, y, z, 1)$，练习 6 中透视矩阵变换该点的均质化和非均质化结果是多少？
+10. For the eye position $\bold{e} = (0, 1, 0)$, a gaze vector $\bold{g} = (0, −1, 0)$, and a viewup vector $\bold{t} = (1, 1, 0)$, what is the resulting orthonormal $\bold{uvw}$ basis used for coordinate rotations?
+    对于眼睛位置 $\bold{e} = (0, 1, 0)$，注视向量 $\bold{g} = (0, −1, 0)$ 和视图向量 $\bold{ t} = (1, 1, 0)$，用于坐标旋转的正交 $\bold{uvw}$ 基础是什么？
+11. Show, that for a perspective transform, line segments that start in the view volume do map to line segments in the canonical volume after homogenization. Further, show that the relative ordering of points on the two segments is the same. Hint: Show that the f(t) in Equation (7.8) has the properties
+    $f(0) = 0, f(1) = 1$, the derivative of f is positive for all $t ∈ [0, 1]$​, and the homogeneous coordinate does not change sign.
+    表明，对于透视变换，在视图体积中开始的线段在均质化后确实映射到规范体积中的线段。 进一步证明两条线段上点的相对顺序是相同的。 提示：证明方程（7.8）中的 f(t) 具有以下性质
+         $f(0) = 0, f(1) = 1$，f的导数对于所有$t ∈ [0, 1]$均为正，且齐次坐标不改变符号。
+
+
+
+# 8  The Graphics Pipeline  图形管道
+
+The previous several chapters have established the mathematical scaffolding we need to look at the second major approach to rendering: drawing objects one by one onto the screen, or object-order rendering. Unlike in ray tracing, where we consider each pixel in turn and find the objects that influence its color, we’ll now instead consider each geometric object in turn and find the pixels that it could have an effect on. The process of finding all the pixels in an image that are occupied by  a geometric primitive is called rasterization, so object-order rendering can also  be called rendering by rasterization. The sequence of operations that is required,  starting with objects and ending by updating pixels in the image, is known as the graphics pipeline.
+前面几章已经建立了我们需要查看第二种主要渲染方法的数学支架：将对象一个接一个地绘制到屏幕上，或对象顺序渲染。 与光线追踪中我们依次考虑每个像素并找到影响其颜色的对象不同，我们现在将依次考虑每个几何对象并找到它可能产生影响的像素。 找到图像中某个几何图元所占据的所有像素的过程称为光栅化，因此对象顺序渲染也可以称为光栅化渲染。 所需的操作序列（从对象开始到更新图像中的像素结束）称为图形管道。
+
+> Any graphics system has one or more types of “primitive object” that it can handle directly, and more complex objects are converted into these “primitives.” Triangles are the most often used primitive.
+> 任何图形系统都有一种或多种可以直接处理的“原始对象”，更复杂的对象被转换为这些“原始对象”。 三角形是最常用的图元。
+
+> Rasterization-based systems are also called scanline renderers. 
+> 基于光栅化的系统也称为扫描线渲染器。
+
+Object-order rendering has enjoyed great success because of its efficiency. For large scenes, management of data access patterns is crucial to performance, and making a single pass over the scene visiting each bit of geometry once has significant advantages over repeatedly searching the scene to retrieve the objects required to shade each pixel.
+对象顺序渲染因其效率而获得了巨大的成功。 对于大型场景，数据访问模式的管理对于性能至关重要，与重复搜索场景以检索对每个像素进行着色所需的对象相比，对场景进行单次访问访问几何图形的每一位具有显着的优势。
+
+The title of this chapter suggests that there is only one way to do objectorder rendering. Of course this isn’t true—two quite different examples of graphics pipelines with very different goals are the hardware pipelines used to support interactive rendering via APIs like OpenGL and Direct3D and the software pipelines used in film production, supporting APIs like RenderMan. Hardware pipelines must run fast enough to react in real time for games, visualizations, and user interfaces. Production pipelines must render the highest quality animation and visual effects possible and scale to enormous scenes, but may take much  more time to do so. Despite the different design decisions resulting from these divergent goals, a remarkable amount is shared among most, if not all, pipelines, and this chapter attempts to focus on these common fundamentals, erring on the side of following the hardware pipelines more closely.
+本章的标题表明只有一种方法可以进行对象顺序渲染。 当然，这不是真的——两个截然不同的图形管道示例，目标截然不同，一个是用于通过 OpenGL 和 Direct3D 等 API 支持交互式渲染的硬件管道，另一个是电影制作中使用的支持 RenderMan 等 API 的软件管道。 硬件管道必须运行得足够快，才能对游戏、可视化和用户界面做出实时反应。 制作流程必须尽可能渲染最高质量的动画和视觉效果，并扩展到巨大的场景，但可能需要更多时间才能完成。 尽管这些不同的目标导致了不同的设计决策，但大多数（如果不是全部）管道之间共享了大量的数据，本章试图重点关注这些共同的基础知识，而不是更紧密地遵循硬件管道。
+
+The work that needs to be done in object-order rendering can be organized into the task of rasterization itself, the operations that are done to geometry before rasterization, and the operations that are done to pixels after rasterization. The most common geometric operation is applying matrix transformations, as discussed in the previous two chapters, to map the points that define the geometry from object space to screen space, so that the input to the rasterizer is expressed in pixel coordinates, or screen space. The most common pixelwise operation is hidden surface removal which arranges for surfaces closer to the viewer to appear in front of surfaces farther from the viewer. Many other operations also can be included at each stage, thereby achieving a wide range of different rendering effects using the same general process.
+对象顺序渲染中需要完成的工作可以组织为光栅化本身的任务、光栅化之前对几何图形执行的操作以及光栅化之后对像素执行的操作。 最常见的几何操作是应用矩阵变换，如前两章所述，将定义几何的点从对象空间映射到屏幕空间，以便光栅化器的输入以像素坐标或屏幕空间表示。 最常见的像素级操作是隐藏表面去除，它将靠近观察者的表面安排在距观察者较远的表面前面。 每个阶段还可以包括许多其他操作，从而使用相同的通用过程实现各种不同的渲染效果。
+
+For the purposes of this chapter, we’ll discuss the graphics pipeline in terms of four stages (Figure 8.1). Geometric objects are fed into the pipeline from an interactive application or from a scene description file, and they are always described by sets of vertices. The vertices are operated on in the vertex-processing stage, then the primitives using those vertices are sent to the rasterization stage. The rasterizer breaks each primitive into a number of fragments, one for each pixel covered by the primitive. The fragments are processed in the fragment processing stage, and then the various fragments corresponding to each pixel are combined in the fragment blending stage.
+为了本章的目的，我们将分四个阶段讨论图形管道（图 8.1）。 几何对象从交互式应用程序或场景描述文件输入到管道中，并且它们始终由顶点集描述。 顶点在顶点处理阶段进行操作，然后使用这些顶点的图元被发送到光栅化阶段。 光栅化器将每个基元分解为多个片段，一个片段对应于基元覆盖的每个像素。 在片段处理阶段对片段进行处理，然后在片段混合阶段将每个像素对应的各个片段进行组合。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.1.png" alt="Figure 8.1" style="zoom:67%;" />
+
+Figure 8.1. The stages of a graphics pipeline.
+图 8.1. 图形管道的阶段。
+
+We’ll begin by discussing rasterization, then illustrate the purpose of the geometric and pixel-wise stages by a series of examples.
+我们将从讨论光栅化开始，然后通过一系列示例说明几何和像素级阶段的目的。
+
+## 8.1 Rasterization 光栅化
+
+Rasterization is the central operation in object-order graphics, and the rasterizer is central to any graphics pipeline. For each primitive that comes in, the rasterizer has two jobs: it enumerates the pixels that are covered by the primitive and it interpolates values, called attributes, across the primitive—the purpose for these attributes will be clear with later examples. The output of the rasterizer is a set of fragments, one for each pixel covered by the primitive. Each fragment “lives” at a particular pixel and carries its own set of attribute values. 
+光栅化是对象顺序图形中的核心操作，光栅化器是任何图形管道的核心。 对于每个进来的基元，光栅化器有两个工作：它枚举基元覆盖的像素，并在基元上插入值（称为属性） - 这些属性的用途将在后面的示例中清楚地显示出来。 光栅化器的输出是一组片段，每个片段对应图元覆盖的每个像素。 每个片段“存在”于特定的像素处并携带其自己的一组属性值。
+
+In this chapter, we will present rasterization with a view toward using it to render three-dimensional scenes. The same rasterization methods are used to draw  lines and shapes in 2D as well—although it is becoming more and more common to use the 3D graphics system “under the covers” to do all 2D drawing.
+在本章中，我们将介绍光栅化，以期使用它来渲染三维场景。 相同的光栅化方法也用于在 2D 中绘制线条和形状 - 尽管“在幕后”使用 3D 图形系统来完成所有 2D 绘图变得越来越普遍。
+
+### 8.1.1 Line Drawing 画线
+
+Most graphics packages contain a line drawing command that takes two endpoints in screen coodinates (see Figure 3.10) and draws a line between them. For example, the call for endpoints (1,1) and (3,2) would turn on pixels (1,1) and (3,2) and fill in one pixel between them. For general screen coordinate endpoints $(x_0, y_0)$ and $(x_1, y_1)$, the routine should draw some “reasonable” set of pixels that approximates a line between them. Drawing such lines is based on line equations, and we have two types of equations to choose from: implicit and parametric. This section describes the approach using implicit lines.
+大多数图形包都包含一个线条绘制命令，该命令获取屏幕坐标中的两个端点（参见图 3.10）并在它们之间绘制一条线。 例如，对端点 (1,1) 和 (3,2) 的调用将打开像素 (1,1) 和 (3,2)，并在它们之间填充一个像素。 对于一般屏幕坐标端点 $(x_0, y_0)$ 和 $(x_1, y_1)$，例程应该绘制一些“合理”的像素集，近似它们之间的一条线。 绘制这样的线是基于线方程，我们有两种类型的方程可供选择：隐式方程和参数方程。 本节介绍使用隐式线的方法。  
+
+> Even though we often use integer-valued endpoints for examples, it’s important to properly support arbitrary endpoints.
+> 尽管我们经常使用整数值端点作为示例，但正确支持任意端点也很重要。
+
+#### Line Drawing Using Implicit Line Equations 使用隐式直线方程绘制线条
+
+The most common way to draw lines using implicit equations is the midpoint algorithm (Pitteway (1967); van Aken and Novak (1985)). The midpoint algorithm ends up drawing the same lines as the Bresenham algorithm (Bresenham, 1965) but it is somewhat more straightforward.
+使用隐式方程绘制直线的最常见方法是中点算法（Pitteway (1967)；van Aken 和 Novak (1985)）。 中点算法最终绘制与 Bresenham 算法相同的线（Bresenham，1965），但它更简单一些。
+
+The first thing to do is find the implicit equation for the line as discussed in Section 2.5.2:
+首先要做的是找到直线的隐式方程，如第 2.5.2 节中所述：
+$$
+f(x, y) ≡ (y_0 − y_1)x + (x_1 − x_0)y + x_0y_1 − x_1y_0 = 0. (8.1)
+$$
+We assume that $x_0 ≤ x_1$. If that is not true, we swap the points so that it is true. The slope m of the line is given by
+我们假设 $x_0 ≤ x_1$。 如果这不是真的，我们交换点以使其为真。 直线的斜率 m 由下式给出
+$m = \frac{y_1 - y_0}{x_1 - x_0}\\$
+
+The following discussion assumes $m ∈ (0, 1]$. Analogous discussions can be derived for $m ∈ (-∞, -1]$, $m ∈ (-1, 0]$, and $m ∈ (1, ∞)$. The four cases cover all possibilities. 
+以下讨论假设 $m ∈ (0, 1]$。类似的讨论可以推导出 $m ∈ (-∞, -1]$、$m ∈ (-1, 0]$ 和 $m ∈ (1, ∞)$.这四种情况涵盖了所有的可能性。
+
+For the case m ∈ (0, 1], there is more “run” than “rise,” i.e., the line is moving faster in x than in y. If we have an API where the y-axis points downward, we might have a concern about whether this makes the process harder, but, in fact, we can ignore that detail. We can ignore the geometric notions of “up” and “down,” because the algebra is exactly the same for the two cases. Cautious readers can confirm that the resulting algorithm works for the y-axis downward case. The key assumption of the midpoint algorithm is that we draw the thinnest line possible  that has no gaps. A diagonal connection between two pixels is not considered a gap.
+对于 m ∈ (0, 1] 的情况，“运行”多于“上升”，即，线在 x 方向上移动比在 y 方向上移动得更快。如果我们有一个 y 轴指向下方的 API，我们可能会 担心这是否会使过程变得更加困难，但事实上，我们可以忽略这个细节。我们可以忽略“向上”和“向下”的几何概念，因为这两种情况的代数完全相同。 读者可以确认所得算法适用于 y 轴向下的情况。中点算法的关键假设是我们绘制尽可能没有间隙的最细线。两个像素之间的对角线连接不被视为间隙。
+
+As the line progresses from the left endpoint to the right, there are only two possibilities: draw a pixel at the same height as the pixel drawn to its left, or draw a pixel one higher. There will always be exactly one pixel in each column of pixels between the endpoints. Zero would imply a gap, and two would be too thick a line. There may be two pixels in the same row for the case we are considering; the line is more horizontal than vertical so sometimes it will go right, and sometimes up. This concept is shown in Figure 8.2, where three “reasonable” lines are shown, each advancing more in the horizontal direction than in the vertical direction.
+当线从左端点向右延伸时，只有两种可能性：在与左侧绘制的像素相同的高度上绘制一个像素，或者在更高的高度绘制一个像素。 端点之间的每一列像素中始终只有一个像素。 零意味着有一个间隙，而两个则意味着线条太粗。 对于我们正在考虑的情况，同一行中可能有两个像素； 该线的水平方向多于垂直方向，因此有时会向右移动，有时会向上移动。 这个概念如图 8.2 所示，其中显示了 3 条“合理”线，每条线在水平方向上比在垂直方向上前进得更多。
+![Figure 8.2](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.2.png)
+Figure 8.2. Three “reasonable” lines that go seven pixels horizontally and three pixels vertically. 
+图 8.2. 三个“合理”的线，水平方向有七个像素，垂直方向有三个像素。
+
+The midpoint algorithm for $m ∈ (0, 1]$ first establishes the leftmost pixel and the column number (x-value) of the rightmost pixel and then loops horizontally establishing the row (y-value) of each pixel. The basic form of the algorithm is:
+$m ∈ (0, 1]$ 的中点算法首先建立最左边的像素和最右边像素的列号（x 值），然后水平循环建立每个像素的行（y 值）。基本形式 算法的内容是：
+
+> $y = y_0$
+> for $x = x_0$ to $x_1$ do
+> 	draw(x, y)
+> 	if (some condition) then
+> 		y = y + 1  
+
+Note that x and y are integers. In words this says, “keep drawing pixels from left to right and sometimes move upward in the y-direction while doing so.” The key is to establish efficient ways to make the decision in the if statement.
+请注意，x 和 y 是整数。 换句话说，“不断从左向右绘制像素，有时在 y 方向上向上移动”。 关键是建立有效的方法来在 if 语句中做出决定。
+
+An effective way to make the choice is to look at the midpoint of the line between the two potential pixel centers. More specifically, the pixel just drawn is pixel (x, y) whose center in real screen coordinates is at (x, y). The candidate pixels to be drawn to the right are pixels (x + 1, y) and (x + 1, y + 1). The midpoint between the centers of the two candidate pixels is (x + 1, y + 0.5). If the line passes below this midpoint we draw the bottom pixel, and otherwise we draw the top pixel (Figure 8.3).  
+做出选择的有效方法是查看两个潜在像素中心之间的线的中点。 更具体地说，刚刚绘制的像素是实际屏幕坐标中的中心位于（x，y）的像素（x，y）。 向右绘制的候选像素是像素(x+1，y)和(x+1，y+1)。 两个候选像素中心之间的中点是(x + 1, y + 0.5)。 如果该线穿过该中点下方，我们将绘制底部像素，否则我们将绘制顶部像素（图 8.3）。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.3.png" alt="Figure 8.3" style="zoom:50%;" />
+Figure 8.3. Top: the line goes above the midpoint so the top pixel is drawn. Bottom: the line goes below the midpoint so the bottom pixel is drawn. 
+图 8.3. 顶部：线位于中点上方，因此绘制顶部像素。 底部：线位于中点下方，因此绘制底部像素。 
+
+To decide whether the line passes above or below $(x+1, y +0.5)$, we evaluate $f(x, y + 0.5)$ in Equation (8.1). Recall from Section 2.5.1 that $f(x, y) = 0$ for points $(x, y)$ on the line, $f(x, y) > 0$ for points on one side of the line, and $f(x, y) < 0$ for points on the other side of the line. Because $-f(x, y) = 0$ and $f(x, y) = 0$ are both perfectly good equations for the line, it is not immediately clear whether $f(x, y)$ being positive indicates that $(x, y)$ is above the line, or whether it is below. However, we can figure it out; the key term in Equation (8.1) is the $y$ term $(x_1 - x_0)y$. Note that $(x_1 - x_0)$ is definitely positive because $x_1 > x_0$. This means that as $y$ increases, the term $(x_1-x_0)y$ gets larger (i.e., more positive or less negative). Thus, the case $f(x, +∞)$ is definitely positive, and definitely above the line, implying points above the line are all positive. Another way to look at it is that the $y$ component of the gradient vector is positive. So above the line, where $y$ can increase arbitrarily, $f(x, y)$ must be positive. Thism eans we can make our code more specific by filling in the if statement:
+为了确定直线是否高于或低于 $(x+1, y +0.5)$，我们评估方程 (8.1) 中的 $f(x, y + 0.5)$。 回想一下第 2.5.1 节，对于直线上的点 $(x, y)$，$f(x, y) = 0$，对于直线一侧的点，$f(x, y) > 0$，并且 $f(x, y) < 0$ 对于线另一侧的点。 由于 $-f(x, y) = 0$ 和 $f(x, y) = 0$ 都是该直线的完美方程，因此尚不清楚 $f(x, y)$ 为正是否表明 $(x, y)$ 在线上方，或者在线下方。 然而，我们可以弄清楚； 方程 (8.1) 中的关键项是 $y$ 项 $(x_1 - x_0)y$。 请注意，$(x_1 - x_0)$ 肯定是正数，因为 $x_1 > x_0$。 这意味着随着 $y$ 的增加，$(x_1-x_0)y$ 项变得更大（即，更多的正值或更少的负值）。 因此，$f(x, +∞)$ 的情况肯定是正的，并且肯定在线上方，这意味着线上方的点都是正的。 另一种看待它的方式是梯度向量的 $y$ 分量为正。 因此，在线上方，$y$ 可以任意增加，$f(x, y)$ 必须为正数。 这意味着我们可以通过填写 if 语句来使我们的代码更加具体：
+
+> if $f(x + 1, y + 0.5) < 0$ then
+> 	$y = y + 1$
+
+The above code will work nicely for lines of the appropriate slope (i.e., between zero and one). The reader can work out the other three cases which differ only in small details. 
+上面的代码对于具有适当斜率（即介于 0 和 1 之间）的线可以很好地工作。 读者可以找出其他三种仅在小细节上有所不同的情况。
+
+If greater efficiency is desired, using an incremental method can help. An incremental method tries to make a loop more efficient by reusing computation from the previous step. In the midpoint algorithm as presented, the main computation is the evaluation of $f(x + 1, y + 0.5)$. Note that inside the loop, after the first iteration, either we already evaluated $f(x - 1, y + 0.5)$ or $f(x - 1, y - 0.5)$ (Figure 8.4). Note also this relationship:
+如果需要更高的效率，使用增量方法会有所帮助。 增量方法尝试通过重用上一步的计算来提高循环效率。 在所提出的中点算法中，主要计算是$f(x + 1, y + 0.5)$的评估。 请注意，在循环内部，第一次迭代之后，我们要么已经计算了 $f(x - 1, y + 0.5)$ 或 $f(x - 1, y - 0.5)$（图 8.4）。 还要注意这种关系：
+$f(x + 1, y) = f(x, y) + (y_0 - y_1)\\
+f(x + 1, y + 1) = f(x, y) + (y_0 - y_1) + (x_1 - x_0).  $
+
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.4.png" alt="Figure 8.4" style="zoom:67%;" />
+Figure 8.4. When using the decision point shown between the two orange pixels, we just drew the blue pixel, so we evaluated f at one of the two left points shown. 
+图 8.4. 当使用两个橙色像素之间显示的决策点时，我们只绘制了蓝色像素，因此我们在显示的两个左侧点之一评估 f。
+
+This allows us to write an incremental version of the code: 
+这允许我们编写代码的增量版本：
+
+> $y = y_0$
+> $d = f(x_0 + 1, y_0 + 0.5)$
+> for $x = x_0$ to $x_1$ do
+> 	draw(x, y)
+> 	if d < 0 then
+> 		y = y + 1
+> 		$d = d + (x_1 - x_0) + (y_0 - y_1)$
+> 	else
+> 		$d = d + (y_0 - y_1)$
+
+This code should run faster since it has little extra setup cost compared to the non-incremental version (that is not always true for incremental algorithms), but it may accumulate more numeric error because the evaluation of $f(x, y + 0.5)$ may be composed of many adds for long lines. However, given that lines are rarely longer than a few thousand pixels, such an error is unlikely to be critical. Slightly longer setup cost, but faster loop execution, can be achieved by storing $(x_1 - x_0) + (y_0 - y_1)$ and $(y_0 - y_1)$ as variables. We might hope a good compiler would do that for us, but if the code is critical, it would be wise to examine the results of compilation to make sure.
+该代码应该运行得更快，因为与非增量版本相比，它几乎没有额外的设置成本（增量算法并不总是如此），但它可能会积累更多的数字错误，因为 $f(x, y + 0.5)$的评估可能由许多添加组成，以表示长行。 然而，考虑到线条很少超过几千像素，这样的错误不太可能是严重的。 通过将 $(x_1 - x_0) + (y_0 - y_1)$ 和 $(y_0 - y_1)$ 存储为变量，可以实现稍长的设置成本，但更快的循环执行。 我们可能希望一个好的编译器能为我们做到这一点，但如果代码很关键，那么明智的做法是检查编译结果以确保这一点。
+
+### 8.1.2 Triangle Rasterization 三角形光栅化
+
+We often want to draw a 2D triangle with 2D points $\bold{p}_0 = (x_0, y_0)$, $\bold{p}_1 = (x_1, y_1)$, and $\bold{p}_2 = (x_2, y_2)$ in screen coordinates. This is similar to the line drawing problem, but it has some of its own subtleties. As with line drawing, we may wish to interpolate color or other properties from values at the vertices. This is straightforward if we have the barycentric coordinates (Section 2.7). For example, if the vertices have colors $\bold{c}_0$, $\bold{c}_1$, and $\bold{c}_2$, the color at a point in the triangle with barycentric coordinates $(α, β, γ)$ is
+我们经常想画一个2D三角形，在屏幕坐标中有两个点$\bold{p}_0 = (x_0, y_0)$， $\bold{p}_1 = (x_1, y_1)$和$\bold{p}_2 = (x_2, y_2)$。这类似于线条绘制问题，但它有一些自己的微妙之处。与线条绘制一样，我们可能希望从顶点处的值插入颜色或其他属性。如果我们有以质量为中心的坐标(第2.7节)，这是很简单的。例如，如果顶点的颜色为$\bold{c}_0$， $\bold{c}_1$和$\bold{c}_2$，则三角形中具有质心坐标$(α， β， γ)$的点的颜色为
+$\bold{c} = α\bold{c}_0 + β\bold{c}_1 + γ\bold{c}_2  $
+
+This type of interpolation of color is known in graphics as Gouraud interpolation after its inventor (Gouraud, 1971). 
+这种类型的颜色插值在图形学中被称为 Gouraud 插值，以其发明者命名（Gouraud，1971）。
+
+Another subtlety of rasterizing triangles is that we are usually rasterizing triangles that share vertices and edges. This means we would like to rasterize adjacent triangles so there are no holes. We could do this by using the midpoint algorithm to draw the outline of each triangle and then fill in the interior pixels. This would mean adjacent triangles both draw the same pixels along each edge. If the adjacent triangles have different colors, the image will depend on the order in which the two triangles are drawn. The most common way to rasterize triangles that avoids the order problem and eliminates holes is to use the convention that pixels are drawn if and only if their centers are inside the triangle, i.e., the barycentric coordinates of the pixel center are all in the interval (0, 1). This raises the issue of what to do if the center is exactly on the edge of the triangle. There are several ways to handle this as will be discussed later in this section. The key observation is that barycentric coordinates allow us to decide whether to draw a pixel and what color that pixel should be if we are interpolating colors from the vertices. So our problem of rasterizing the triangle boils down to efficiently finding the barycentric coordinates of pixel centers (Pineda, 1988). The brute-force rasterization algorithm is:
+栅格化三角形的另一个微妙之处是我们通常栅格化共享顶点和边的三角形。 这意味着我们想要栅格化相邻的三角形，这样就不会有洞。 我们可以通过使用中点算法绘制每个三角形的轮廓，然后填充内部像素来做到这一点。 这意味着相邻的三角形都沿着每条边绘制相同的像素。 如果相邻三角形具有不同的颜色，则图像将取决于两个三角形的绘制顺序。 栅格化三角形以避免顺序问题并消除空洞的最常见方法是使用以下约定：当且仅当像素中心位于三角形内部时，即像素中心的重心坐标都在区间 ( 0, 1)。 这就提出了一个问题：如果中心恰好位于三角形的边缘上该怎么办。 有多种方法可以处理此问题，本节稍后将对此进行讨论。 关键的观察是，重心坐标允许我们决定是否绘制像素，以及如果我们从顶点插值颜色，该像素应该是什么颜色。 因此，我们对三角形进行光栅化的问题归结为有效地找到像素中心的重心坐标（Pineda，1988）。 暴力光栅化算法是：
+
+> for all x do
+> 	for all y do
+> 		compute $(α, β, γ)$ for $(x, y)$
+> 		if $(α ∈ [0, 1] and β ∈ [0, 1] and γ ∈ [0, 1])$ then
+> 			$\bold{c} = α\bold{c}_0 + β\bold{c}_1 + γ\bold{c}_2$
+> 			drawpixel (x, y) with color $\bold{c}$
+
+The rest of the algorithm limits the outer loops to a smaller set of candidate pixels and makes the barycentric computation efficient.
+该算法的其余部分将外部循环限制为较小的候选像素集，并使重心计算变得高效。
+
+We can add a simple efficiency by finding the bounding rectangle of the three vertices and only looping over this rectangle for candidate pixels to draw. We can compute barycentric coordinates using Equation (2.32). This yields the algorithm:
+我们可以通过找到三个顶点的边界矩形并仅循环该矩形来绘制候选像素来增加简单的效率。 我们可以使用方程（2.32）计算重心坐标。 这产生了算法：
+
+> $x_{min}$ = floor($x_i$)
+> $x_{max}$ = ceiling($x_i$)
+> $y_{min}$ = floor($y_i$)
+> $y_{max}$ = ceiling($y_i$)
+> for $y = y_{min}$ to $y_{max}$ do
+> 	for $x = x_{min}$ to $x_{max}$ do
+> 		$α = f_{12}(x, y)/f_{12}(x_0, y_0)$
+> 		$β = f_{20}(x, y)/f_{20}(x_1, y_1)$
+> 		$γ = f_{01}(x, y)/f_{01}(x_2, y_2)$
+> 		if ($α > 0$ and $β > 0$ and $γ > 0$) then
+> 			$\bold{c} = α\bold{c}_0 + β\bold{c}_1 + γ\bold{c}_2$
+> 			drawpixel (x, y) with color $\bold{c}$
+
+Here $f_{ij}$ is the line given by Equation (8.1) with the appropriate vertices:
+这里$f_{ij}$是由式(8.1)给出的具有相应顶点的直线:
+$$
+f_{01}(x, y) = (y_0 − y_1)x + (x_1 − x_0)y + x_0y_1 − x_1y_0, \\
+f_{12}(x, y) = (y_1 − y_2)x + (x_2 − x_1)y + x_1y_2 − x_2y_1, \\
+f_{20}(x, y) = (y_2 − y_0)x + (x_0 − x_2)y + x_2y_0 − x_0y_2.
+$$
+Note that we have exchanged the test $α ∈ (0, 1)$ with $α > 0$ etc., because if all of $α, β, γ$ are positive, then we know they are all less than one because $α + β + γ = 1$. We could also compute only two of the three barycentric variables and get the third from that relation, but it is not clear that this saves computation once the algorithm is made incremental, which is possible as in the line drawing algorithms; each of the computations of $α$, $β$, and $γ$ does an evaluation of the form $f(x, y) = Ax + By + C$. In the inner loop, only $x$ changes, and it changes by one. Note that $f(x + 1, y) = f(x, y) + A$. This is the basis of the incremental algorithm. In the outer loop, the evaluation changes for $f(x, y)$ to $f(x, y + 1)$, so a similar efficiency can be achieved. Because $α$, $β$, and $γ$ change by constant increments in the loop, so does the color $\bold{c}$. So this can be made incremental as well. For example, the red value for pixel $(x + 1, y)$ differs from the red value for pixel $(x, y)$ by a constant amount that can be precomputed. An example of a triangle with color interpolation is shown in Figure 8.5.
+请注意，我们已经将测试 $α ∈ (0, 1)$ 与 $α > 0$ 等交换，因为如果所有 $α, β, γ$ 都是正数，那么我们知道它们都小于 1，因为 $ α + β + γ = 1$。 我们也可以只计算三个重心变量中的两个，并从该关系中得到第三个，但尚不清楚一旦算法增量，这是否可以节省计算量，这在画线算法中是可能的； $α$、$β$ 和 $γ$ 的每个计算都会进行 $f(x, y) = Ax + By + C$ 形式的评估。 在内层循环中，只有$x$改变，并且改变了1。 请注意 $f(x + 1, y) = f(x, y) + A$。 这是增量算法的基础。 在外循环中，$f(x, y)$ 的评估更改为$f(x, y + 1)$，因此可以实现类似的效率。 由于 $α$、$β$ 和 $γ$ 在循环中按恒定增量变化，因此颜色 $\bold{c}$ 也会变化。 所以这也可以是增量的。 例如，像素 $(x + 1, y)$ 的红色值与像素 $(x, y)$ 的红色值相差可预先计算的恒定量。 图 8.5 显示了带有颜色插值的三角形示例。
+![Figure 8.5](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.5.png)
+Figure 8.5. A colored triangle with barycentric interpolation. Note that the changes in color components are linear in each row and column as well as along each edge. In fact it is constant along every line, such as the diagonals, as well. 
+图 8.5. 具有重心插值的彩色三角形。 请注意，颜色分量的变化在每行和每列以及沿每条边缘都是线性的。 事实上，它沿着每条线（例如对角线)都是恒定的。
+
+#### Dealing with Pixels on Triangle Edges 处理三角形边缘上的像素
+
+We have still not discussed what to do for pixels whose centers are exactly on the edge of a triangle. If a pixel is exactly on the edge of a triangle, then it is also on the edge of the adjacent triangle if there is one. There is no obvious way to award the pixel to one triangle or the other. The worst decision would be to not draw the pixel because a hole would result between the two triangles. Better, but still not good, would be to have both triangles draw the pixel. If the triangles are transparent, this will result in a double-coloring. We would really like to award the pixel to exactly one of the triangles, and we would like this process to be simple; which triangle is chosen does not matter as long as the choice is well defined.
+我们还没有讨论如何处理中心正好位于三角形边缘的像素。 如果一个像素正好位于三角形的边缘上，那么它也位于相邻三角形的边缘上（如果有的话）。 没有明显的方法将像素分配给一个三角形或另一个三角形。 最糟糕的决定是不绘制像素，因为两个三角形之间会产生一个洞。 更好但仍然不好的是让两个三角形都绘制像素。 如果三角形是透明的，这将导致双色。 我们真的很想将像素奖励给其中一个三角形，并且我们希望这个过程很简单； 只要选择明确，选择哪个三角形并不重要。
+
+One approach is to note that any off-screen point is definitely on exactly one side of the shared edge and that is the edge we will draw. For two non-overlapping triangles, the vertices not on the edge are on opposite sides of the edge from each other. Exactly one of these vertices will be on the same side of the edge as the off-screen point (Figure 8.6). This is the basis of the test. The test if numbers $p$ and $q$ have the same sign can be implemented as the test $pq > 0$, which is very efficient in most environments.
+一种方法是注意任何屏幕外点绝对位于共享边缘的一侧，这就是我们将绘制的边缘。 对于两个不重叠的三角形，不在边上的顶点位于边的相对两侧。 这些顶点中的一个恰好与屏幕外点位于边缘的同一侧（图 8.6）。 这是测试的基础。 数字 $p$ 和 $q$ 是否具有相同符号的测试可以实现为测试 $pq > 0$，这在大多数环境中非常有效。
+![Figure 8.6](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.6.png)
+Figure 8.6. The off-screen point will be on one side of the triangle edge or the other. Exactly one of the non-shared vertices $\bold{a}$ and $\bold{b}$ will be on the same side. 
+图 8.6. 屏幕外点将位于三角形边缘的一侧或另一侧。 非共享顶点 $\bold{a}$ 和 $\bold{b}$ 中的一个恰好位于同一侧。
+
+Note that the test is not perfect because the line through the edge may also go through the off-screen point, but we have at least greatly reduced the number of problematic cases. Which off-screen point is used is arbitrary, and $(x, y) = (−1, −1)$ is as good a choice as any. We will need to add a check for the case of a point exactly on an edge. We would like this check not to be reached for common cases, which are the completely inside or outside tests. This suggests:
+请注意，测试并不完美，因为穿过边缘的线也可能穿过屏幕外的点，但我们至少大大减少了有问题的情况。 使用哪个屏幕外点是任意的，$(x, y) = (−1, −1)$ 是一个不错的选择。 我们需要添加一个检查，检查点是否恰好位于边缘上。 我们希望在常见情况下不要进行此检查，这些情况是完全内部或外部测试。 这表明：
+
+> $x_{min} = floor(x_i)$
+> $x_{max} = ceiling(x_i)$
+> $y_{min} = floor(y_i) $
+> $y_{max} = ceiling(y_i)$
+> $f_α = f_{12}(x_0, y_0)$
+> $f_β = f_{20}(x_1, y_1)$
+> $f_γ = f_{01}(x_2, y_2)$
+> for $y = y_{min}$ to $y_{max}$ do
+> 	for $x = x_{min}$ to $x_{max}$ do
+> 		$α = f_{12}(x, y)/f_α$
+> 		$β = f_{20}(x, y)/f_β$
+> 		$γ = f_{01}(x, y)/f_γ$
+> 		if ($α ≥ 0$ and $β ≥ 0$ and $γ ≥ 0$) then
+> 			if ($α > 0$ or $f_αf_{12}(-1, -1) > 0)$ and
+> 				($β > 0$ or $f_βf_{20}(-1, -1) > 0$) and
+> 				($γ > 0$ or $f_γf_{01}(-1, -1) > 0$) then
+> 				$\bold{c} = α\bold{c}_0 + β\bold{c}_1 + γ\bold{c}_2$
+> 				drawpixel $(x, y)$ with color $\bold{c}$  
+
+We might expect that the above code would work to eliminate holes and doubledraws only if we use exactly the same line equation for both triangles. In fact, the line equation is the same only if the two shared vertices have the same order in the draw call for each triangle. Otherwise the equation might flip in sign. This could be a problem depending on whether the compiler changes the order of operations. So if a robust implementation is needed, the details of the compiler and arithmetic unit may need to be examined. The first four lines in the pseudocode above must be coded carefully to handle cases where the edge exactly hits the pixel center. 
+我们可能期望，只有当我们对两个三角形使用完全相同的直线方程时，上述代码才能消除孔和双重绘制。 事实上，仅当两个共享顶点在每个三角形的绘制调用中具有相同的顺序时，线方程才是相同的。 否则方程的符号可能会翻转。 这可能会成为一个问题，具体取决于编译器是否更改操作顺序。 因此，如果需要健壮的实现，则可能需要检查编译器和算术单元的细节。 上面伪代码中的前四行必须仔细编码，以处理边缘恰好击中像素中心的情况。
+
+In addition to being amenable to an incremental implementation, there are several potential early exit points. For example, if $α$ is negative, there is no need to compute $β$ or $γ$. While this may well result in a speed improvement, profiling is always a good idea; the extra branches could reduce pipelining or concurrency and might slow down the code. So as always, test any attractive-looking optimizations if the code is a critical section. 
+除了适合增量实施之外，还有几个潜在的早期退出点。 例如，如果$α$为负，则无需计算$β$或$γ$。 虽然这很可能会提高速度，但分析始终是一个好主意。 额外的分支可能会减少管道或并发性，并可能减慢代码速度。 因此，与往常一样，如果代码是关键部分，请测试任何看起来有吸引力的优化。
+
+Another detail of the above code is that the divisions could be divisions by zero for degenerate triangles, i.e., if $f_γ = 0$. Either the floating point error conditions should be accounted for properly, or another test will be needed.
+上述代码的另一个细节是，对于简并三角形，除法可以被零除，即，如果 $f_γ = 0$。 要么应正确考虑浮点错误条件，要么需要进行另一次测试。
+
+### 8.1.3 Clipping 剪辑
+
+Simply transforming primitives into screen space and rasterizing them does not quite work by itself. This is because primitives that are outside the view volume— particularly, primitives that are behind the eye—can end up being rasterized, leading to incorrect results. For instance, consider the triangle shown in Figure 8.7.
+简单地将图元转换为屏幕空间并对它们进行光栅化本身并不能完全起作用。 这是因为视图体积之外的图元（特别是眼睛后面的图元）最终可能会被光栅化，从而导致不正确的结果。 例如，考虑图 8.7 中所示的三角形。
+![Figure 8.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.7.png)
+Figure 8.7. The depth $z$ is transformed to the depth $z'$ by the perspective transform. Note that when $z$ moves from positive to negative, $z'$ switches from negative to positive. Thus vertices behind the eye are moved in front of the eye beyond $z' = n + f$. This will lead to wrong results, which is why the triangle is first clipped to ensure all vertices are in front of the eye.
+图 8.7. 深度$z$通过透视变换变换为深度$z'$。 请注意，当 $z$ 从正值变为负值时，$z'$ 从负值变为正值。 因此，眼睛后面的顶点会移动到眼睛前面，超出 $z' = n + f$。 这将导致错误的结果，这就是为什么首先对三角形进行裁剪以确保所有顶点都在眼睛前面的原因。
+
+Two vertices are in the view volume, but the third is behind the eye. The projection transformation maps this vertex to a nonsensical location behind the far plane, and if this is allowed to happen the triangle will be rasterized incorrectly. For this reason, rasterization has to be preceded by a clipping operation that removes parts of primitives that could extend behind the eye.
+两个顶点在视图体中，但第三个在眼睛后面。投影变换将这个顶点映射到远平面后面的一个无意义的位置，如果允许这种情况发生，三角形将被错误地栅格化。由于这个原因，光栅化之前必须进行裁剪操作，该操作删除可能延伸到眼睛后面的原语部分。
+
+Clipping is a common operation in graphics, needed whenever one geometric entity “cuts” another. For example, if you clip a triangle against the plane x = 0, the plane cuts the triangle into two parts if the signs of the x-coordinates of the vertices are not all the same. In most applications of clipping, the portion of the triangle on the “wrong” side of the plane is discarded. This operation for a single plane is shown in Figure 8.8.
+剪切是图形中的一种常见操作，每当一个几何实体“剪切”另一个几何实体时就需要剪切。 例如，如果您相对于平面 x = 0 裁剪三角形，并且顶点的 x 坐标的符号不相同，则平面会将三角形切割成两部分。 在大多数裁剪应用中，平面“错误”一侧的三角形部分会被丢弃。 单平面的操作如图 8.8 所示。
+![Figure 8.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.8.png)
+
+Figure 8.8. A polygon is clipped against a clipping plane. The portion “inside” the plane is retained.
+图 8.8. 多边形相对于剪裁平面进行剪裁。 保留平面“内部”的部分。
+
+In clipping to prepare for rasterization, the “wrong” side is the side outside the view volume. It is always safe to clip away all geometry outside the view volume—that is, clipping against all six faces of the volume—but many systems manage to get away with only clipping against the near plane. 
+在为光栅化做准备的剪裁中，“错误”的一侧是视图体积之外的一侧。 剪掉视图体积之外的所有几何体始终是安全的，即剪裁体积的所有六个面，但许多系统设法仅剪裁近平面。
+
+This section discusses the basic implementation of a clipping module. Those interested in implementing an industrial-speed clipper should see the book by Blinn mentioned in the notes at the end of this chapter. 
+本节讨论裁剪模块的基本实现。 那些对实现工业速度剪裁机感兴趣的人应该看看本章末尾的注释中提到的 Blinn 的书。
+
+The two most common approaches for implementing clipping are
+实现裁剪的两种最常见的方法是
+
+1. in world coordinates using the six planes that bound the truncated viewing pyramid, 
+   在世界坐标中，使用限制截断观察金字塔的六个平面，
+2. in the 4D transformed space before the homogeneous divide.
+   在齐次划分之前的4D变换空间中。
+
+Either possibility can be effectively implemented (J. Blinn, 1996) using the following approach for each triangle:
+对于每个三角形，使用以下方法都可以有效地实现任何一种可能性（J. Blinn，1996）：
+
+> for each of six planes do
+> 	if (triangle entirely outside of plane) then
+> 		break (triangle is not visible)
+> 	else if triangle spans plane then
+> 		clip triangle
+> 		if (quadrilateral is left) then
+> 			break into two triangles
+
+### 8.1.4 Clipping Before the Transform (Option 1)  变换前裁剪（选项 1）
+
+Option 1 has a straightforward implementation. The only question is, “What are the six plane equations?” Because these equations are the same for all triangles rendered in the single image, we do not need to compute them very efficiently. For this reason, we can just invert the transform shown in Figure 5.11 and apply it to the eight vertices of the transformed view volume:
+选项 1 的实现很简单。 唯一的问题是，“六个平面方程是什么？” 因为这些方程对于单个图像中渲染的所有三角形都是相同的，所以我们不需要非常有效地计算它们。 因此，我们可以反转图 5.11 所示的变换并将其应用到变换后的视图体积的八个顶点：
+$$
+(x, y, z) =(l, b, n) \\
+(r, b, n) \\
+(l, t, n) \\
+(r, t, n) \\
+(l, b, f) \\
+(r, b, f) \\
+(l, t, f) \\
+(r, t, f).
+$$
+The plane equations can be inferred from here. Alternatively, we can use vector geometry to get the planes directly from the viewing parameters.
+平面方程可以从这里推断出来。或者，我们可以使用矢量几何直接从查看参数中获取平面。
+
+### 8.1.5 Clipping in Homogeneous Coordinates (Option 2) 在齐次坐标中裁剪（选项 2）
+
+Surprisingly, the option usually implemented is that of clipping in homogeneous coordinates before the divide. Here the view volume is 4D, and it is bounded by 3D volumes (hyperplanes). These are
+令人惊讶的是，通常实现的选项是在划分之前在齐次坐标中进行裁剪。 这里的视图体积是 4D 的，并且它受到 3D 体积（超平面）的限制。 这些都是
+$$
+−x + lw = 0, \\
+x − rw = 0, \\
+−y + bw = 0, \\
+y − tw = 0, \\
+−z + nw = 0, \\
+z − fw = 0.
+$$
+These planes are quite simple, so the efficiency is better than for Option 1. They still can be improved by transforming the view volume $[l, r] × [b, t] × [f, n]$ to $[0, 1]^3$. It turns out that the clipping of the triangles is not much more complicated than in 3D.
+这些平面非常简单，所以效率比选项1要好。它们仍然可以通过将视图体积$[1,r] × [b, t] × [f, n]$转换为$[0,1]^3$来改进。事实证明，三角形的裁剪并不比在3D中复杂多少。
+
+### 8.1.6 Clipping against a Plane 对平面进行裁剪
+
+No matter which option we choose, we must clip against a plane. Recall from Section 2.5.5 that the implicit equation for a plane through point $\bold{q}$ with normal $\bold{n}$ is
+无论我们选择哪一个选项，我们都必须夹在一个平面上。回想2.5.5节，通过点$\bold{q}$的平面与法线$\bold{n}$的隐式方程为
+$f(\bold{p}) = \bold{n} · (\bold{p} - \bold{q}) = 0.  $
+
+This is often written
+经常这样写
+$f(\bold{p}) = \bold{n} · \bold{p} + D = 0. (8.2)  $
+
+Interestingly, this equation not only describes a 3D plane, but it also describes a line in 2D and the volume analog of a plane in 4D. All of these entities are usually called planes in their appropriate dimension.
+有趣的是，这个方程不仅描述了 3D 平面，还描述了 2D 中的直线和 4D 中平面的体积模拟。 所有这些实体通常在其适当的尺寸下被称为平面。
+
+If we have a line segment between points $\bold{a}$ and $\bold{b}$, we can “clip” it against a plane using the techniques for cutting the edges of 3D triangles in BSP tree programs described in Section 12.4.3. Here, the points a and b are tested to determine whether they are on opposite sides of the plane $f(\bold{p}) = 0$ by checking whether $f(\bold{a})$ and $f(\bold{b})$ have different signs. Typically $f(\bold{p}) < 0$ is defined to be “inside” the plane, and $f(\bold{p}) > 0$ is “outside” the plane. If the plane does split the line, then we can solve for the intersection point by substituting the equation for the parametric line,
+如果我们在点 $\bold{a}$ 和 $\bold{b}$ 之间有一条线段，我们可以使用第 2 节中描述的 BSP 树程序中切割 3D 三角形边缘的技术将其“剪辑”到平面上 12.4.3。 这里，通过检查 $f(\bold{a})$ 和 $f(\ 粗体{b})$有不同的符号。 通常，$f(\bold{p}) < 0$ 被定义为平面“内部”，$f(\bold{p}) > 0$ 被定义为平面“外部”。 如果平面确实分割了线，那么我们可以通过将方程代入参数线来求解交点，
+$\bold{p} = \bold{a} + t(\bold{b} - \bold{a}),  $
+
+into the $f(\bold{p}) = 0$ plane of Equation (8.2). This yields
+进入方程（8.2）的 $f(\bold{p}) = 0$ 平面。 这产生
+$\bold{n} · (\bold{a} + t(\bold{b} - \bold{a})) + D = 0.  $
+
+Solving for t gives
+求解t得到
+$$
+t = \frac{\bold{n}· \bold{a} + D }{\bold{n}· (\bold{a} − \bold{b})}
+$$
+We can then find the intersection point and “shorten” the line.
+然后我们可以找到交点并“缩短”这条线。
+
+To clip a triangle, we again can follow Section 12.4.3 to produce one or two triangles. 
+要裁剪一个三角形，我们同样可以按照第12.4.3节来生成一个或两个三角形。
+
+## 8.2 Operations Before and After Rasterization 光栅化前后的操作
+
+Before a primitive can be rasterized, the vertices that define it must be in screen coordinates, and the colors or other attributes that are supposed to be interpolated across the primitive must be known. Preparing this data is the job of the vertex-processing stage of the pipeline. In this stage, incoming vertices are transformed by the modeling, viewing, and projection transformations, mapping them from their original coordinates into screen space (where, recall, position is measured in terms of pixels). At the same time, other information, such as colors, surface normals, or texture coordinates, is transformed as needed; we’ll discuss these additional attributes in the examples below. 
+在对图元进行光栅化之前，定义它的顶点必须位于屏幕坐标中，并且必须知道应该在图元上插值的颜色或其他属性。 准备这些数据是管道的顶点处理阶段的工作。 在此阶段，传入的顶点通过建模、查看和投影变换进行变换，将它们从原始坐标映射到屏幕空间（其中，位置以像素为单位进行测量）。 同时，其他信息，例如颜色、表面法线或纹理坐标，也会根据需要进行转换； 我们将在下面的示例中讨论这些附加属性。
+
+After rasterization, further processing is done to compute a color and depth for each fragment. This processing can be as simple as just passing through an interpolated color and using the depth computed by the rasterizer; or it can involve complex shading operations. Finally, the blending phase combines the fragments generated by the (possibly several) primitives that overlapped each pixel to compute the final color. The most common blending approach is to choose the color of the fragment with the smallest depth (closest to the eye). 
+光栅化后，进行进一步处理以计算每个片段的颜色和深度。 这种处理可以非常简单，只需通过插值颜色并使用光栅化器计算的深度即可； 或者它可能涉及复杂的着色操作。 最后，混合阶段组合由重叠每个像素的（可能是多个）图元生成的片段来计算最终颜色。 最常见的混合方法是选择深度最小（最接近眼睛）的片段的颜色。
+
+The purposes of the different stages are best illustrated by examples.
+不同阶段的目的可以通过示例得到最好的说明。
+
+### 8.2.1 Simple 2D Drawing 简单的 2D 绘图
+
+The simplest possible pipeline does nothing in the vertex or fragment stages, and in the blending stage the color of each fragment simply overwrites the value of the previous one. The application supplies primitives directly in pixel coordinates, and the rasterizer does all the work. This basic arrangement is the essence of many simple, older APIs for drawing user interfaces, plots, graphs, and other 2D content. Solid color shapes can be drawn by specifying the same color for all vertices of each primitive, and our model pipeline also supports smoothly varying color using interpolation. 
+最简单的管道在顶点或片段阶段不执行任何操作，并且在混合阶段，每个片段的颜色只是覆盖前一个片段的值。 应用程序直接以像素坐标提供图元，光栅化器完成所有工作。 这种基本安排是许多简单、较旧的 API 的本质，用于绘制用户界面、绘图、图表和其他 2D 内容。 可以通过为每个图元的所有顶点指定相同的颜色来绘制纯色形状，并且我们的模型管道还支持使用插值平滑地改变颜色。
+
+### 8.2.2 A Minimal 3D Pipeline
+
+To draw objects in 3D, the only change needed to the 2D drawing pipeline is a single matrix transformation: the vertex-processing stage multiplies the incoming vertex positions by the product of the modeling, camera, projection, and viewport matrices, resulting in screen-space triangles that are then drawn in the same way as if they’d been specified directly in 2D. 
+要以 3D 方式绘制对象，2D 绘图管道所需的唯一更改是单个矩阵转换：顶点处理阶段将传入的顶点位置乘以建模、相机、投影和视口矩阵的乘积，从而得到屏幕矩阵 然后以与直接在 2D 中指定的方式相同的方式绘制空间三角形。
+
+One problem with the minimal 3D pipeline is that in order to get occlusion relationships correct—to get nearer objects in front of farther away objects— primitives must be drawn in back-to-front order. This is known as the painter’s algorithm for hidden surface removal, by analogy to painting the background of a painting first, then painting the foreground over it. The painter’s algorithm is a perfectly valid way to remove hidden surfaces, but it has several drawbacks. It cannot handle triangles that intersect one another, because there is no correct order in which to draw them. Similarly, several triangles, even if they don’t intersect, can still be arranged in an occlusion cycle, as shown in Figure 8.9, another case in which the back-to-front order does not exist. And most importantly, sorting the primitives by depth is slow, especially for large scenes, and disturbs the efficient flow of data that makes object-order rendering so fast. Figure 8.10 shows the result of this process when the objects are not sorted by depth.
+最小3D管道的一个问题是，为了获得正确的遮挡关系——使较近的物体在较远的物体前面——原语必须按前后顺序绘制。这被称为去除隐藏表面的画家算法，类似于先绘制一幅画的背景，然后在其上绘制前景。画家的算法是去除隐藏表面的一种非常有效的方法，但它有几个缺点。它不能处理彼此相交的三角形，因为没有正确的顺序来绘制它们。同样，即使几个三角形不相交，也可以排列成一个遮挡循环，如图8.9所示，这是另一种不存在前后顺序的情况。最重要的是，按深度排序原语很慢，特别是对于大型场景，并且会干扰有效的数据流，从而使对象顺序渲染如此快速。图8.10显示了对象不按深度排序时的处理结果。
+
+![Figure 8.9](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.9.png)
+Figure 8.9. Two occlusion cycles, which cannot be drawn in back-to-front order. 
+图 8.9. 两个遮挡循环，不能按从后到前的顺序绘制。
+
+ ![Figure 8.10](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.10.png)
+Figure 8.10. The result of drawing two spheres of identical size using the minimal pipeline. The sphere that appears smaller is farther away but is drawn last, so it incorrectly overwrites the nearer one.
+图 8.10. 使用最小管道绘制两个相同尺寸的球体的结果。 看起来较小的球体距离较远，但最后绘制，因此它错误地覆盖了较近的球体。
+
+### 8.2.3 Using a z-Buffer for Hidden Surfaces对隐藏表面使用 z 缓冲区
+
+In practice, the painter’s algorithm is rarely used; instead a simple and effective hidden surface removal algorithm known as the z-buffer algorithm is used. The method is very simple: at each pixel we keep track of the distance to the closest surface that has been drawn so far, and we throw away fragments that are farther away than that distance. The closest distance is stored by allocating an extra value for each pixel, in addition to the red, green, and blue color values, which is known as the depth, or z-value. The depth buffer, or z-buffer, is the name for the grid of depth values.
+在实际应用中，画家算法很少被使用； 相反，使用一种简单有效的隐藏表面去除算法，称为 z 缓冲区算法。 该方法非常简单：在每个像素处，我们跟踪迄今为止绘制的最近表面的距离，并丢弃比该距离更远的片段。 除了红色、绿色和蓝色值之外，还通过为每个像素分配一个额外值（称为深度或 z 值）来存储最近距离。 深度缓冲区或 z 缓冲区是深度值网格的名称。
+
+The z-buffer algorithm is implemented in the fragment blending phase, by comparing the depth of each fragment with the current value stored in the z-buffer. If the fragment’s depth is closer, both its color and its depth value overwrite the values currently in the color and depth buffers. If the fragment’s depth is farther away, it is discarded. To ensure that the first fragment will pass the depth test, the z buffer is initialized to the maximum depth (the depth of the far plane). Irrespective of the order in which surfaces are drawn, the same fragment will win the depth test, and the image will be the same.
+z 缓冲区算法是在片段混合阶段实现的，通过将每个片段的深度与 z 缓冲区中存储的当前值进行比较。 如果片段的深度更接近，则其颜色和深度值都会覆盖颜色和深度缓冲区中当前的值。 如果片段的深度较远，则将其丢弃。 为了确保第一个片段能够通过深度测试，z 缓冲区被初始化为最大深度（远平面的深度）。 无论表面绘制的顺序如何，相同的片段将赢得深度测试，并且图像将是相同的。
+
+> Of course there can be ties in the depth test, in which case the order may well matter.
+> 当然，深度测试中可能存在平局，在这种情况下，顺序可能很重要。
+
+The z-buffer algorithm requires each fragment to carry a depth. This is done simply by interpolating the z-coordinate as a vertex attribute, in the same way that color or other attributes are interpolated. 
+z-buffer算法要求每个片段携带一个深度。 只需将 z 坐标插值作为顶点属性即可完成此操作，与插值颜色或其他属性的方式相同。
+
+The z-buffer is such a simple and practical way to deal with hidden surfaces in object-order rendering that it is by far the dominant approach. It is much simpler than geometric methods that cut surfaces into pieces that can be sorted by depth, because it avoids solving any problems that don’t need to be solved. The depth order only needs to be determined at the locations of the pixels, and that is all that the z-buffer does. It is universally supported by hardware graphics pipelines and is also the most commonly used method for software pipelines. Figure 8.11 shows an example result.
+z 缓冲区是一种处理对象顺序渲染中隐藏表面的简单而实用的方法，因此它是迄今为止占主导地位的方法。 它比将曲面切割成可以按深度排序的块的几何方法要简单得多，因为它避免了解决任何不需要解决的问题。 只需要在像素位置确定深度顺序，这就是 z 缓冲区所做的全部工作。 它得到硬件图形管线的普遍支持，也是软件管线最常用的方法。 图 8.11 显示了示例结果。
+![Figure 8.11](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.11.png)
+Figure 8.11. The result of drawing the same two spheres using the z-buffer.
+图 8.11.  使用 z 缓冲区绘制相同的两个球体的结果。
+
+#### Precision Issues 精度问题
+
+In practice, the z-values stored in the buffer are nonnegative integers. This is preferable to true floats because the fast memory needed for the z-buffer is somewhat expensive and is worth keeping to a minimum. 
+实际上，存储在缓冲区中的 z 值是非负整数。 这比真正的浮点数更可取，因为 z 缓冲区所需的快速内存有点昂贵，并且值得保持在最低限度。
+
+The use of integers can cause some precision problems. If we use an integer range having $B$ values ${0, 1, . . . , B - 1}$, we can map 0 to the near clipping plane $z = n$ and $B -1$ to the far clipping plane $z = f$. Note, that for this discussion, we assume $z$, $n$, and $f$ are positive. This will result in the same results as the negative case, but the details of the argument are easier to follow. We send each z-value to  a “bucket” with depth $Δz = (f - n)/B$. We would not use the integer z-buffer if memory were not a premium, so it is useful to make $B$ as small as possible.  
+使用整数可能会导致一些精度问题。 如果我们使用具有 $B$ 值 ${0, 1, . . ., B - 1}$，我们可以将 0 映射到近裁剪平面 $z = n$，将 $B -1$ 映射到远裁剪平面 $z = f$。 请注意，对于本次讨论，我们假设 $z$、$n$ 和 $f$ 为正。 这将产生与反面情况相同的结果，但论证的细节更容易理解。 我们将每个 z 值发送到深度 $Δz = (f - n)/B$ 的“桶”。 如果内存不是溢价，我们不会使用整数 z 缓冲区，因此使 $B$ 尽可能小是有用的。
+
+If we allocate b bits to store the z-value, then $B = 2^b$. We need enough bits to make sure any triangle in front of another triangle will have its depth mapped to distinct depth bins. 
+如果我们分配 b 位来存储 z 值，则 $B = 2^b$。 我们需要足够的位来确保另一个三角形前面的任何三角形都将其深度映射到不同的深度箱。
+
+For example, if you are rendering a scene where triangles have a separation of at least one meter, then $Δz < 1$ should yield images without artifacts. There are two ways to make $Δz$ smaller: move $n$ and $f$ closer together or increase $b$. If $b$ is fixed, as it may be in APIs or on particular hardware platforms, adjusting $n$ and $f$ is the only option. 
+例如，如果您渲染的场景中三角形间隔至少一米，则 $Δz < 1$ 应生成没有伪影的图像。 有两种方法可以使 $Δz$ 变小：将 $n$ 和 $f$ 移近或增加 $b$。 如果 $b$ 是固定的，因为它可能在 API 或特定硬件平台上，则调整 $n$ 和 $f$ 是唯一的选择。
+
+The precision of z-buffers must be handled with great care when perspective images are created. The value $Δz$ above is used after the perspective divide. Recall from Section 7.3 that the result of the perspective divide is
+创建透视图像时必须非常小心地处理 z 缓冲区的精度。 上面的值 $Δz$ 在透视除法之后使用。 回想一下 7.3 节，透视除法的结果是
+$z = n + f - \frac{fn}{z_w}\\$
+
+The actual bin depth is related to $z_w$, the world depth, rather than $z$, the post-perspective divide depth. We can approximate the bin size by differentiating both sides:
+实际的 bin 深度与 $z_w$（世界深度）相关，而不是与 $z$（后透视划分深度）相关。 我们可以通过区分两侧来估算 bin 大小：
+$Δz ≈  \frac{fnΔz_w}{z^2_w}\\$
+
+Bin sizes vary in depth. The bin size in world space is
+垃圾箱的大小因深度而异。 世界空间中的 bin 大小为
+$Δzw ≈  \frac{z_w^2 Δz}{fn}\\$
+
+Note that the quantity $Δz$ is as previously discussed. The biggest bin will be for $z' = f$, where
+注意，数量$Δz$与前面讨论的一样。最大的箱子将是$z' = f$，其中
+$Δz^{max}_w ≈ \frac{fΔz}{n} $
+
+Note that choosing $n = 0$, a natural choice if we don’t want to lose objects right in front of the eye, will result in an infinitely large bin—a very bad condition. To make $Δz_{max}^w$ as small as possible, we want to minimize $f$ and maximize $n$. Thus, it is always important to choose $n$ and $f$ carefully.
+请注意，选择$n = 0$，如果我们不想失去眼前的物体，这是一个自然的选择，将导致一个无限大的箱子，这是一个非常糟糕的情况。为了使$Δz_{max}^w$尽可能小，我们希望最小化$f$和最大化$n$。因此，仔细选择$n$和$f$总是很重要的。
+<img src="E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.12.png" alt="Figure 8.12" style="zoom:80%;" />
+Figure 8.12. A z-buffer rasterizing two triangles in each of two possible orders. The first triangle is fully rasterized. The second triangle has every pixel computed, but for three of the pixels the depth-contest is lost, and those pixels are not drawn. The final image is the same regardless.
+图 8.12。 z 缓冲区以两种可能的顺序光栅化两个三角形。 第一个三角形已完全光栅化。 第二个三角形计算了每个像素，但对于其中三个像素，深度竞争丢失，并且不绘制这些像素。 无论如何，最终图像都是相同的。
+
+### 8.2.4 Per-vertex Shading 每顶点着色
+
+So far the application sending triangles into the pipeline is responsible for setting the color; the rasterizer just interpolates the colors and they are written directly into the output image. For some applications this is sufficient, but in many cases we want 3D objects to be drawn with shading, using the same illumination equations that we used for image-order rendering in Chapter 4. Recall that these equations require a light direction, an eye direction, and a surface normal to compute the color of a surface.
+到目前为止，将三角形发送到管道的应用程序负责设置颜色； 光栅化器只是插入颜色并将它们直接写入输出图像中。 对于某些应用程序来说，这已经足够了，但在许多情况下，我们希望使用与第 4 章中用于图像顺序渲染的照明方程相同的照明方程，使用着色来绘制 3D 对象。回想一下，这些方程需要光线方向、眼睛方向 ，以及用于计算表面颜色的表面法线。
+
+One way to handle shading computations is to perform them in the vertex stage. The application provides normal vectors at the vertices, and the positions and colors of the lights are provided separately (they don’t vary across the surface, so they don’t need to be specified for each vertex). For each vertex, the direction to the viewer and the direction to each light are computed based on the positions of the camera, the lights, and the vertex. The desired shading equation is evaluated to compute a color, which is then passed to the rasterizer as the vertex color. Per-vertex shading is sometimes called Gouraud shading.
+处理着色计算的一种方法是在顶点阶段执行它们。 该应用程序在顶点处提供法线向量，并且单独提供灯光的位置和颜色（它们在整个表面上不会变化，因此不需要为每个顶点指定它们）。 对于每个顶点，根据相机、灯光和顶点的位置计算到观察者的方向和到每个灯光的方向。 评估所需的着色方程以计算颜色，然后将其作为顶点颜色传递到光栅器。 每顶点着色有时称为 Gouraud 着色。
+
+One decision to be made is the coordinate system in which shading computations are done. World space or eye space are good choices. It is important to choose a coordinate system that is orthonormal when viewed in world space, because shading equations depend on angles between vectors, which are not preserved by operations like nonuniform scale that are often used in the modeling transformation, or perspective projection, often used in the projection to the canonical view volume. Shading in eye space has the advantage that we don’t need to keep track of the camera position, because the camera is always at the origin in eye space, in perspective projection, or the view direction is always +z in orthographic projection.
+需要做出的一项决定是进行着色计算的坐标系。 世界空间或眼睛空间是不错的选择。 选择在世界空间中查看时正交的坐标系非常重要，因为着色方程取决于向量之间的角度，而这些角度不能通过建模变换中经常使用的非均匀缩放或经常使用的透视投影等操作来保留。 在到规范视图体积的投影中。 眼睛空间中的阴影的优点是我们不需要跟踪相机位置，因为在透视投影中相机始终位于眼睛空间的原点，或者在正交投影中视图方向始终为 +z。
+
+Per-vertex shading has the disadvantage that it cannot produce any details in the shading that are smaller than the primitives used to draw the surface, because it only computes shading once for each vertex and never in between vertices. For instance, in a room with a floor that is drawn using two large triangles and illuminated by a light source in the middle of the room, shading will be evaluated only at the corners of the room, and the interpolated value will likely be much too dark in the center. Also, curved surfaces that are shaded with specular highlights must be drawn using primitives small enough that the highlights can be resolved.
+每顶点着色的缺点是它无法在着色中产生任何小于用于绘制表面的图元的细节，因为它只为每个顶点计算一次着色，而从不在顶点之间计算着色。 例如，在一个使用两个大三角形绘制地板并由房间中间的光源照明的房间中，将仅在房间的角落评估阴影，并且插值可能会太大 中心黑暗。 此外，必须使用足够小的图元来绘制用镜面高光着色的曲面，以便可以解析高光。
+
+Figure 8.13 shows our two spheres drawn with per-vertex shading.
+图 8.13 显示了我们用逐顶点着色绘制的两个球体。
+
+![Figure 8.13](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.13.png)
+Figure 8.13. Two spheres drawn using per-vertex (Gouraud) shading. Because the triangles are large, interpolation artifacts are visible.
+图8.13. 使用逐顶点(Gouraud)着色绘制的两个球体。因为三角形很大，所以可以看到插值伪影。
+
+### 8.2.5 Per-fragment Shading  每片段着色
+
+To avoid the interpolation artifacts associated with per-vertex shading, we can avoid interpolating colors by performing the shading computations after the interpolation, in the fragment stage. In per-fragment shading, the same shading equations are evaluated, but they are evaluated for each fragment using interpolated vectors, rather than for each vertex using the vectors from the application. 
+为了避免与每顶点着色相关的插值伪像，我们可以通过在片段阶段插值后执行着色计算来避免插值颜色。 在逐片段着色中，计算相同的着色方程，但使用插值向量对每个片段进行计算，而不是使用应用程序中的向量对每个顶点进行计算。
+
+> Per-fragment shading is sometimes called Phong shading, which is confusing because the same name is attached to the Phong illumination model.
+> 每片段着色有时称为 Phong 着色，这很容易混淆，因为 Phong 照明模型也有相同的名称。
+
+In per-fragment shading, the geometric information needed for shading is passed through the rasterizer as attributes, so the vertex stage must coordinate with the fragment stage to prepare the data appropriately. One approach is to interpolate the eye-space surface normal and the eye-space vertex position, which then can be used just as they would in per-vertex shading. 
+在逐片段着色中，着色所需的几何信息作为属性通过光栅化器传递，因此顶点阶段必须与片段阶段协调以适当地准备数据。 一种方法是对眼睛空间表面法线和眼睛空间顶点位置进行插值，然后可以像在逐顶点着色中一样使用它们。
+
+Figure 8.14 shows our two spheres drawn with per-fragment shading.
+图 8.14 显示了我们用每个片段着色绘制的两个球体。
+
+![Figure 8.14](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 8.14.png)
+Figure 8.14. Two spheres drawn using per-fragment shading. Because the triangles are large, interpolation artifacts are visible.
+图8.14. 使用每个片段着色绘制的两个球体。因为三角形很大，所以可以看到插值伪影。
+
+### 8.2.6 Texture Mapping  纹理映射
+
+Textures (discussed in Chapter 11) are images that are used to add extra detail to the shading of surfaces that would otherwise look too homogeneous and artificial. The idea is simple: each time shading is computed, we read one of the values used in the shading computation—the diffuse color, for instance—from a texture instead of using the attribute values that are attached to the geometry being rendered. This operation is known as a texture lookup: the shading code specifies a texture coordinate, a point in the domain of the texture, and the texture-mapping system finds the value at that point in the texture image and returns it. The texture value is then used in the shading computation.
+纹理（第 11 章中讨论）是用于为表面阴影添加额外细节的图像，否则这些图像看起来过于均匀和人造。 这个想法很简单：每次计算着色时，我们都会从纹理中读取着色计算中使用的值之一（例如漫反射颜色），而不是使用附加到正在渲染的几何体的属性值。 此操作称为纹理查找：着色代码指定纹理坐标、纹理域中的点，纹理映射系统查找纹理图像中该点的值并将其返回。 然后将纹理值用于着色计算。
+
+The most common way to define texture coordinates is simply to make the texture coordinate another vertex attribute. Each primitive then knows where it lives in the texture.
+定义纹理坐标最常见的方法就是将纹理坐标作为另一个顶点属性。 然后，每个基元都知道它位于纹理中的位置。
+
+### 8.2.7 Shading Frequency 着色频率
+
+The decision about where to place shading computations depends on how fast the color changes—the scale of the details being computed. Shading with large-scale features, such as diffuse shading on curved surfaces, can be evaluated fairly infrequently and then interpolated: it can be computed with a low shading frequency. Shading that produces small-scale features, such as sharp highlights or detailed textures, needs to be evaluated at a high shading frequency. For details that need to look sharp and crisp in the image, the shading frequency needs to be at least one shading sample per pixel. 
+关于在何处进行着色计算的决定取决于颜色变化的速度 - 正在计算的细节的规模。 具有大规模特征的着色（例如曲面上的漫反射着色）可以相当不频繁地进行评估，然后进行插值：可以使用低着色频率进行计算。 产生小尺度特征（例如锐利高光或详细纹理）的着色需要以高着色频率进行评估。 对于需要在图像中看起来清晰锐利的细节，着色频率需要至少为每个像素一个着色样本。
+
+So large-scale effects can safely be computed in the vertex stage, even when the vertices defining the primitives are many pixels apart. Effects that require a high shading frequency can also be computed at the vertex stage, as long as the vertices are close together in the image; alternatively, they can be computed at the fragment stage when primitives are larger than a pixel. 
+因此，即使定义图元的顶点相距许多像素，也可以在顶点阶段安全地计算大规模效果。 需要高着色频率的效果也可以在顶点阶段计算，只要图像中的顶点靠近即可； 或者，当基元大于像素时，可以在片段阶段计算它们。
+
+For example, a hardware pipeline as used in a computer game, generally using primitives that cover several pixels to ensure high efficiency, normally does most shading computations per fragment. On the other hand, the PhotoRealistic RenderMan system does all shading computations per vertex, after first subdividing, or dicing, all surfaces into small quadrilaterals called micropolygons that are about the size of pixels. Since the primitives are small, per-vertex shading in this system achieves a high shading frequency that is suitable for detailed shading.
+例如，计算机游戏中使用的硬件管道通常使用覆盖多个像素的图元来确保高效率，通常对每个片段进行大部分着色计算。 另一方面，PhotoRealistic RenderMan 系统在首先将所有表面细分或切割成大约像素大小的称为微多边形的小四边形之后，对每个顶点进行所有着色计算。 由于图元很小，因此该系统中的逐顶点着色实现了适合详细着色的高着色频率。
+
+## 8.3 Simple Antialiasing  简单的抗锯齿
+
+Just as with ray tracing, rasterization will produce jagged lines and triangle edgesif we make an all-or-nothing determination of whether each pixel is inside theprimitive or not. In fact, the set of fragments generated by the simple trianglerasterization algorithms described in this chapter, sometimes called standard oraliased rasterization, is exactly the same as the set of pixels that would be mappedto that triangle by a ray tracer that sends one ray through the center of each pixel.Also as in ray tracing, the solution is to allow pixels to be partly covered by aprimitive (Crow, 1978). In practice, this form of blurring helps visual quality,especially in animations. This is shown as the top line of Figure 8.15.
+就像光线追踪一样，如果我们对每个像素是否位于基元内部进行全有或全无的确定，则光栅化将产生锯齿状线条和三角形边缘。 事实上，本章中描述的简单三角形光栅化算法（有时称为标准口腔锯齿光栅化）生成的一组片段与通过中心发送一条光线的光线追踪器映射到该三角形的像素组完全相同。 与光线追踪一样，解决方案是允许像素部分被基元覆盖（Crow，1978）。 在实践中，这种形式的模糊有助于提高视觉质量，尤其是在动画中。 这如图 8.15 的顶行所示。
+![Figure 8.15](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 8.15.png)
+Figure 8.15. An antialiased and a jaggy line viewed at close range so individual pixels are visible. 
+图 8.15. 在近距离观察时会出现抗锯齿和锯齿线，因此各个像素都可见。
+
+There are a number of different approaches to antialiasing in rasterizationapplications. Just as with a ray tracer, we can produce an antialiased image bysetting each pixel value to the average color of the image over the square areabelonging to the pixel, an approach known as box filtering. This means we have to think of all drawable entities as having well-defined areas. For example, the linein Figure 8.15 can be thought of as approximating a one-pixel-wide rectangle.
+光栅化应用程序中有多种不同的抗锯齿方法。 就像光线追踪器一样，我们可以通过将每个像素值设置为属于该像素的方形区域上图像的平均颜色来生成抗锯齿图像，这种方法称为盒过滤。 这意味着我们必须将所有可绘制实体视为具有明确定义的区域。 例如，图 8.15 中的线条可以被认为近似于一个像素宽的矩形。
+
+> There are better filters thanthe box, but a box filter willsuffice for all but the mostdemanding applications.
+> 有比箱式过滤器更好的过滤器，但箱式过滤器足以满足除最苛刻应用之外的所有应用。
+
+The easiest way to implement box-filter antialiasing is by supersampling: create images at very high resolutions and then downsample. For example, if ourgoal is a 256 × 256 pixel image of a line with width 1.2 pixels, we could rasterizea rectangle version of the line with width 4.8 pixels on a 1024 × 1024 screen,and then average 4 × 4 groups of pixels to get the colors for each of the 256 ×256 pixels in the “shrunken” image. This is an approximation of the actual boxfiltered image, but works well when objects are not extremely small relative to thedistance between pixels.
+实现盒式滤波器抗锯齿的最简单方法是超级采样：以非常高的分辨率创建图像，然后进行下采样。 例如，如果我们的目标是宽度为 1.2 像素的线条的 256 × 256 像素图像，我们可以在 1024 × 1024 屏幕上光栅化宽度为 4.8 像素的线条的矩形版本，然后平均 4 × 4 组像素以获得 “缩小”图像中每个 256 × 256 像素的颜色。 这是实际盒式过滤图像的近似值，但当对象相对于像素之间的距离不是极小时，效果很好。
+
+Supersampling is quite expensive, however. Because the very sharp edgesthat cause aliasing are normally caused by the edges of primitives, rather thansudden variations in shading within a primitive, a widely used optimization isto sample visibility at a higher rate than shading. If information about coverageand depth is stored for several points within each pixel, very good antialiasingcan be achieved even if only one color is computed. In systems like RenderManthat use per-vertex shading, this is achieved by rasterizing at high resolution: it isinexpensive to do so because shading is simply interpolated to produce colors forthe many fragments, or visibility samples. In systems with per-fragment shading,such as hardware pipelines, multisample antialiasing is achieved by storing foreach fragment a single color plus a coverage mask and a set of depth values.
+然而，超级采样非常昂贵。 由于导致锯齿的非常尖锐的边缘通常是由基元的边缘引起的，而不是由基元内着色的突然变化引起的，因此广泛使用的优化是以比着色更高的速率对可见性进行采样。 如果为每个像素内的多个点存储有关覆盖范围和深度的信息，即使只计算一种颜色，也可以实现非常好的抗锯齿效果。 在像 RenderMan 这样使用逐顶点着色的系统中，这是通过以高分辨率进行光栅化来实现的：这样做的成本并不高，因为着色只需插值即可为许多片段或可见性样本生成颜色。 在具有逐片段着色的系统中，例如硬件管道，多重采样抗锯齿是通过为每个片段存储单一颜色加上覆盖遮罩和一组深度值来实现的。
+
+## 8.4 Culling Primitives for Efficiency  剔除基元以提高效率
+
+The strength of object-order rendering, that it requires a single pass over all thegeometry in the scene, is also a weakness for complex scenes. For instance, in amodel of an entire city, only a few buildings are likely to be visible at any giventime. A correct image can be obtained by drawing all the primitives in the scene,but a great deal of effort will be wasted processing geometry that is behind thevisible buildings, or behind the viewer, and therefore doesn’t contribute to thefinal image.
+对象顺序渲染的优点是它需要一次遍历场景中的所有几何图形，这也是复杂场景的弱点。 例如，在整个城市的模型中，在任何给定时间可能只有少数建筑物可见。 通过绘制场景中的所有图元可以获得正确的图像，但是大量的精力将浪费在处理可见建筑物后面或观看者后面的几何体上，因此对最终图像没有贡献。
+
+Identifying and throwing away invisible geometry to save the time that wouldbe spent processing it is known as culling. Three commonly implemented cullingstrategies (often used in tandem) are
+识别并丢弃不可见的几何体以节省处理它所花费的时间称为剔除。 三种常用的剔除策略（通常串联使用）是
+
+- view volume culling—the removal of geometry that is outside the viewvolume;
+  视图体积剔除——移除视体积之外的几何体；
+- occlusion culling—the removal of geometry that may be within the viewvolume but is obscured, or occluded, by other geometry closer to thecamera;
+  遮挡剔除——移除可能位于视体积内但被更靠近相机的其他几何体遮挡或遮挡的几何体；
+- backface culling—the removal of primitives facing away from the camera.
+  背面剔除——去除远离相机的图元。
+
+We will briefly discuss view volume culling and backface culling, but cullingin high performance systems is a complex topic; see (Akenine-M¨ oller et al., 2008)for a complete discussion and for information about occlusion culling.
+我们将简要讨论视图体积剔除和背面剔除，但高性能系统中的剔除是一个复杂的话题； 有关遮挡剔除的完整讨论和信息，请参阅（Akenine-Měller 等人，2008）。
+
+### 8.4.1 View Volume Culling 视图卷剔除
+
+When an entire primitive lies outside the view volume, it can be culled, since itwill produce no fragments when rasterized. If we can cull many primitives with aquick test, we may be able to speed up drawing significantly. On the other hand,testing primitives individually to decide exactly which ones need to be drawn maycost more than just letting the rasterizer eliminate them.
+当整个图元位于视图体积之外时，它可以被剔除，因为它在光栅化时不会产生片段。 如果我们可以通过快速测试剔除许多图元，我们也许能够显着加快绘制速度。 另一方面，单独测试图元以准确决定需要绘制哪些图元可能比仅仅让光栅化器消除它们花费更多。
+
+View volume culling, also known as view frustum culling, is especially helpful when many triangles are grouped into an object with an associated boundingvolume. If the bounding volume lies outside the view volume, then so do all thetriangles that make up the object. For example, if we have 1000 triangles boundedby a single sphere with center $\bold{c}$ and radius $r$, we can check whether the spherelies outside the clipping plane,
+当许多三角形被分组为具有关联边界体积的对象时，视图体积剔除（也称为视图视锥体剔除）特别有用。 如果边界体积位于视图体积之外，则构成该对象的所有三角形也是如此。 例如，如果我们有 1000 个由中心 $\bold{c}$ 和半径 $r$ 的单个球体包围的三角形，我们可以检查球体是否位于剪切平面之外，
+$(\bold{p} - \bold{a}) · \bold{n} = 0,  $
+
+where $\bold{a}$ is a point on the plane, and $\bold{p}$ is a variable. This is equivalent to checkingwhether the signed distance from the center of the sphere $\bold{c}$ to the plane is greaterthan $+r$. This amounts to the check that
+其中$\bold{a}$是平面上的点，$\bold{p}$是变量。 这相当于检查球心 $\bold{c}$ 到平面的有符号距离是否大于 $+r$。 这相当于支票
+$\frac{(\bold{c} - \bold{a}) \cdot \bold{n}}{|\|n\|} > r \\$
+
+Note that the sphere may overlap the plane even in a case where all the trianglesdo lie outside the plane. Thus, this is a conservative test. How conservative thetest is depends on how well the sphere bounds the object.
+请注意，即使所有三角形都位于平面之外，球体也可能与平面重叠。 因此，这是一个保守的测试。 测试的保守程度取决于球体对物体的限制程度。
+
+The same idea can be applied hierarchically if the scene is organized in oneof the spatial data structures described in Chapter 12.
+如果场景以第 12 章中描述的空间数据结构之一进行组织，则可以分层应用相同的想法。
+
+### 8.4.2 Backface Culling 背面剔除
+
+When polygonal models are closed, i.e., they bound a closed space with no holes,then they are often assumed to have outward facing normal vectors as discussedin Chapter 10. For such models, the polygons that face away from the eye arecertain to be overdrawn by polygons that face the eye. Thus, those polygons canbe culled before the pipeline even starts. The test for this condition is the sameone used for silhouette drawing given in Section 10.3.1.
+当多边形模型是封闭的时，即它们限定了一个没有孔的封闭空间，那么它们通常被假设为具有朝外的法向量，如第 10 章所述。对于此类模型，背离眼睛的多边形肯定会被透支 面向眼睛的多边形。 因此，可以在管道启动之前剔除这些多边形。 此条件的测试与第 10.3.1 节中给出的轮廓绘制所用的测试相同。
+
+## Frequently Asked Questions 经常问的问题
+
+### I’ve often seen clipping discussed at length, and it is a much more involved process than that described in this chapter. What is going on here? 我经常看到对裁剪进行详细讨论，这是一个比本章中描述的过程复杂得多的过程。 这里发生了什么？
+
+The clipping described in this chapter works, but lacks optimizations that anindustrial-strength clipper would have. These optimizations are discussed in detail in Blinn’s definitive work listed in the chapter notes.
+本章中描述的剪裁可以工作，但缺乏工业级剪裁器所具有的优化。 这些优化在章节注释中列出的 Blinn 权威著作中进行了详细讨论。
+
+### How are polygons that are not triangles rasterized? 非三角形的多边形是如何光栅化的？
+
+These can either be done directly scan-line by scan-line, or they can be brokendown into triangles. The latter appears to be the more popular technique.
+这些可以直接逐行扫描完成，也可以分解为三角形。 后者似乎是更流行的技术。
+
+### Is it always better to antialias? 抗锯齿总是更好吗？
+
+No. Some images look crisper without antialiasing. Many programs use unantialiased “screen fonts” because they are easier to read. 
+不会。有些图像在没有抗锯齿的情况下看起来更清晰。 许多程序使用未抗锯齿的“屏幕字体”，因为它们更易于阅读。
+
+### The documentation for my API talks about “scene graphs” and “matrixstacks.” Are these part of the graphics pipeline?我的 API 文档讨论了“场景图”和“矩阵堆栈”。 这些是图形管道的一部分吗？
+
+The graphics pipeline is certainly designed with these in mind, and whether wedefine them as part of the pipeline is a matter of taste. This book delays theirdiscussion until Chapter 12.
+图形管道在设计时肯定考虑到了这些，我们是否将它们定义为管道的一部分是一个品味问题。 本书将他们的讨论推迟到第 12 章。
+
+### Is a uniform distance z-buffer better than the standard one that includesperspective matrix nonlinearities?均匀距离 z 缓冲区是否比包含透视矩阵非线性的标准缓冲区更好？
+
+It depends. One “feature” of the nonlinearities is that the z-buffer has more resolution near the eye and less in the distance. If a level-of-detail system is used,then geometry in the distance is coarser and the “unfairness” of the z-buffer canbe a good thing.
+这取决于。 非线性的一个“特征”是 z 缓冲区在眼睛附近的分辨率较高，而在远处的分辨率较低。 如果使用细节层次系统，那么远处的几何图形会更粗糙，并且 z 缓冲区的“不公平”可能是一件好事。
+
+### Is a software z-buffer ever useful?软件 z 缓冲区有用吗？
+
+Yes. Most of the movies that use 3D computer graphics have used a variant of thesoftware z-buffer developed by Pixar (Cook, Carpenter, & Catmull, 1987).
+是的。 大多数使用 3D 计算机图形的电影都使用了 Pixar 开发的软件 z 缓冲区的变体（Cook、Carpenter 和 Catmull，1987）。
+
+## Notes 注释
+
+A wonderful book about designing a graphics pipeline is Jim Blinn’s Corner:A Trip Down the Graphics Pipeline (J. Blinn, 1996). Many nice details of thepipeline and culling are in 3D Game Engine Design (Eberly, 2000) and Real-TimeRendering (Akenine-M¨ oller et al., 2008).
+Jim Blinn 的《Corner:A Trip Down the Graphics Pipeline》（J. Blinn，1996 年）是一本关于设计图形管道的精彩书籍。 3D 游戏引擎设计（Eberly，2000）和实时渲染（Akenine-Měller 等人，2008）中有许多关于管道和剔除的精彩细节。
+
+## Exercises 练习
+
+1. Suppose that in the perspective transform we have $n = 1$ and $f = 2$. Underwhat circumstances will we have a “reversal” where a vertex before andafter the perspective transform flips from in front of to behind the eye orvice versa?
+   假设在透视变换中我们有 $n = 1$ 和 $f = 2$。 在什么情况下我们会出现“反转”，即透视变换前后的顶点从眼睛前面翻转到眼睛后面，反之亦然？
+2. Is there any reason not to clip in $x$ and $y$ after the perspective divide (seeFigure 11.2, stage 3)?
+   在透视分割之后，是否有任何理由不剪辑 $x$ 和 $y$（参见图 11.2，阶段 3）？
+3. Derive the incremental form of the midpoint line-drawing algorithm withcolors at endpoints for $0 < m ≤ 1$.
+   推导出端点颜色为 $0 < m ≤ 1$ 的中点画线算法的增量形式。
+4. Modify the triangle-drawing algorithm so that it will draw exactly one pixelfor points on a triangle edge which goes through $(x, y) = (-1, -1)$.
+   修改三角形绘制算法，使其为经过 $(x, y) = (-1, -1)$ 的三角形边缘上的点精确绘制一个像素。
+5. Suppose you are designing an integer z-buffer for flight simulation whereall of the objects are at least one meter thick, are never closer to the viewerthan 4 meters, and may be as far away as 100 km. How many bits areneeded in the z-buffer to ensure there are no visibility errors? Suppose thatvisibility errors only matter near the viewer, i.e., for distances less than 100meters. How many bits are needed in that case?
+   假设您正在设计一个用于飞行模拟的整数 z 缓冲区，其中所有对象的厚度至少为 1 米，距离观察者的距离绝不会超过 4 米，并且可能远至 100 公里。 z 缓冲区中需要多少位才能确保不存在可见性错误？ 假设可见度误差仅在观察者附近（即距离小于 100 米）产生影响。 在这种情况下需要多少位？
+
+
+
+# 9 Signal Processing 信号处理
+
+In graphics, we often deal with functions of a continuous variable: an image is the first example you have seen, but you will encounter many more as you continue your exploration of graphics. By their nature, continuous functions can’t be directly represented in a computer; we have to somehow represent them using a finite number of bits. One of the most useful approaches to representing continuous functions is to use samples of the function: just store the values of the function at many different points and reconstruct the values in between when and if they are needed. 
+在图形中，我们经常处理连续变量的函数：图像是您看到的第一个示例，但是当您继续探索图形时，您会遇到更多示例。 就其本质而言，连续函数不能直接在计算机中表示； 我们必须以某种方式使用有限数量的位来表示它们。 表示连续函数的最有用的方法之一是使用函数的样本：只需将函数的值存储在许多不同的点，并在需要时和需要时重建值。
+
+You are by now familiar with the idea of representing an image using a two-dimensional grid of pixels—so you have already seen a sampled representation! Think of an image captured by a digital camera: the actual image of the scene that was formed by the camera’s lens is a continuous function of the position on the image plane, and the camera converted that function into a two-dimensional grid of samples. Mathematically, the camera converted a function of type $\R^2 → \bold{C}$ (where $\bold{C}$ is the set of colors) to a two-dimensional array of color samples, or a function of type $\Z^2 → \bold{C}$. 
+您现在已经熟悉了使用二维像素网格表示图像的想法，因此您已经看到了采样表示！ 想象一下数码相机捕获的图像：由相机镜头形成的场景的实际图像是图像平面上位置的连续函数，并且相机将该函数转换为样本的二维网格。 从数学上讲，相机将 $\R^2 → \bold{C}$ 类型的函数（其中 $\bold{C}$ 是颜色集）转换为二维颜色样本数组，或者函数 输入 $\Z^2 → \bold{C}$。
+
+Another example of a sampled representation is a 2D digitizing tablet, such as the screen of a tablet computer or a separate pen tablet used by an artist. In this case, the original function is the motion of the stylus, which is a time-varying 2D position, or a function of type $\R → \R^2$. The digitizer measures the position of the stylus at many points in time, resulting in a sequence of 2D coordinates, or a function of type $\Z → \R^2$. A motion capture system does exactly the same thing for a special marker attached to an actor’s body: it takes the 3D position of the marker over time ($\R → \R^3$) and makes it into a series of instantaneous position measurements ($\Z → \R^3$). 
+采样表示的另一个示例是 2D 数字化平板电脑，例如平板电脑的屏幕或艺术家使用的单独的手写板。 在这种情况下，原始函数是触笔的运动，即随时间变化的 2D 位置，或者 $\R → \R^2$ 类型的函数。 数字化仪在多个时间点测量触笔的位置，从而产生一系列 2D 坐标，或 $\Z → \R^2$ 类型的函数。 动作捕捉系统对于附着在演员身体上的特殊标记执行完全相同的操作：它随着时间的推移获取标记的 3D 位置 ($\R → \R^3$) 并将其转换为一系列瞬时位置测量值 ($\Z → \R^3$)。
+
+Going up in dimension, a medical CT scanner, used to non-invasively examine the interior of a person’s body, measures density as a function of position inside the body. The output of the scanner is a 3D grid of density values: it converts the density of the body $(\R^3 → \R)$ to a 3D array of real numbers $(\Z^3 → \R)$. 
+在维度上，医用 CT 扫描仪用于非侵入性检查人体内部，测量密度作为体内位置的函数。 扫描仪的输出是密度值的 3D 网格：它将身体的密度 $(\R^3 → \R)$ 转换为实数 $(\Z^3 → \R)$ 的 3D 数组。
+
+These examples seem different, but in fact they can all be handled using exactly the same mathematics. In all cases a function is being sampled at the points of a lattice in one or more dimensions, and in all cases we need to be able to reconstruct that original continuous function from the array of samples. 
+这些例子看起来不同，但实际上它们都可以使用完全相同的数学来处理。 在所有情况下，函数都会在一维或多维的点阵点处进行采样，并且在所有情况下，我们都需要能够从样本数组中重建原始连续函数。
+
+From the example of a 2D image, it may seem that the pixels are enough, and we never need to think about continuous functions again once the camera has discretized the image. But what if we want to make the image larger or smaller on the screen, particularly by non-integer scale factors? It turns out that the simplest algorithms to do this perform badly, introducing obvious visual artifacts known as aliasing. Explaining why aliasing happens and understanding how to prevent it require the mathematics of sampling theory. The resulting algorithms are rather simple, but the reasoning behind them, and the details of making them perform well, can be subtle. 
+从2D图像的例子来看，似乎像素已经足够了，一旦相机将图像离散化，我们就不再需要考虑连续函数了。 但是，如果我们想要在屏幕上放大或缩小图像，特别是通过非整数比例因子，该怎么办？ 事实证明，最简单的算法执行此操作的效果很差，引入了明显的视觉伪像，称为混叠。 解释混叠发生的原因以及了解如何防止混叠需要采样理论的数学知识。 由此产生的算法相当简单，但其背后的推理以及使它们表现良好的细节可能很微妙。
+
+Representing continuous functions in a computer is, of course, not unique to graphics; nor is the idea of sampling and reconstruction. Sampled representations are used in applications from digital audio to computational physics, and graphics is just one (and by no means the first) user of the related algorithms and mathematics. The fundamental facts about how to do sampling and reconstruction have been known in the field of communications since the 1920s and were stated in exactly the form we use them by the 1940s (Shannon & Weaver, 1964). 
+当然，在计算机中表示连续函数并不是图形所独有的。 采样和重建的想法也不是。 采样表示用于从数字音频到计算物理的应用中，而图形只是相关算法和数学的一个（并且绝不是第一个）用户。 自 20 年代以来，有关如何进行采样和重建的基本事实在通信领域已为人所知，并且在 1940 年代以我们使用的形式准确地表述了（Shannon & Weaver，1964）。
+
+This chapter starts by summarizing sampling and reconstruction using the concrete one-dimensional example of digital audio. Then, we go on to present the basic mathematics and algorithms that underlie sampling and reconstruction in one and two dimensions. Finally, we go into the details of the frequency-domain viewpoint, which provides many insights into the behavior of these algorithms.
+本章首先使用数字音频的具体一维示例总结采样和重建。 然后，我们继续介绍一维和二维采样和重建的基础数学和算法。 最后，我们详细介绍频域观点，它为这些算法的行为提供了许多见解。
+
+## 9.1 Digital Audio: Sampling in 1D 数字音频：一维采样
+
+Although sampled representations had already been in use for years in telecommunications, the introduction of the compact disc in 1982, following the increased use of digital recording for audio in the previous decade, was the first highly visible consumer application of sampling. 
+尽管采样表示法已在电信领域使用多年，但随着过去十年音频数字录音的使用不断增加，1982 年推出的光盘成为第一个高度可见的采样消费者应用。
+
+In audio recording, a microphone converts sound, which exists as pressure waves in the air, into a time-varying voltage that amounts to a measurement of the changing air pressure at the point where the microphone is located. This electrical signal needs to be stored somehow so that it may be played back at a later time and sent to a loudspeaker that converts the voltage back into pressure waves by moving a diaphragm in synchronization with the voltage. 
+在音频录制中，麦克风将空气中以压力波形式存在的声音转换为随时间变化的电压，该电压相当于麦克风所在位置变化的气压的测量值。 该电信号需要以某种方式存储，以便稍后回放并发送到扬声器，扬声器通过与电压同步移动隔膜将电压转换回压力波。
+
+The digital approach to recording the audio signal (Figure 9.1) uses sampling: an analog-to-digital converter (A/D converter, or ADC) measures the voltage many thousand times per second, generating a stream of integers that can easily be stored on any number of media, say a disk on a computer in the recording studio, or transmitted to another location, say the memory in a portable audio player. At playback time, the data is read out at the appropriate rate and sent to a digital-to-analog converter (D/A converter, or DAC). The DAC produces a voltage according to the numbers it receives, and, provided we take enough samples to fairly represent the variation in voltage, the resulting electrical signal is, for all practical purposes, identical to the input. 
+记录音频信号的数字方法（图 9.1）使用采样：模数转换器（A/D 转换器或 ADC）每秒测量电压数千次，生成易于存储的整数流 在任意数量的媒体上，例如录音室计算机上的磁盘，或传输到另一个位置，例如便携式音频播放器中的内存。 在播放时，数据以适当的速率读出并发送到数模转换器（D/A 转换器或 DAC）。 DAC 根据其接收到的数字产生电压，并且，如果我们采取足够的样本来公平地表示电压的变化，则出于所有实际目的，所得电信号与输入相同。
+![Figure 9.1](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.1.png)
+Figure 9.1. Sampling and reconstruction in digital audio.  
+图 9.1. 数字音频中的采样和重建。
+
+It turns out that the number of samples per second required to end up with a good reproduction depends on how high-pitched the sounds are that we are trying to record. A sample rate that works fine for reproducing a string bass or a kick drum produces bizarre-sounding results if we try to record a piccolo or a cymbal; but those sounds are reproduced just fine with a higher sample rate. To avoid these undersampling artifacts the digital audio recorder filters the input to the ADC to remove high frequencies that can cause problems. 
+事实证明，最终获得良好再现效果所需的每秒样本数取决于我们尝试录制的声音的高音调。 如果我们尝试录制短笛或铙钹，那么适合再现低音提琴或底鼓的采样率会产生听起来很奇怪的结果； 但这些声音可以通过更高的采样率很好地再现。 为了避免这些欠采样伪影，数字录音机会对 ADC 的输入进行过滤，以消除可能导致问题的高频。
+
+Another kind of problem arises on the output side. The DAC produces a voltage that changes whenever a new sample comes in, but stays constant until the next sample, producing a stair-step shaped graph. These stair-steps act like noise, adding a high-frequency, signal-dependent buzzing sound. To remove this reconstruction artifact, the digital audio player filters the output from the DAC to smooth out the waveform.
+另一种问题出现在输出侧。 DAC 产生的电压在新样本进入时会发生变化，但在下一个样本到来之前保持恒定，从而产生阶梯形图形。 这些楼梯就像噪音一样，增加了高频、与信号相关的嗡嗡声。 为了消除这种重建伪影，数字音频播放器会对 DAC 的输出进行过滤以平滑波形。
+
+### 9.1.1 Sampling Artifacts and Aliasing 采样伪像和混叠
+
+The digital audio recording chain can serve as a concrete model for the sampling and reconstruction processes that happen in graphics. The same kind of undersampling and reconstruction artifacts also happen with images or other sampled signals in graphics, and the solution is the same: filtering before sampling and filtering again during reconstruction. 
+数字音频记录链可以作为图形中发生的采样和重建过程的具体模型。 同样的欠采样和重建伪影也会发生在图像或图形中的其他采样信号上，解决方案是相同的：在采样之前进行滤波，并在重建期间再次进行滤波。
+
+A concrete example of the kind of artifacts that can arise from too-low sample frequencies is shown in Figure 9.2. Here we are sampling a simple sine wave using two different sample frequencies: 10.8 samples per cycle on the top and 1.2 samples per cycle on the bottom. The higher rate produces a set of samples that obviously capture the signal well, but the samples resulting from the lower sample rate are indistinguishable from samples of a low-frequency sine wave—in fact, faced with this set of samples the low-frequency sinusoid seems the more likely interpretation.
+图 9.2 显示了因采样频率过低而产生的伪像的具体示例。 在这里，我们使用两种不同的采样频率对简单的正弦波进行采样：顶部每个周期 10.8 个样本，底部每个周期 1.2 个样本。 较高的速率产生的一组样本显然可以很好地捕获信号，但较低采样率产生的样本与低频正弦波的样本无法区分 - 事实上，面对这组样本，低频正弦波 似乎更有可能的解释。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.2.png" alt="Figure 9.2" style="zoom:67%;" />
+Figure 9.2. A sine wave (blue curve) sampled at two different rates. Top: at a high sample rate, the resulting samples (black dots) represent the signal well. Bottom: a lower sample rate produces an ambiguous result: the samples are exactly the same as would result from sampling a wave of much lower frequency (dashed curve).
+图 9.2. 以两种不同速率采样的正弦波（蓝色曲线）。 上图：在高采样率下，生成的样本（黑点）很好地代表了信号。 底部：较低的采样率会产生不明确的结果：样本与对频率低得多的波进行采样所得到的结果完全相同（虚线）。
+
+Once the sampling has been done, it is impossible to know which of the two signals—the fast or the slow sine wave—was the original, and therefore there is no single method that can properly reconstruct the signal in both cases. Because the high-frequency signal is “pretending to be” a low-frequency signal, this phenomenon is known as aliasing.
+一旦完成采样，就不可能知道两个信号（快正弦波或慢速正弦波）中哪一个是原始信号，因此没有一种方法可以在这两种情况下正确重建信号。 由于高频信号“假装”为低频信号，因此这种现象称为混叠。
+
+Aliasing shows up whenever flaws in sampling and reconstruction lead to artifacts at surprising frequencies. In audio, aliasing takes the form of odd-sounding extra tones—a bell ringing at 10KHz, after being sampled at 8KHz, turns into a 6KHz tone. In images, aliasing often takes the form of moire patterns ´ that result from the interaction of the sample grid with regular features in an image, for instance the window blinds in Figure 9.34.
+每当采样和重建中的缺陷导致令人惊讶的频率的伪影时，就会出现混叠。 在音频中，混叠表现为听起来很奇怪的额外音调——以 10KHz 响起的铃声，在以 8KHz 采样后变成 6KHz 音调。 在图像中，混叠通常采用莫尔图案的形式，这是由样本网格与图像中的常规特征相互作用产生的，例如图 9.34 中的百叶窗。
+
+Another example of aliasing in a synthetic image is the familiar stair-stepping on straight lines that are rendered with only black and white pixels (Figure 9.34). This is an example of small-scale features (the sharp edges of the lines) creating artifacts at a different scale (for shallow-slope lines the stair steps are very long). 
+合成图像中锯齿的另一个例子是常见的仅用黑白像素渲染的直线上的阶梯（图 9.34）。 这是小尺度特征（线条的尖锐边缘）在不同尺度上创建伪影的示例（对于浅坡度线条，楼梯台阶非常长）。
+
+The basic issues of sampling and reconstruction can be understood simply based on features being too small or too large, but some more quantitative questions are harder to answer: 
+采样和重建的基本问题可以简单地根据特征太小或太大来理解，但一些更定量的问题很难回答：
+
+- What sample rate is high enough to ensure good results? 
+  什么样的采样率足够高才能确保良好的结果？
+- What kinds of filters are appropriate for sampling and reconstruction? 
+  什么样的滤波器适合采样和重建？
+- What degree of smoothing is required to avoid aliasing?
+  需要什么程度的平滑才能避免混叠？
+
+Solid answers to these questions will have to wait until we have developed the theory fully in Section 9.5
+这些问题的可靠答案必须等到我们在第 9.5 节中充分发展理论之后
+
+## 9.2 Convolution 卷积
+
+Before we discuss algorithms for sampling and reconstruction, we’ll first examine the mathematical concept on which they are based—convolution. Convolution is a simple mathematical concept that underlies the algorithms that are used for sampling, filtering, and reconstruction. It also is the basis of how we will analyze these algorithms later in the chapter.
+在讨论采样和重建算法之前，我们将首先研究它们所基于的数学概念——卷积。 卷积是一个简单的数学概念，是用于采样、滤波和重建的算法的基础。 这也是我们在本章后面分析这些算法的基础。
+
+Convolution is an operation on functions: it takes two functions and combines them to produce a new function. In this book, the convolution operator is denoted by a star: the result of applying convolution to the functions $f$ and $g$ is $f *g$. We say that $f$ is convolved with $g$, and $f*g$ is the convolution of $f$ and $g$. 
+卷积是函数的运算：它采用两个函数并将它们组合起来产生一个新函数。 在本书中，卷积算子用星号表示：将卷积应用于函数$f$和$g$的结果是$f *g$。 我们说$f$与$g$进行卷积，$f*g$是$f$和$g$的卷积。
+
+Convolution can be applied either to continuous functions (functions $f(x)$ that are defined for any real argument $x$) or to discrete sequences (functions $a[i]$ that are defined only for integer arguments $i$). It can also be applied to functions defined on one-dimensional, two-dimensional, or higher-dimensional domains (that is, functions of one, two, or more arguments). We will start with the discrete, one-dimensional case first, then continue to continuous functions and two- and three-dimensional functions.
+卷积可以应用于连续函数（为任何实数参数 $x$ 定义的函数 $f(x)$）或离散序列（仅为整数参数 $i$ 定义的函数 $a[i]$） 。 它还可以应用于在一维、二维或更高维域上定义的函数（即一个、两个或多个参数的函数）。 我们将首先从离散的一维情况开始，然后继续讨论连续函数以及二维和三维函数。
+
+For convenience in the definitions, we generally assume that the functions’ domains go on forever, though of course in practice they will have to stop somewhere, and we have to handle the endpoints in a special way.
+为了定义方便，我们通常假设函数的域永远持续下去，尽管在实践中它们当然必须在某个地方停止，并且我们必须以特殊的方式处理端点。
+
+### 9.2.1 Moving Averages 移动平均线
+
+To get a basic picture of convolution, consider the example of smoothing a 1D function using a moving average (Figure 9.3). To get a smoothed value at any point, we compute the average of the function over a range extending a distance r in each direction. The distance r, called the radius of the smoothing operation, is a parameter that controls how much smoothing happens.
+要了解卷积的基本情况，请考虑使用移动平均值平滑一维函数的示例（图 9.3）。 为了获得任意点的平滑值，我们计算函数在每个方向延伸距离 r 的范围内的平均值。 距离 r，称为平滑操作的半径，是控制平滑程度的参数。
+![Figure 9.3](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.3.png)
+Figure 9.3. Smoothing using a moving average. 
+图 9.3. 使用移动平均线进行平滑。
+
+We can state this idea mathematically for discrete or continuous functions. If we’re smoothing a continuous function $g(x)$, averaging means integrating $g$ over an interval and then dividing by the length of the interval:
+我们可以用数学方法对离散或连续函数表达这个想法。 如果我们要平滑连续函数 $g(x)$，平均意味着在一个区间内对 $g$ 进行积分，然后除以区间的长度：
+$$
+h(x) = \frac{1}{2r}\int^{x+r}_{x-r}g(t)dt
+$$
+On the other hand, if we’re smoothing a discrete function $a[i]$, averaging means summing a for a range of indices and dividing by the number of values: 
+另一方面，如果我们要平滑离散函数 $a[i]$，平均意味着对一系列索引求和 a，然后除以值的数量：
+$$
+c[i] = \frac{1}{2r + 1}\sum^{i+r}_{j=i-r}a[j] \ \ \ \ (9.1)
+$$
+In each case, the normalization constant is chosen so that if we smooth a constant function the result will be the same function. 
+在每种情况下，都会选择归一化常数，以便如果我们平滑常数函数，结果将是相同的函数。
+
+This idea of a moving average is the essence of convolution; the only difference is that in convolution the moving average is a weighted average.
+移动平均的思想是卷积的本质； 唯一的区别是，在卷积中，移动平均值是加权平均值。
+
+### 9.2.2 Discrete Convolution 离散卷积
+
+We will start with the most concrete case of convolution: convolving a discrete sequence $a[i]$ with another discrete sequence $b[i]$. The result is a discrete sequence $(a*b)[i]$. The process is just like smoothing a with a moving average, but this time instead of equally weighting all samples within a distance $r$, we use a second sequence $b$ to give a weight to each sample (Figure 9.4). The value $b[i − j]$ gives the weight for the sample at position $j$, which is at a distance $i − j$ from the index i where we are evaluating the convolution. Here is the definition of $(a*b)$, expressed as a formula:
+我们将从最具体的卷积案例开始：将离散序列 $a[i]$ 与另一个离散序列 $b[i]$ 进行卷积。 结果是离散序列$(a*b)[i]$。 这个过程就像用移动平均值平滑 a 一样，但这次我们不是对距离 $r$ 内的所有样本进行平均加权，而是使用第二个序列 $b$ 为每个样本赋予权重（图 9.4）。 值 $b[i − j]$ 给出位置 $j$ 处样本的权重，该位置距我们评估卷积的索引 i 的距离为 $i − j$。 这是 $(a*b)$ 的定义，用公式表示：
+$$
+(a * b)[i] = \sum_ja[j]b[i − j]. \ \ \ \ \ \ (9.2)
+$$
+By omitting bounds on $j$, we indicate that this sum runs over all integers (that is, from $−∞$ to $+∞$). Figure 9.4 illustrates how one output sample is computed, using the example of $b = \frac{1}{16}[. . . , 0, 1, 4, 6, 4, 1, 0, . . .]$—that is, $b[0] = \frac{6}{16}$ , $a[±1] = \frac{4}{16}$, etc.
+通过省略$j$的界限，我们表示这个求和是对所有整数进行的（也就是说，从$−∞$到$+∞$）。图9.4说明了如何计算一个输出样本，使用的例子是$b = \frac{1}{16}[. . . , 0, 1, 4, 6, 4, 1, 0, . . .]$——也就是说，$b[0] = \frac{6}{16}$ , $a[±1] = \frac{4}{16}$，等等。
+
+In graphics, one of the two functions will usually have finite support (as does the example in Figure 9.4), which means that it is nonzero only over a finite interval of argument values. If we assume that b has finite support, there is some radius r such that $b[k] = 0$ whenever $|k| > r$. In that case, we can write the sum above as 
+在图形中，两个函数之一通常具有有限支持（如图 9.4 中的示例所示），这意味着它仅在参数值的有限区间内才非零。 如果我们假设 b 具有有限支持，则存在某个半径 r，使得每当 $|k| 时 $b[k] = 0$ > r$。 在这种情况下，我们可以将上面的总和写为
+$(a*b)[i] = \sum^{i+r}_{j=i-r}a[j]b[i-j] \\$
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.4.png" alt="Figure 9.4" style="zoom:67%;" />
+Figure 9.4. Computing one value in the discrete convolution of a sequence a with $a$ filter $b$ that has support five samples wide. Each sample in $a*b$ is an average of nearby samples in $a$, weighted by the values of $b$.
+图 9.4. 使用支持五个样本宽的 $a$ 过滤器 $b$ 计算序列 a 的离散卷积中的一个值。 $a*b$ 中的每个样本都是 $a$ 中附近样本的平均值，并按 $b$ 的值加权。
+
+and we can express the definition in code as
+我们可以把这个定义用代码表示为
+
+> function convolve(sequence a, filter b, int i)
+> 	$s = 0$
+> 	$r = b.radius$
+> 	for $j = i - r$ to $i + r$ do
+> 		$s = s + a[j]b[i - j]$
+> 	return s  
+
+#### Convolution Filters 卷积滤波器
+
+Convolution is important because we can use it to perform filtering. Looking back at our first example of filtering, the moving average, we can now reinterpret that smoothing operation as convolution with a particular sequence. When we compute an average over some limited range of indices, that is the same as weighting the points in the range all identically and weighting the rest of the points with zeros. This kind of filter, which has a constant value over the interval where it is nonzero, is known as a box filter (because it looks like a rectangle if you draw its graph—see Figure 9.5). For a box filter of radius r the weight is $1/(2r + 1)$: 
+卷积很重要，因为我们可以用它来进行过滤。回顾我们滤波的第一个例子，即移动平均线，我们现在可以将平滑操作重新解释为与特定序列的卷积。当我们在一些有限的指标范围内计算平均值时，这就等同于对范围内的点进行相同的加权，并对其余的点进行零加权。这种过滤器在非零区间内具有恒定值，称为框式过滤器(因为如果您绘制它的图形，它看起来像一个矩形，请参见图9.5)。对于半径为r的框过滤器，其权重为$1/(2r + 1)$:
+![Figure 9.5](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.5.png)
+Figure 9.5. A discrete box filter. 
+图9.5. 离散盒滤波器。
+$$
+b[k] = \begin{cases}
+\frac{1}{2r+1} \ \ \ \ \ (-r ≤ k ≤ r)\\
+0 \ \ \ \ otherwise
+\end{cases}
+$$
+If you substitute this filter into Equation (9.2), you will find that it reduces to the moving average in Equation (9.1). 
+如果将此滤波器代入方程（9.2），您会发现它简化为方程（9.1）中的移动平均值。
+
+As in this example, convolution filters are usually designed so that they sum to 1. That way, they don’t affect the overall level of the signal.
+如本例所示，卷积滤波器通常设计为总和为 1。这样，它们就不会影响信号的整体电平。
+
+Example (Convolution of a box and a step). For a simple example of filtering, let the signal be the step function 
+示例（框和步骤的卷积）。 对于一个简单的滤波示例，令信号为阶跃函数 
+$$
+a_{i} = \begin{cases}
+1 \ \ \ i ≥ 0 \\
+1 \ \ \ i < 0
+\end{cases}
+$$
+and the filter be the five-point box filter centered at zero, 
+滤波器是以零为中心的五点箱式滤波器，
+$$
+b[k] = \frac{1}{5}
+\begin{cases}
+1 \ \ \ \ -2 ≤ k ≤ 2 \\
+0 \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+What is the result of convolving $a$ and $b$? At a particular index $i$, as shown in Figure 9.6, the result is the average of the step function over the range from $i − 2$ to $i + 2$. If $i < −2$, we are averaging all zeros and the result is zero. If $i ≥ 2$, we are averaging all ones and the result is one. In between there are $i + 3$ ones, resulting in the value $\frac{i+3}{5}$ . The output is a linear ramp that goes from 0 to 1 over five samples: $\frac{1}{5}[. . . , 0, 0, 1, 2, 3, 4, 5, 5, . . .]$.
+$a$ 和 $b$ 卷积的结果是什么？ 在特定索引 $i$ 处，如图 9.6 所示，结果是从 $i − 2$ 到 $i + 2$ 范围内阶跃函数的平均值。 如果 $i < −2$，我们对所有零进行平均，结果为零。 如果 $i ≥ 2$，我们对所有 1 进行平均，结果为 1。 中间有 $i + 3$ 个，结果为 $\frac{i+3}{5}$ 值。 输出是一个线性斜坡，在五个样本中从 0 到 1：$\frac{1}{5}[. . . , 0, 0, 1, 2, 3, 4, 5, 5, . . .]$.
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.6.png" alt="Figure 9.6" style="zoom:80%;" />
+Figure 9.6. Discrete convolution of a box function with a step function. 
+图 9.6. 盒函数与阶跃函数的离散卷积。
+
+#### Properties of Convolution 卷积的性质
+
+The way we’ve written it so far, convolution seems like an asymmetric operation: $a$ is the sequence we’re smoothing, and $b$ provides the weights. But one of the nice properties of convolution is that it actually doesn’t make any difference which is which: the filter and the signal are interchangeable. To see this, just rethink the sum in Equation (9.2) with the indices counting from the origin of the filter $b$, rather than from the origin of $a$. That is, we replace $j$ with $i - k$. The result of this change of variable is 
+到目前为止我们编写的方式，卷积似乎是一种不对称操作：$a$ 是我们正在平滑的序列，$b$ 提供权重。 但卷积的一个很好的特性是，它实际上没有任何区别：滤波器和信号是可以互换的。 要看到这一点，只需重新考虑等式 (9.2) 中的总和，其中索引从过滤器 $b$ 的原点计数，而不是从 $a$ 的原点计数。 也就是说，我们将 $j$ 替换为 $i - k$。 变量变化的结果是
+$$
+(a*b)[i] = \sum_ka[i − k]b[i − (i − k)] = \sum_kb[k]a[i − k]
+$$
+This is exactly the same as Equation (9.2) but with $a$ acting as the filter and $b$ acting as the signal. So for any sequences $a$ and $b$, $(a*b) = (b*a)$, and we say that convolution is a commutative operation.（You may have noticed that one of the functions in the convolution sum seems to be flipped over— that is, $b[k]$ gives the weight for the sample $k$ units earlier in the sequence, while $b[−k]$ gives the weight for the sample $k$ units later in the sequence. The reason for this has to do with ensuring associativity; see Exercise 4. Most of the filters we use are symmetric, so you hardly ever need to worry about this.）
+这与方程 (9.2) 完全相同，但 $a$ 充当滤波器，$b$ 充当信号。 所以对于任意序列$a$和$b$，$(a*b) = (b*a)$，我们说卷积是一种交换运算。（你可能已经注意到，卷积和中的函数之一 似乎被翻转了——也就是说，$b[k]$ 给出了序列中较早的样本 $k$ 单位的权重，而 $b[−k]$ 给出了序列中较晚的样本 $k$ 单位的权重 序列。 这样做的原因与确保关联性有关。 请参见练习 4。我们使用的大多数滤波器都是对称的，因此您几乎不需要担心这一点。）
+
+More generally, convolution is a “multiplication-like” operation. Like multiplication or addition of numbers or functions, neither the order of the arguments nor the placement of parentheses affects the result. Also, convolution relates to addition in the same way that multiplication does. To be precise, convolution is commutative and associative, and it is distributive over addition.
+更一般地说，卷积是一种“类似乘法”的运算。 与数字或函数的乘法或加法一样，参数的顺序和括号的位置都不影响结果。 此外，卷积与加法的关系与乘法的关系相同。 准确地说，卷积是可交换的和结合的，并且对加法是分配的。
+$$
+commutative: (a * b)[i] = (b * a)[i] \\
+associative: (a * (b * c))[i] = ((a * b) * c)[i] \\
+distributive: (a * (b + c))[i] = (a * b + a * c)[i]
+$$
+These properties are very natural if we think of convolution as being like multiplication, and they are very handy to know about because they can help us save work by simplifying convolutions before we actually compute them. For instance, suppose we want to take a sequence a and convolve it with three filters, $b_1$, $b_2$, and $b_3$—that is, we want $((a*b_1)*b_2)*b_3$. If the sequence is long and the filters are short (that is, they have small radii), it is much faster to first convolve the three filters together (computing $b_1*b_2*b_3$) and finally to convolve the result with the signal, computing $a*(b_1*b_2*b_3)$, which we know from associativity gives the same result.
+如果我们将卷积视为乘法，那么这些属性是非常自然的，并且它们非常容易了解，因为它们可以帮助我们在实际计算卷积之前通过简化卷积来节省工作量。 例如，假设我们想要获取一个序列 a 并将其与三个过滤器 $b_1$、$b_2$ 和 $b_3$ 进行卷积，也就是说，我们需要 $((a*b_1)*b_2)*b_3$。 如果序列很长并且滤波器很短（即它们的半径很小），那么首先将三个滤波器卷积在一起（计算 $b_1*b_2*b_3$），最后将结果与信号进行卷积要快得多 ，计算 $a*(b_1*b_2*b_3)$，我们从结合性知道它会给出相同的结果。
+
+A very simple filter serves as an identity for discrete convolution: it is the discrete filter of radius zero, or the sequence $d[i] = . . . , 0, 0, 1, 0, 0, . . .$ (Figure 9.7). If we convolve d with a signal a, there will be only one nonzero term in the sum:
+一个非常简单的滤波器作为离散卷积的恒等式:它是半径为零的离散滤波器，或者序列($d[i] = . . . , 0, 0, 1, 0, 0, . . .$图9.7)。如果我们将d与信号a进行卷积，那么和中只有一个非零项:
+![Figure 9.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.7.png)
+Figure 9.7. The discrete identity filter. 
+图9.7. 离散身份过滤器。
+$$
+(a*d)[i] =\sum^{j=i}_{j=i}a[j]d[i − j] = a[i]
+$$
+So clearly, convolving a with d just gives back a again. The sequence d is known as the discrete impluse. It is occasionally useful in expressing a filter: for instance, the process of smoothing a signal a with a filter b and then subtracting that from the original could be expressed as a single convolution with the filter $d − b$:
+很明显，将 a 与 d 进行卷积只会再次返回 a。 序列 d 称为离散脉冲。 它有时在表达滤波器时很有用：例如，用滤波器 b 平滑信号 a，然后从原始信号中减去该信号的过程可以表示为与滤波器 $d − b$ 的单个卷积：
+$c = a - a*b = a*d - a*b = a*(d - b).  $
+
+### 9.2.3 Convolution as a Sum of Shifted Filters 卷积作为移位滤波器的总和
+
+There is a second, entirely equivalent, way of interpreting Equation (9.2). Looking at the samples of $a*b$ one at a time leads to the weighted-average interpretation that we have already seen. But if we omit the $[i]$, we can instead think of the sum as adding together entire sequences. One piece of notation is required to make this work: if $b$ is a sequence, then the same sequence shifted to the right by j places is called $b_{→j}$ (Figure 9.8):
+还有第二种完全等价的解释方程（9.2）的方法。 一次查看 $a*b$ 的样本会得出我们已经看到的加权平均解释。 但如果我们省略 $[i]$，我们可以将总和视为将整个序列加在一起。 需要一种符号来完成这项工作：如果 $b$ 是一个序列，那么向右移动 j 个位置的同一序列称为 $b_{→j}$ （图 9.8）：
+$b_{→j}[i] = b[i - j].  $
+
+![Figure 9.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.8.png)
+Figure 9.8. Shifting a sequence b to get $b_{→j}$.
+图 9.8. 移动序列 b 得到 $b_{→j}$。
+
+Then, we can write Equation (9.2) as a statement about the whole sequence $(a*b)$ rather than element-by-element: 
+然后，我们可以将方程（9.2）写为关于整个序列 $(a*b)$ 的陈述，而不是逐个元素：
+$(a*b) = \sum_ja[j]b_{→j}.  $
+
+Looking at it this way, the convolution is a sum of shifted copies of $b$, weighted by the entries of $a$ (Figure 9.9). Because of commutativity, we can pick either $a$ or $b$ as the filter; if we choose $b$, then we are adding up one copy of the filter for every sample in the input.
+从这个角度来看，卷积是 $b$ 的移位副本的总和，并由 $a$ 的条目加权（图 9.9）。 由于交换律，我们可以选择 $a$ 或 $b$ 作为过滤器； 如果我们选择 $b$，那么我们将为输入中的每个样本添加一份过滤器副本。
+![Figure 9.9](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.9.png)
+Figure 9.9. Discrete convolution as a sum of shifted copies of the filter. 
+图 9.9. 离散卷积作为滤波器的移位副本的总和。
+
+### 9.2.4 Convolution with Continuous Functions 与连续函数的卷积
+
+While it is true that discrete sequences are what we actually work with in a computer program, these sampled sequences are supposed to represent continuous functions, and often we need to reason mathematically about the continuous functions in order to figure out what to do. For this reason, it is useful to define convolution between continuous functions and also between continuous and discrete functions.
+虽然离散序列确实是我们在计算机程序中实际使用的，但这些采样序列应该表示连续函数，并且通常我们需要对连续函数进行数学推理，以便弄清楚要做什么。 因此，定义连续函数之间以及连续函数和离散函数之间的卷积很有用。 
+
+The convolution of two continuous functions is the obvious generalization of Equation (9.2), with an integral replacing the sum:
+两个连续函数的卷积是方程（9.2）的明显推广，用积分代替和：
+$$
+(f*g)(x) = 	\int^{+∞}_{-∞}f(t)g(x − t) dt. \ \ \ \ \ \ \ \  (9.3)
+$$
+One way of interpreting this definition is that the convolution of $f$ and $g$, evaluated at the argument $x$, is the area under the curve of the product of the two functions  after we shift $g$ so that $g(0)$ lines up with $f(t)$. Just like in the discrete case, the convolution is a moving average, with the filter providing the weights for the average (see Figure 9.10).
+解释此定义的一种方法是，$f$ 和 $g$ 的卷积（在参数 $x$ 处求值）是我们移动 $g$ 后两个函数的乘积曲线下的面积，使得 $g (0)$ 与 $f(t)$ 对齐。 就像离散情况一样，卷积是移动平均值，滤波器提供平均值的权重（见图 9.10）。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.10.png" alt="Figure 9.10" style="zoom:67%;" />
+Figure 9.10. Continuous convolution. 
+图 9.10. 连续卷积。
+
+Like discrete convolution, convolution of continuous functions is commutative and associative, and it is distributive over addition. Also as with the discrete case, the continuous convolution can be seen as a sum of copies of the filter rather than the computation of weighted averages. Except, in this case, there are infinitely many copies of the filter $g$:
+与离散卷积一样，连续函数的卷积是可交换的和结合的，并且对加法是分配的。 与离散情况一样，连续卷积可以看作是滤波器副本的总和，而不是加权平均值的计算。 除了在这种情况下，过滤器 $g$ 有无限多个副本：
+$(f*g) =  \int^{+∞}_{-∞}f(t)g_{→t}dt.  $
+
+Example (Convolution of two box functions). Let $f$ be a box function:
+示例（两个框函数的卷积）。 令 $f$ 为盒函数：
+$$
+f(x) = \begin{cases}
+1 \ \ \ \ \ -\frac{1}{2} ≤ x < \frac{1}{2} \\
+0 \ \ \ \ \ otherwise
+\end{cases}
+$$
+Then what is $f*f$ ? The definition (Equation 9.3) gives
+那么 $f*f$ 是什么？ 定义（公式 9.3）给出
+$(f*f)(x) =  \int^{∞}_{-∞}f(t)f(x - t) dt.  $
+
+Figure 9.11 shows the two cases of this integral. The two boxes might have zero overlap, which happens when $x ≤ −1$ or $x ≥ 1$; in this case the result is zero. When $−1 < x < 1$, the overlap depends on the separation between the two boxes, which is $|x|$; the result is $1 − |x|$. So
+图 9.11 显示了该积分的两种情况。 当 $x ≤ −1$ 或 $x ≥ 1$ 时，两个框可能有零重叠； 在这种情况下，结果为零。 当$−1 < x < 1$时，重叠取决于两个盒子之间的间隔，即$|x|$； 结果是 $1 − |x|$。 所以
+![Figure 9.11](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.11.png)
+Figure 9.11. Convolving two boxes yields a tent function. 
+图 9.11.  对两个盒子进行卷积会产生一个帐篷函数
+$$
+(f*f)(x) = \begin{cases}
+1 - |x| \ \ \ \ \ -1 < x < 1 \\
+0 \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+This function, known as the tent function, is another common filter (see Section 9.3.1).
+该函数称为帐篷函数，是另一个常见的过滤器（参见第 9.3.1 节）。
+
+#### The Dirac Delta Function 狄拉克 Delta 函数
+
+In discrete convolution, we saw that the discrete impulse $d$ acted as an identity: $d*a = a$. In the continuous case, there is also an identity function, called the Dirac impulse or Dirac delta function, denoted $δ(x)$.
+在离散卷积中，我们看到离散脉冲 $d$ 充当恒等式：$d*a = a$。 在连续情况下，还有一个恒等函数，称为狄拉克脉冲或狄拉克δ函数，表示为$δ(x)$。
+
+Intuitively, the delta function is a very narrow, very tall spike that has infinitesimal width but still has area equal to 1 (Figure 9.12). The key defining property of  the delta function is that multiplying it by a function selects out the value exactly at zero: 
+直观上，Delta 函数是一个非常窄、非常高的尖峰，其宽度无穷小，但面积仍等于 1（图 9.12）。 Delta 函数的关键定义属性是，将其乘以一个函数会选择恰好为零的值：
+$$
+\int^∞_{-∞}δ(x)f(x)dx = f(0).
+$$
+![Figure 9.12](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.12.png)
+Figure 9.12. The Dirac delta function $δ(x)$. 
+图 9.12. 狄拉克δ函数$δ(x)$。
+
+The delta function does not have a well-defined value at $0$ (you can think of its value loosely as $+∞$), but it does have the value $δ(x) = 0$ for all $x ≠ 0$. 
+Delta 函数在 $0$ 处没有明确定义的值（您可以将其值宽松地视为 $+∞$），但对于所有 $x ≠ 0$，它的值确实为 $δ(x) = 0$ 。
+
+From this property of selecting out single values, it follows that the delta function is the identity for continuous convolution (Figure 9.13), because convolving $δ$ with any function $f$ yields
+从选择单个值的这个性质可以看出，delta 函数是连续卷积的恒等式（图 9.13），因为将 $δ$ 与任何函数 $f$ 进行卷积会产生
+$(δ*f)(x) = \int^{∞}_{-∞}δ(t)f(x - t)dt = f(x).  $
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.13.png" alt="Figure 9.13" style="zoom:67%;" />
+Figure 9.13. Convolving a function with $δ(x)$ returns a copy of the same function.
+图 9.13. 将函数与 $δ(x)$ 进行卷积会返回同一函数的副本。
+
+So $δ*f = f$ (and because of commutativity $f*δ = f$ also). 
+所以$δ*f = f$（并且由于交换律$f*δ = f$）。
+
+### 9.2.5 Discrete-Continuous Convolution 离散连续卷积
+
+There are two ways to connect the discrete and continuous worlds. One is sampling: we convert a continuous function into a discrete one by writing down the function’s value at all integer arguments and forgetting about the rest. Given a continuous function f(x), we can sample it to convert to a discrete sequence $a[i]$:
+有两种方法可以连接离散世界和连续世界。 一种是采样：我们通过记下函数在所有整数参数处的值并忘记其余部分，将连续函数转换为离散函数。 给定一个连续函数 f(x)，我们可以对其进行采样以转换为离散序列 $a[i]$：
+$a[i] = f(i).  $
+
+Going the other way, from a discrete function, or sequence, to a continuous function, is called reconstruction. This is accomplished using yet another form of convolution, the discrete-continuous form. In this case, we are filtering a discrete sequence $a[i]$ with a continuous filter $f(x)$:
+相反，从离散函数或序列到连续函数，称为重构。 这是通过使用另一种形式的卷积（离散连续形式）来完成的。 在本例中，我们使用连续过滤器 $f(x)$ 过滤离散序列 $a[i]$：
+$(a*f)(x) = \sum_ia[i]f(x - i).  $
+
+The value of the reconstructed function $a*f$ at $x$ is a weighted sum of the samples $a[i]$ for values of $i$ near $x$ (Figure 9.14). The weights come from the filter $f$, which is evaluated at a set of points spaced one unit apart. For example, if $x = 5.3$ and $f$ has radius 2, f is evaluated at 1.3, 0.3, -0.7, and -1.7. Note that for discrete-continuous convolution we generally write the sequence first and the filter second, so that the sum is over integers.
+$x$ 处的重构函数 $a*f$ 的值是 $x$ 附近 $i$ 值的样本 $a[i]$ 的加权和（图 9.14）。 权重来自过滤器 $f$，它在一组间隔一个单位的点上进行评估。 例如，如果 $x = 5.3$ 并且 $f$ 的半径为 2，则 f 的计算值为 1.3、0.3、-0.7 和 -1.7。 请注意，对于离散连续卷积，我们通常先写序列，然后写滤波器，以便总和超过整数。
+
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.14.png" alt="Figure 9.14" style="zoom:67%;" />
+Figure 9.14. Discrete-continuous convolution. 
+图9.14. 离散连续卷积。
+
+As with discrete convolution, we can put bounds on the sum if we know the filter’s radius, $r$, eliminating all points where the difference between $x$ and $i$ is at least $r$:
+与离散卷积一样，如果我们知道滤波器的半径 $r$，我们可以对总和设置界限，从而消除 $x$ 和 $i$ 之间的差异至少为 $r$ 的所有点：
+$$
+(a*f)(x) = \sum^{\lfloor x + r \rfloor}_{i=\lceil x - r \rceil} a[i]f(x − i).
+$$
+Note, that if a point falls exactly at distance $r$ from $x$ (i.e., if $x − r$ turns out to be an integer), it will be left out of the sum. This is in contrast to the discrete case, where we included the point at $i − r$.
+请注意，如果一个点恰好落在距 $x$ 的距离 $r$ 处（即，如果 $x − r$ 结果是一个整数），则它将被排除在总和之外。 这与离散情况相反，在离散情况下，我们将点包含在 $i − r$ 处。
+
+Expressed in code, this is:
+用代码来表达就是：
+
+> function reconstruct(sequence a, filter f, real x)
+> 	$s = 0$
+> 	$r = f.radius$
+> 	for $i = \lceil x - r\rceil$ to $\lfloor x + r\rfloor$ do
+> 		$s = s + a[i]f(x - i)$
+> 	return s  
+
+As with the other forms of convolution, discrete-continuous convolution may be seen as summing shifted copies of the filter (Figure 9.15): 
+与其他形式的卷积一样，离散连续卷积可以被视为对滤波器的移位副本求和（图 9.15）：
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.15.png" alt="Figure 9.15" style="zoom:67%;" />
+Figure 9.15. Reconstruction (discrete-continuous convolution) as a sum of shifted copies of the filter.  
+图 9.15. 重建（离散连续卷积）作为滤波器的移位副本的总和。
+$$
+(a*f) = \sum_i a[i]f_{→i}.
+$$
+Discrete-continuous convolution is closely related to splines. For uniform splines (a uniform B-spline, for instance), the parameterized curve for the spline is exactly the convolution of the spline’s basis function with the control point sequence (see Section 15.6.2).
+离散连续卷积与样条密切相关。 对于均匀样条（例如均匀 B 样条），样条的参数化曲线正是样条的基函数与控制点序列的卷积（参见第 15.6.2 节）。
+
+### 9.2.6 Convolution in More Than One Dimension 多维卷积
+
+So far, everything we have said about sampling and reconstruction has been one-dimensional: there has been a single variable x or a single sequence index i. Many of the important applications of sampling and reconstruction in graphics, though, are applied to two-dimensional functions—in particular, to 2D images. Fortunately, the generalization of sampling algorithms and theory from 1D to 2D, 3D, and beyond is conceptually very simple.
+到目前为止，我们所说的有关采样和重建的所有内容都是一维的：存在单个变量 x 或单个序列索引 i。 然而，图形中采样和重建的许多重要应用都应用于二维函数，特别是二维图像。 幸运的是，从 1D 到 2D、3D 等的采样算法和理论的推广在概念上非常简单。
+
+Beginning with the definition of discrete convolution, we can generalize it to two dimensions by making the sum into a double sum:
+从离散卷积的定义开始，我们可以通过将和变成双和来将其推广到二维：
+$(a*b)[i, j] = \sum_{i'}\sum_{j'}a[i', j']b[i - i', j - j'].   \\$
+
+If $b$ is a finitely supported filter of radius r (that is, it has $(2r + 1)^2$ values), then we can write this sum with bounds (Figure 9.16): 
+如果 $b$ 是半径为 r 的有限支持滤波器（即，它具有 $(2r + 1)^2$ 值），那么我们可以将这个总和写为有界（图 9.16）：
+$(a*b)[i, j] = \sum^{i+r}_{i'=i-r}\sum^{j+r}_{j'=j-r}a[i', j']b[i - i', j - j']   \\ $
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.16.png" alt="Figure 9.16" style="zoom:67%;" />
+Figure 9.16. The weights for the nine input samples that contribute to the discrete convolution at point $(i, j)$ with a filter $b$ of radius 1. 
+图 9.16. 九个输入样本的权重，有助于在点 $(i, j)$ 处使用半径为 1 的滤波器 $b$ 进行离散卷积。
+
+and express it in code:
+并用代码表达：
+
+> function convolve2d(sequence2d a, filter2d b, int i, int j)
+> 	$s = 0$
+> 	$r = b.radius$
+> 	for $i' = i − r$ to $i + r$ do
+> 		for $j' = j − r$ to $j + r$ do
+> 			$s = s + a[i'][j']b[i − i'][j − j']$
+> 	return s
+
+This definition can be interpreted in the same way as in the 1D case: each output sample is a weighted average of an area in the input, using the 2D filter as a “mask” to determine the weight of each sample in the average. 
+这个定义可以用与 1D 情况相同的方式解释：每个输出样本是输入中某个区域的加权平均值，使用 2D 滤波器作为“掩模”来确定平均值中每个样本的权重。
+
+Continuing the generalization, we can write continuous-continuous (Figure 9.17) and discrete-continuous (Figure 9.18) convolutions in 2D as well:
+继续泛化，我们也可以在 2D 中编写连续-连续（图 9.17）和离散-连续（图 9.18）卷积：
+![Figure 9.17](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.17.png)
+Figure 9.17. The weight for an infinitesimal area in the input signal resulting from continuous convolution at $(x, y)$.
+图 9.17. 输入信号中无穷小区域的权重，由 $(x, y)$ 处的连续卷积产生。
+
+![Figure 9.18](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.18.png)
+Figure 9.18. The weights for the 16 input samples that contribute to the discrete-continuous convolution at point $(x, y)$ for a reconstruction filter of radius 2. 
+图 9.18. 16 个输入样本的权重，有助于半径为 2 的重建滤波器在点 $(x, y)$ 处的离散连续卷积。
+$$
+(f*g)(x, y) =\int\int f(x', y')g(x − x', y − y') dx' dy'; \\
+(a*f)(x, y) = \sum_i\sum_j a[i, j]f(x − i, y − j). 
+$$
+In each case, the result at a particular point is a weighted average of the input near that point. For the continuous-continuous case, it is a weighted integral over a region centered at that point, and in the discrete-continuous case it is a weighted average of all the samples that fall near the point.
+在每种情况下，特定点的结果是该点附近输入的加权平均值。对于连续连续的情况，它是在该点为中心的区域上的加权积分，而在离散连续的情况下，它是落在该点附近的所有样本的加权平均值。
+
+Once we have gone from 1D to 2D, it should be fairly clear how to generalize further to 3D or even to higher dimensions.
+一旦我们从 1D 过渡到 2D，如何进一步推广到 3D 甚至更高的维度就应该相当清楚了。
+
+### 9.3 Convolution Filters 卷积滤波器
+
+Now that we have the machinery of convolution, let’s examine some of the particular filters commonly used in graphics. 
+现在我们已经掌握了卷积机制，让我们研究一下图形中常用的一些特定过滤器。
+
+Each of the following filters has a natural radius, which is the default size to be used for sampling or reconstruction when samples are spaced one unit apart. In this section filters are defined at this natural size: for instance, the box filter has a natural radius of $\frac{1}{2}$, and the cubic filters have a natural radius of 2. We also arrange for each filter to integrate to $1: \int^{∞}_{x=0}f(x)dx = 1$, as required for sampling and reconstruction without changing a signal’s average value.
+以下每个滤波器都有一个自然半径，这是当样本间隔一个单位时用于采样或重建的默认大小。 在本节中，过滤器定义为自然尺寸：例如，盒式过滤器的自然半径为 $\frac{1}{2}$，立方过滤器的自然半径为 2。我们还为每个过滤器进行了安排 积分到 $1：\int^{∞}_{x=0}f(x)dx = 1$，根据采样和重建的要求，而不改变信号的平均值。
+
+As we will see in Section 9.4.3, some applications require filters of different sizes, which can be obtained by scaling the basic filter. For a filter $f(x)$, we can define a version of scale $s$:
+正如我们将在第 9.4.3 节中看到的，某些应用程序需要不同大小的滤波器，这可以通过缩放基本滤波器来获得。 对于过滤器 $f(x)$，我们可以定义尺度 $s$ 的一个版本：
+$f_s{x} = \frac{f(x/s)}{s}\\$
+
+The filter is stretched horizontally by a factor of $s$, and then squashed vertically by a factor $\frac{1}{s}$ so that its area is unchanged. A filter that has a natural radius of $r$ and is used at scale s has a radius of support $sr$ (see Figure 9.20 below). 
+过滤器在水平方向被拉伸$s$，然后在垂直方向被挤压$\frac{1}{s}$，这样它的面积是不变的。一个具有自然半径$r$并在尺度s上使用的滤波器具有支持半径$sr$(见下面的图9.20)。
+
+![Figure 9.20](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.20.png)
+Figure 9.20. The tent filter and two scaled versions. 
+图 9.20。 帐篷过滤器和两个缩放版本。
+
+### 9.3.1 A Gallery of Convolution Filters  卷积滤波器图库
+
+#### The Box Filter 箱式过滤器
+
+The box filter (Figure 9.19) is a piecewise constant function whose integral is equal to one. As a discrete filter, it can be written as 
+箱式滤波器（图 9.19）是一个分段常数函数，其积分等于 1。 作为离散滤波器，它可以写为
+$$
+a_{box,r}[i] = \begin{cases}
+1/(2r + 1) \ \ \  \ \ \ \ |i| ≤ r, \\
+0 \ \ \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.19.png" alt="Figure 9.19" style="zoom:80%;" />
+Figure 9.19. The discrete and continuous box filters.
+图 9.19. 离散和连续箱式过滤器。
+
+Note that for symmetry we include both endpoints.
+请注意，为了对称，我们包括两个端点。
+
+As a continuous filter, we write
+作为连续过滤器，我们写
+$$
+f_{box, r}(x) = \begin{cases}
+1/(2r) \ \ \ \ \ -r ≤ x < r \\
+0 \ \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+In this case, we exclude one endpoint, which makes the box of radius 0.5 usable as a reconstruction filter. It is because the box filter is discontinuous that these boundary cases are important, and so for this particular filter we need to pay attention to them. We write just fbox for the natural radius of $r = \frac{1}{2}$.
+在这种情况下，我们排除一个端点，这使得半径为 0.5 的盒子可用作重建滤波器。 正是因为盒式滤波器是不连续的，所以这些边界情况很重要，因此对于这个特定的滤波器我们需要注意它们。 我们只用 fbox 来表示 $r = \frac{1}{2}$ 的自然半径。
+
+#### The Tent Filter 帐篷过滤器
+
+The tent, or linear filter (Figure 9.20), is a continuous, piecewise linear function:
+帐篷或线性滤波器（图 9.20）是一个连续的分段线性函数：
+<img src="E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 9.20.png" alt="Figure 9.20" style="zoom:80%;" />
+Figure 9.20. The tent filter and two scaled versions.
+图 9.20。 帐篷过滤器和两个缩放版本。
+$$
+f_{tent}(x) = \begin{cases}
+1 - |x| \ \ \ \ |x| < 1 \\
+0 \ \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+Its natural radius is 1. For filters, such as this one, that are at least $C^0$ (that is, there are no sudden jumps in the value, as there are with the box), we no longer need to separate the definitions of the discrete and continuous filters: the discrete filter is just the continuous filter sampled at the integers.
+它的自然半径是 1。对于像这个这样的至少为 $C^0$ 的过滤器（也就是说，值不会像盒子那样突然跳跃），我们不再需要分离 离散滤波器和连续滤波器的定义：离散滤波器只是以整数采样的连续滤波器。
+
+#### The Gaussian Filter 高斯滤波器 
+
+The Gaussian function (Figure 9.21), also known as the normal distribution, is an important filter theoretically and practically. We’ll see more of its special properties as the chapter goes on:
+高斯函数（图 9.21），也称为正态分布，是理论上和实践中重要的滤波器。 随着本章的继续，我们将看到更多它的特殊属性：
+$$
+f_g,σ(x) = \frac{1}{σ\sqrt{2π}}e^{-x^2/2σ^2}
+$$
+![Figure 9.21](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.21.png)
+Figure 9.21. The Gaussian filter.
+图 9.21。 高斯滤波器。
+
+The parameter σ is called the standard deviation. The Gaussian makes a good sampling filter because it is very smooth; we’ll make this statement more precise later in the chapter.
+参数 σ 称为标准差。 高斯滤波器是一个很好的采样滤波器，因为它非常平滑； 我们将在本章后面使这一说法更加精确。
+
+The Gaussian filter does not have any particular natural radius; it is a useful sampling filter for a range of σ. The Gaussian also does not have a finite radius of support, although because of the exponential decay, its values rapidly become small enough to ignore. When necessary, then, we can trim the tails from the function by setting it to zero outside some radius r, resulting in a trimmed Gaussian. This means that the filter’s width and natural radius can vary depending on the application, and a trimmed Gaussian scaled by s is the same as an unscaled trimmed Gaussian with standard deviation sσ and radius sr. The best way to handle this in practice is to let σ and r be set as properties of the filter, fixed when the filter is specified, and then scale the filter just like any other when it is applied.
+高斯滤波器没有任何特定的自然半径； 它对于 σ 范围来说是一个有用的采样过滤器。 高斯也没有有限的支持半径，尽管由于指数衰减，它的值很快变得小到可以忽略。 必要时，我们可以通过将函数在半径 r 之外设置为零来修剪函数的尾部，从而得到修剪后的高斯分布。 这意味着滤波器的宽度和自然半径可以根据应用而变化，并且按 s 缩放的修剪高斯与标准偏差 sσ 和半径 sr 的未缩放修剪高斯相同。 在实践中处理这个问题的最佳方法是让 σ 和 r 设置为过滤器的属性，在指定过滤器时固定，然后在应用时像任何其他过滤器一样缩放过滤器。
+
+> Good starting points are σ = 1 and r = 3. 
+> 好的起点是 σ = 1 和 r = 3。
+
+#### The B-Spline Cubic Filter B 样条三次过滤器
+
+Many filters are defined as piecewise polynomials, and cubic filters with four pieces (natural radius of 2) are often used as reconstruction filters. One such filter  is known as the B-spline filter (Figure 9.22) because of its origins as a blending function for spline curves (see Chapter 15):
+许多滤波器被定义为分段多项式，并且四部分三次滤波器（自然半径为2）通常用作重建滤波器。 其中一种滤波器被称为 B 样条滤波器（图 9.22），因为它起源于样条曲线的混合函数（参见第 15 章）：
+![Figure 9.22](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.22.png)
+Figure 9.22. The B-spline filter.
+图 9.22。 B 样条滤波器。
+$$
+f_B(x) = \frac{1}{6} \begin{cases}
+-3(1 − |x|)^3 + 3(1 − |x|)^2 + 3(1 − |x|) + 1 \ \ \ \ \ -1 ≤ x ≤ 1 \\
+(2 - |x|)^3 \ \ \ \ \ \ \ 1 ≤ |x| ≤ 2 \\
+0 \ \ \ \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+Among piecewise cubics, the B-spline is special because it has continuous first and second derivatives—that is, it is $C^2$. A more concise way of defining this filter is $fB = f_{box} * f_{box} * f_{box} * f_{box}$; proving that the longer form above is equivalent is a nice exercise in convolution (see Exercise 3).
+在分段三次中，B 样条比较特殊，因为它具有连续的一阶导数和二阶导数，即 $C^2$。 定义此过滤器的更简洁方法是 $fB = f_{box} * f_{box} * f_{box} * f_{box}$; 证明上面的较长形式是等效的是一个很好的卷积练习（参见练习 3）。
+
+#### The Catmull-Rom Cubic Filter Catmull-Rom 立方滤波器
+
+Another piecewise cubic filter named for a spline, the Catmull-Rom filter (Figure 9.23), has the value zero at $x = −2, −1, 1,$ and $2$, which means it will interpolate the samples when used as a reconstruction filter (Section 9.3.2):
+另一个以样条命名的分段三次滤波器 Catmull-Rom 滤波器（图 9.23）在 $x = −2, −1, 1,$ 和 $2$ 处的值为零，这意味着当用作 重建滤波器（第 9.3.2 节）：
+$$
+f_C(x) = \frac{1}{2} \begin{cases}
+-3(1 − |x|)^3 + 4(1 − |x|)^2 + (1 − |x|) \ \ \ \ \ \ -1 ≤ x ≤ 1 \\
+(2 − |x|)^3 − (2 − |x|)^2 \ \ \ \ \ \ \ \ \ 1 ≤ |x| ≤ 2 \\ 
+0 \ \ \ \ \ \ \ \ \ otherwise.
+\end{cases}
+$$
+![Figure 9.23](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.23.png)
+Figure 9.23. The CatmullRom filter. 
+图 9.23。 CatmullRom 过滤器。
+
+#### The Mitchell-Netravali Cubic Filter Mitchell-Netravali 立方滤波器
+
+For the all-important application of resampling images, Mitchell and Netravali (Mitchell & Netravali, 1988) made a study of cubic filters and recommended one partway between the previous two filters as the best all-around choice (Figure 9.24). It is simply a weighted combination of the previous two filters:
+对于图像重采样这一至关重要的应用，Mitchell 和 Netravali（Mitchell & Netravali，1988）对三次滤波器进行了研究，并推荐前两个滤波器之间的一个作为最佳全面选择（图 9.24）。 它只是前两个过滤器的加权组合：
+$$
+f_M(x) = \frac{1}{3}f_B(x) + \frac{2}{3}f_C(x) \\
+= \frac{1}{18}\begin{cases}
+−21(1 − |x|)^3 + 27(1 − |x|)^2 + 9(1 − |x|) + 1 \ \ \ \ \ \ -1 ≤ x ≤ 1 \\
+7(2 − |x|)^3 − 6(2 − |x|)^2 \ \ \ \ \ \ \ \ \ 1 ≤ |x| ≤ 2 \\
+0 \ \  \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+![Figure 9.24](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.24.png)
+Figure 9.24. The MitchellNetravali filter. 
+图 9.24。 MitchellNetravali 过滤器。
+
+### 9.3.2 Properties of Filters 过滤器的属性
+
+Filters have some traditional terminology that goes with them, which we use to describe the filters and compare them to one another.
+过滤器有一些与之相关的传统术语，我们用它们来描述过滤器并将它们相互比较。
+
+The impulse response of a filter is just another name for the function: it is the response of the filter to a signal that just contains an impluse (and recall that convolving with an impulse just gives back the filter).
+滤波器的脉冲响应只是该函数的另一个名称：它是滤波器对仅包含脉冲的信号的响应（回想一下，与脉冲进行卷积只会返回滤波器）。
+
+A continuous filter is interpolating if, when it is used to reconstruct a continuous function from a discrete sequence, the resulting function takes on exactly the values of the samples at the sample points— that is, it “connects the dots” rather than producing a function that only goes near the dots. Interpolating filters are exactly those filters f for which $f(0) = 1$ and $f(i) = 0$ for all nonzero integers i (Figure 9.25).
+如果当连续滤波器用于从离散序列重建连续函数时，所得到的函数精确地采用样本点处的样本值，则连续滤波器正在插值 - 也就是说，它“连接点”而不是产生一个 只接近点的函数。 插值滤波器正是那些滤波器 f，对于所有非零整数 i，$f(0) = 1$ 且 $f(i) = 0$（图 9.25）。
+![Figure 9.25](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.25.png)
+Figure 9.25. An interpolating filter reconstructs the sample points exactly because it has the value zero at all nonzero integer offsets from the center.
+图 9.25。 插值滤波器精确地重建样本点，因为它在距中心的所有非零整数偏移处具有零值。
+
+A filter that takes on negative values has ringing or overshoot: it will produce extra oscillations in the value around sharp changes in the value of the function being filtered.
+具有负值的滤波器会产生振铃或过冲：它会在被滤波函数值急剧变化时产生额外的振荡。
+
+For instance, the Catmull-Rom filter has negative lobes on either side, and if you filter a step function with it, it will exaggerate the step a bit, resulting in function values that undershoot 0 and overshoot 1 (Figure 9.26).
+例如，Catmull-Rom 滤波器的两侧都有负瓣，如果用它过滤阶跃函数，它会稍微夸大阶跃，导致函数值低于 0 且高于 1（图 9.26）。
+![Figure 9.26](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.26.png)
+Figure 9.26. A filter with negative lobes will always produce some overshoot when filtering or reconstructing a sharp discontinuity.
+图 9.26。 当过滤或重建尖锐的不连续性时，具有负瓣的滤波器总是会产生一些过冲。
+
+A continuous filter is ripple free if, when used as a reconstruction filter, it will reconstruct a constant sequence as a constant function (Figure 9.27). This is equivalent to the requirement that the filter sum to one on any integer-spaced grid:
+如果连续滤波器用作重构滤波器时，它将重构常数序列作为常数函数，则它是无纹波的（图 9.27）。 这相当于要求滤波器在任何整数间隔网格上总和为 1：
+$\sum_if(x + i) = 1\ \ \ for\ all\ x \\$
+
+![Figure 9.27](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.27.png)
+Figure 9.27. The tent filter of radius 1 is a ripple-free reconstruction filter; the Gaussian filter with standard deviation 1/2 is not.
+图 9.27。 半径为1的帐篷滤波器是无波纹重构滤波器； 标准差为 1/2 的高斯滤波器则不然。
+
+All the filters in Section 9.3.1 are ripple free at their natural radii, except the Gaussian, but none of them are necessarily ripple free when they are used at a noninteger scale. If it is necessary to eliminate ripple in discrete-continuous convolution, it is easy to do so: divide each computed sample by the sum of the weights used to compute it:
+除高斯滤波器外，第 9.3.1 节中的所有滤波器在其自然半径上都是无波纹的，但当它们用于非整数尺度时，它们都不一定是无波纹的。 如果需要消除离散连续卷积中的纹波，很容易做到：将每个计算样本除以用于计算它的权重总和：
+$$
+\overline{(a * f)}(x) = \frac{\sum_ia[i]f(x-i)}{\sum_ia[i]} \ \ \ \ (9.4)
+$$
+This expression can still be interpreted as convolution between a and a filter $\overline{f}$ (see Exercise 6). 
+这个表达式仍然可以解释为 a 和过滤器 $\overline{f}$ 之间的卷积（参见练习 6）。
+
+A continuous filter has a degree of continuity, which is the highest-order derivative that is defined everywhere. A filter, like the box filter, that has sudden jumps in its value is not continuous at all. A filter that is continuous but has sharp corners (discontinuities in the first derivative), such as the tent filter, has order of continuity zero, and we say it is $C^0$. A filter that has a continuous derivative (no sharp corners), such as the piecewise cubic filters in the previous section, is $C^1$; if its second derivative is also continuous, as is true of the B-spline filter, it is $C^2$. The order of continuity of a filter is particularly important for a reconstruction filter because the reconstructed function inherits the continuity of the filter.
+连续滤波器具有一定程度的连续性，这是到处都定义的最高阶导数。 过滤器（如箱式过滤器）的值突然跳跃，根本不是连续的。 连续但具有尖角（一阶导数不连续）的滤波器（例如帐篷滤波器）的连续阶数为零，我们称其为 $C^0$。 具有连续导数（无尖角）的滤波器，例如上一节中的分段三次滤波器，为 $C^1$； 如果它的二阶导数也是连续的，就像 B 样条滤波器一样，则它是 $C^2$。 滤波器的连续性阶对于重构滤波器来说特别重要，因为重构函数继承了滤波器的连续性。
+
+#### Separable Filters 可分离过滤器
+
+So far we have only discussed filters for 1D convolution, but for images and other multidimensional signals we need filters too. In general, any 2D function could be a 2D filter, and occasionally it is useful to define them this way. But, in most cases, we can build suitable 2D (or higher-dimensional) filters from the 1D filters we have already seen.
+到目前为止，我们只讨论了一维卷积的滤波器，但对于图像和其他多维信号，我们也需要滤波器。 一般来说，任何 2D 函数都可以是 2D 滤波器，有时以这种方式定义它们很有用。 但是，在大多数情况下，我们可以从已经见过的 1D 滤波器构建合适的 2D（或更高维）滤波器。
+
+The most useful way of doing this is by using a separable filter. The value of a separable filter $f_2(x, y)$ at a particular $x$ and $y$ is simply the product of $f_1$ (the 1D filter) evaluated at $x$ and at $y$:
+最有用的方法是使用可分离的过滤器。 可分离滤波器 $f_2(x, y)$ 在特定 $x$ 和 $y$ 处的值只是在 $x$ 和 $y$ 处计算的 $f_1$（一维滤波器）的乘积：
+$f_2(x, y) = f_1(x)f_1(y)  $
+
+Similarly, for discrete filters, 
+类似地，对于离散滤波器，
+$b_2[i, j] = b_1[i]b_1[j].  $
+
+Any horizontal or vertical slice through $f_2$ is a scaled copy of $f_1$. The integral of $f_2$ is the square of the integral of $f_1$, so in particular if $f_1$ is normalized, then so is $f_2$.
+通过 $f_2$ 的任何水平或垂直切片都是 $f_1$ 的缩放副本。 $f_2$ 的积分是 $f_1$ 积分的平方，因此特别是如果 $f_1$ 被标准化，那么 $f_2$ 也被标准化。
+
+**Example (The separable tent filter)**. If we choose the tent function for $f_1$, the resulting piecewise bilinear function (Figure 9.28) is
+**示例（可分离的帐篷过滤器）**。 如果我们为$ f_1 $选择帐篷函数，则得到的分段双线性函数（图 9.28）为
+$$
+f_{2,tent}(x,y) = \begin{cases}
+(1 - |x|)(1 - |y|) \ \ \ \ \ |x| < 1\ and\ |y| < 1 \\
+0 \ \ \ \ \ \ \ \ \ otherwise
+\end{cases}
+$$
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.28.png" alt="Figure 9.28" style="zoom:67%;" />
+
+Figure 9.28. The separable 2D tent filter.
+图 9.28。 可分离的 2D 帐篷过滤器。
+
+The profiles along the coordinate axes are tent functions, but the profiles along the diagonals are quadratics (for instance, along the line $x = y$ in the positive quadrant, we see the quadratic function $(1 − x)^2$).
+沿坐标轴的轮廓是帐篷函数，但沿对角线的轮廓是二次函数（例如，沿正象限中的 $x = y$ 线，我们看到二次函数 $(1 − x)^2$） 。
+
+**Example (The 2D Gaussian filter)**. If we choose the Gaussian function for f1, the resulting 2D function (Figure 9.29) is 
+**示例（2D 高斯滤波器）**。 如果我们为 f1 选择高斯函数，则得到的 2D 函数（图 9.29）为
+$f_{2,g}(x,y) = \frac{1}{2\pi}(e^{-x^2/2}e^{-y^2/2}) \\ 
+ = \frac{1}{2\pi}(e^{-(x^2+y^2)/2})\\
+ = \frac{1}{2\pi}e^{-r^2/2}$
+
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.29.png" alt="Figure 9.29" style="zoom:67%;" />
+
+Figure 9.29. The 2D Gaussian filter, which is both separable and radially symmetric.
+图 9.29。 二维高斯滤波器，既可分离又径向对称。
+
+Notice that this is (up to a scale factor) the same function we would get if we revolved the 1D Gaussian around the origin to produce a circularly symmetric function. The property of being both circularly symmetric and separable at the same time is unique to the Gaussian function. The profiles along the coordinate axes are Gaussians, but so are the profiles along any direction at any offset from the center.
+请注意，如果我们围绕原点旋转一维高斯函数以产生圆对称函数，则这（在比例因子范围内）与我们得到的函数相同。 同时具有圆对称性和可分离性的性质是高斯函数所独有的。 沿坐标轴的轮廓是高斯分布，但沿距中心任意偏移的任意方向的轮廓也是高斯分布。
+
+The key advantage of separable filters over other 2D filters has to do with efficiency in implementation. Let’s substitute the definition of $a_2$ into the definition of discrete convolution:
+与其他 2D 滤波器相比，可分离滤波器的主要优势在于实现效率。 我们将$a_2$的定义代入离散卷积的定义：
+$(a*b_2)[i, j] = \sum_{i'}\sum_{j'}a[i', j']b_1[i - i']b_1[j - j']    \\$
+
+Note that $b_1[i - i']$ does not depend on $j'$ and can be factored out of the inner sum:
+请注意，$b_1[i - i']$ 不依赖于 $j'$，并且可以从内部总和中分解出来：
+$= \sum_{i'}b_1[i - i']\sum_{j'}a[i',j']b_1[j-j'] \\ $
+
+Let’s abbreviate the inner sum as $S[i']$: 
+让我们将内部总和缩写为 $S[i']$：
+$$
+S[i'] = \sum_{j'}a[i', j']b_1[j-j'] \\
+(a*b_2)[i,j] = \sum_{i'}b_1[i - i']S[i']  \ \ \  \ \ \ (9.5)
+$$
+With the equation in this form, we can first compute and store $S[i']$ for each value of $i'$, and then compute the outer sum using these stored values. At first glance this does not seem remarkable, since we still had to do work proportional to $(2r + 1)^2$ to compute all the inner sums. However, it’s quite different if we want to compute the value at many points $[i, j]$.
+通过这种形式的方程，我们可以首先计算并存储 $i'$ 的每个值的 $S[i']$，然后使用这些存储的值计算外部总和。 乍一看，这似乎并不引人注目，因为我们仍然必须做与 $(2r + 1)^2$ 成比例的工作来计算所有内部总和。 然而，如果我们想要计算多个点 $[i, j]$ 的值，那就完全不同了。
+
+Suppose we need to compute $a*b_2$ at $[2, 2]$ and $[3, 2]$, and $b_1$ has a radius of 2. Examining Equation 9.5, we can see that we will need $S[0], . . . , S[4]$ to compute the result at $[2, 2]$, and we will need $S[1], . . . , S[5]$ to compute the result at $[3, 2]$. So, in the separable formulation, we can just compute all six values of $S$ and share $S[1], . . . , S[4]$ (Figure 9.30).
+假设我们需要计算 $[2, 2]$ 和 $[3, 2]$ 处的 $a*b_2$，并且 $b_1$ 的半径为 2。检查公式 9.5，我们可以看到我们需要 $S [0]，..., S[4]$ 来计算 $[2, 2]$ 处的结果，我们将需要 $S[1], ..., S[5]$ 计算 $[3, 2]$ 处的结果。 因此，在可分离公式中，我们可以计算 $S$ 的所有六个值并共享 $S[1], ...，S[4]$（图 9.30）。
+![Figure 9.30](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.30.png)
+Figure 9.30. Computing two output points using separate 2D arrays of 25 samples (above) vs. filtering once along the columns, then using separate 1D arrays of five samples (below).
+图 9.30。 使用包含 25 个样本的单独 2D 数组（上图）计算两个输出点，而不是沿列过滤一次，然后使用包含 5 个样本的单独 1D 数组（下图)。
+
+This savings has great significance for large filters. Filtering an image with a filter of radius r in the general case requires computation of $(2r + 1)^2$ products per pixel, while filtering the image with a separable filter of the same size requires $2(2r + 1)$ products (at the expense of some intermediate storage). This change in asymptotic complexity from $O(r^2)$ to $O(r)$ enables the use of much larger filters.
+这种节省对于大型过滤器具有重要意义。 一般情况下，使用半径为 r 的滤波器过滤图像需要计算每个像素 $(2r + 1)^2$ 个乘积，而使用相同大小的可分离滤波器过滤图像需要 $2(2r + 1)$ 个乘积 （以一些中间存储为代价）。 渐近复杂度从 $O(r^2)$ 到 $O(r)$ 的这种变化使得可以使用更大的滤波器。
+
+The algorithm is:
+算法是：
+
+> function filterImage(image I, filter b)
+> 	$r = b.radius$
+> 	$n_x = I.width$
+> 	$n_y = I.height$
+> 	allocate storage array $S[0 . . . n_x − 1]$
+> 	allocate image $I_{out}[r . . . n_x − r − 1, r . . . n_y − r − 1]$
+> 	initialize $S$ and $I_{out}$ to all zero
+> 	for $j = r$ to $n_y − r − 1$ do
+> 		for $i' = 0$ to $n_x − 1$ do
+> 			$S[i'] = 0$
+> 			for $j' = j − r$ to $j + r$ do
+> 				$S[i'] = S[i'] + I[i', j']b[j − j']$
+> 		for $i = r$ to $n_x − r − 1$ do
+> 			for $i' = i − r$ to $i + r$ do
+> 				$I_{out}[i, j] = I_{out}[i, j] + S[i']b[i − i']$
+> 	return $I_{out}$
+
+For simplicity, this function avoids all questions of boundaries by trimming $r$ pixels off all four sides of the output image. In practice there are various ways to handle the boundaries; see Section 9.4.3.
+为简单起见，此函数通过修剪输出图像所有四个边的 $r$ 像素来避免所有边界问题。 在实践中，有多种方法可以处理边界； 参见第 9.4.3 节。
+
+## 9.4 Signal Processing for Images 图像信号处理
+
+We have discussed sampling, filtering, and reconstruction in the abstract so far, using mostly 1D signals for examples. But as we observed at the beginning of the chapter, the most important and most common application of signal processing in graphics is for sampled images. Let us look carefully at how all this applies to images.
+到目前为止，我们已经抽象地讨论了采样、滤波和重构，主要使用一维信号作为示例。 但正如我们在本章开头所观察到的，信号处理在图形中最重要和最常见的应用是采样图像。 让我们仔细看看这一切如何应用于图像。
+
+### 9.4.1 Image Filtering Using Discrete Filters 使用离散滤波器进行图像滤波
+
+Perhaps the simplest application of convolution is processing images using discrete convolution. Some of the most widely used features of image manipulation programs are simple convolution filters. Blurring of images can be achieved by convolving with many common lowpass filters, ranging from the box to the Gaussian (Figure 9.31). A Gaussian filter creates a very smooth-looking blur and is commonly used for this purpose. 
+也许卷积最简单的应用是使用离散卷积处理图像。 图像处理程序最广泛使用的一些功能是简单的卷积滤波器。 图像模糊可以通过与许多常见的低通滤波器（从盒子到高斯）进行卷积来实现（图 9.31）。 高斯滤镜可创建看起来非常平滑的模糊效果，通常用于此目的。 
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.31.png" alt="Figure 9.31" style="zoom:67%;" />
+Figure 9.31. Blurring an image by convolution with each of three different filters. 
+图9.31。通过与三种不同的滤镜中的每一种进行卷积来模糊图像。
+
+The opposite of blurring is sharpening, and one way to do this is by using the “unsharp mask” procedure: subtract a fraction α of a blurred image from the original. With a rescaling to avoid changing the overall brightness, we have
+模糊的反面是锐化，实现此目的的一种方法是使用“unsharp mask”过程：从原始图像中减去模糊图像的一小部分 α。 通过重新缩放以避免改变整体亮度，我们有
+$$
+I_{sharp} = (1 + α)I − α(I * f_{g,σ}) \\
+= I * ((1 + α)d − αf_{g,σ}) \\
+= I * f_{sharp}(σ, α),
+$$
+where $f_{g,σ}$ is the Gaussian filter of width $σ$. Using the discrete impluse d and the distributive property of convolution, we were able to write this whole process as a single filter that depends on both the width of the blur and the degree of sharpening (Figure 9.32).
+其中 $f_{g,σ}$ 是宽度 $σ$ 的高斯滤波器。 使用离散脉冲 d 和卷积的分布特性，我们能够将整个过程编写为单个滤波器，该滤波器取决于模糊的宽度和锐化的程度（图 9.32）。
+![Figure 9.32](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.32.png)
+Figure 9.32. Sharpening an image using a convolution filter. 
+图 9.32。 使用卷积滤波器锐化图像。
+
+Another example of combining two discrete filters is a drop shadow. It’s common to take a blurred, shifted copy of an object’s outline to create a soft drop shadow (Figure 9.33). We can express the shifting operation as convolution with an off-center impulse:
+组合两个离散滤镜的另一个示例是阴影。 通常采用对象轮廓的模糊、移位副本来创建柔和的阴影（图 9.33）。 我们可以将移位操作表示为带有偏心脉冲的卷积：
+![Figure 9.33](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.33.png)
+Figure 9.33. A soft drop shadow. 
+图9.33。柔和的投影。
+$$
+d_{m,n}(i, j) = \begin{cases}
+1 \ \ \ \ \ \ i = m\ and\ j = n \\
+0 \ \ \ \ \ \ otherwise.
+\end{cases}
+$$
+Shifting, then blurring, is achieved by convolving with both filters:
+通过与两个滤波器进行卷积来实现移动，然后模糊：
+$$
+I_{shadow} = (I * d_{m,n}) * f_{g,σ} \\
+= I * (d_{m,n} * f_{g,σ}) \\
+= I * f_{shadow}(m, n, σ) 
+$$
+Here we have used associativity to group the two operations into a single filter with three parameters. 
+这里我们使用结合律将这两个操作组合到一个带有三个参数的过滤器中。
+
+### 9.4.2 Antialiasing in Image Sampling 图像采样中的抗锯齿
+
+In image synthesis, we often have the task of producing a sampled representation of an image for which we have a continuous mathematical formula (or at least a procedure we can use to compute the color at any point, not just at integer pixel positions). Ray tracing is a common example; more about ray tracing and the specific methods for antialiasing is in Chapter 4. In the language of signal processing, we have a continuous 2D signal (the image) that we need to sample on a regular 2D lattice. If we go ahead and sample the image without any special measures, the result will exhibit various aliasing artifacts (Figure 9.34). At sharp edges in the image, we see stair-step artifacts known as “jaggies.” In areas where there are repeating patterns, we see wide bands known as moire patterns .
+在图像合成中，我们经常需要生成图像的采样表示，对于该图像，我们有一个连续的数学公式（或者至少是一个可以用来计算任意点的颜色的过程，而不仅仅是整数像素位置的颜色）。 光线追踪是一个常见的例子； 有关光线追踪和抗锯齿具体方法的更多信息请参见第 4 章。用信号处理的语言来说，我们有一个连续的 2D 信号（图像），需要在规则的 2D 晶格上进行采样。 如果我们在不采取任何特殊措施的情况下对图像进行采样，结果将出现各种混叠伪像（图 9.34）。 在图像的锐利边缘，我们看到称为“锯齿”的阶梯伪影。 在有重复图案的区域，我们会看到称为莫尔图案的宽带。
+![Figure 9.34](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.34.png)
+Figure 9.34. Two artifacts of aliasing in images: moir patterns in periodic textures (left), and “jaggies” on straight lines (right). 
+图 9.34。 图像中的两种锯齿现象：周期性纹理中的莫尔图案（左）和直线上的“锯齿”（右)。
+
+The problem here is that the image contains too many small-scale features; we need to smooth it out by filtering it before sampling. Looking back at the definition of continuous convolution in Equation (9.3), we need to average the image over an area around the pixel location, rather than just taking the value at a single point. The specific methods for doing this are discussed in Chapter 4. A simple filter like a box will improve the appearance of sharp edges, but it still produces some moir´ e patterns (Figure 9.35). The Gaussian filter, which is very smooth, is much more effective against the moir´ e patterns, at the expense of overall somewhat more blurring. These two examples illustrate the tradeoff between sharpness and aliasing that is fundamental to choosing antialiasing filters.
+这里的问题是图像包含太多小尺度特征； 我们需要在采样之前通过过滤来平滑它。 回顾方程（9.3）中连续卷积的定义，我们需要在像素位置周围的区域上对图像进行平均，而不是仅仅取单个点的值。 具体方法将在第 4 章中讨论。像盒子这样的简单过滤器将改善锐利边缘的外观，但它仍然会产生一些莫尔图案（图 9.35）。 高斯滤镜非常平滑，对莫尔图案的抑制效果要好得多，但总体上会更加模糊。 这两个例子说明了清晰度和混叠之间的权衡，这是选择抗混叠滤波器的基础。
+![Figure 9.35](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.35.png)
+Figure 9.35. A comparison of three different sampling filters being used to antialias a difficult test image that contains circles that are spaced closer and closer as they get larger. 
+图 9.35。 比较三种不同的采样滤波器，用于对困难的测试图像进行抗锯齿处理，其中包含的圆圈随着它们变大而间隔越来越近。
+
+### 9.4.3 Reconstruction and Resampling 重建和重采样
+
+One of the most common image operations where careful filtering is crucial is resampling—changing the sample rate, or changing the image size.
+最常见的图像操作之一是重新采样，其中仔细的过滤至关重要，即更改采样率或更改图像大小。
+
+Suppose we have taken an image with a digital camera that is 3000 by 2000 pixels in size, and we want to display it on a monitor that has only 1280 by 1024 pixels. In order to make it fit, while maintaining the 3:2 aspect ratio, we need to resample it to 1278 by 852 pixels. How should we go about this?
+假设我们用数码相机拍摄了一张尺寸为 3000 x 2000 像素的图像，并且希望将其显示在只有 1280 x 1024 像素的显示器上。 为了使其适合，同时保持 3:2 的宽高比，我们需要将其重新采样为 1278 x 852 像素。 我们应该怎样做呢？
+
+One way to approach this problem is to think of the process as dropping pixels: the size ratio is between 2 and 3, so we’ll have to drop out one or two pixels between pixels that we keep. It’s possible to shrink an image in this way, but the quality of the result is low—the images in Figure 9.34 were made using pixel dropping. Pixel dropping is very fast, however, and it is a reasonable choice to make a preview of the resized image during an interactive manipulation.
+解决这个问题的一种方法是将该过程视为丢弃像素：尺寸比在 2 到 3 之间，因此我们必须在保留的像素之间丢弃一两个像素。 可以通过这种方式缩小图像，但结果的质量较低——图 9.34 中的图像是使用像素丢弃技术制作的。 然而，像素下降非常快，在交互式操作期间预览调整大小的图像是一个合理的选择。
+
+The way to think about resizing images is as a resampling operation: we want a set of samples of the image on a particular grid that is defined by the new image dimensions, and we get them by sampling a continuous function that is reconstructed from the input samples (Figure 9.36). Looking at it this way, it’s just a sequence of standard image processing operations: first we reconstruct a continuous function from the input samples, and then we sample that function just as we would sample any other continuous image. To avoid aliasing artifacts, appropriate filters need to be used at each stage.
+调整图像大小的方式被视为重采样操作：我们希望在由新图像尺寸定义的特定网格上获得一组图像样本，并通过对从输入重建的连续函数进行采样来获取它们 样本（图 9.36）。 从这个角度来看，它只是一系列标准图像处理操作：首先，我们从输入样本中重建一个连续函数，然后我们对该函数进行采样，就像对任何其他连续图像进行采样一样。 为了避免混叠伪影，需要在每个阶段使用适当的滤波器。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.36.png" alt="Figure 9.36" style="zoom:67%;" />
+Figure 9.36. Resampling an image consists of two logical steps that are combined into a single operation in code. First, we use a reconstruction filter to define a smooth, continuous function from the input samples. Then, we sample that function on a new grid to get the output samples.
+图 9.36。 图像重采样由两个逻辑步骤组成，这两个步骤组合成代码中的单个操作。 首先，我们使用重建滤波器根据输入样本定义平滑、连续的函数。 然后，我们在新网格上对该函数进行采样以获得输出样本。
+
+A small example is shown in Figure 9.37: if the original image is 12 × 9 pixels and the new one is 8 × 6 pixels, there are 2/3 as many output pixels as input pixels in each dimension, so their spacing across the image is 3/2 the spacing of the original samples.
+图 9.37 显示了一个小例子：如果原始图像是 12 × 9 像素，新图像是 8 × 6 像素，则每个维度上的输出像素数量是输入像素数量的 2/3，因此它们在图像上的间距 是原始样本间距的 3/2。
+![Figure 9.37](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.37.png)
+Figure 9.37. The sample locations for the input and output grids in resampling a 12 by 9 image to make an 8 by 6 one.
+图 9.37。 对 12 x 9 图像重新采样以生成 8 x 6 图像时输入和输出网格的样本位置。
+
+In order to come up with a value for each of the output samples, we need to somehow compute values for the image in between the samples. The pixeldropping algorithm gives us one way to do this: just take the value of the closest sample in the input image and make that the output value. This is exactly equivalent to reconstructing the image with a 1-pixel-wide (radius one-half) box filter and then point sampling.
+为了得出每个输出样本的值，我们需要以某种方式计算样本之间图像的值。 像素丢弃算法为我们提供了一种方法：只需获取输入图像中最接近样本的值并将其作为输出值。 这完全相当于用 1 像素宽（半径二分之一）的盒式滤波器重建图像，然后进行点采样。
+
+Of course, if the main reason for choosing pixel dropping or other very simple filtering is performance, one would never implement that method as a special case of the general reconstruction-and-resampling procedure. In fact, because of the discontinuities, it’s difficult to make box filters work in a general framework. But, for high-quality resampling, the reconstruction/sampling framework provides valuable flexibility.
+当然，如果选择像素丢弃或其他非常简单的过滤的主要原因是性能，则永远不会将该方法作为一般重建和重采样过程的特殊情况来实现。 事实上，由于不连续性，很难使盒式滤波器在通用框架中工作。 但是，对于高质量重采样，重建/采样框架提供了宝贵的灵活性。
+
+To work out the algorithmic details, it’s simplest to drop down to 1D and discuss resampling a sequence. The simplest way to write an implementation is in terms of the reconstruct function we defined in Section 9.2.5.
+要弄清楚算法细节，最简单的方法是下降到一维并讨论对序列进行重采样。 编写实现的最简单方法是使用我们在第 9.2.5 节中定义的重建函数。
+
+> function resample(sequence a, float $x_0$, float $Δx$, int $n$, filter $f$)
+> 	create sequence $b$ of length $n$
+> 	for $i = 0$ to $n - 1$ do
+> 		$b[i]$ = reconstruct$(a, f, x_0 + iΔx)$
+> 	return $b$
+
+The parameter $x_0$ gives the position of the first sample of the new sequence in terms of the samples of the old sequence. That is, if the first output sample falls midway between samples 3 and 4 in the input sequence, $x_0$ is 3.5.
+参数 $x_0$ 给出了新序列的第一个样本相对于旧序列的样本的位置。 也就是说，如果第一个输出样本位于输入序列中样本 3 和 4 之间，则 $x_0$ 为 3.5。
+
+This procedure reconstructs a continuous image by convolving the input sequence with a continuous filter and then point samples it. That’s not to say that these two operations happen sequentially—the continuous function exists only in principle and its values are computed only at the sample points. But mathematically, this function computes a set of point samples of the function $a*f$.
+该过程通过将输入序列与连续滤波器进行卷积来重建连续图像，然后对其进行点采样。 这并不是说这两个操作是顺序发生的——连续函数仅在原则上存在，并且其值仅在样本点处计算。 但从数学上讲，该函数计算函数 $a*f$ 的一组点样本。
+
+This point sampling seems wrong, though, because we just finished saying that a signal should be sampled with an appropriate smoothing filter to avoid aliasing. We should be convolving the reconstructed function with a sampling filter $g$ and point sampling $g*(f*a)$. But since this is the same as $(g*f)*a$, we can roll the sampling filter together with the reconstruction filter; one convolution operation is all we need (Figure 9.38). This combined reconstruction and sampling filter is known as a resampling filter.
+不过，这种点采样似乎是错误的，因为我们刚刚说过应该使用适当的平滑滤波器对信号进行采样以避免混叠。 我们应该将重构函数与采样滤波器 $g$ 和点采样 $g*(f*a)$ 进行卷积。 但由于这与 $(g*f)*a$ 相同，因此我们可以将采样滤波器与重建滤波器一起滚动； 我们只需要一次卷积运算（图 9.38）。 这种组合的重建和采样滤波器称为重采样滤波器。
+![Figure 9.38](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.38.png)
+Figure 9.38. Resampling involves filtering for reconstruction and for sampling. Since two convolution filters applied in sequence can be replaced with a single filter, we only need one resampling filter, which serves the roles of reconstruction and sampling.
+图 9.38。 重采样涉及重构和采样的过滤。 由于顺序应用的两个卷积滤波器可以用单个滤波器代替，因此我们只需要一个重采样滤波器，它起到重建和采样的作用。
+
+When resampling images, we usually specify a source rectangle in the units of the old image that specifies the part we want to keep in the new image. For example, using the pixel sample positioning convention from Chapter 3, the rectangle we’d use to resample the entire image is $(−0.5, n^{old}_{x} − 0.5) × (−0.5, n^{old}_y − 0.5)$. Given a source rectangle $(x_l, x_h) × (y_l, y_h)$, the sample spacing for the new image is $Δx = (x_h − x_l)/n^{new}_x$ in $x$ and $Δy = (y_h − y_l)/n^{new}_y$ in $y$. The lower-left sample is positioned at $(x_l + Δx/2, y_l + Δy/2)$.
+当我们重新采样图像时，我们通常会在旧图像的单位中指定一个源矩形，该矩形指定了我们希望在新图像中保留的部分。例如，使用第3章中的像素采样定位约定，我们用来重新采样整个图像的矩形是 $(−0.5, n^{old}_{x} − 0.5) × (−0.5, n^{old}_y − 0.5)$。给定源矩形 $(x_l, x_h) × (y_l, y_h)$，新图像的样本间距是 $Δx = (x_h − x_l)/n^{new}_x$ 在 $x$ 方向和 $Δy = (y_h − y_l)/n^{new}_y$ 在 $y$ 方向。左下角的样本位于 $(x_l + Δx/2, y_l + Δy/2)$ 的位置。
+
+Modifying the 1D pseudocode to use this convention, and expanding the call to the reconstruct function into the double loop that is implied, we arrive at:
+修改一维伪代码以使用此约定，并将对重建函数的调用扩展为隐含的双循环，我们得到：
+
+> function resample(sequence $a$, float $x_l$, float $x_h$, int $n$, filter $f$)
+> 	create sequence $b$ of length $n$
+> 	$r = f.radius$
+> 	$x_0 = x_l + Δx/2$
+> 	for $i = 0$ to $n - 1$ do
+> 		$s = 0$
+> 		$x = x_0 + iΔx$
+> 		for $j = \lceil x - r\rceil$ to $\lfloor x + r\rfloor$ do
+> 			$s = s + a[j]f(x - j)$
+> 		$b[i] = s$
+> 	return $b$
+
+This routine contains all the basics of resampling an image. One last issue that remains to be addressed is what to do at the edges of the image, where the simple version here will access beyond the bounds of the input sequence. There are several things we might do:
+该例程包含图像重采样的所有基础知识。 仍有待解决的最后一个问题是在图像边缘做什么，这里的简单版本将超出输入序列的边界。 我们可以做几件事：
+
+- Just stop the loop at the ends of the sequence. This is equivalent to padding the image with zeros on all sides.
+  只需在序列末尾停止循环即可。 这相当于用零填充图像的所有边。
+- Clip all array accesses to the end of the sequence—that is, return a[0] when we would want to access $a[−1]$. This is equivalent to padding the edges of the image by extending the last row or column.
+  将所有数组访问剪辑到序列的末尾，也就是说，当我们想要访问 $a[−1]$ 时，返回 a[0]。 这相当于通过延伸最后一行或最后一列来填充图像的边缘。
+- Modify the filter as we approach the edge so that it does not extend beyond the bounds of the sequence.
+  当我们接近边缘时修改过滤器，使其不会超出序列的边界。
+
+The first option leads to dim edges when we resample the whole image, which is not really satisfactory. The second option is easy to implement; the third is probably the best performing. The simplest way to modify the filter near the edge of the image is to renormalize it: divide the filter by the sum of the part of the filter that falls within the image. This way, the filter always adds up to 1 over the actual image samples, so it preserves image intensity. For performance, it is desirable to handle the band of pixels within a filter radius of the edge (which require this renormalization) separately from the center (which contains many more pixels and does not require renormalization).
+当我们对整个图像重新采样时，第一个选项会导致边缘变暗，这并不令人满意。 第二种方案很容易实现； 第三个可能是表现最好的。 修改图像边缘附近的滤波器的最简单方法是将其重新归一化：将滤波器除以落在图像内的滤波器部分的总和。 这样，滤波器在实际图像样本上的总和总是为 1，因此它保留了图像强度。 为了提高性能，需要将边缘滤波器半径内的像素带（需要重新归一化）与中心（包含更多像素并且不需要重新归一化）分开处理。
+
+The choice of filter for resampling is important. There are two separate issues: the shape of the filter and the size (radius). Because the filter serves both as a reconstruction filter and a sampling filter, the requirements of both roles affect the choice of filter. For reconstruction, we would like a filter smooth enough to avoid aliasing artifacts when we enlarge the image, and the filter should be ripplefree. For sampling, the filter should be large enough to avoid undersampling and smooth enough to avoid moir´ e artifacts. Figure 9.39 illustrates these two different needs.
+用于重采样的滤波器的选择很重要。 有两个独立的问题：过滤器的形状和尺寸（半径）。 由于滤波器既充当重建滤波器又充当采样滤波器，因此这两种角色的要求都会影响滤波器的选择。 对于重建，我们希望滤波器足够平滑，以避免放大图像时出现混叠伪影，并且滤波器应该没有波纹。 对于采样，滤波器应该足够大以避免采样不足，并且足够平滑以避免莫尔伪影。 图 9.39 说明了这两种不同的需求。
+![Figure 9.39](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.39.png)
+Figure 9.39. The effects of using different sizes of a filter for upsampling (enlarging) or downsampling (reducing) an image.
+图 9.39。 使用不同尺寸的滤波器对图像进行上采样（放大）或下采样（缩小)的效果。
+
+Generally, we will choose one filter shape and scale it according to the relative resolutions of the input and output. The lower of the two resolutions determines the size of the filter: when the output is more coarsely sampled than the input (downsampling, or shrinking the image), the smoothing required for proper sampling is greater than the smoothing required for reconstruction, so we size the filter according to the output sample spacing (radius 3 in Figure 9.39). On the other hand, when the output is more finely sampled (upsampling, or enlarging the image) then the smoothing required for reconstruction dominates (the reconstructed function is already smooth enough to sample at a higher rate than it started), so the size of the filter is determined by the input sample spacing (radius 1 in Figure 9.39).
+通常，我们会选择一种滤波器形状并根据输入和输出的相对分辨率对其进行缩放。 两个分辨率中较低的一个决定了滤波器的大小：当输出的采样比输入更粗略时（下采样或缩小图像），正确采样所需的平滑大于重建所需的平滑，因此我们调整大小 根据输出样本间距（图 9.39 中的半径 3）过滤器。 另一方面，当对输出进行更精细的采样（上采样或放大图像）时，重建所需的平滑占主导地位（重建函数已经足够平滑，可以以比开始时更高的速率进行采样），因此 滤波器由输入样本间距（图 9.39 中的半径 1）决定。
+
+Choosing the filter itself is a tradeoff between speed and quality. Common choices are the box filter (when speed is paramount), the tent filter (moderate quality), or a piecewise cubic (excellent quality). In the piecewise cubic case, the degree of smoothing can be adjusted by interpolating between fB and fC; the Mitchell-Netravali filter is a good choice. 
+选择过滤器本身就是速度和质量之间的权衡。 常见的选择是盒式过滤器（当速度至关重要时）、帐篷过滤器（中等质量）或分段立方过滤器（卓越质量）。 在分段三次的情况下，可以通过在fB和fC之间插值来调整平滑程度； Mitchell-Netravali 滤波器是一个不错的选择。
+
+Just as with image filtering, separable filters can provide a significant speedup. The basic idea is to resample all the rows first, producing an image with changed width but not height, then to resample the columns of that image to produce the final result (Figure 9.40). Modifying the pseudocode given earlier so that it takes advantage of this optimization is reasonably straightforward.
+正如图像过滤一样，可分离的过滤器可以提供显着的加速。 基本思想是首先对所有行重新采样，生成宽度改变但高度不变的图像，然后对该图像的列重新采样以产生最终结果（图 9.40）。 修改前面给出的伪代码以利用这种优化是相当简单的。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.40.png" alt="Figure 9.40" style="zoom:80%;" />
+Figure 9.40. Resampling an image using a separable approach. 
+图 9.40。 使用可分离方法对图像进行重新采样。
+
+## 9.5 Sampling Theory 抽样理论
+
+If you are only interested in implementation, you can stop reading here; the algorithms and recommendations in the previous sections will let you implement programs that perform sampling and reconstruction and achieve excellent results. However, there is a deeper mathematical theory of sampling with a history reaching back to the first uses of sampled representations in telecommunications. Sampling theory answers many questions that are difficult to answer with reasoning based strictly on scale arguments.
+如果你只对实现感兴趣，你可以停止阅读这里； 前面几节中的算法和建议将让您实现执行采样和重建的程序并获得出色的结果。 然而，还有更深入的采样数学理论，其历史可以追溯到电信中采样表示的首次使用。 抽样理论回答了许多严格基于尺度论证的推理难以回答的问题。
+
+But most important, sampling theory gives valuable insight into the workings of sampling and reconstruction. It gives the student who learns it an extra set of intellectual tools for reasoning about how to achieve the best results with the most efficient code.
+但最重要的是，采样理论为采样和重建的工作原理提供了宝贵的见解。 它为学习它的学生提供了一套额外的智力工具，用于推理如何使用最有效的代码实现最佳结果。
+
+### 9.5.1 The Fourier Transform 傅里叶变换
+
+The Fourier transform, along with convolution, is the main mathematical concept that underlies sampling theory. You can read about the Fourier transform in many math books on analysis, as well as in books on signal processing.
+傅立叶变换与卷积一起是构成采样理论的主要数学概念。 您可以在许多有关分析的数学书籍以及有关信号处理的书籍中阅读有关傅立叶变换的内容。
+
+The basic idea behind the Fourier transform is to express any function by adding together sine waves (sinusoids) of all frequencies. By using the appropriate weights for the different frequencies, we can arrange for the sinusoids to add up to any (reasonable) function we want.
+傅立叶变换背后的基本思想是通过将所有频率的正弦波（正弦波）相加来表达任何函数。 通过对不同频率使用适当的权重，我们可以安排正弦曲线相加得到我们想要的任何（合理的）函数。
+
+As an example, the square wave in Figure 9.41 can be expressed by a sequence of sine waves:
+例如，图 9.41 中的方波可以用正弦波序列表示：
+$\sum^∞_{n=1,3,5,...}\frac{4}{\pi n}\sin2\pi nx\\$
+
+![Figure 9.41](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.41.png)
+Figure 9.41. Approximating a square wave with finite sums of sines.
+图 9.41。 用有限正弦和近似方波。
+
+This Fourier series starts with a sine wave ($\sin 2πx$) that has frequency 1.0—same as the square wave—and the remaining terms add smaller and smaller corrections to reduce the ripples and, in the limit, reproduce the square wave exactly. Note that all the terms in the sum have frequencies that are integer multiples of the frequency of the square wave. This is because other frequencies would produce results that don’t have the same period as the square wave.
+该傅立叶级数以频率为 1.0 的正弦波 ($\sin 2πx$) 开始（与方波相同），其余项添加越来越小的修正以减少纹波，并在极限情况下精确再现方波 。 请注意，总和中的所有项的频率都是方波频率的整数倍。 这是因为其他频率会产生与方波周期不同的结果。
+
+A surprising fact is that a signal does not have to be periodic in order to be expressed as a sum of sinusoids in this way: a non-periodic signal just requires more sinusoids. Rather than summing over a discrete sequence of sinusoids, we will instead integrate over a continuous family of sinusoids. For instance, a box function can be written as the integral of a family of cosine waves:
+一个令人惊讶的事实是，信号不一定必须是周期性的才能以这种方式表示为正弦波之和：非周期性信号只需要更多的正弦波。 我们不会对离散的正弦曲线序列进行求和，而是对连续的正弦曲线族进行积分。 例如，盒函数可以写成余弦波族的积分： 
+$$
+\int^∞_{−∞}\frac{\sin\pi u}{\pi u}\cos2\pi ux du \ \ \ \ \ (9.6)
+$$
+This integral in Equation (9.6) is adding up infinitely many cosines, weighting the cosine of frequency $u$ by the weight $(\sin πu)/πu$. The result, as we include higher and higher frequencies, converges to the box function (see Figure 9.42). When a function $f$ is expressed in this way, this weight, which is a function of the frequency $u$, is called the Fourier transform of $f$, denoted $\hat{f}$. The function $\hat{f}$tells us how to build $f$ by integrating over a family of sinusoids:
+方程（9.6）中的积分将无穷多个余弦相加，用权重 $(\sin πu)/πu$ 对频率 $u$ 的余弦进行加权。 当我们包含越来越高的频率时，结果会收敛到框函数（见图 9.42）。 当函数$f$以这种方式表达时，这个权重是频率$u$的函数，称为$f$的傅立叶变换，记为$\hat{f}$。 函数 $\hat{f}$ 告诉我们如何通过对一系列正弦曲线进行积分来构建 $f$：
+$$
+f(x) = \int^∞_{-∞}\hat{f}(u)e^{2\pi iux}du \ \ \ \ \ (9.7)
+$$
+![Figure 9.42](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.42.png)
+Figure 9.42. Approximating a box function with integrals of cosines up to each of four cutoff frequencies.
+图 9.42。 使用最多四个截止频率中的每一个的余弦积分来近似箱函数。
+
+Equation (9.7) is known as the inverse Fourier transform (IFT) because it starts with the Fourier transform of f and ends up with $f$.(Note that the term “Fourier transform” is used both for the function $\hat{f}$ and for the operation that computes $\hat{f}$ from $f$. Unfortunately, this rather ambiguous usage is standard.  )
+方程 (9.7) 被称为逆傅里叶变换 (IFT)，因为它以 f 的傅里叶变换开始，以 $f$ 结束。（请注意，术语“傅里叶变换”同时用于函数 $\hat{ f}$ 以及从 $f$ 计算 $\hat{f}$ 的操作。不幸的是，这种相当模糊的用法是标准的。）
+
+Note that in Equation (9.7) the complex exponential $e^{2πiux}$ has been substituted for the cosine in the previous equation. Also, $\hat{f}$ is a complex-valued function. The machinery of complex numbers is required to allow the phase, as well as the frequency, of the sinusoids to be controlled; this is necessary to represent any functions that are not symmetric across zero. The magnitude of $\hat{f}$ is known as the Fourier spectrum, and, for our purposes, this is sufficient—we won’t need to worry about phase or use any complex numbers directly.
+请注意，在方程 (9.7) 中，复指数 $e^{2πiux}$ 已替换为前面方程中的余弦。 此外，$\hat{f}$ 是一个复值函数。 需要复数机制来控制正弦波的相位和频率； 这对于表示任何不对称于零的函数是必要的。 $\hat{f}$ 的幅度被称为傅里叶谱，对于我们的目的来说，这已经足够了——我们不需要担心相位或直接使用任何复数。
+
+It turns out that computing $\hat{f}$ from $f$ looks very much like computing $f$ from $\hat{f}$: 
+事实证明，从 $f$ 计算 $\hat{f}$ 看起来非常像从 $\hat{f}$ 计算 $f$： 
+$$
+\hat{f}u = \int^∞_{-∞}f(x)e^{2πiux}dx \ \ \ \ \ (9.8)
+$$
+Equation (9.8) is known as the (forward) Fourier transform (FT). The sign in the exponential is the only difference between the forward and inverse Fourier transforms, and it is really just a technical detail. For our purposes, we can think of the FT and IFT as the same operation.
+方程（9.8）被称为（前）傅立叶变换（FT）。 指数中的符号是正向和逆傅里叶变换之间的唯一区别，这实际上只是一个技术细节。 出于我们的目的，我们可以将 FT 和 IFT 视为相同的操作。
+
+Sometimes the $f–\hat{f}$ notation is inconvenient, and then we will denote the Fourier transform of $f$ by $F{f}$ and the inverse Fourier transform of $\hat{f}$by $F^{−1}\{\hat{f}\}$. 
+有时$f–\hat{f}$表示法不方便，这时我们将$f$的傅立叶变换表示为$F{f}$，将$\hat{f}$的逆傅立叶变换表示为$F ^{−1}\{\hat{f}\}$。
+
+A function and its Fourier transform are related in many useful ways. A few facts (most of them easy to verify) that we will use later in the chapter are:
+函数及其傅里叶变换在许多有用的方面相关。 我们将在本章后面使用的一些事实（其中大多数很容易验证）是：
+
+- A function and its Fourier transform have the same squared integral:
+  函数及其傅里叶变换具有相同的平方积分： 
+  $\int (f(x))^2dx = \int(\hat{f}(u))^2du$
+
+  The physical interpretation is that the two have the same energy (Figure 9.43).
+  物理解释是两者具有相同的能量（图9.43）。
+  ![Figure 9.43](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.43.png)
+  Figure 9.43. The Fourier transform preserves the squared integral of the signal.
+  图 9.43。 傅里叶变换保留了信号的平方积分。
+  In particular, scaling a function up by a also scales its Fourier transform by $a$. That is, $F{af} = aF{f}$.
+  特别是，将函数放大 a 也会将其傅立叶变换放大 $a$。 即 $F{af} = aF{f}$。
+
+- Stretching a function along the x-axis squashes its Fourier transform along the u-axis by the same factor (Figure 9.44):
+  沿 x 轴拉伸函数会沿 u 轴将其傅立叶变换压缩相同的因子（图 9.44）：
+
+  ![Figure 9.44](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.44.png)
+  Figure 9.44. Scaling a signal along the x-axis in the space domain causes an inverse scale along the u-axis in the frequency domain.
+  图 9.44。 在空间域中沿 x 轴缩放信号会导致在频域中沿 u 轴缩放信号。
+  $F\{f(x/b)\} = b\hat{f}(bx)  $
+  (The renormalization by b is needed to keep the energy the same.) 
+  （需要通过 b 进行重整化以保持能量相同。）
+  This means that if we are interested in a family of functions of different width and height (say all box functions centered at zero), then we only need to know the Fourier transform of one canonical function (say the box function with width and height equal to one), and we can easily know the Fourier transforms of all the scaled and dilated versions of that function. For example, we can instantly generalize Equation (9.6) to give the Fourier transform of a box of width $b$ and height $a$:
+  这意味着，如果我们对一系列不同宽度和高度的函数感兴趣（假设所有框函数都以零为中心），那么我们只需要知道一个规范函数的傅立叶变换（假设宽度和高度相等的框函数） 到一），我们可以很容易地知道该函数的所有缩放和扩张版本的傅里叶变换。 例如，我们可以立即推广方程（9.6)来给出宽度为 $b$ 和高度为 $a$ 的盒子的傅里叶变换：
+  $ab\frac{\sin\pi bu}{\pi bu} \\$
+
+- The average value of f is equal to $\hat{f}(0)$. This makes sense since $\hat{f}(0)$ is supposed to be the zero-frequency component of the signal (the DC component if we are thinking of an electrical voltage).
+  f 的平均值等于 $\hat{f}(0)$。 这是有道理的，因为 $\hat{f}(0)$ 应该是信号的零频率分量（如果我们考虑的是电压，则为直流分量）。
+
+- If $f$ is real (which it always is for us), $\hat{f}$ is an even function—that is, $\hat{f}(u) = \hat{f}(−u)$. Likewise, if f is an even function then $\hat{f}$ will be real (this is not usually the case in our domain, but remember that we really are only going to care about the magnitude of $\hat{f}$).
+  如果 $f$ 是实数（对我们来说始终如此），则 $\hat{f}$ 是偶函数，即 $\hat{f}(u) = \hat{f}(−u) $。 同样，如果 f 是偶函数，那么 $\hat{f}$ 将是实数（在我们的域中通常不是这种情况，但请记住，我们实际上只关心 $\hat{f} 的大小 $）。
+
+### 9.5.2 Convolution and the Fourier Transform 卷积和傅立叶变换
+
+One final property of the Fourier transform that deserves special mention is its relationship to convolution (Figure 9.45). Briefly,
+傅立叶变换值得特别提及的最后一个属性是它与卷积的关系（图 9.45）。 简要地，
+$F\{f*g\} = \hat{f}\hat{g}$
+![Figure 9.45](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.45.png)
+Figure 9.45. A commutative diagram to show visually the relationship between convolution and multiplication. If we multiply $f$ and g in space, then transform to frequency, we end up in the same place as if we transformed $f$ and $g$ to frequency and then convolved them. Likewise, if we convolve $f$ and $g$ in space and then transform into frequency, we end up in the same place as if we transformed $f$ and $g$ to frequency, then multiplied them.
+图 9.45。 交换图直观地展示了卷积和乘法之间的关系。 如果我们在空间中将 $f$ 和 g 相乘，然后转换为频率，我们最终会得到相同的结果，就像我们将 $f$ 和 $g$ 转换为频率然后对它们进行卷积一样。 同样，如果我们在空间中对 $f$ 和 $g$ 进行卷积，然后转换为频率，我们最终会得到相同的位置，就像我们将 $f$ 和 $g$ 转换为频率，然后将它们相乘一样。
+
+The Fourier transform of the convolution of two functions is the product of the Fourier transforms. Following the by now familiar symmetry, 
+两个函数卷积的傅里叶变换是傅里叶变换的乘积。 遵循现在熟悉的对称性，
+$\hat{f}*\hat{g}=F\{fg\}$
+
+The convolution of two Fourier transforms is the Fourier transform of the product of the two functions. These facts are fairly straightforward to derive from the definitions.
+两个傅里叶变换的卷积是两个函数乘积的傅里叶变换。 这些事实很容易从定义中推导出来。
+
+This relationship is the main reason Fourier transforms are useful in studying the effects of sampling and reconstruction. We’ve seen how sampling, filtering, and reconstruction can be seen in terms of convolution; now the Fourier transform gives us a new domain—the frequency domain—in which these operations are simply products.
+这种关系是傅立叶变换可用于研究采样和重建效果的主要原因。 我们已经了解了如何用卷积来看待采样、滤波和重构； 现在，傅里叶变换为我们提供了一个新的域——频域——其中这些运算只是乘积。
+
+### 9.5.3 A Gallery of Fourier Transforms 傅里叶变换画廊
+
+Now that we have some facts about Fourier transforms, let’s look at some examples of individual functions. In particular, we’ll look at some filters from Section 9.3.1, which are shown with their Fourier transforms in Figure 9.46. We have already seen the box function:
+现在我们已经了解了有关傅里叶变换的一些事实，让我们看一下各个函数的一些示例。 特别是，我们将查看第 9.3.1 节中的一些滤波器，它们及其傅里叶变换如图 9.46 所示。 我们已经看到了 box 函数：
+$F\{f_{box}\} = \frac{\sinπu}{πu}
+= sinc\ πu.  $
+![Figure 9.46](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.46.png)
+Figure 9.46. The Fourier transforms of the box, tent, B-spline, and Gaussian filters.
+图 9.46。 盒子滤波器、帐篷滤波器、B 样条滤波器和高斯滤波器的傅立叶变换。
+
+The function $sin x/x$ is important enough to have its own name, $sinc\ x$.(You may notice that $\sin πu/πu$ is undefined for $u = 0$. It is, however, continuous across zero,a nd we take it as understood that we use the limiting value of this ratio, 1, at $u = 0$.  )
+函数 $sin x/x$ 非常重要，有自己的名称 $sinc\ x$。（您可能会注意到，$\sin πu/πu$ 对于 $u = 0$ 是未定义的。然而，它是连续的 跨越零，并且我们认为我们使用该比率的极限值 1，在 $u = 0$ 处。）
+
+The tent function is the convolution of the box with itself, so its Fourier transform is just the square of the Fourier transform of the box function:
+帐篷函数是盒子与自身的卷积，因此它的傅里叶变换只是盒子函数傅里叶变换的平方：
+$F\{f_{tent}\} = \frac{\sin^2 πu}{π^2u^2} = sinc^2πu. \\$
+
+We can continue this process to get the Fourier transform of the B-spline filter (see Exercise 3):
+我们可以继续这个过程来获得 B 样条滤波器的傅立叶变换（参见练习 3）：
+$F\{f_B\} = \frac{\sin^4 πu}{π^4u^4} = sinc^4πu \\ $
+
+The Gaussian has a particularly nice Fourier transform:
+高斯有一个特别好的傅立叶变换：
+$F\{f_G\} = e^{-(2πu)^2/2}  $
+
+It is another Gaussian! The Gaussian with standard deviation 1.0 becomes a Gaussian with standard deviation 1/2π.
+这是另一个高斯分布！ 标准差为 1.0 的高斯函数变为标准差为 1/2π 的高斯函数。
+
+### 9.5.4 Dirac Impulses in Sampling Theory 抽样理论中的狄拉克脉冲
+
+The reason impulses are useful in sampling theory is that we can use them to talk about samples in the context of continuous functions and Fourier transforms. We represent a sample, which has a position and a value, by an impulse translated to that position and scaled by that value. A sample at position a with value b is represented by $bδ(x − a)$. This way we can express the operation of sampling the function $f(x)$ at a as multiplying $f$ by $δ(x − a)$. The result is $f(a)δ(x − a)$.
+脉冲在采样理论中有用的原因是我们可以使用它们来讨论连续函数和傅里叶变换背景下的样本。 我们通过转换到该位置并按该值缩放的脉冲来表示具有位置和值的样本。 位置 a 且值为 b 的样本由 $bδ(x − a)$ 表示。 这样我们就可以将在 a 处对函数 $f(x)$ 进行采样的操作表示为 $f$ 乘以 $δ(x − a)$。 结果是 $f(a)δ(x − a)$。
+
+Sampling a function at a series of equally spaced points is therefore expressed as multiplying the function by the sum of a series of equally spaced impulses, called an impulse train (Figure 9.47). An impulse train with period T, meaning that the impulses are spaced a distance T apart is
+因此，在一系列等距点处对函数进行采样表示为将该函数乘以一系列等距脉冲的总和，称为脉冲串（图 9.47）。 周期为 T 的脉冲串，意味着脉冲之间的距离为 T
+$s_T(x) = \sum^{∞}_{i= -∞}δ(x - Ti)  $
+![Figure 9.47](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.47.png)
+Figure 9.47. Impulse trains. The Fourier transform of an impulse train is another impulse train. Changing the period of the impulse train in space causes an inverse change in the period in frequency.
+图 9.47。 脉冲列车。 脉冲串的傅里叶变换是另一种脉冲串。 改变空间脉冲序列的周期会导致频率周期的反向变化。
+
+The Fourier transform of $s_1$ is the same as $s_1$: a sequence of impulses at all integer frequencies. You can see why this should be true by thinking about what happens when we multiply the impulse train by a sinusoid and integrate. We wind up adding up the values of the sinusoid at all the integers. This sum will exactly cancel to zero for non-integer frequencies, and it will diverge to $+∞$ for integer frequencies.
+$s_1$ 的傅立叶变换与 $s_1$ 相同：所有整数频率的脉冲序列。 通过思考当我们将脉冲串乘以正弦曲线并积分时会发生什么，您可以明白为什么这是正确的。 我们最终将所有整数处的正弦曲线值相加。 对于非整数频率，这个总和将精确地抵消为零，对于整数频率，它将发散到 $+∞$。
+
+Because of the dilation property of the Fourier transform, we can guess that the Fourier transform of an impulse train with period T (which is like a dilation of $s_1$) is an impulse train with period $1/T$ . Making the sampling finer in the space domain makes the impulses farther apart in the frequency domain.
+由于傅里叶变换的膨胀特性，我们可以猜测周期为 T 的脉冲序列（类似于 $s_1$ 的膨胀）的傅里叶变换是周期为 $1/T$ 的脉冲序列。 在空间域中进行更精细的采样会使脉冲在频域中相距更远。 
+
+### 9.5.5 Sampling and Aliasing 采样和混叠
+
+Now that we have built the mathematical machinery, we need to understand the sampling and reconstruction process from the viewpoint of the frequency domain. The key advantage of introducing Fourier transforms is that it makes the effects of convolution filtering on the signal much clearer, and it provides more precise explanations of why we need to filter when sampling and reconstructing.
+现在我们已经构建了数学机制，我们需要从频域的角度来理解采样和重构过程。 引入傅里叶变换的主要优点是它使卷积滤波对信号的影响更加清晰，并且更精确地解释了为什么我们在采样和重构时需要滤波。
+
+We start the process with the original, continuous signal. In general its Fourier transform could include components at any frequency, although for most kinds of signals (especially images), we expect the content to decrease as the frequency gets higher. Images also tend to have a large component at zero frequency— remember that the zero-frequency, or DC, component is the integral of the whole image, and since images are all positive values this tends to be a large number.
+我们从原始的连续信号开始该过程。 一般来说，它的傅里叶变换可以包括任何频率的分量，尽管对于大多数类型的信号（尤其是图像），我们预计随着频率的升高，内容会减少。 图像在零频率处也往往有一个很大的分量 - 请记住，零频率或 DC 分量是整个图像的积分，并且由于图像都是正值，因此这往往是一个很大的数字。
+
+Let’s see what happens to the Fourier transform if we sample and reconstruct without doing any special filtering (Figure 9.48). When we sample the signal, we model the operation as multiplication with an impulse train; the sampled signal is $fs_T$ . Because of the multiplication-convolution property, the FT of the sampled signal is $\hat{f}* \hat{s_T} = \hat{f} * s_{1/T} $. 
+让我们看看如果我们在不进行任何特殊滤波的情况下进行采样和重建，傅里叶变换会发生什么（图 9.48）。 当我们对信号进行采样时，我们将运算建模为与脉冲序列相乘； 采样信号是 $fs_T$ 。 由于乘法卷积特性，采样信号的 FT 为 $\hat{f}* \hat{s_T} = \hat{f} * s_{1/T} $。
+<img src="E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.48.png" alt="Figure 9.48" style="zoom:80%;" />
+Figure 9.48. Sampling and reconstruction with no filtering. Sampling produces alias spectra that overlap and mix with the base spectrum. Reconstruction with a box filter collects even more information from the alias spectra. The result is a signal that has serious aliasing artifacts.
+图 9.48。 无过滤的采样和重建。 采样产生与基础光谱重叠并混合的混叠光谱。 使用盒式滤波器进行重建可以从别名光谱中收集更多信息。 结果是信号具有严重的混叠伪影。
+
+Recall that $δ$ is the identity for convolution. This means that
+回想一下，$δ$ 是卷积的恒等式。 这意味着
+$(\hat{f}*s_{1/T})(u) = \sum^∞_{i=-∞}\hat{f}(u - i/T);  $
+
+that is, convolving with the impulse train makes a whole series of equally spaced copies of the spectrum of f. A good intuitive interpretation of this seemingly odd result is that all those copies just express the fact (as we saw back in Section 9.1.1) that frequencies that differ by an integer multiple of the sampling frequency are indistinguishable once we have sampled—they will produce exactly the same set of samples. The original spectrum is called the base spectrum and the copies are known as alias spectra.
+也就是说，与脉冲序列卷积生成 f 频谱的一系列等距副本。 对这个看似奇怪的结果的一个很好的直观解释是，所有这些副本都只是表达了这样一个事实（正如我们在第 9.1.1 节中看到的那样）：一旦我们采样，相差采样频率整数倍的频率就无法区分——它们将 产生完全相同的一组样本。 原始光谱称为基础光谱，副本称为别名光谱。
+
+The trouble begins if these copies of the signal’s spectrum overlap, which will happen if the signal contains any significant content beyond half the sample frequency. When this happens, the spectra add, and the information about different frequencies is irreversibly mixed up. This is the first place aliasing can occur, and if it happens here, it’s due to undersampling—using too low a sample frequency for the signal.
+如果信号频谱的这些副本重叠，那么麻烦就开始了，如果信号包含超过采样频率一半的任何重要内容，就会发生这种情况。 当这种情况发生时，频谱会相加，不同频率的信息就会不可逆地混合在一起。 这是第一个可能发生混叠的地方，如果在这里发生混叠，那是由于采样不足——对信号使用了太低的采样频率。 
+
+Suppose we reconstruct the signal using the nearest-neighbor technique. This is equivalent to convolving with a box of width 1. (The discrete-continuous convolution used to do this is the same as a continuous convolution with the series of impulses that represent the samples.) The convolution-multiplication property means that the spectrum of the reconstructed signal will be the product of the spectrum of the sampled signal and the spectrum of the box. The resulting reconstructed Fourier transform contains the base spectrum (though somewhat attenuated at higher frequencies), plus attenuated copies of all the alias spectra. Because the box has a fairly broad Fourier transform, these attenuated bits of alias spectra are significant, and they are the second form of aliasing, due to an inadequate reconstruction filter. These alias components manifest themselves in the image as the pattern of squares that is characteristic of nearest-neighbor reconstruction.
+假设我们使用最近邻技术重建信号。 这相当于与宽度为 1 的框进行卷积。（用于执行此操作的离散连续卷积与与代表样本的一系列脉冲进行连续卷积相同。）卷积乘法属性意味着 重建的信号将是采样信号的频谱和盒子的频谱的乘积。 由此产生的重建傅里叶变换包含基础频谱（尽管在较高频率下有所衰减），以及所有混叠频谱的衰减副本。 由于该盒子具有相当宽的傅里叶变换，因此混叠频谱的这些衰减位非常重要，并且由于重建滤波器不充分，它们是混叠的第二种形式。 这些混叠分量在图像中表现为正方形图案，这是最近邻重建的特征。
+
+#### Preventing Aliasing in Sampling 防止采样中的混叠
+
+To do high quality sampling and reconstruction, we have seen that we need to choose sampling and reconstruction filters appropriately. From the standpoint of the frequency domain, the purpose of lowpass filtering when sampling is to limit the frequency range of the signal so that the alias spectra do not overlap the base spectrum. Figure 9.49 shows the effect of sample rate on the Fourier transform of the sampled signal. Higher sample rates move the alias spectra farther apart, and eventually whatever overlap is left does not matter.
+为了进行高质量的采样和重建，我们已经看到我们需要适当地选择采样和重建滤波器。 从频域的角度来看，采样时低通滤波的目的是限制信号的频率范围，使混叠频谱不与基础频谱重叠。 图 9.49 显示了采样率对采样信号傅里叶变换的影响。 较高的采样率会使混叠频谱相距更远，最终留下的任何重叠都无关紧要。
+![Figure 9.49](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.49.png)
+Figure 9.49. The effect of sample rate on the frequency spectrum of the sampled signal. Higher sample rates push the copies of the spectrum apart, reducing problems caused by overlap.
+图 9.49。 采样率对采样信号频谱的影响。 更高的采样率将频谱的副本分开，减少了重叠引起的问题。
+
+The key criterion is that the width of the spectrum must be less than the distance between the copies—that is, the highest frequency present in the signal must be less than half the sample frequency. This is known as the Nyquist criterion, and the highest allowable frequency is known as the Nyquist frequency or Nyquist limit. The Nyquist-Shannon sampling theorem states that a signal whose frequencies do not exceed the Nyquist limit (or, said another way, a signal that is bandlimited to the Nyquist frequency) can, in principle, be reconstructed exactly from samples.
+关键标准是频谱的宽度必须小于副本之间的距离，也就是说，信号中存在的最高频率必须小于采样频率的一半。 这称为奈奎斯特准则，最高允许频率称为奈奎斯特频率或奈奎斯特极限。 奈奎斯特-香农采样定理指出，原则上，频率不超过奈奎斯特极限的信号（或者换句话说，带宽限制为奈奎斯特频率的信号）可以从样本中精确重建。
+
+With a high enough sample rate for a particular signal, we don’t need to use a sampling filter. But if we are stuck with a signal that contains a wide range of frequencies (such as an image with sharp edges in it), we must use a sampling filter to bandlimit the signal before we can sample it. Figure 9.50 shows the effects of three lowpass (smoothing) filters in the frequency domain, and Figure 9.51 shows the effect of using these same filters when sampling. Even if the spectra overlap without filtering, convolving the signal with a lowpass filter can narrow the spectrum enough to eliminate overlap and produce a well-sampled representation of the filtered signal. Of course, we have lost the high frequencies, but that’s better than having them get scrambled with the signal and turn into artifacts.
+如果特定信号的采样率足够高，我们就不需要使用采样滤波器。 但是，如果我们遇到包含各种频率的信号（例如具有锐利边缘的图像），则必须使用采样滤波器对信号进行带宽限制，然后才能对其进行采样。 图 9.50 显示了频域中三个低通（平滑）滤波器的效果，图 9.51 显示了采样时使用这些相同滤波器的效果。 即使频谱在没有滤波的情况下重叠，用低通滤波器对信号进行卷积也可以使频谱变窄，足以消除重叠并产生滤波后信号的良好采样表示。 当然，我们失去了高频，但这比让它们与信号混杂并变成伪影要好。
+![Figure 9.50](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.50.png)
+Figure 9.50. Applying lowpass (smoothing) filters narrows the frequency spectrum of a signal.
+图 9.50。 应用低通（平滑)滤波器可以缩小信号的频谱。
+
+![Figure 9.51](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.51.png)
+Figure 9.51. How the lowpass filters from Figure 9.50 prevent aliasing during sampling. Lowpass filtering narrows the spectrum so that the copies overlap less, and the high frequencies from the alias spectra interfere less with the base spectrum.
+图 9.51。 图 9.50 中的低通滤波器如何防止采样期间出现混叠。 低通滤波使频谱变窄，从而使副本重叠更少，并且混叠频谱中的高频对基本频谱的干扰更少。
+
+#### Preventing Aliasing in Reconstruction 防止重建中出现锯齿
+
+From the frequency domain perspective, the job of a reconstruction filter is to remove the alias spectra while preserving the base spectrum. In Figure 9.48, we can see that the crudest reconstruction filter, the box, does attenuate the alias spectra. Most important, it completely blocks the DC spike for all the alias spectra. This is a characteristic of all reasonable reconstruction filters: they have zeroes in frequency space at all multiples of the sample frequency. This turns out to be equivalent to the ripple-free property in the space domain.
+从频域的角度来看，重建滤波器的作用是去除混叠频谱，同时保留基础频谱。 在图 9.48 中，我们可以看到最原始的重建滤波器（盒子）确实衰减了混叠频谱。 最重要的是，它完全阻挡了所有混叠频谱的直流尖峰。 这是所有合理的重构滤波器的一个特征：它们在频率空间中在采样频率的所有倍数处都有零点。 事实证明，这相当于空间域中的无波纹特性。
+
+So a good reconstruction filter needs to be a good lowpass filter, with the added requirement of completely blocking all multiples of the sample frequency. The purpose of using a reconstruction filter different from the box filter is to more completely eliminate the alias spectra, reducing the leakage of high-frequency artifacts into the reconstructed signal, while disturbing the base spectrum as little as possible. Figure 9.52 illustrates the effects of different filters when used during reconstruction. As we have seen, the box filter is quite “leaky” and results in plenty of artifacts even if the sample rate is high enough. The tent filter, resulting in linear interpolation, attenuates high frequencies more, resulting in milder artifacts, and the B-spline filter is very smooth, controlling the alias spectra very effectively. It also smooths the base spectrum some—this is the tradeoff between smoothing and aliasing that we saw earlier.
+因此，一个好的重构滤波器必须是一个好的低通滤波器，并且还需要完全阻止采样频率的所有倍数。 使用与盒式滤波器不同的重建滤波器的目的是更完全地消除混叠频谱，减少高频伪影泄漏到重建信号中，同时尽可能少地干扰基础频谱。 图 9.52 说明了在重建过程中使用不同滤波器的效果。 正如我们所看到的，盒式滤波器非常“泄漏”，即使采样率足够高，也会产生大量伪影。 帐篷滤波器产生线性插值，更多地衰减高频，从而产生更温和的伪影，而 B 样条滤波器非常平滑，可以非常有效地控制混叠频谱。 它还对基础频谱进行了一些平滑——这是我们之前看到的平滑和混叠之间的权衡。
+![Figure 9.52](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.52.png)
+Figure 9.52. The effects of different reconstruction filters in the frequency domain. A good  reconstruction filter attenuates the alias spectra effectively while preserving the base spectrum.
+图 9.52。 频域中不同重构滤波器的效果。 良好的重建滤波器可以有效地衰减混叠频谱，同时保留基础频谱。
+
+#### Preventing Aliasing in Resampling 防止重采样中的混叠
+
+When the operations of reconstruction and sampling are combined in resampling, the same principles apply, but with one filter doing the work of both reconstruction and sampling. Figure 9.53 illustrates how a resampling filter must remove the alias spectra and leave the spectrum narrow enough to be sampled at the new sample rate.
+当在重采样中组合重建和采样操作时，适用相同的原理，但由一个滤波器同时完成重建和采样工作。 图 9.53 说明了重采样滤波器如何必须去除混叠频谱并使频谱足够窄以便以新的采样率进行采样。
+![Figure 9.53](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 9.53.png)
+Figure 9.53. Resampling viewed in the frequency domain. The resampling filter both reconstructs the signal (removes the alias spectra) and bandlimits it (reduces its width) for sampling at the new rate.
+图 9.53。 在频域中查看重采样。 重采样滤波器既重建信号（去除混叠频谱），又对其进行频带限制（减小其宽度)，以便以新的速率进行采样。
+
+### 9.5.6 Ideal Filters vs. Useful Filters 理想过滤器与有用过滤器
+
+Following the frequency domain analysis to its logical conclusion, a filter that is exactly a box in the frequency domain is ideal for both sampling and reconstruction. Such a filter would prevent aliasing at both stages without diminishing the frequencies below the Nyquist frequency at all.
+根据频域分析得出的逻辑结论，频域中恰好是一个盒子的滤波器对于采样和重建都是理想的。 这样的滤波器可以防止两个阶段的混叠，而根本不会减少奈奎斯特频率以下的频率。
+
+Recall that the inverse and forward Fourier transforms are essentially identical, so the spatial domain filter that has a box as its Fourier transform is the function $\sin πx/πx = sinc πx$.
+回想一下，逆傅立叶变换和正向傅立叶变换本质上是相同的，因此以框作为傅立叶变换的空间域滤波器是函数 $\sin πx/πx = sinc πx$。
+
+However, the sinc filter is not generally used in practice, either for sampling or for reconstruction, because it is impractical and because, even though it is optimal according to the frequency domain criteria, it doesn’t produce the best results for many applications.
+然而，sinc 滤波器在实践中通常不用于采样或重建，因为它不切实际，而且即使根据频域标准它是最佳的，它也不会为许多应用产生最佳结果。
+
+For sampling, the infinite extent of the sinc filter, and its relatively slow rate of decrease with distance from the center, is a liability. Also, for some kinds of sampling, the negative lobes are problematic. A Gaussian filter makes an excellent sampling filter even for difficult cases where high-frequency patterns must be removed from the input signal, because its Fourier transform falls off exponentially, with no bumps that tend to let aliases leak through. For less difficult cases, a tent filter generally suffices.
+对于采样来说，sinc 滤波器的无限范围及其随着距中心距离的减小而相对缓慢的速率是一个缺点。 此外，对于某些类型的采样，负瓣是有问题的。 即使对于必须从输入信号中去除高频模式的困难情况，高斯滤波器也是一个出色的采样滤波器，因为它的傅里叶变换呈指数下降，并且没有容易让混叠泄漏的凹凸。 对于不太困难的情况，帐篷过滤器通常就足够了。
+
+For reconstruction, the size of the sinc function again creates problems, but even more importantly, the many ripples create “ringing” artifacts in reconstructed signals.
+对于重建来说，sinc 函数的大小再次产生了问题，但更重要的是，许多纹波会在重建信号中产生“振铃”伪影。
+
+## Exercises 练习
+
+1. Show that discrete convolution is commutative and associative. Do the same for continuous convolution. 
+   证明离散卷积是可交换的和结合的。 对连续卷积做同样的事情。
+2. Discrete-continuous convolution can’t be commutative, because its arguments have two different types. Show that it is associative, though.
+   离散连续卷积不能交换，因为它的参数有两种不同的类型。 不过，请证明它是关联的。
+3. Prove that the B-spline is the convolution of four box functions.
+   证明B样条是四个框函数的卷积。
+4. Show that the “flipped” definition of convolution is necessary by trying to show that convolution is commutative and associative using this (incorrect) definition (see the footnote on page 192):
+   通过尝试使用这个（不正确的）定义来证明卷积是可交换的和结合的，证明卷积的“翻转”定义是必要的（参见第 192 页的脚注）：
+   $(a*b)[i] = \sum_ja[j]b[i + j]  \\$
+5. Prove that $F\{f*g\} = \hat{f}\hat{g}$  and $\hat{f}*\hat{g} = F\{fg\}$. 
+   证明 $F\{f*g\} = \hat{f}\hat{g}$ 且 $\hat{f}*\hat{g} = F\{fg\}$。
+6. Equation 9.4 can be interpreted as the convolution of a with a filter $\overline{f}$. Write a mathematical expression for the “de-rippled” filter $\overline{f}$. Plot the filter that results from de-rippling the box, tent, and B-spline filters scaled to $s = 1.25$.
+   方程 9.4 可以解释为 a 与滤波器 $\overline{f}$ 的卷积。 为“去波纹”滤波器 $\overline{f}$ 编写一个数学表达式。 绘制通过对盒子、帐篷和 B 样条滤波器去波纹而得到的滤波器，并缩放至 $s = 1.25$。
+
+
+
+# 10  Surface Shading 表面着色
+
+To make objects appear to have more volume, it can help to use shading, i.e., the surface is “painted” with light. This chapter presents the most common heuristic shading methods. The first two, diffuse and Phong shading, were developed in the 1970s and are available in most graphics libraries. The last, artistic shading, uses artistic conventions to assign color to objects. This creates images reminiscent of technical drawings, which is desirable in many applications. 
+为了使物体看起来有更大的体积，可以使用阴影，即用光“绘制”表面。 本章介绍最常见的启发式着色方法。 前两种，漫反射和 Phong 着色，是在 20 世纪 70 年代开发的，并且在大多数图形库中都可用。 最后一种是艺术着色，使用艺术惯例为对象分配颜色。 这创建的图像让人想起技术图纸，这在许多应用中都是理想的。
+
+## 10.1 Diffuse Shading 漫反射着色
+
+Many objects in the world have a surface appearance loosely described as “matte,” indicating that the object is not at all shiny. Examples include paper, unfinished wood, and dry, unpolished stones. To a large degree, such objects do not have a color change with a change in viewpoint. For example, if you stare at a particular point on a piece of paper and move while keeping your gaze fixed on that point, the color at that point will stay relatively constant. Such matte objects can be considered as behaving as Lambertian objects. This section discusses how to implement the shading of such objects. A key point is that all formulas in this chapter should be evaluated in world coordinates and not in the warped coordinates after the perspective transform is applied. Otherwise, the angles between normals are changed and the shading will be inaccurate.
+世界上许多物体的表面外观被粗略地描述为“无光泽”，表明该物体根本没有光泽。 例如纸张、未加工的木材以及干燥、未抛光的石头。 在很大程度上，此类物体的颜色不会随着视点的变化而变化。 例如，如果您盯着一张纸上的特定点，并在目光固定在该点上的同时移动，则该点的颜色将保持相对恒定。 此类无光泽对象可以被视为具有朗伯对象的行为。 本节讨论如何实现此类对象的着色。 关键点是本章中的所有公式都应在世界坐标中计算，而不是在应用透视变换后在扭曲坐标中计算。 否则，法线之间的角度会发生变化，并且着色将不准确。
+
+### 10.1.1 Lambertian Shading Model  朗伯着色模型
+
+A Lambertian object obeys Lambert’s cosine law, which states that the color c of a surface is proportional to the cosine of the angle between the surface normal and the direction to the light source (Gouraud, 1971):
+朗伯物体遵循朗伯余弦定律，该定律规定表面的颜色 c 与表面法线和光源方向之间的角度的余弦成正比（Gouraud，1971）：
+$c ∝ \cos θ  $
+or in vector form,
+或以向量形式，
+$c ∝ \bold{n} · \bold{l},  $
+where $\bold{n}$ and $\bold{l}$ are shown in Figure 10.1. Thus, the color on the surface will vary according to the cosine of the angle between the surface normal and the light direction. Note that the vector $\bold{l}$ is typically assumed not to depend on the location of the object. That assumption is equivalent to assuming the light is “distant” relative to object size. Such a “distant” light is often called a directional light, because its position is specified only by a direction.
+其中 $\bold{n}$ 和 $\bold{l}$ 如图 10.1 所示。 因此，表面上的颜色将根据表面法线与光线方向之间的角度的余弦而变化。 请注意，通常假设向量 $\bold{l}$ 不依赖于对象的位置。 该假设相当于假设光相对于物体大小是“远”的。 这种“远”光通常称为定向光，因为它的位置仅由方向指定。
+![Figure 10.1](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.1.png)
+Figure 10.1. The geometry for Lambert’s law. Both $\bold{n}$ and $\bold{l}$ are unit vectors.
+图 10.1。 兰伯特定律的几何形状。 $\bold{n}$ 和 $\bold{l}$ 都是单位向量。
+
+A surface can be made lighter or darker by changing the intensity of the light source or the reflectance of the surface. The diffuse reflectance $c_r$ is the fraction of light reflected by the surface. This fraction will be different for different color components. For example, a surface is red if it reflects a higher fraction of red incident light than blue incident light. If we assume surface color is proportional to the light reflected from a surface, then the diffuse reflectance $c_r$—an RGB color—must also be included:
+通过改变光源的强度或表面的反射率可以使表面变亮或变暗。 漫反射率 $c_r$ 是表面反射的光的比例。 对于不同的颜色分量，该分数会有所不同。 例如，如果表面反射的红色入射光比例高于蓝色入射光，则该表面为红色。 如果我们假设表面颜色与表面反射的光成正比，则还必须包括漫反射率 $c_r$（RGB 颜色）：
+$$
+c ∝ c_r\bold{n} · \bold{l}. \ \ \ \ \ \ (10.1)
+$$
+The right-hand side of Equation (10.1) is an RGB color with all RGB components in the range [0, 1]. We would like to add the effects of light intensity while keeping the RGB components in the range [0, 1]. This suggests adding an RGB intensity term $c_l$ which itself has components in the range [0, 1]:
+等式（10.1）的右侧是 RGB 颜色，所有 RGB 分量都在 [0, 1] 范围内。 我们希望添加光强度的影响，同时将 RGB 分量保持在 [0, 1] 范围内。 这建议添加一个 RGB 强度项 $c_l$，它本身具有 [0, 1] 范围内的分量：
+$$
+c = c_rc_l\bold{n} · \bold{l}. (10.2)
+$$
+This is a very convenient form, but it can produce RGB components for $c$ that are outside the range $[0, 1]$, because the dot product can be negative. The dot product is negative when the surface is pointing away from the light as shown in Figure 10.2. 
+这是一种非常方便的形式，但它可以为 $c$ 生成超出范围 $[0, 1]$ 的 RGB 分量，因为点积可能为负。 当表面背向光源时，点积为负，如图 10.2 所示。
+![Figure 10.2](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.2.png)
+Figure 10.2. When a surface points away from the light, it should receive no light. This case can be verified by checking whether the dot product of $\bold{l}$ and $\bold{n}$ is negative.
+图 10.2。 当表面远离光线时，它不应接收到光线。 这种情况可以通过检查 $\bold{l}$ 和 $\bold{n}$ 的点积是否为负来验证。
+
+The “max” function can be added to Equation (10.2) to test for that case:
+可以将“max”函数添加到方程（10.2）中来测试这种情况：
+$$
+c = c_rc_lmax(0, \bold{n} · \bold{l}). \ \ \ \ \ \  (10.3)
+$$
+Another way to deal with the “negative” light is to use an absolute value:
+处理“负”光的另一种方法是使用绝对值：
+$$
+c = c_rc_l|\bold{n} · \bold{l}|.\ \ \ \ \  (10.4)
+$$
+While Equation (10.4) may seem physically implausible, it actually corresponds to Equation (10.3) with two lights in opposite directions. For this reason it is often called two-sided lighting (Figure 10.3).
+虽然方程（10.4）在物理上看起来不可信，但它实际上对应于方程（10.3），其中两个光方向相反。 因此，它通常被称为两侧照明（图 10.3）。
+![Figure 10.3](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.3.png)
+Figure 10.3. Using Equation (10.4), the two-sided lighting formula, is equivalent to assuming two opposing light sources of the same color.
+图 10.3。 使用方程（10.4)，即两侧照明公式，相当于假设两个相对的相同颜色的光源。
+
+### 10.1.2 Ambient Shading 环境阴影
+
+One problem with the diffuse shading of Equation (10.3) is that any point whose normal faces away from the light will be black. In real life, light is reflected all over, and some light is incident from every direction. In addition, there is often skylight giving “ambient” lighting. One way to handle this is to use several light sources. A common trick is to always put a dim source at the eye so that all visible points will receive some light. Another way is to use two-sided lighting as described by Equation (10.4). A more common approach is to add an ambient term (Gouraud, 1971). This is just a constant color term added to Equation (10.3):
+方程 (10.3) 的漫反射着色的一个问题是法线背离光线的任何点都将是黑色的。 在现实生活中，光会到处反射，有些光会从各个方向入射。 此外，通常还有天窗提供“环境”照明。 解决这个问题的一种方法是使用多个光源。 一个常见的技巧是始终将昏暗的光源放在眼睛上，以便所有可见点都会接收到一些光线。 另一种方法是使用两侧照明，如公式 (10.4) 所示。 更常见的方法是添加环境术语（Gouraud，1971）。 这只是添加到方程 (10.3) 中的常数颜色项：
+$c = c_r (c_a + c_lmax (0, \bold{n} · \bold{l})) .  $
+
+Intuitively, you can think of the ambient color $c_a$ as the average color of all surfaces in the scene. If you want to ensure that the computed RGB color stays in the range $[0, 1]^3$, then $c_a + c_l ≤ (1, 1, 1)$. Otherwise your code should “clamp” RGB values above one to have the value one.
+直观上，您可以将环境颜色 $c_a$ 视为场景中所有表面的平均颜色。 如果要确保计算出的 RGB 颜色保持在 $[0, 1]^3$ 范围内，则 $c_a + c_l ≤ (1, 1, 1)$。 否则，您的代码应将 RGB 值“限制”在 1 以上，以使其值为 1。
+
+### 10.1.3 Vertex-Based Diffuse Shading 基于顶点的漫反射着色
+
+If we apply Equation (10.1) to an object made up of triangles, it will typically have a faceted appearance. Often, the triangles are an approximation to a smooth surface. To avoid the faceted appearance, we can place surface normal vectors at the vertices of the triangles (Phong, 1975), and apply Equation (10.3) at each of the vertices using the normal vectors at the vertices (see Figure 10.4). This will give a color at each triangle vertex, and this color can be interpolated using the barycentric interpolation described in Section 8.1.2. 
+如果我们将方程（10.1）应用于由三角形组成的对象，它通常会具有多面外观。 通常，三角形是光滑表面的近似值。 为了避免多面外观，我们可以将表面法线向量放置在三角形的顶点处（Phong，1975），并使用顶点处的法线向量在每个顶点应用方程（10.3）（见图10.4）。 这将在每个三角形顶点给出颜色，并且可以使用第 8.1.2 节中描述的重心插值来插值该颜色。
+![Figure 10.4](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.4.png)
+Figure 10.4. A circle (left) is approximated by an octagon (right). Vertex normals record the surface normal of the original curve. 
+图 10.4。 圆形（左）近似为八边形（右)。 顶点法线记录原始曲线的表面法线。
+
+One problem with shading at triangle vertices is that we need to get the normals from somewhere. Many models will come with normals supplied. If you tessellate your own smooth model, you can create normals when you create the triangles. If you are presented with a polygonal model that does not have normals at vertices and you want to shade it smoothly, you can compute normals by a variety of heuristic methods. The simplest is to just average the normals of the triangles that share each vertex and use this average normal at the vertex. This average normal will not automatically be of unit length, so you should convert it to a unit vector before using it for shading.
+三角形顶点着色的一个问题是我们需要从某处获取法线。 许多型号都会提供法线。 如果您对自己的平滑模型进行细分，则可以在创建三角形时创建法线。 如果您看到的多边形模型在顶点处没有法线，并且您希望对其进行平滑着色，则可以通过各种启发式方法计算法线。 最简单的方法是对共享每个顶点的三角形的法线进行平均，并在顶点处使用该平均法线。 该平均法线不会自动具有单位长度，因此您应该在将其用于着色之前将其转换为单位向量。
+
+## 10.2 Phong Shading Phong 阴影
+
+Some surfaces are essentially like matte surfaces, but they have highlights. Examples of such surfaces include polished tile floors, gloss paint, and whiteboards. Highlights move across a surface as the viewpoint moves. This means that we must add a unit vector e toward the eye into our equations. If you look carefully at highlights, you will see that they are really reflections of the light; sometimes these reflections are blurred. The color of these highlights is the color of the light—the surface color seems to have little effect. This is because the reflection occurs at the object’s surface, and the light that penetrates the surface and picks up the object’s color is scattered diffusely.
+有些表面本质上类似于无光泽表面，但它们具有高光。 此类表面的示例包括抛光瓷砖地板、光泽涂料和白板。 随着视点的移动，高光也会在表面上移动。 这意味着我们必须在方程中添加一个朝向眼睛的单位向量 e。 如果你仔细观察高光，你会发现它们实际上是光的反射； 有时这些反射是模糊的。 这些高光的颜色就是光的颜色——表面颜色似乎影响不大。 这是因为反射发生在物体表面，穿透表面并拾取物体颜色的光被漫散射。
+
+### 10.2.1 Phong Lighting Model  Phong 光照模型
+
+We want to add a fuzzy “spot” the same color as the light source in the right place. The center of the dot should be drawn where the direction $\bold{e}$ to the eye “lines” up with the natural direction of reflection $\bold{r}$ as shown in Figure 10.5. Here “lines up” is mathematically equivalent to “where $σ$ is zero.” We would like to have the highlight have some nonzero area, so that the eye sees some highlight wherever $σ$ is small. 
+我们想在正确的位置添加一个与光源颜色相同的模糊“点”。 点的中心应该绘制在眼睛的方向 $\bold{e}$ 与反射的自然方向 $\bold{r}$ 对齐的位置，如图 10.5 所示。 这里的“排队”在数学上相当于“$σ$ 为零”。 我们希望高光具有一些非零区域，以便眼睛在 $σ$ 较小的地方看到一些高光。
+![Figure 10.5](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.5.png)
+Figure 10.5. The geometry for the Phong illumination model. The eye should see a highlight if σ is small.
+图 10.5。 Phong 照明模型的几何形状。 如果 σ 很小，眼睛应该看到亮点。
+
+Given $\bold{r}$, we’d like a heuristic function that is bright when $\bold{e} = \bold{r}$ and falls off gradually when $\bold{e}$ moves away from $\bold{r}$. An obvious candidate is the cosine of the angle between them:
+给定 $\bold{r}$，我们想要一个启发式函数，当 $\bold{e} = \bold{r}$ 时明亮，而当 $\bold{e}$ 远离 $\ 粗体{r}$。 一个明显的候选者是它们之间角度的余弦：
+$c = c_l(\bold{e} · \bold{r}).  $
+
+There are two problems with using this equation. The first is that the dot product can be negative. This can be solved computationally with an “if” statement that sets the color to zero when the dot product is negative. The more serious problem is that the highlight produced by this equation is much wider than that seen in real life. The maximum is in the right place and it is the right color, but it is just too big. We can narrow it without reducing its maximum color by raising to a power:
+使用这个方程有两个问题。 首先是点积可能为负。 这可以通过“if”语句通过计算来解决，当点积为负时，该语句将颜色设置为零。 更严重的问题是，这个方程产生的亮点比现实生活中看到的要宽得多。 最大值位于正确的位置，颜色也正确，但它太大了。 我们可以通过求幂来缩小它而不减少其最大颜色：
+$$
+c = c_lmax(0, \bold{e} · \bold{r})^p. \ \ \ \  \ \  \ (10.5)
+$$
+Here p is called the Phong exponent; it is a positive real number (Phong, 1975). The effect that changing the Phong exponent has on the highlight can be seen in Figure 10.6. 
+这里 p 称为 Phong 指数； 它是一个正实数（Phong，1975）。 改变 Phong 指数对高光的影响如图 10.6 所示。
+![Figure 10.6](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.6.png)
+Figure 10.6. The effect of the Phong exponent on highlight characteristics. This uses Equation (10.5) for the highlight. There is also a diffuse component, giving the objects a shiny but nonmetallic appearance. Image courtesy Nate Robins.
+图 10.6。 Phong 指数对高光特征的影响。 这使用方程（10.5)来突出显示。 还有一个漫反射组件，使物体具有闪亮但非金属的外观。 图片由内特·罗宾斯提供。
+
+To implement Equation (10.5), we first need to compute the unit vector r. Given unit vectors l and n, r is the vector l reflected about n. Figure 10.7 shows that this vector can be computed as 
+为了实现方程（10.5），我们首先需要计算单位向量r。 给定单位向量 l 和 n，r 是关于 n 反射的向量 l。 图 10.7 显示该向量可以计算为
+![Figure 10.7](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.7.png)
+Figure 10.7. The geometry for calculating the vector $\bold{r}$. 
+图 10.7。 用于计算向量 $\bold{r}$ 的几何图形。
+$$
+\bold{r} = −\bold{l} + 2(\bold{l} · \bold{n})\bold{n},\ \ \ \ \ \ \ \ (10.6)
+$$
+where the dot product is used to compute $\cos θ$. 
+其中点积用于计算 $\cos θ$。
+
+An alternative heuristic model based on Equation (10.5) eliminates the need to check for negative values of the number used as a base for exponentiation (Warn, 1983). Instead of $\bold{r}$, we compute $\bold{h}$, the unit vector halfway between $\bold{l}$ and $\bold{e}$ (Figure 10.8):
+基于方程（10.5）的替代启发式模型无需检查用作求幂基数的数字是否为负值（Warn，1983）。 我们计算 $\bold{h}$，而不是 $\bold{r}$，它是 $\bold{l}$ 和 $\bold{e}$ 之间的单位向量（图 10.8）：
+$\bold{h} = \frac{\bold{e} + \bold{l}}{\| \bold{e} + \bold{l} \|} \\$
+
+![Figure 10.8](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.8.png)
+Figure 10.8. The unit vector $\bold{h}$ is halfway between $\bold{l}$ and $\bold{e}$.
+图 10.8。 单位向量 $\bold{h}$ 位于 $\bold{l}$ 和 $\bold{e}$ 之间。
+
+The highlight occurs when $\bold{h}$ is near $\bold{n}$, i.e., when $\cos ω = \bold{h} · \bold{n}$ is near 1. This suggests the rule:
+当 $\bold{h}$ 接近 $\bold{n}$ 时，即当 $\cos ω = \bold{h} · \bold{n}$ 接近 1 时，突出显示。这表明了以下规则： 
+$$
+c = c_l(\bold{h} · \bold{n})^p. (10.7)
+$$
+The exponent $p$ here will have analogous control behavior to the exponent in Equation (10.5), but the angle between $\bold{h}$ and $\bold{n}$ is half the size of the angle between $\bold{e}$ and $\bold{r}$, so the details will be slightly different. The advantage of using the cosine between $\bold{n}$ and $\bold{h}$ is that it is always positive for eye and light above the plane. The disadvantage is that a square root and divide is needed to compute $\bold{h}$.
+这里的指数$p$将具有与式(10.5)中的指数类似的控制行为，但是$\bold{h}$和$\bold{n}$之间的角度是$\bold{e}$和$\bold{r}$之间角度的一半，因此细节将略有不同。使用$\bold{n}$和$\bold{h}$之间的余弦值的优点是，它对于平面上方的眼睛和光线总是正的。缺点是需要平方根和除法来计算$\bold{h}$。
+
+In practice, we want most materials to have a diffuse appearance in addition to a highlight. We can combine Equations (10.3) and (10.7) to get
+在实践中，我们希望大多数材质除了高光之外还具有漫反射外观。 我们可以结合方程（10.3）和（10.7）得到
+$$
+c = c_r (c_a + c_lmax (0, \bold{n} · \bold{l})) + c_l(\bold{h} · \bold{n})^p. \ \ \ \ \ \ (10.8)
+$$
+If we want to allow the user to dim the highlight, we can add a control term $c_p$: 
+如果我们想允许用户调暗突出显示，我们可以添加一个控制项$c_p$：
+$$
+c = c_r (c_a + c_lmax (0, \bold{n} · \bold{l})) + c_lc_p(\bold{h} · \bold{n})^p. (10.9)
+$$
+The term $c_p$ is a RGB color, which allows us to change highlight colors. This is useful for metals where $c_p = c_r$, because highlights on metal take on a metallic color. In addition, it is often useful to make $c_p$ a neutral value less than one, so that colors stay below one. For example, setting $c_p = 1 − M$ where $M$ is the maximum component of $c_r$ will keep colors below one for one light source and no ambient term. 
+术语 $c_p$ 是 RGB 颜色，它允许我们更改突出显示颜色。 这对于 $c_p = c_r$ 的金属很有用，因为金属上的高光呈现金属颜色。 此外，将 $c_p$ 设置为小于 1 的中性值通常很有用，这样颜色就会保持在 1 以下。 例如，设置 $c_p = 1 − M$（其中 $M$ 是 $c_r$ 的最大分量）将使一个光源的颜色保持在 1 以下，并且没有环境项。
+
+### 10.2.2 Surface Normal Vector Interpolation 表面法向量插值
+
+Smooth surfaces with highlights tend to change color quickly compared to Lambertian surfaces with the same geometry. Thus, shading at the normal vectors can generate disturbing artifacts.
+与具有相同几何形状的朗伯表面相比，具有高光的光滑表面往往会快速改变颜色。 因此，法向量处的阴影可能会产生令人不安的伪影。
+
+These problems can be reduced by interpolating the normal vectors across the polygon and then applying Phong shading at each pixel. This allows you to get good images without making the size of the triangles extremely small. Recall from Chapter 3, that when rasterizing a triangle, we compute barycentric coordinates $(α, β, γ)$ to interpolate the vertex colors $c_0, c_1, c_2$:
+通过在多边形上插入法向量，然后在每个像素上应用 Phong 着色，可以减少这些问题。 这样您就可以获得良好的图像，而无需使三角形的尺寸变得非常小。 回想一下第 3 章，当光栅化三角形时，我们计算重心坐标 $(α, β, γ)$ 来插值顶点颜色 $c_0, c_1, c_2$：
+$$
+c = αc_0 + βc_1 + γc_2. (10.10)
+$$
+We can use the same equation to interpolate surface normals $n_0$, $n_1$, and $n_2$:
+我们可以使用相同的方程来插值表面法线 $n_0$、$n_1$ 和 $n_2$：
+$$
+\bold{n} = α\bold{n}_0 + β\bold{n}_1 + γ\bold{n}_2. (10.11)
+$$
+And Equation (10.9) can then be evaluated for the $\bold{n}$ computed at each pixel. Note that the $\bold{n}$ resulting from Equation (10.11) is usually not a unit normal. Better visual results will be achieved if it is converted to a unit vector before it is used in shading computations. This type of normal interpolation is often called Phong normal interpolation (Phong, 1975).
+然后可以针对每个像素处计算的 $\bold{n}$ 评估方程（10.9）。 请注意，由方程 (10.11) 得出的 $\bold{n}$ 通常不是单位法线。 如果在用于着色计算之前将其转换为单位向量，将获得更好的视觉效果。 这种类型的法线插值通常称为 Phong 法线插值（Phong，1975）。
+
+## 10.3 Artistic Shading  艺术着色
+
+The Lambertian and Phong shading methods are based on heuristics designed to imitate the appearance of objects in the real world. Artistic shading is designed to mimic drawings made by human artists (Yessios, 1979; Dooley & Cohen, 1990; Saito & Takahashi, 1990; L. Williams, 1991). Such shading seems to have advantages in many applications. For example, auto manufacturers hire artists to draw diagrams for car owners’ manuals. This is more expensive than using much more “realistic” photographs, so there is probably some intrinsic advantage to the techniques of artists when certain types of communication are needed. In this section, we show how to make subtly shaded line drawings reminiscent of human-drawn images. Creating such images is often called non-photorealistic rendering, but we will avoid that term because many non-photorealistic techniques are used for efficiency that are not related to any artistic practice.
+Lambertian 和 Phong 着色方法基于启发式算法，旨在模仿现实世界中对象的外观。 艺术着色旨在模仿人类艺术家的绘画（Yessios，1979；Dooley & Cohen，1990；Saito & Takahashi，1990；L. Williams，1991）。 这种阴影似乎在许多应用中都有优势。 例如，汽车制造商聘请艺术家为车主手册绘制图表。 这比使用更“现实”的照片更昂贵，因此当需要某些类型的交流时，艺术家的技术可能有一些内在的优势。 在本节中，我们将展示如何制作微妙的阴影线条图，让人想起人类绘制的图像。 创建此类图像通常称为非真实感渲染，但我们将避免使用该术语，因为许多非真实感技术用于提高与任何艺术实践无关的效率。
+
+### 10.3.1 Line Drawing 画线
+
+The most obvious thing we see in human drawings that we don’t see in real life is silhouettes. When we have a set of triangles with shared edges, we should draw an edge as a silhouette when one of the two triangles sharing an edge faces toward the viewer, and the other triangle faces away from the viewer. This condition can be tested for two normals $\bold{n}_0$ and $\bold{n}_1$ by
+我们在人类绘画中看到但在现实生活中看不到的最明显的东西是剪影。 当我们有一组具有共享边的三角形时，当共享边的两个三角形中的一个面向观察者，而另一个三角形背向观察者时，我们应该绘制一条边作为轮廓。 可以通过以下方式对两个法线 $\bold{n}_0$ 和 $\bold{n}1$ 测试此条件
+$draw\ silhouette\ if (\bold{e} · \bold{n}_0)(\bold{e} · \bold{n}_1) ≤ 0.  $
+
+Here $\bold{e}$ is a vector from the edge to the eye. This can be any point on the edge or either of the triangles. Alternatively, if $f_i(\bold{p}) = 0$ are the implicit plane equations for the two triangles, the test can be written
+这里$\bold{e}$是从边缘到眼睛的向量。 这可以是边缘或任一三角形上的任何点。 或者，如果 $f_i(\bold{p}) = 0$ 是两个三角形的隐式平面方程，则可以编写测试
+$draw\ silhouette\ if\ f_0(\bold{e})f_1(\bold{e}) ≤ 0.  $
+
+We would also like to draw visible edges of a polygonal model. To do this, we can use either of the hidden surface methods of Chapter 12 for drawing in the background color and then draw the outlines of each triangle in black. This, in fact, will also capture the silhouettes. Unfortunately, if the polygons represent a smooth surface, we really don’t want to draw most of those edges. However, we might want to draw all creases where there really is a corner in the geometry. We can test for creases by using a heuristic threshold:
+我们还想绘制多边形模型的可见边缘。 为此，我们可以使用第 12 章中的任何一种隐藏表面方法来绘制背景色，然后用黑色绘制每个三角形的轮廓。 事实上，这也将捕捉剪影。 不幸的是，如果多边形代表光滑的表面，我们真的不想绘制大部分边缘。 然而，我们可能想要在几何体中确实有角的地方绘制所有折痕。 我们可以使用启发式阈值来测试折痕：
+$draw\ crease\ if\ (n_0 · n_1) ≤ threshold.  $
+
+This combined with the silhouette test will give nice-looking line drawings. 
+与轮廓测试相结合将得到漂亮的线条图。
+
+### 10.3.2 Cool-to-Warm Shading 冷色到暖色着色
+
+When artists shade line drawings, they often use low intensity shading to give some impression of curve to the surface and to give colors to objects (Gooch, Gooch, Shirley, & Cohen, 1998). Surfaces facing in one direction are shaded with a cool color, such as a blue, and surfaces facing in the opposite direction are shaded with a warm color, such as orange. Typically these colors are not very saturated and are also not dark. That way, black silhouettes show up nicely. Overall this gives a cartoon-like effect. This can be achieved by setting up a direction to a “warm” light l and using the cosine to modulate color, where the warmth constant $k_w$ is defined on $[0, 1]$:
+当艺术家对线条图进行着色时，他们经常使用低强度着色来给表面带来一些曲线印象，并为物体赋予颜色（Gooch、Gooch、Shirley 和 Cohen，1998）。 面向一个方向的表面用冷色（例如蓝色）着色，面向相反方向的表面用暖色（例如橙色）着色。 通常这些颜色不是很饱和，也不是很暗。 这样，黑色轮廓就会很好地显现出来。 总体而言，这给出了类似卡通的效果。 这可以通过设置“暖”光 l 的方向并使用余弦来调制颜色来实现，其中暖度常数 $k_w$ 在 $[0, 1]$ 上定义：
+$k_w = \frac{1 + \bold{n} \cdot \bold{l}}{2} \\$
+
+The color $c$ is then just a linear blend of the cool color $c_c$ and the warm color $c_w$: 
+那么颜色 $c$ 只是冷色 $c_c$ 和暖色 $c_w$ 的线性混合：
+$c = k_wc_w + (1 - k_w)c_c.  $
+
+There are many possible $c_w$ and $c_b$ that will produce reasonable looking results. A good starting place for a guess is
+有许多可能的 $c_w$ 和 $c_b$ 会产生合理的结果。 猜测的一个很好的起点是
+$$
+c_c = (0.4, 0.4, 0.7), \\
+c_c = (0.8, 0.6, 0.6).
+$$
+Figure 10.9 shows a comparison between traditional Phong lighting and this type of artistic shading.
+图 10.9 显示了传统 Phong 照明与此类艺术着色之间的比较。
+![Figure 10.9](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 10.9.png)
+Figure 10.9. Left: a Phong-illuminated image. Middle: cool-to-warm shading is not useful without silhouettes. Right: cool-to-warm shading plus silhouettes. Image courtesy Amy Gooch. 
+图 10.9。 左：Phong 照明图像。 中：如果没有轮廓，从冷到暖的阴影是没有用的。 右：从冷色到暖色的阴影加上轮廓。 图片由艾米·古奇提供。
+
+## Frequently Asked Questions 经常问的问题
+
+### All of the shading in this chapter seems like enormous hacks. Is that true? 本章中的所有阴影看起来都是巨大的黑客攻击。 真的吗？
+
+Yes. However, they are carefully designed hacks that have proven useful in practice. In the long run, we will probably have better-motivated algorithms that include physics, psychology, and tone-mapping. However, the improvements in image quality will probably be incremental. 
+是的。 然而，它们是精心设计的技巧，在实践中证明是有用的。 从长远来看，我们可能会拥有更积极的算法，包括物理学、心理学和色调映射。 然而，图像质量的改进可能是渐进的。
+
+### I hate calling pow(). Is there a way to avoid it when doing Phong lighting? 我讨厌调用 pow()。 在进行 Phong 照明时有没有办法避免这种情况？
+
+A simple way is to only have exponents that are themselves a power of two, i.e., 2, 4, 8, 16, . . . . In practice, this is not a problematic restriction for most applications. A look-up table is also possible, but will often not give a large speed-up.
+一种简单的方法是只使用本身是 2 的幂的指数，即 2, 4, 8, 16, . . . .。 实际上，对于大多数应用程序来说这并不是一个有问题的限制。 查找表也是可能的，但通常不会提供很大的加速。
+
+## Exercises 练习
+
+1. The moon is poorly approximated by diffuse or Phong shading. What observations tell you that this is true? 
+   漫反射或 Phong 阴影对月亮的近似效果很差。 什么观察告诉你这是真的？
+2. Velvet is poorly approximated by diffuse or Phong shading. What observations tell you that this is true?
+   漫反射或 Phong 阴影对天鹅绒的近似效果很差。 什么观察告诉你这是真的？
+3. Why do most highlights on plastic objects look white, while those on gold metal look gold?
+   为什么塑料物体上的大多数高光看起来是白色的，而金色金属上的高光看起来是金色的？
+
+
+
+# 11  Texture Mapping  纹理映射
+
+When trying to replicate the look of the real world, one quickly realizes that hardly any surfaces are featureless. Wood grows with grain; skin grows with wrinkles; cloth shows its woven structure; paint shows the marks of the brush or roller that laid it down. Even smooth plastic is made with bumps molded into it, and smooth metal shows the marks of the machining process that made it. Materials that were once featureless quickly become covered with marks, dents, stains, scratches, fingerprints, and dirt. 
+当试图复制现实世界的外观时，人们很快就会意识到几乎没有任何表面是毫无特色的。 木随谷而生； 皮肤长出皱纹； 布料显示其编织结构； 油漆显示了放置它的刷子或滚筒的痕迹。 即使是光滑的塑料也是由模制而成的凸块制成的，而光滑的金属则显示出其加工过程的痕迹。 曾经毫无特色的材料很快就会布满痕迹、凹痕、污渍、划痕、指纹和污垢。
+
+In computer graphics we lump all these phenomena under the heading of “spatially varying surface properties”—attributes of surfaces that vary from place to place but don’t really change the shape of the surface in a meaningful way. To allow for these effects, all kinds of modeling and rendering systems provide some means for texture mapping: using an image, called a texture map, texture image, or just a texture, to store the details that you want to go on a surface, then mathematically “mapping” the image onto the surface.
+在计算机图形学中，我们将所有这些现象归结为“空间变化的表面属性”——表面的属性因地点而异，但并没有真正以有意义的方式改变表面的形状。 为了实现这些效果，各种建模和渲染系统都提供了一些纹理映射方法：使用图像（称为纹理贴图、纹理图像或只是纹理）来存储要在表面上显示的细节， 然后以数学方式将图像“映射”到表面上。
+
+> This is mapping in the sense of Section 2.1. 
+> 这是第 2.1 节意义上的映射。
+
+As it turns out, once the mechanism to map images onto surfaces exists, there are many less obvious ways it can be used that go beyond the basic purpose of introducing surface detail. Textures can be used to make shadows and reflections, to provide illumination, even to define surface shape. In sophisticated interactive programs, textures are used to store all kinds of data that doesn’t even have anything to do with pictures! 
+事实证明，一旦将图像映射到表面的机制存在，就有许多不那么明显的方法可以使用它，超出了引入表面细节的基本目的。 纹理可用于制作阴影和反射、提供照明，甚至定义表面形状。 在复杂的交互程序中，纹理被用来存储各种甚至与图片无关的数据！
+
+This chapter discusses the use of texture for representing surface detail, shadows, and reflections. While the basic ideas are simple, several practical problems complicate the use of textures. First of all, textures easily become distorted, and designing the functions that map textures onto surfaces is challenging. Also, texture mapping is a resampling process, just like rescaling an image, and as we saw in Chapter 9, resampling can very easily introduce aliasing artifacts. The use of texture mapping and animation together readily produces truly dramatic aliasing, and much of the complexity of texture mapping systems is created by the antialiasing measures that are used to tame these artifacts.
+本章讨论使用纹理来表示表面细节、阴影和反射。 虽然基本思想很简单，但一些实际问题使纹理的使用变得复杂。 首先，纹理很容易扭曲，并且设计将纹理映射到表面的函数具有挑战性。 此外，纹理映射是一个重采样过程，就像重新缩放图像一样，正如我们在第 9 章中看到的，重采样很容易引入锯齿伪影。 纹理映射和动画一起使用很容易产生真正引人注目的锯齿，并且纹理映射系统的大部分复杂性是由用于抑制这些伪像的抗锯齿措施造成的。
+
+## 11.1 Looking Up Texture Values 查找纹理值
+
+To start off, let’s consider a simple application of texture mapping. We have a scene with a wood floor, and we would like the diffuse color of the floor to be controlled by an image showing floorboards with wood grain. Regardless of whether we are using ray tracing or rasterization, the shading code that computes the color for a ray-surface intersection point or for a fragment generated by the rasterizer needs to know the color of the texture at the shading point, in order to use it as the diffuse color in the Lambertian shading model from Chapter 10. 
+首先，让我们考虑纹理映射的简单应用。 我们有一个带有木地板的场景，我们希望通过显示木纹地板的图像来控制地板的漫反射颜色。 无论我们使用光线追踪还是光栅化，计算光线表面交点或光栅化器生成的片段颜色的着色代码都需要知道着色点处纹理的颜色，以便使用 它是第 10 章朗伯着色模型中的漫反射颜色。
+
+To get this color, the shader performs a texture lookup: it figures out the location, in the coordinate system of the texture image, that corresponds to the shading point, and it reads out the color at that point in the image, resulting in the texture sample. That color is then used in shading, and since the texture lookup happens at a different place in the texture for every pixel that sees the floor, a pattern of different colors shows up in the image. The code might look like this:
+为了获得这种颜色，着色器执行纹理查找：它在纹理图像的坐标系中找出与着色点相对应的位置，并读出图像中该点的颜色，从而得到 纹理样本。 然后将该颜色用于着色，并且由于对于看到地板的每个像素，纹理查找发生在纹理中的不同位置，因此图像中会显示不同颜色的图案。 代码可能如下所示：
+
+> Color texture_lookup(Texture t, float u, float v) {
+> 	int i = round(u * t.width() - 0.5)
+> 	int j = round(v * t.height() - 0.5)
+> 	return t.get_pixel(i,j)
+> }
+> Color shade_surface_point(Surface s, Point p, Texture t) {
+> 	Vector normal = s.get_normal(p)
+> 	(u,v) = s.get_texcoord(p)
+> 	Color diffuse_color = texture_lookup(u,v)
+> 	// compute shading using diffuse_color and normal
+> 	// return shading result
+> }  
+
+In this code, the shader asks the surface where to look in the texture, and somehow every surface that we want to shade using a texture needs to be able to answer this query. This brings us to the first key ingredient of texture mapping: we need a function that maps from the surface to the texture that we can easily compute for every pixel. This is the texture coordinate function (Figure 11.1) and we say that it assigns texture coordinates to every point on the surface. Mathematically it is a mapping from the surface $S$ to the domain of the texture, $T$ :
+在此代码中，着色器询问表面在纹理中的何处查看，并且不知何故，我们想要使用纹理着色的每个表面都需要能够回答此查询。 这给我们带来了纹理映射的第一个关键要素：我们需要一个从表面映射到纹理的函数，我们可以轻松计算每个像素。 这就是纹理坐标函数（图 11.1），我们说它为表面上的每个点分配纹理坐标。 从数学上讲，它是从表面 $S$ 到纹理域 $T$ 的映射：
+![Figure 11.1](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.1.png)
+Figure 11.1. Just like the viewing projection π maps every point on an object’s surface, S, to a point in the image, the texture coordinate function φ maps every point on the object’s surface to a point in the texture map, T . Appropriately defining this function φ is fundamental to all applications of texture mapping.
+图 11.1。 就像观察投影 π 将对象表面 S 上的每个点映射到图像中的点一样，纹理坐标函数 φ 将对象表面上的每个点映射到纹理映射中的点 T 。 正确定义该函数 φ 是纹理映射所有应用的基础。
+$φ : S → T : (x, y, z) \mapsto (u, v).  $
+
+The set $T$ , often called “texture space,” is usually just a rectangle that contains the image; it is common to use the unit square $(u, v) ∈ [0, 1]^2$ (in this book we’ll use the names $u$ and $v$ for the two texture coordinates). In many ways it’s similar to the viewing projection discussed in Chapter 7, called $π$ in this chapter, which maps points on surfaces in the scene to points in the image; both are 3D-to-2D mappings, and both are needed for rendering—one to know where to get the texture value from, and one to know where to put the shading result in the image. But there are some important differences, too: $π$ is almost always a perspective or orthographic projection, whereas $φ$ can take on many forms; and there is only one viewing projection for an image, whereas each object in the scene is likely to have a completely separate texture coordinate function.
+集合 $T$ 通常称为“纹理空间”，通常只是一个包含图像的矩形； 通常使用单位正方形 $(u, v) ∈ [0, 1]^2$（在本书中，我们将使用名称 $u$ 和 $v$ 来表示两个纹理坐标）。 在很多方面，它类似于第 7 章中讨论的观看投影，在本章中称为 $π$，它将场景中表面上的点映射到图像中的点； 两者都是 3D 到 2D 映射，并且渲染都需要两者 — 一个用于了解从何处获取纹理值，另一个用于了解将着色结果放在图像中的何处。 但也有一些重要的区别：$π$ 几乎总是透视或正交投影，而 $φ$ 可以采取多种形式； 并且一幅图像只有一个观看投影，而场景中的每个对象很可能具有完全独立的纹理坐标函数。
+
+It may seem surprising that $φ$ is a mapping from the surface to the texture, when our goal is to put the texture onto the surface, but this is the function we need.
+当我们的目标是将纹理放到表面上时，$φ$ 是从表面到纹理的映射，这似乎令人惊讶，但这正是我们需要的函数。
+
+For the case of the wood floor, if the floor happens to be at constant z and aligned to the x and y axes, we could just use the mapping
+对于木地板的情况，如果地板恰好处于常数 z 并与 x 和 y 轴对齐，我们可以使用映射
+$u = ax; v = by,  $
+for some suitably chosen scale factors a and b, to assign texture coordinates $(s, t)$ to the point $(x, y, z)_{floor}$, and then use the value of the texture pixel, or texel, closest to $(u, v)$ as the texture value at $(x, y)$. In this way we rendered the image in Figure 11.2.
+对于一些适当选择的比例因子 a 和 b，将纹理坐标 $(s, t)$ 分配给点 $(x, y, z)_{floor}$，然后使用纹理像素或纹素的值 ，最接近 $(u, v)$ 作为 $(x, y)$ 处的纹理值。 这样我们就渲染出了图11.2的图像。
+![Figure 11.2](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.2.png)
+Figure 11.2. A wood floor, textured using a texture coordinate function that simply uses the x and y coordinates of points directly.
+图 11.2。 木地板，使用纹理坐标函数进行纹理化，该函数直接使用点的 x 和 y 坐标。
+
+> So . . . the first thing you have to learn is how to think backwards?
+> 所以. . . 你首先要学会的是如何逆向思维？
+
+This is pretty limiting, though: what if the room is modeled at an angle to the x and y axes, or what if we want the wood texture on the curved back of a chair? We will need some better way to compute texture coordinates for points on the surface.
+不过，这是相当有限的：如果房间的模型与 x 轴和 y 轴成一定角度，或者如果我们想要在椅子的弯曲靠背上使用木质纹理，该怎么办？ 我们需要一些更好的方法来计算表面上点的纹理坐标。
+
+Another problem that arises from the simplest form of texture mapping is illustrated dramatically by rendering at a high contrast texture from a very grazing angle into a low-resolution image. Figure 11.3 shows a larger plane textured using the same approach but with a high contrast grid pattern and a view toward the horizon. You can see it contains aliasing artifacts (stairsteps in the foreground, wavy and glittery patterns in the distance) similar to the ones that arise in image resampling (Chapter 9) when appropriate filters are not used. Although it takes an extreme case to make these artifacts so obvious in a tiny still image printed in a book, in animations these patterns move around and are very distracting even when they are much more subtle.
+最简单形式的纹理映射所产生的另一个问题可以通过从非常掠射角度以高对比度纹理渲染到低分辨率图像来戏剧性地说明。 图 11.3 显示了使用相同方法纹理化的较大平面，但具有高对比度网格图案和地平线视图。 您可以看到它包含混叠伪影（前景中的楼梯，远处的波浪形和闪光图案），类似于未使用适当的滤波器时在图像重采样（第 9 章）中出现的伪影。 虽然需要极端的情况才能使这些伪像在书中印刷的微小静态图像中如此明显，但在动画中，这些图案会四处移动，即使它们更加微妙，也会非常分散注意力。
+![Figure 11.3](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.3.png)
+Figure 11.3. A large horizontal plane, textured in the same way as in Figure 11.2 and displaying severe aliasing artifacts.
+图 11.3。 一个大的水平面，其纹理方式与图 11.2 中相同，并显示严重的锯齿伪影。
+
+We have now seen the two primary issues in basic texture mapping:
+我们现在已经看到了基本纹理映射中的两个主要问题：
+
+- defining texture coordinate functions, and
+  定义纹理坐标函数，以及
+- looking up texture values without introducing too much aliasing.
+  查找纹理值而不引入太多锯齿。
+
+These two concerns are fundamental to all kinds of applications of texture mapping and are discussed in Sections 11.2 and 11.3. Once you understand them and some of the solutions to them, then you understand texture mapping. The rest is just how to apply the basic texturing machinery for a variety of different purposes, which is discussed in Section 11.4.
+这两个问题对于纹理映射的各种应用都是基础，并在 11.2 和 11.3 节中讨论。 一旦您了解了它们以及它们的一些解决方案，您就了解了纹理映射。 剩下的就是如何将基本纹理机制应用于各种不同的目的，这将在 11.4 节中讨论。
+
+## 11.2 Texture Coordinate Functions 纹理坐标函数
+
+Designing the texture coordinate function $φ$ well is a key requirement for getting good results with texture mapping. You can think of this as deciding how you are going to deform a flat, rectangular image so that it conforms to the 3D surface you want to draw. Or alternatively, you are taking the surface and gently flattening it, without letting it wrinkle, tear, or fold, so that it lies flat on the image. Sometimes this is easy: maybe the 3D surface is already a flat rectangle! In other cases it’s very tricky: the 3D shape might be very complicated, like the surface of a character’s body.
+设计好纹理坐标函数$φ$是纹理映射获得良好效果的关键要求。 您可以将其视为决定如何使平面矩形图像变形，使其符合您想要绘制的 3D 表面。 或者，您可以将表面轻轻压平，不要让它起皱、撕裂或折叠，使其平放在图像上。 有时这很简单：也许 3D 表面已经是一个平坦的矩形了！ 在其他情况下，这非常棘手：3D 形状可能非常复杂，例如角色身体的表面。
+
+The problem of defining texture coordinate functions is not new to computer graphics. Exactly the same problem is faced by cartographers when designing maps that cover large areas of the Earth’s surface: the mapping from the curved globe to the flat map inevitably causes distortion of areas, angles, and/or distances that can easily make maps very misleading. Many map projections have been proposed over the centuries, all balancing the same competing concerns—of minimizing various kinds of distortion while covering a large area in one contiguous piece—that are faced in texture mapping.
+定义纹理坐标函数的问题对于计算机图形学来说并不新鲜。 制图师在设计覆盖地球表面大面积的地图时面临着完全相同的问题：从弯曲的地球到平面地图的映射不可避免地会导致面积、角度和/或距离的扭曲，这很容易使地图具有很大的误导性。 几个世纪以来，人们提出了许多地图投影，它们都平衡了纹理映射中面临的相同的相互竞争的问题——在覆盖一个连续部分的大区域的同时最大限度地减少各种失真。
+
+In some applications (as we’ll see later in this chapter) there’s a clear reason to use a particular map. But in most cases, designing the texture coordinate map is a delicate task of balancing competing concerns, which skilled modelers put considerable effort into.
+在某些应用程序中（正如我们将在本章后面看到的），使用特定地图有明确的理由。 但在大多数情况下，设计纹理坐标图是一项平衡相互竞争的问题的微妙任务，熟练的建模者为此付出了相当大的努力。
+
+You can define $φ$ in just about any way you can dream up. But there are several competing goals to consider:
+您几乎可以用任何您能想到的方式来定义$φ$。 但有几个相互竞争的目标需要考虑：
+
+> “UV mapping” or “surface parameterization” are other names you may encounter for the texture coordinate function.
+> “UV 映射”或“表面参数化”是您可能遇到的纹理坐标函数的其他名称。
+
+- **Bijectivity**. In most cases you’d like φ to be bijective (see Section 2.1.1), so that each point on the surface maps to a different point in texture space. If several points map to the same texture space point, the value at one point in the texture will affect several points on the surface. In cases where you want a texture to repeat over a surface (think of wallpaper or carpet with their repeating patterns), it makes sense to deliberately introduce a many-to-one mapping from surface points to texture points, but you don’t want this to happen by accident. 
+  **双射性**。 在大多数情况下，您希望 φ 是双射的（参见第 2.1.1 节），以便表面上的每个点映射到纹理空间中的不同点。 如果多个点映射到同一纹理空间点，则纹理中某一点的值将影响表面上的多个点。 如果您希望纹理在表面上重复（想想具有重复图案的壁纸或地毯），则有意引入从表面点到纹理点的多对一映射是有意义的，但您不希望 这是偶然发生的。
+- **Size distortion**. The scale of the texture should be approximately constant across the surface. That is, close-together points anywhere on the surface that are about the same distance apart should map to points about the same distance apart in the texture. In terms of the function φ, the magnitude of the derivatives of φ should not vary too much. 
+  **尺寸扭曲**。 纹理的比例在整个表面上应该大致恒定。 也就是说，表面上任何位置相距大约相同距离的靠近点应该映射到纹理中相距大约相同距离的点。 就函数 φ 而言，φ 的导数的大小不应变化太大。
+- **Shape distortion**. The texture should not be very distorted. That is, a small circle drawn on the surface should map to a reasonably circular shape in texture space, rather than an extremely squashed or elongated shape. In terms of φ, the derivative of φ should not be too different in different directions.
+  **形状扭曲**。 纹理不应该非常扭曲。 也就是说，在表面上绘制的小圆圈应该映射到纹理空间中合理的圆形形状，而不是极度挤压或拉长的形状。 就φ而言，不同方向上的导数不应该相差太大。 
+- **Continuity**. There should not be too many seams: neighboring points on the surface should map to neighboring points in the texture. That is, φ should be continuous, or have as few discontinuities as possible. In most cases, some discontinuities are inevitable, and we’d like to put them in inconspicuous locations.
+  **连续性**。 不应有太多接缝：表面上的相邻点应映射到纹理中的相邻点。 也就是说， φ 应该是连续的，或者具有尽可能少的不连续性。 在大多数情况下，一些不连续性是不可避免的，我们希望将它们放在不显眼的位置。
+
+Surfaces that are defined by parametric equations (Section 2.5.8) come with a built-in choice for the texture coordinate function: simply invert the function that defines the surface, and use the two parameters of the surface as texture coordinates. These texture coordinates may or may not have desirable properties, depending on the surface, but they do provide a mapping. 
+由参数方程（第 2.5.8 节）定义的表面带有纹理坐标函数的内置选择：只需反转定义表面的函数，并使用表面的两个参数作为纹理坐标。 这些纹理坐标可能具有也可能不具有所需的属性，具体取决于表面，但它们确实提供了映射。
+
+But for surfaces that are defined implicitly, or are just defined by a triangle mesh, we need some other way to define the texture coordinates, without relying on an existing parameterization. Broadly speaking, the two ways to define texture coordinates are to compute them geometrically, from the spatial coordinates of the surface point, or, for mesh surfaces, to store values of the texture coordinates at vertices and interpolate them across the surface. Let’s look at these options one at a time.
+但对于隐式定义的表面或仅由三角形网格定义的表面，我们需要其他方法来定义纹理坐标，而不依赖于现有的参数化。 一般来说，定义纹理坐标的两种方法是从表面点的空间坐标进行几何计算，或者对于网格表面，存储顶点处的纹理坐标值并将它们插值到整个表面。 让我们一次看一下这些选项。
+
+### 11.2.1 Geometrically Determined Coordinates 几何确定的坐标
+
+Geometrically determined texture coordinates are used for simple shapes or special situations, as a quick solution, or as a starting point for designing a hand-tweaked texture coordinate map. 
+几何确定的纹理坐标用于简单的形状或特殊情况，作为快速解决方案，或作为设计手动调整纹理坐标图的起点。
+
+We will illustrate the various texture coordinate functions by mapping the test image in Figure 11.4 onto the surface. The numbers in the image let you read the approximate (u, v) coordinates out of the rendered image, and the grid lets you see how distorted the mapping is.
+我们将通过将图 11.4 中的测试图像映射到表面来说明各种纹理坐标函数。 图像中的数字可让您从渲染图像中读取近似 (u, v) 坐标，而网格可让您了解映射的扭曲程度。
+![Figure 11.4](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.4.png)
+Figure 11.4. Test image. 
+图 11.4。 测试图像。
+
+#### Planar Projection 平面投影
+
+Probably the simplest mapping from 3D to 2D is a parallel projection—the same mapping as used for orthographic viewing (Figure 11.5). The machinery we developed already for viewing (Section 7.1) can be re-used directly for defining texture coordinates: just as orthographic viewing boils down to multiplying by a matrix and discarding the z component, generating texture coordinates by planar projection can be done with a simple matrix multiply:
+从 3D 到 2D 的最简单映射可能是平行投影 - 与用于正交视图的映射相同（图 11.5）。 我们已经开发的用于查看的机制（第 7.1 节）可以直接重新用于定义纹理坐标：正如正交查看归结为乘以矩阵并丢弃 z 分量一样，通过平面投影生成纹理坐标可以使用 简单矩阵乘法：
+$$
+φ(x, y, z) = (u, v) where \begin{bmatrix}
+u \\ v\\ *\\ 1
+\end{bmatrix} = M_t\begin{bmatrix}
+x\\ y\\ z\\ 1
+\end{bmatrix}
+$$
+![Figure 11.5](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.5.png)
+Figure 11.5. Planar projection makes a useful parameterization for objects or parts of objects that are nearly flat to start with, if the projection direction is chosen roughly along the overall normal.
+图 11.5。 如果大致沿整体法线选择投影方向，则平面投影对于一开始就接近平坦的对象或对象部分可以进行有用的参数化。
+
+where the texturing matrix $M_t$ represents an affine transformation, and the asterisk indicates that we don’t care what ends up in the third coordinate. 
+其中纹理矩阵 $M_t$ 表示仿射变换，星号表示我们不关心第三个坐标的结果。
+
+This works quite well for surfaces that are mostly flat, without too much variation in surface normal, and a good projection direction can be found by taking the average normal. For any kind of closed shape, though, a planar projection will not be injective: points on the front and back will map to the same point in texture space (Figure 11.6).
+这对于大部分平坦的表面非常有效，表面法线没有太大变化，并且可以通过取平均法线找到良好的投影方向。 然而，对于任何类型的闭合形状，平面投影都不会是单射的：正面和背面的点将映射到纹理空间中的同一点（图 11.6）。
+![Figure 11.6](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.6.png)
+Figure 11.6. Using planar projection on a closed object will always result in a noninjective, one-to-many mapping, and extreme distortion near points where the projection direction is tangent to the surface.
+图 11.6。 在闭合对象上使用平面投影总是会导致非内射、一对多映射，以及投影方向与表面相切的点附近的极端扭曲。
+
+By simply substituting perspective projection for orthographic, we get projective texture coordinates (Figure 11.7): 
+通过简单地用透视投影代替正交投影，我们得到投影纹理坐标（图 11.7）：
+![Figure 11.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.7.png)
+Figure 11.7. A projective texture transformation uses a viewing-like transformation that projects toward a point.
+图 11.7。 投影纹理变换使用类似观看的变换来投影到一个点。
+$$
+φ(x, y, z) = (\tilde{u}/w, \tilde{v}/w)\ where\ \begin{bmatrix}
+\tilde{u} \\ \tilde{v} \\ * \\ w  
+\end{bmatrix} =
+P_t
+\begin{bmatrix}
+x \\ y \\ z \\ 1
+\end{bmatrix}
+$$
+Now the 4×4 matrix Pt represents a projective (not necessarily affine) transformation—that is, the last row may not be [0, 0, 0, 1]. 
+现在 4×4 矩阵 Pt 表示射影（不一定是仿射）变换，即最后一行可能不是 [0, 0, 0, 1]。
+
+Projective texture coordinates are important in the technique of shadow mapping, discussed in Section 11.4.4. 
+投影纹理坐标在阴影贴图技术中很重要，这将在 11.4.4 节中讨论。
+
+#### Spherical Coordinates 球坐标
+
+For spheres, the latitude/longitude parameterization is familiar and widely used. It has a lot of distortion near the poles, which can lead to difficulties, but it does cover the whole sphere with discontinuities only along one line of latitude. 
+对于球体，纬度/经度参数化是熟悉且广泛使用的。 它在两极附近有很多扭曲，这可能会导致困难，但它确实覆盖了整个球体，仅沿着一条纬线存在不连续性。
+
+Surfaces that are roughly spherical in shape can be parameterized using a texture coordinate function that maps a point on the surface to a point on a sphere using radial projection: take a line from the center of the sphere through the point on the surface, and find the intersection with the sphere. The spherical coordinates of this intersection point are the texture coordinates of the point you started with on the surface. 
+形状大致为球形的表面可以使用纹理坐标函数进行参数化，该函数使用径向投影将表面上的点映射到球体上的点：从球体中心穿过表面上的点取一条线，然后找到 与球体的交点。 该交点的球面坐标是您在曲面上开始的点的纹理坐标。
+
+Another way to say this is that you express the surface point in spherical coordinates $(ρ, θ, φ)$ and then discard the ρ coordinate and map $θ$ and $φ$ each to the range $[0, 1]$. The formula depends on the spherical coordinates convention; using the convention of Section 2.5.8,
+另一种说法是，用球面坐标 $(ρ, θ, φ)$ 表示表面点，然后丢弃 ρ 坐标并将 $θ$ 和 $φ$ 分别映射到范围 $[0, 1]$ 。 该公式取决于球坐标约定； 使用第 2.5.8 节的约定，
+$φ(x, y, z) = ([π + \atan2(y, x)]/2π, [π - acos(z/\|x\|)]/π) .  $
+
+> This and other texture coordinate functions in this chapter for objects that are in the box $[−1, 1]^3$ and centered at the origin.
+> 本章中的此纹理坐标函数和其他纹理坐标函数适用于框 $[−1, 1]^3$ 中且以原点为中心的对象。
+
+A spherical coordinates map will be bijective everywhere except at the poles if the whole surface is visible from the center point. It inherits the same distortion near the poles as the latitude-longitude map on the sphere. Figure 11.8 shows an object for which spherical coordinates provide a suitable texture coordinate function.
+如果整个表面从中心点可见，则球面坐标图在除极点之外的任何地方都是双射的。 它在两极附近继承了与球体上的经纬度地图相同的变形。 图 11.8 显示了一个对象，球坐标为其提供了合适的纹理坐标函数。
+![Figure 11.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.8.png)
+Figure 11.8. For this vaguely sphere-like object, projecting each point onto a sphere centered at the center of the object provides an injective mapping, which here is used to place the same map texture as was used for the globe images. Note that areas become magnified (surface points are crowded together in texture space) where the surface is far from the center, and areas shrink where the surface is closer to the center.
+图 11.8。 对于这个模糊的球形对象，将每个点投影到以对象中心为中心的球体上提供了单射映射，此处用于放置与地球图像所使用的相同的地图纹理。 请注意，当表面远离中心时，区域会被放大（表面点在纹理空间中拥挤在一起)，而当表面靠近中心时，区域会缩小。
+
+#### Cylindrical Coordinates 圆柱坐标
+
+For objects that are more columnar than spherical, projection outward from an axis onto a cylinder may work better than projection from a point onto a sphere (Figure 11.9). Analogously to spherical projection, this amounts to converting to cylindrical coordinates and discarding the radius:
+对于柱状而非球状的物体，从轴向外投影到圆柱体可能比从点到球体的投影效果更好（图 11.9）。 与球面投影类似，这相当于转换为柱坐标并丢弃半径：
+$φ(x, y, z) = ( \frac{1}{2π} [π + \atan2(y, x)]/2π, \frac{1}{2}[1 + z]) .  \\$
+
+![Figure 11.9](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.9.png)
+Figure 11.9. A far-from-spherical vase for which spherical projection produces a lot of distortion (left) and cylindrical projection produces a very good result on the outer surface.
+图 11.9。 一个远非球形的花瓶，其球形投影会产生大量变形（左)，而圆柱形投影会在外表面产生非常好的效果。
+
+#### Cubemaps 立方体贴图
+
+Using spherical coordinates to parameterize a spherical or sphere-like shape leads to high distortion of shape and area near the poles, which often leads to visible artifacts that reveal that there are two special points where something is going wrong with the texture. A popular alternative is much more uniform at the cost of having more discontinuities. The idea is to project onto a cube, rather than a sphere, and then use six separate square textures for the six faces of the cube. The collection of six square textures is called a cubemap. This introduces discontinuities along all the cube edges, but it keeps distortion of shape and area low. 
+使用球坐标来参数化球形或类球体形状会导致极点附近的形状和区域高度变形，这通常会导致可见的伪影，表明纹理有两个特殊点出现问题。 一种流行的替代方案是更加统一，但代价是有更多的不连续性。 这个想法是投影到立方体而不是球体上，然后对立方体的六个面使用六个单独的方形纹理。 六个正方形纹理的集合称为立方体贴图。 这会沿所有立方体边缘引入不连续性，但可以保持较低的形状和面积扭曲。
+
+Computing cubemap texture coordinates is also cheaper than for spherical coordinates, because projecting onto a plane just requires a division—essentially the same as perspective projection for viewing. For instance, for a point that projects onto the +z face of the cube:
+计算立方体贴图纹理坐标也比球面坐标便宜，因为投影到平面上只需要除法，与用于查看的透视投影本质上相同。 例如，对于投影到立方体 +z 面上的点：
+$(x, y, z) \mapsto (\frac{x}{z} , \frac{y}{z}) .  \\$
+
+A confusing aspect of cubemaps is establishing the convention for how the $u$ and $v$ directions are defined on the six faces. Any convention is fine, but the convention chosen affects the contents of textures, so standardization is important. Because cubemaps are very often used for textures that are viewed from the inside of the cube (see environment mapping in Section 11.4.5), the usual conventions have the $u$ and $v$ axes oriented so that $u$ is clockwise from $v$ as viewed from inside. The convention used by OpenGL is
+立方体贴图的一个令人困惑的方面是建立如何在六个面上定义 $u$ 和 $v$ 方向的约定。 任何约定都可以，但是选择的约定会影响纹理的内容，因此标准化很重要。 由于立方体贴图经常用于从立方体内部查看的纹理（请参阅第 11.4.5 节中的环境映射），因此通常的约定将 $u$ 和 $v$ 轴定向，以便 $u$ 从 从内部看$v$。 OpenGL 使用的约定是
+$$
+φ_{−x}(x, y, z) = \frac{1}{2}[1 + (+z, −y) / |x|] , \\
+φ_{+x}(x, y, z) = \frac{1}{2}[1 + (−z, −y) / |x|] , \\
+φ_{−y}(x, y, z) = \frac{1}{2}[1 + (+x, −z) / |y|] , \\
+φ_{+y}(x, y, z) = \frac{1}{2}[1 + (+x, +z) / |y|] , \\ 
+φ_{−z}(x, y, z) = \frac{1}{2}[1 + (−x, −y) / |z|] , \\
+φ_{+z}(x, y, z) = \frac{1}{2}[1 + (+x, −y) / |z|] .
+$$
+The subscripts indicate which face of the cube each projection corresponds to. For example, $φ_{−x}$ is used for points that project to the face of the cube at $x = +1$. You can tell which face a point projects to by looking at the coordinate with the largest absolute value: for example, if $|x| > |y|$ and $|x| > |z|$, the point projects to the $+x$ or $−x$ face, depending on the sign of $x$. 
+下标表示每个投影对应于立方体的哪个面。 例如，$φ_{−x}$ 用于投影到立方体表面 $x = +1$ 处的点。 您可以通过查看绝对值最大的坐标来判断点投影到哪个面：例如，如果 $|x| > |y|$ 和 $|x| > |z|$，点投影到 $+x$ 或 $−x$ 面上，具体取决于 $x$ 的符号。
+
+A texture to be used with a cube map has six square pieces. (See Figure 11.10.) Often they are packed together in a single image for storage, arranged as if the cube was unwrapped.
+与立方体贴图一起使用的纹理有六个正方形块。 （见图 11.10。）它们通常被打包在一个图像中进行存储，排列得就像立方体被展开一样。
+![Figure 11.10](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.10.png)
+Figure 11.10. A surface being projected into a cubemap. Points on the surface project outward from the center, each mapping to a point on one of the six faces.
+图 11.10。 被投影到立方体贴图的表面。 曲面上的点从中心向外投影，每个点映射到六个面之一上的一个点。
+
+### 11.2.2 Interpolated Texture Coordinates 插值纹理坐标
+
+For more fine-grained control over the texture coordinate function on a triangle mesh surface, you can explicitly store the texture coordinates at each vertex,  and interpolate them across the triangles using barycentric interpolation (Section 8.1.2). It works in exactly the same way as any other smoothly varying quantities you might define over a mesh: colors, normals, even the 3D position itself.
+为了对三角形网格表面上的纹理坐标函数进行更细粒度的控制，您可以显式存储每个顶点的纹理坐标，并使用重心插值在三角形上对它们进行插值（第 8.1.2 节）。 它的工作方式与您在网格上定义的任何其他平滑变化的量完全相同：颜色、法线，甚至 3D 位置本身。
+
+> The idea of interpolated texture coordinates is very simple—but it can be a bit confusing at first.
+> 插值纹理坐标的想法非常简单，但一开始可能会有点令人困惑。
+
+Let’s look at an example with a single triangle. Figure 11.11 shows a triangle texture mapped with part of the by now familiar test pattern. By looking at the pattern that appears on the rendered triangle, you can deduce that the texture coordinates of the three vertices are $(0.2, 0.2)$, $(0.8, 0.2)$, and $(0.2, 0.8)$, because those are the points in the texture that appear at the three corners of the triangle. Just as with the geometrically determined mappings in the previous section, we control where the texture goes on the surface by giving the mapping from the surface to the texture domain, in this case by specifying where each vertex should go in texture space. Once you position the vertices, linear (barycentric) interpolation across triangles takes care of the rest.
+让我们看一个只有一个三角形的例子。 图 11.11 显示了与现在熟悉的测试图案的一部分映射的三角形纹理。 通过查看渲染三角形上出现的图案，您可以推断出三个顶点的纹理坐标为 $(0.2, 0.2)$、$(0.8, 0.2)$ 和 $(0.2, 0.8)$，因为 这些是纹理中出现在三角形三个角处的点。 正如上一节中几何确定的映射一样，我们通过给出从表面到纹理域的映射来控制纹理在表面上的位置，在本例中是通过指定每个顶点在纹理空间中的位置。 一旦定位了顶点，三角形之间的线性（重心）插值就会处理其余的事情。
+![Figure 11.11](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.11.png)
+Figure 11.11. A single triangle using linearly interpolated texture coordinates. Left: the triangle drawn in texture space; right: the triangle rendered in a 3D scene. 
+图 11.11。 使用线性插值纹理坐标的单个三角形。 左：在纹理空间中绘制的三角形； 右：3D 场景中渲染的三角形。
+
+In Figure 11.12 we show a common way to visualize texture coordinates on a whole mesh: simply draw triangles in texture space with the vertices positioned at  their texture coordinates. This visualization shows you what parts of the texture are being used by which triangles, and it is a handy tool for evaluating texture coordinates and for debugging all sorts of texture-mapping code.
+在图 11.12 中，我们展示了一种在整个网格上可视化纹理坐标的常用方法：简单地在纹理空间中绘制三角形，其顶点位于其纹理坐标处。 此可视化显示了哪些三角形正在使用纹理的哪些部分，并且它是用于评估纹理坐标和调试各种纹理映射代码的便捷工具。
+
+![Figure 11.12](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.12.png)
+Figure 11.12. An icosahedron with its triangles laid out in texture space to provide zero distortion but with many seams. 
+图 11.12。 一个二十面体，其三角形布置在纹理空间中，以提供零失真，但有许多接缝。
+
+The quality of a texture coordinate mapping that is defined by vertex texture coordinates depends on what coordinates are assigned to the vertices—that is, how the mesh is laid out in texture space. No matter what coordinates are assigned, as long as the triangles in the mesh share vertices (Section 12.1), the texture coordinate mapping is always continuous, because neighboring triangles will agree on the texture coordinate at points on their shared edge. But the other desirable qualities described above are not so automatic. Injectivity means the triangles don’t overlap in texture space—if they do, it means there’s some point in the texture that will show up at more than one place on the surface. 
+由顶点纹理坐标定义的纹理坐标映射的质量取决于分配给顶点的坐标，即网格在纹理空间中的布局方式。 无论分配什么坐标，只要网格中的三角形共享顶点（第 12.1 节），纹理坐标映射始终是连续的，因为相邻三角形将在其共享边缘上的点处同意纹理坐标。 但上述其他理想的品质并不是那么自然而然的。 注入性意味着三角形在纹理空间中不会重叠，如果重叠，则意味着纹理中的某个点将出现在表面上的多个位置。
+
+Size distortion is low when the areas of triangles in texture space are in proportion to their areas in 3D. For instance, if a character’s face is mapped with a continuous texture coordinate function, one often ends up with the nose squeezed into a relatively small area in texture space, as shown in Figure 11.13. Although triangles on the nose are smaller than on the cheek, the ratio of sizes is more extreme in texture space. The result is that the texture is enlarged on the nose, because a small area of texture has to cover a large area of surface. Similarly, comparing the forehead to the temple, the triangles are similar in size in 3D, but the triangles around the temple are larger in texture space, causing the texture to appear smaller there.
+当纹理空间中的三角形面积与其在 3D 中的面积成比例时，尺寸失真较低。 例如，如果使用连续纹理坐标函数映射角色的脸部，则通常会导致鼻子被挤压到纹理空间中相对较小的区域，如图 11.13 所示。 尽管鼻子上的三角形比脸颊上的小，但尺寸比例在纹理空间中更为极端。 结果是鼻子上的纹理被放大，因为小面积的纹理必须覆盖大面积的表面。 同样，将前额与太阳穴进行比较，三角形在 3D 中大小相似，但太阳穴周围的三角形在纹理空间中更大，导致那里的纹理显得更小。
+![Figure 11.13](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.13.png)
+Figure 11.13. A face model, with texture coordinates assigned so as to achieve reasonably low shape distortion, but still showing moderate area distortion.
+图 11.13。 面部模型，分配了纹理坐标，以实现相当低的形状失真，但仍然显示出中等的区域失真。
+
+Similarly, shape distortion is low when the shapes of triangles are similar in 3D and in texture space. The face example has fairly low shape distortion, but, for example, the sphere in Figure 11.17 has very large shape distortion near the poles.
+类似地，当三角形的形状在 3D 和纹理空间中相似时，形状失真较低。 面部示例具有相当低的形状畸变，但是，例如图 11.17 中的球体在两极附近具有非常大的形状畸变。
+
+### 11.2.3 Tiling, Wrapping Modes, and Texture Transformations 平铺、环绕模式和纹理转换
+
+It’s often useful to allow texture coordinates to go outside the bounds of the texture image. Sometimes this is a detail: rounding error in a texture coordinate calculation might cause a vertex that lands exactly on the texture boundary to be slightly outside, and the texture mapping machinery should not fail in that case. But it can also be a modeling tool. 
+允许纹理坐标超出纹理图像的范围通常很有用。 有时这是一个细节：纹理坐标计算中的舍入误差可能会导致恰好落在纹理边界上的顶点稍微位于外部，并且在这种情况下纹理映射机制不应失败。 但它也可以是一个建模工具。
+
+If a texture is only supposed to cover part of the surface, but texture coordinates are already set up to map the whole surface to the unit square, one option is to prepare a texture image that is mostly blank with the content in a small area. But that might require a very high resolution texture image to get enough detail in the relevant area. Another alternative is to scale up all the texture coordinates so that they cover a larger range—$[−4.5, 5.5] × [−4.5, 5.5]$ for instance, to position the unit square at one-tenth size in the center of the surface. 
+如果纹理仅覆盖表面的一部分，但纹理坐标已设置为将整个表面映射到单位正方形，则一种选择是准备一个大部分为空白且内容位于小区域的纹理图像。 但这可能需要非常高分辨率的纹理图像才能在相关区域获得足够的细节。 另一种选择是放大所有纹理坐标，以便它们覆盖更大的范围 - 例如 $[−4.5, 5.5] × [−4.5, 5.5]$，将单位正方形放置在十分之一大小的中心 表面。
+
+For a case like this, texture lookups outside the unit-square area that’s covered by the texture image should return a constant background color. One way to do this is to set a background color to be returned by texture lookups outside the unit square. If the texture image already has a constant background color (for instance, a logo on a white background), another way to extend this background automatically over the plane is to arrange for lookups outside the unit square to return the color of the texture image at the closest point on the edge, achieved by clamping the u and v coordinates to the range from the first pixel to the last pixel in the image. 
+对于这样的情况，纹理图像覆盖的单位正方形区域之外的纹理查找应返回恒定的背景颜色。 实现此目的的一种方法是设置由单位方块外部的纹理查找返回的背景颜色。 如果纹理图像已经具有恒定的背景颜色（例如，白色背景上的徽标），则在平面上自动扩展此背景的另一种方法是安排单位正方形之外的查找，以返回纹理图像的颜色 边缘上的最近点，通过将 u 和 v 坐标限制在图像中从第一个像素到最后一个像素的范围来实现。
+
+Sometimes we want a repeating pattern, such as a checkerboard, a tile floor, or a brick wall. If the pattern repeats on a rectangular grid, it would be wasteful to create an image with many copies of the same data. Instead we can handle texture lookups outside the texture image using wraparound indexing—when the lookup point exits the right edge of the texture image, it wraps around to the left edge. This is handled very simply using the integer remainder operation on the pixel coordinates.
+有时我们想要重复的图案，例如棋盘、瓷砖地板或砖墙。 如果图案在矩形网格上重复，则创建具有相同数据的许多副本的图像将是浪费的。 相反，我们可以使用环绕索引来处理纹理图像外部的纹理查找 - 当查找点退出纹理图像的右边缘时，它会环绕到左边缘。 使用像素坐标上的整数余数运算可以非常简单地处理此问题。
+
+> Color texture_lookup_wrap(Texture t, float u, float v) {
+> 	int i = round(u * t.width() - 0.5)
+> 	int j = round(v * t.height() - 0.5)
+> 	return t.get_pixel(i % t.width(), j % t.height())
+> }
+> Color texture_lookup_wrap(Texture t, float u, float v) {
+> 	int i = round(u * t.width() - 0.5)
+> 	int j = round(v * t.height() - 0.5)
+> 	return t.get_pixel(max(0, min(i, t.width()-1)),
+> 					(max(0, min(j, t.height()-1))))
+> }
+
+The choice between these two ways of handling out-of-bounds lookups is specified by selecting a wrapping mode from a list that includes tiling, clamping, and often combinations or variants of the two. With wrapping modes, we can freely think of a texture as a function that returns a color for any point in the infinite 2D plane (Figure 11.14). When we specify a texture using an image, these modes describe how the finite image data is supposed to be used to define this function. In Section 11.5, we’ll see that procedural textures can naturally extend across an infinite plane, since they are not limited by finite image data. Since both are logically infinite in extent, the two types of textures are interchangeable. 
+这两种处理越界查找的方法之间的选择是通过从列表中选择环绕模式来指定的，该列表包括平铺、夹紧以及通常两者的组合或变体。 通过环绕模式，我们可以自由地将纹理视为一个为无限 2D 平面中的任何点返回颜色的函数（图 11.14）。 当我们使用图像指定纹理时，这些模式描述了如何使用有限图像数据来定义该函数。 在第 11.5 节中，我们将看到程序纹理可以自然地延伸到无限平面，因为它们不受有限图像数据的限制。 由于两者在逻辑上都是无限的，因此两种类型的纹理是可以互换的。
+![Figure 11.14](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.14.png)
+Figure 11.14. A wood floor texture tiled over texture space by wrapping texel coordinates. 
+图 11.14。 通过包裹纹理像素坐标在纹理空间上平铺的木地板纹理。
+
+When adjusting the scale and placement of textures, it’s convenient to avoid actually changing the functions that generate texture coordinates, or the texture coordinate values stored at vertices of meshes, by instead applying a matrix transformation to the texture coordinates before using them to sample the texture: 
+调整纹理的比例和位置时，可以方便地避免实际更改生成纹理坐标的函数或存储在网格顶点的纹理坐标值，而是在使用纹理坐标对纹理进行采样之前对纹理坐标应用矩阵变换 :
+$φ(\bold{x}) = \bold{M}_T φ_{model}(\bold{x}),  $
+
+where $φ_{model}$ is the texture coordinate function provided with the model, and $\bold{M}_T$ is a 3 by 3 matrix representing an affine or projective transformation of the 2D texture coordinates using homogeneous coordinates. Such a transformation, sometimes limited just to scaling and/or translation, is supported by most renderers that use texture mapping.
+其中 $φ_{model}$ 是模型提供的纹理坐标函数，$\bold{M}_T$ 是一个 3 x 3 矩阵，表示使用齐次坐标对 2D 纹理坐标进行仿射或投影变换。 大多数使用纹理映射的渲染器都支持这种变换，有时仅限于缩放和/或平移。
+
+### 11.2.4 Perspective Correct Interpolation 透视正确插值
+
+There are some subtleties in achieving correct-looking perspective by interpolating texture coordinates across triangles, but we can address this at the rasterization stage. The reason things are not straightforward is that just interpolating texture coordinates in screen space results in incorrect images, as shown for the grid texture in Figure 11.15. Because things in perspective get smaller as the distance to the viewer increases, the lines that are evenly spaced in 3D should compress in 2D image space. More careful interpolation of texture coordinates is needed to accomplish this.
+通过在三角形之间插值纹理坐标来实现正确的透视有一些微妙之处，但我们可以在光栅化阶段解决这个问题。 事情并不简单的原因是，仅在屏幕空间中插值纹理坐标会导致不正确的图像，如图 11.15 中的网格纹理所示。 由于随着与观察者距离的增加，透视中的物体会变得更小，因此 3D 中均匀分布的线条在 2D 图像空间中应该会被压缩。 需要更仔细地插值纹理坐标才能实现此目的。
+![Figure 11.15](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.15.png)
+Figure 11.15. Left: correct perspective. Right: interpolation in screen space.
+图 11.15。 左：正确的视角。 右：屏幕空间中的插值。
+
+We can implement texture mapping on triangles by interpolating the $(u, v)$ coordinates, modifying the rasterization method of Section 8.1.2, but this results in the problem shown at the right of Figure 11.15. A similar problem occurs for triangles if screen space barycentric coordinates are used as in the following rasterization code:
+我们可以通过对$(u,v)$坐标进行插值来实现三角形上的纹理映射，修改8.1.2节的光栅化方法，但这会导致如图11.15右侧所示的问题。 如果使用屏幕空间重心坐标，如以下光栅化代码所示，三角形也会出现类似的问题：
+
+> for all $x$ do
+> 	for all $y$ do
+> 		compute $(α, β, γ)$ for $(x, y)$
+> 		if $α ∈ (0, 1)$ and $β ∈ (0, 1)$ and $γ ∈ (0, 1)$ then
+> 			$\bold{t} = α\bold{t}_0 + β\bold{t}_1 + γ\bold{t}_2$
+> 			drawpixel $(x, y)$ with color texture($\bold{t}$) for a solid texture
+> 			or with texture$(β, γ)$ for a 2D texture.  
+
+This code will generate images, but there is a problem. To unravel the basic problem, let’s consider the progression from world space $\bold{q}$ to homogeneous point $\bold{r}$ to homogenized point $\bold{s}$:
+这段代码会生成图像，但是有一个问题。 为了解决这个基本问题，让我们考虑从世界空间 $\bold{q}$ 到同质点 $\bold{r}$ 再到同质点 $\bold{s}$ 的进展：
+$$
+\begin{bmatrix}
+x_q \\y_q \\z_q \\ 1
+\end{bmatrix}
+{transform}\rightarrow
+\begin{bmatrix}
+x_r \\y_r \\z_r \\ h_r
+\end{bmatrix}
+homogenize\rightarrow
+\begin{bmatrix}
+x_r/h_r \\y_r/h_r \\z_r/h_r \\ 1
+\end{bmatrix}
+\equiv \begin{bmatrix}
+x_s \\y_s \\z_s \\ 1
+\end{bmatrix}
+$$
+The simplest form of the texture coordinate interpolation problem is when we have texture coordinates $(u, v)$ associated with two points, $\bold{q}$ and $\bold{Q}$, and we need to generate texture coordinates in the image along the line between $\bold{s}$ and $\bold{S}$. If the world-space point $\bold{q}'$ that is on the line between $\bold{q}$ and $\bold{Q}$ projects to the screen-space point $\bold{s}'$ on the line between $\bold{s}$ and $\bold{S}$, then the two points should have the same texture coordinates.
+纹理坐标插值问题的最简单形式是当我们有与两个点 $\bold{q}$ 和 $\bold{Q}$ 关联的纹理坐标 $(u, v)$ 时，我们需要生成纹理坐标 在图像中沿着 $\bold{s}$ 和 $\bold{S}$ 之间的线。 如果 $\bold{q}$ 和 $\bold{Q}$ 之间的直线上的世界空间点 $\bold{q}'$ 投影到屏幕空间点 $\bold{s}'$ 在 $\bold{s}$ 和 $\bold{S}$ 之间的线上，那么这两个点应该具有相同的纹理坐标。
+
+The naïve screen-space approach, embodied by the algorithm above, says that at the point $\bold{s}' = \bold{s} + α(\bold{S} − \bold{s})$ we should use texture coordinates $u_s + α(u_S − u_s)$ and $v_s + α(v_S − v_s)$. This doesn’t work correctly because the world-space point $\bold{q}'$ that transforms to $\bold{s}'$ is not $\bold{q} + α(\bold{Q} − \bold{q})$.
+上面的算法所体现的朴素屏幕空间方法表示，在 $\bold{s}' = \bold{s} + α(\bold{S} − \bold{s})$ 点，我们应该使用 纹理坐标 $u_s + α(u_S − u_s)$ 和 $v_s + α(v_S − v_s)$。 这无法正常工作，因为转换为 $\bold{s}'$ 的世界空间点 $\bold{q}'$ 不是 $\bold{q} + α(\bold{Q} − \bold {q})$。
+
+However, we know from Section 7.4 that the points on the line segment between $\bold{q}$ and $\bold{Q}$ do end up somewhere on the line segment between $\bold{s}$ and $\bold{S}$; in fact, in that section we showed that
+然而，我们从第 7.4 节知道，$\bold{q}$ 和 $\bold{Q}$ 之间的线段上的点确实位于 $\bold{s}$ 和 $\bold 之间的线段上的某个位置 {S}$; 事实上，在该部分我们表明
+$\bold{q} + t(\bold{Q} - \bold{q}) \mapsto \bold{s} + α(\bold{S} + \bold{s}).  $
+
+The interpolation parameters $t$ and $α$ are not the same, but we can compute one from the other: (It is worthwhile to derive these functions yourself from Equation (7.6); in that chapter’s notation, $α = f(t)$.  ) 
+插值参数 $t$ 和 $α$ 不同，但我们可以从另一个计算一个：（值得自己从方程（7.6）导出这些函数；在该章的符号中，$α = f(t ）$。）
+$$
+t(α) = \frac{w_rα}{w_R + α(w_r − w_R)}\ and\ α(t) = \frac{w_Rt}{w_r + t(w_R- w_r)} \ \ \ \ \ (11.1)
+$$
+These equations provide one possible fix to the screen-space interpolation idea. To get texture coordinates for the screen-space point $\bold{s}' = \bold{s} + α(\bold{S} − \bold{s})$, compute $u'_s = u_s + t(α)(u_S − u_s)$ and $v'_s = v_s + t(α)(v_S − v_s)$. These are the coordinates of the point $\bold{q}'$ that maps to $\bold{s}'$, so this will work. However, it is slow to evaluate $t(α)$ for each fragment, and there is a simpler way.
+这些方程为屏幕空间插值思想提供了一种可能的解决方案。 要获取屏幕空间点 $\bold{s}' = \bold{s} + α(\bold{S} − \bold{s})$ 的纹理坐标，请计算 $u'_s = u_s + t( α)(u_S − u_s)$ 和 $v'_s = v_s + t(α)(v_S − v_s)$。 这些是映射到 $\bold{s}'$ 的点 $\bold{q}'$ 的坐标，因此这是可行的。 然而，为每个片段评估 $t(α)$ 的速度很慢，并且有一种更简单的方法。
+
+The key observation is that because, as we know, the perspective transform preserves lines and planes, it is safe to linearly interpolate any attributes we want across triangles, but only as long as they go through the perspective transformation along with the points. To get a geometric intuition for this, reduce the dimension so that we have homogeneous points $(x_r, y_r, w_r)$ and a single attribute $u$ being interpolated. The attribute $u$ is supposed to be a linear function of $x_r$ and $y_r$, so if we plot $u$ as a height field over $(x_r, y_r)$ the result is a plane. Now, if we think of $u$ as a third spatial coordinate (call it $u_r$ to emphasize that it’s treated the same as the others) and send the whole 3D homogeneous point $(x_r, y_r, u_r, w_r)$ through the perspective transformation, the result $(x_s, y_s, u_s)$ still generates points that lie on a plane. There will be some warping within the plane, but the plane stays flat. This means that us is a linear function of $(x_s, y_s)$—which is to say, we can compute us anywhere by using linear interpolation based on the coordinates $(x_s, y_s)$. 
+关键的观察结果是，正如我们所知，透视变换保留了直线和平面，因此在三角形上线性插入我们想要的任何属性是安全的，但前提是它们与点一起经历透视变换。 为了获得对此的几何直觉，请减少维度，以便我们拥有同质点 $(x_r, y_r, w_r)$ 和单个属性 $u$ 进行插值。 属性 $u$ 应该是 $x_r$ 和 $y_r$ 的线性函数，因此如果我们将 $u$ 绘制为 $(x_r, y_r)$ 上的高度场，则结果是一个平面。 现在，如果我们将 $u$ 视为第三个空间坐标（称其为 $u_r$ 以强调它与其他空间坐标相同）并将整个 3D 齐次点 $(x_r, y_r, u_r, w_r)$ 通过 透视变换，结果 $(x_s, y_s, u_s)$ 仍然生成位于平面上的点。 平面内会有一些扭曲，但平面保持平坦。 这意味着 us 是 $(x_s, y_s)$ 的线性函数，也就是说，我们可以在任何地方使用基于坐标 $(x_s, y_s)$ 的线性插值来计算 us。
+![Figure 11.16](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.16.png)
+Figure 11.16. Geometric reasoning for screen-space interpolation. Top: $u_r$ is to be interpolated as a linear function of $(x_r, y_r)$. Bottom: after a perspective transformation from $(x_r, y_r, u_r, w_r)$ to $(x_s, y_s, u_s, 1)$, $u_s$ is a linear function of $(x_s, y_s)$.
+图 11.16。 屏幕空间插值的几何推理。 顶部：$u_r$ 将作为 $(x_r, y_r)$ 的线性函数进行插值。 下图：从 $(x_r, y_r, u_r, w_r)$ 到 $(x_s, y_s, u_s, 1)$ 的透视变换后，$u_s$ 是 $(x_s, y_s)$ 的线性函数。
+
+Returning to the full problem, we need to interpolate texture coordinates $(u, v)$ that are linear functions of the world space coordinates $(x_q, y_q, z_q)$. After transforming the points to screen space, and adding the texture coordinates as if they were additional coordinates, we have
+回到完整的问题，我们需要插入纹理坐标 $(u, v)$，它们是世界空间坐标 $(x_q, y_q, z_q)$ 的线性函数。 将点转换到屏幕空间并添加纹理坐标（就像它们是附加坐标一样）后，我们有
+$$
+\begin{bmatrix}
+u\\ v\\ 1\\ x_r\\ y_r\\ z_r\\ w_r
+\end{bmatrix}
+homogenize\rightarrow 
+\begin{bmatrix}
+u/w_r\\ v/w_r\\ 1/w_r\\ x_r/w_r = x_s\\ y_r/w_r = y_s\\ z_r/w_r = z_s \\ 1 
+\end{bmatrix} \ \ \ \ \ \ \ (11.2)
+$$
+The practical implication of the previous paragraph is that we can go ahead and interpolate all of these quantities based on the values of $(x_s, y_s)$—including the value $z_s$, used in the z-buffer. The problem with the naïve approach is simply that we are interpolating components selected inconsistently—as long as the quantities involved are from before or all from after the perspective divide, all will be well.
+上一段的实际含义是，我们可以继续根据 $(x_s, y_s)$ 的值（包括 z 缓冲区中使用的值 $z_s$）对所有这些量进行插值。 这种简单方法的问题在于，我们对选择的成分进行了不一致的插值——只要涉及的数量来自透视划分之前或全部来自透视划分之后，一切都会好起来的。
+
+The one remaining problem is that $(u/w_r, v/w_r)$ is not directly useful for looking up texture data; we need $(u, v)$. This explains the purpose of the extra parameter we slipped into (11.2), whose value is always 1: once we have $u/w_r$, $v/w_r$, and $1/w_r$, we can easily recover $(u, v)$ by dividing.
+剩下的一个问题是 $(u/w_r, v/w_r)$ 对于查找纹理数据并不直接有用； 我们需要$(u, v)$。 这解释了我们放入 (11.2) 的额外参数的用途，该参数的值始终为 1：一旦我们有了 $u/w_r$、$v/w_r$ 和 $1/w_r$，我们就可以轻松恢复 $(u, v)$ 除以。
+
+To verify that this is all correct, let’s check that interpolating the quantity $1/w_r$ in screen space indeed produces the reciprocal of the interpolated $w_r$ in world space. To see this is true, confirm (Exercise 2):
+为了验证这一切是否正确，让我们检查在屏幕空间中插入数量 $1/w_r$ 是否确实产生了在世界空间中插入的 $w_r$ 的倒数。 要验证这是真的，请确认（练习 2）：
+$$
+\frac{1}{w_r} +  α(t)(\frac{1}{w_R} - \frac{1}{w_r}) = \frac{1}{w'_r}= \frac{1}{w_r+ t(w_R - w_r)} \ \ \ \ \ \ \ (11.3)
+$$
+remembering that $α(t)$ and t are related by Equation 11.1.
+请记住 $α(t)$ 和 t 通过公式 11.1 相关。
+
+This ability to interpolate $1/w_r$ linearly with no error in the transformed space allows us to correctly texture triangles. We can use these facts to modify our scan-conversion code for three points $\bold{t}_i = (x_i, y_i, z_i, w_i)$ that have been passed through the viewing matrices, but have not been homogenized, complete with texture coordinates $\bold{t}_i = (u_i, v_i)$:
+这种在变换空间中无误差地线性插值 $1/w_r$ 的能力使我们能够正确地纹理三角形。 我们可以使用这些事实来修改三个点的扫描转换代码 $\bold{t}_i = (x_i, y_i, z_i, w_i)$ ，这些点已通过观察矩阵，但尚未均质化，完成 纹理坐标$\bold{t}_i = (u_i, v_i)$:
+
+> for all $x_s$ do
+> 	for all $y_s$ do
+> 		compute $(α, β, γ)$ for $(x_s, y_s)$
+> 		if ($α ∈ [0, 1]$ and $β ∈ [0, 1]$ and $γ ∈ [0, 1]$) then
+> 			$u_s = α(u_0/w_0) + β(u_1/w_1) + γ(u_2/w_2)$
+> 			$v_s = α(v_0/w_0) + β(v_1/w_1) + γ(v_2/w_2)$
+> 			$1_s = α(1/w_0) + β(1/w_1) + γ(2/w_2)$
+> 			$u = u_s/1_s$
+> 			$v = v_s/1_s$
+> 			drawpixel $(x_s, y_s)$ with color texture$(u, v)$  
+
+Of course, many of the expressions appearing in this pseudocode would be precomputed outside the loop for speed. For solid textures, it’s simple enough to include the original world space coordinates $x_q, y_q, z_q$ in the list of attributes, treated the same as $u$ and $v$, and correct interpolated world space coordinates will be obtained, which can be passed to the solid texture function.
+当然，为了速度，该伪代码中出现的许多表达式将在循环外部预先计算。 对于实体纹理，很简单，只需将原始世界空间坐标 $x_q、y_q、z_q$ 包含在属性列表中，与 $u$ 和 $v$ 处理相同，即可获得正确的插值世界空间坐标，其中 可以传递给实体纹理函数。
+
+### 11.2.5 Continuity and Seams 连续性和接缝
+
+Although low distortion and continuity are nice properties to have in a texture coordinate function, discontinuities are often unavoidable. For any closed 3D surface, it’s a basic result of topology that there is no continuous, bijective function that maps the whole surface into a texture image. Something has to give, and by introducing seams—curves on the surface where the texture coordinates change suddenly—we can have low distortion everywhere else. Many of the geometrically determined mappings discussed above already contain seams: in spherical and cylindrical coordinates, the seams are where the angle computed by atan2 wraps around from π to -π, and in the cubemap, the seams are along the cube edges, where the mapping switches between the six square textures.
+尽管低失真和连续性是纹理坐标函数的良好特性，但不连续性通常是不可避免的。 对于任何封闭的 3D 表面，拓扑的基本结果是不存在将整个表面映射到纹理图像的连续双射函数。 必须做出一些让步，通过引入接缝（纹理坐标突然变化的表面上的曲线），我们可以在其他地方保持低失真。 上面讨论的许多几何确定的映射已经包含接缝：在球面和柱面坐标中，接缝是由 atan2 计算的角度从 π 到 -π 环绕的地方，而在立方体贴图中，接缝沿着立方体边缘，其中 映射在六个方形纹理之间切换。
+
+With interpolated texture coordinates, seams require special consideration, because they don’t happen naturally. We observed earlier that interpolated texture coordinates are automatically continuous on shared-vertex meshes—the sharing of texture coordinates guarantees it. But this means that if a triangle spans a seam, with some vertices on one side and some on the other, the interpolation machinery will cheerfully provide a continuous mapping, but it will likely be highly distorted or fold over so that it’s not injective. Figure 11.17 illustrates this problem on a globe mapped with spherical coordinates. For example, there is a triangle near the bottom of the globe that has one vertex at the tip of New Zealand’s South Island, and another vertex in the Pacific about 400 km northeast of the North Island. A sensible pilot flying between these points would fly over New Zealand, but the path starts at longitude $167^◦s$ E (+167) and ends at $179^◦s$ W (that is, longitude −179), so linear interpolation chooses a route that crosses South America on the way. This causes a backward copy of the entire map to be compressed into the strip of triangles that crosses the $180^{th}$ meridian! The solution is to label the second vertex with the equivalent longitude of $181^◦s$ E, but this just pushes the problem to the next triangle.
+对于插值纹理坐标，需要特别考虑接缝，因为它们不会自然发生。 我们之前观察到，插值纹理坐标在共享顶点网格上自动连续 - 纹理坐标的共享保证了这一点。 但这意味着，如果三角形跨越接缝，一侧有一些顶点，另一侧有一些顶点，插值机制将乐意提供连续映射，但它可能会高度扭曲或折叠，因此它不是单射的。 图 11.17 在用球坐标映射的地球上说明了这个问题。 例如，地球底部附近有一个三角形，其一个顶点位于新西兰南岛的尖端，另一个顶点位于北岛东北约 400 公里处的太平洋。 在这些点之间飞行的明智飞行员会飞越新西兰，但路径从经度 $167^°s$ E (+167) 开始，到 $179^°s$ W 结束（即经度 -179），因此线性插值 途中选择了一条穿越南美洲的路线。 这会导致整个地图的向后副本被压缩为穿过 $180^{th}$ 子午线的三角形带！ 解决方案是用等效经度 $181^°s$ E 标记第二个顶点，但这只是将问题推到下一个三角形。
+
+The only way to create a clean transition is to avoid sharing texture coordinates at the seam: the triangle crossing New Zealand needs to interpolate to longitude +181, and the next triangle in the Pacific needs to continue starting from to longitude −179. To do this, we duplicate the vertices at the seam: for each vertex we add a second vertex with an equivalent longitude, differing by $360^◦s$, and the triangles on opposite sides of the seam use different vertices. This solution is shown in the right half of Figure 11.17, in which the vertices at the far left and right of the texture space are duplicates, with the same 3D positions.
+创建干净过渡的唯一方法是避免在接缝处共享纹理坐标：穿过新西兰的三角形需要插值到经度 +181，而太平洋中的下一个三角形需要继续从经度 -179 开始。 为此，我们复制接缝处的顶点：对于每个顶点，我们添加具有相同经度的第二个顶点，相差 $360^°s$，并且接缝相对两侧的三角形使用不同的顶点。 该解决方案如图 11.17 的右半部分所示，其中纹理空间最左侧和最右侧的顶点是重复的，具有相同的 3D 位置。
+![Figure 11.17](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.17.png)
+Figure 11.17. Polygonal globes: on the left, with all shared vertices, the texture coordinate function is continuous, but necessarily has problems with triangles that cross the 180th meridian, because texture coordinates are interpolated from longitudes near 180 to longitudes near −180. On the right, some vertices are duplicated, with identical 3D positions but texture coordinates differing by exactly 360 degrees in longitude, so that texture coordinates are interpolated across the meridian rather than all the way across the map.
+图 11.17。 多边形地球：在左侧，所有共享顶点的纹理坐标函数是连续的，但对于穿过第 180 条经线的三角形必然存在问题，因为纹理坐标是从 180 附近的经度插值到 -180 附近的经度。 在右侧，一些顶点是重复的，具有相同的 3D 位置，但纹理坐标的经度相差正好 360 度，因此纹理坐标是跨子午线而不是整个地图进行插值的。
+
+## 11.3 Antialiasing Texture Lookups 抗锯齿纹理查找
+
+The second fundamental problem of texture mapping is antialiasing. Rendering a texture mapped image is a sampling process: mapping the texture onto the surface and then projecting the surface into the image produces a 2D function across the image plane, and we are sampling it at pixels. As we saw in Chapter 9, doing this using point samples will produce aliasing artifacts when the image contains detail or sharp edges—and since the whole point of textures is to introduce detail, they become a prime source of aliasing problems like the ones we saw in Figure 11.3. 
+纹理映射的第二个基本问题是抗锯齿。 渲染纹理映射图像是一个采样过程：将纹理映射到表面，然后将表面投影到图像中，生成跨图像平面的 2D 函数，我们在像素处对其进行采样。 正如我们在第 9 章中看到的，当图像包含细节或锐利边缘时，使用点样本执行此操作会产生锯齿伪影，并且由于纹理的全部目的是引入细节，因此它们成为锯齿问题的主要来源，就像我们看到的那样 如图 11.3 所示。
+
+> It’s a good idea to review the first half of Chapter 9 now.
+> 现在回顾一下第 9 章的前半部分是个好主意。
+
+Just as with antialiased rasterization of lines or triangles, antialiased ray tracing (Section 13.4), or downsampling images (Section 9.4), the solution is to make each pixel not a point sample but an area average of the image, over an area similar in size to the pixel. Using the same supersampling approach used for antialiased rasterization and ray tracing, with enough samples, excellent results can be obtained with no changes to the texture mapping machinery: many samples within a pixel’s area will land at different places in the texture map, and averaging the shading results computed using the different texture lookups is an accurate way to approximate the average color of the image over the pixel. However, with detailed textures it takes very many samples to get good results, which is slow. Computing this area average efficiently in the presence of textures on the surface is the first key topic in texture antialiasing. 
+正如直线或三角形的抗锯齿光栅化、抗锯齿光线追踪（第 13.4 节）或下采样图像（第 9.4 节）一样，解决方案是使每个像素不是点样本，而是图像的区域平均值，在类似的区域上 大小到像素。 使用与抗锯齿光栅化和光线追踪相同的超级采样方法，只要有足够的样本，就可以在不改变纹理映射机制的情况下获得出色的结果：像素区域内的许多样本将落在纹理贴图中的不同位置，并平均 使用不同纹理查找计算的着色结果是近似像素上图像平均颜色的准确方法。 然而，对于详细的纹理，需要非常多的样本才能获得良好的结果，速度很慢。 在表面存在纹理的情况下有效计算该面积平均值是纹理抗锯齿的第一个关键主题。
+
+Texture images are usually defined by raster images, so there is also a reconstruction problem to be considered, just as with upsampling images (Section 9.4). The solution is the same for textures: use a reconstruction filter to interpolate between texels.
+纹理图像通常由光栅图像定义，因此还需要考虑重建问题，就像上采样图像一样（第 9.4 节）。 纹理的解决方案是相同的：使用重建滤波器在纹理像素之间进行插值。
+
+We expand on each of these topics in the following sections.
+我们将在以下部分中详细介绍每个主题。
+
+### 11.3.1 The Footprint of a Pixel 像素的足迹
+
+What makes antialiasing textures more complex than other kinds of antialiasing is that the relationship between the rendered image and the texture is constantly changing. Every pixel value should be computed as an average color over the area belonging to the pixel in the image, and in the common case that the pixel is looking at a single surface, this corresponds to averaging over an area on the surface. If the surface color comes from a texture, this in turn amounts to averaging over a corresponding part of the texture, known as the texture space footprint of the pixel. Figure 11.18 illustrates how the footprints of square areas (which could be pixel areas in a lower-resolution image) map to very different sized and shaped areas in the floor’s texture space.
+抗锯齿纹理比其他类型的抗锯齿更复杂的原因是渲染图像和纹理之间的关系不断变化。 每个像素值应计算为属于图像中像素的区域的平均颜色，并且在像素查看单个表面的常见情况下，这对应于表面上的区域的平均值。 如果表面颜色来自纹理，则这又相当于对纹理的相应部分进行平均，称为像素的纹理空间足迹。 图 11.18 说明了方形区域（可能是低分辨率图像中的像素区域）的足迹如何映射到地板纹理空间中大小和形状截然不同的区域。
+![Figure 11.18](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.18.png)Figure 11.18. The footprints in texture space of identically sized square areas in the image vary in size and shape across the image.
+图 11.18。 图像中相同大小的正方形区域的纹理空间中的足迹在图像中的大小和形状各不相同。
+
+Recall the three spaces involved in rendering with textures: the projection $π$ that maps 3D points into the image and the texture coordinate function $φ$ that maps 3D points into texture space. To work with pixel footprints we need to understand the composition of these two mappings: first follow $π$ backwards to get from the image to the surface, then follow $φ$ forwards. This composition $ψ = φ ◦ π^{−1}$ is what determines pixel footprints: the footprint of a pixel is the image of that pixel’s square area of the image under the mapping $ψ$.
+回想一下使用纹理进行渲染所涉及的三个空间：将 3D 点映射到图像中的投影 $π$ 以及将 3D 点映射到纹理空间中的纹理坐标函数 $φ$。 要处理像素足迹，我们需要了解这两个映射的组成：首先向后跟随 $π$ 从图像到表面，然后向前跟随 $φ$。 这种组合 $ψ = φ ◦ π^{−1}$ 决定了像素足迹：像素的足迹是映射 $ψ$ 下该像素的图像方形区域的图像。
+
+The core problem in texture antialiasing is computing an average value of the texture over the footprint of a pixel. To do this exactly in general could be a pretty complicated job: for a faraway object with a complicated surface shape, the footprint could be a complicated shape covering a large area, or possibly several disconnected areas, in texture space. But in the typical case, a pixel lands in a smooth area of surface that is mapped to a single area in the texture.
+纹理抗锯齿的核心问题是计算像素覆盖范围内纹理的平均值。 一般来说，要准确地做到这一点可能是一项相当复杂的工作：对于具有复杂表面形状的远处物体，足迹可能是覆盖纹理空间中大面积或可能几个不连续区域的复杂形状。 但在典型情况下，像素落在表面的平滑区域中，该区域被映射到纹理中的单个区域。
+
+Because $ψ$ contains both the mapping from image to surface and the mapping from surface to texture, the size and shape of the footprint depend on both the viewing situation and the texture coordinate function. When a surface is closer to the camera, pixel footprints will be smaller; when the same surface moves farther away, the footprint gets bigger. When surfaces are viewed at an oblique angle, the footprint of a pixel on the surface is elongated, which usually means it will be elongated in texture space also. Even with a fixed view, the texture coordinate function can cause variations in the footprint: if it distorts area, the size of footprints will vary, and if it distorts shape, they can be elongated even for head-on views of the surface.
+因为 $ψ$ 既包含从图像到表面的映射，又包含从表面到纹理的映射，因此足迹的大小和形状取决于观看情况和纹理坐标函数。 当表面距离相机越近时，像素足迹就会越小； 当同一表面移动得更远时，足迹就会变大。 当以倾斜角度查看表面时，表面上像素的足迹会被拉长，这通常意味着它在纹理空间中也会被拉长。 即使使用固定视图，纹理坐标函数也会导致足迹的变化：如果它扭曲区域，足迹的大小就会变化，如果它扭曲形状，即使对于表面的正面视图，足迹也会被拉长。
+![Figure 11.19](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.19.png)
+Figure 11.19. An approximation of the texture-space footprint of a pixel can be made using the derivative of the mapping from $(x, y)$ to $(u, v)$. The partial derivatives with respect to $x$ and $y$ are parallel to the images of the $x$ and $y$ isolines (blued) and span a parallelogram (shaded in orange) that approximates the curved shape of the exact footprint (outlined in black).
+图 11.19。 可以使用从 $(x, y)$ 到 $(u, v)$ 映射的导数来近似像素的纹理空间足迹。 关于 $x$ 和 $y$ 的偏导数与 $x$ 和 $y$ 等值线（蓝色）的图像平行，并跨越一个平行四边形（橙色阴影），该平行四边形近似于精确足迹的弯曲形状（ 黑色轮廓)。
+
+However, to find an efficient algorithm for computing antialiased lookups, some substantial approximations will be needed. When a function is smooth, a linear approximation is often useful. In the case of texture antialiasing, this means approximating the mapping $ψ$ from image space to texture space as a linear mapping from 2D to 2D:
+然而，为了找到计算抗锯齿查找的有效算法，需要一些实质性的近似。 当函数平滑时，线性近似通常很有用。 在纹理抗锯齿的情况下，这意味着将从图像空间到纹理空间的映射 $ψ$ 近似为从 2D 到 2D 的线性映射：
+$ψ(\bold{x}) = ψ(\bold{x}_0) + \bold{J}(\bold{x} - \bold{x}_0),  $
+
+> In mathematicians’ terms, we have made a one-term Taylor series approximation to the function $ψ$.
+> 用数学家的话来说，我们对函数$ψ$做了一项泰勒级数近似。
+
+where the 2-by-2 matrix $\bold{J}$ is some approximation to the derivative of $ψ$. It has four entries, and if we denote the image-space position as $\bold{x} = (x, y)$ and the texture-space position as $\bold{u} = (u, v)$ then
+其中 2×2 矩阵 $\bold{J}$ 是 $ψ$ 导数的某种近似值。 它有四个条目，如果我们将图像空间位置表示为 $\bold{x} = (x, y)$ 并将纹理空间位置表示为 $\bold{u} = (u, v)$ 那么
+$$
+\bold{M} = \begin{bmatrix}
+\frac{du}{dx} & \frac{du}{dy} \\
+\frac{dv}{dx} & \frac{dv}{dy}
+\end{bmatrix}
+$$
+where the four derivatives describe how the texture point $(u, v)$ that is seen at a point $(x, y)$ in the image changes when we change $x$ and $y$.
+其中四个导数描述了当我们改变 $x$ 和 $y$ 时，在图像中的点 $(x, y)$ 处看到的纹理点 $(u, v)$ 如何变化。
+
+A geometric interpretation of this approximation is that it says a unit-sized square pixel area centered at $\bold{x}$ in the image will map approximately to a parallelogram in texture space, centered at $ψ(\bold{x})$ and with its edges parallel to the vectors $\bold{u}_x = (du/dx, dv/dx)$ and $\bold{u}_y = (du/dy, dv/dy)$.
+这种近似的几何解释是，它说图像中以$\bold{x}$为中心的单位大小的正方形像素区域将近似映射到纹理空间中的平行四边形，以$ψ(\bold{x})$为中心，其边缘平行于向量$\bold{u}_x = (du/dx, dv/dx)$和$\bold{u}_y = (du/dy, dv/dy)$。
+
+The derivative matrix $\bold{J}$ is useful because it tells the whole story of variation in the (approximated) texture-space footprint across the image. Derivatives that are larger in magnitude indicate larger texture-space footprints, and the relationship between the derivative vectors $\bold{u}_x$ and $\bold{u}_y$ indicates the shape. When they are orthogonal and the same length, the footprint is square, and as they become skewed and/or very different in length, the footprint becomes elongated. 
+导数矩阵 $\bold{J}$ 很有用，因为它讲述了整个图像中（近似）纹理空间足迹的变化。 导数值越大表示纹理空间足迹越大，导数向量 $\bold{u}_x$ 和 $\bold{u}_y$ 之间的关系表示形状。 当它们正交并且长度相同时，足迹是正方形的，并且当它们变得倾斜和/或长度非常不同时，足迹变得拉长。
+
+We’ve now reached the form of the problem that’s usually thought of as the “right answer”: a filtered texture sample at a particular image-space position should be the average value of the texture map over the parallelogram-shaped footprint defined by the texture coordinate derivatives at that point. This already has some assumptions baked into it—namely, that the mapping from image to texture is smooth—but it is sufficiently accurate for excellent image quality. However, this parallelogram area average is already too expensive to compute exactly, so various approximations are used. Approaches to texture antialiasing differ in the speed/quality tradeoffs they make in approximating this lookup. We discuss these in the following sections.
+我们现在已经达到了通常被认为是“正确答案”的问题的形式：特定图像空间位置处的过滤纹理样本应该是由 该点的纹理坐标导数。 这已经包含了一些假设，即从图像到纹理的映射是平滑的，但它对于出色的图像质量来说足够准确。 然而，这个平行四边形面积平均值已经太昂贵而无法精确计算，因此使用了各种近似值。 纹理抗锯齿的方法在近似此查找时进行的速度/质量权衡方面有所不同。 我们将在以下各节中讨论这些内容。
+
+> The approach here uses a box filter to sample the image. Some systems instead use a Gaussian pixel filter, which becomes an elliptical Gaussian in texture space; this is elliptical weighted averaging (EWA).
+> 这里的方法使用盒式过滤器对图像进行采样。 有些系统改用高斯像素滤波器，它在纹理空间中变成椭圆高斯； 这就是椭圆加权平均 (EWA)。
+
+### 11.3.2 Reconstruction 重建
+
+When the footprint is smaller than a texel, we are magnifying the texture as it is mapped into the image. This case is analogous to upsampling an image, and the main consideration is interpolating between texels to produce a smooth image in which the texel grid is not obvious. Just as in image upsampling, this smoothing process is defined by a reconstruction filter that is used to compute texture samples at arbitrary locations in texture space. (See Figure 11.20.)
+当足迹小于纹理元素时，我们会在纹理映射到图像时放大纹理。 这种情况类似于对图像进行上采样，主要考虑的是在纹素之间进行插值以产生平滑的图像，其中纹素网格不明显。 正如图像上采样一样，此平滑过程由重建滤波器定义，该重建滤波器用于计算纹理空间中任意位置的纹理样本。 （见图 11.20。）
+![Figure 11.20](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.20.png)
+Figure 11.20. The dominant issues in texture filtering change with the footprint size. For small footprints (left) interpolating between pixels is needed to avoid blocky artifacts; for large footprints, the challenge is to efficiently find the average of many pixels.
+图 11.20。 纹理过滤的主要问题随着占地面积的大小而变化。 对于小足迹（左)，需要在像素之间进行插值以避免块状伪影； 对于大的足迹，挑战是有效地找到许多像素的平均值。
+
+The considerations are pretty much the same as in image resampling, with one important difference. In image resampling, the task is to compute output samples on a regular grid, and that regularity enabled an important optimization in the case of a separable reconstruction filter. In texture filtering, the pattern of lookups is not regular, and the samples have to be computed separately. This means large, high-quality reconstruction filters are very expensive to use, and for this reason the highest-quality filter normally used for textures is bilinear interpolation. 
+这些考虑因素与图像重采样几乎相同，但有一个重要的区别。 在图像重采样中，任务是在规则网格上计算输出样本，并且该规则性在可分离重建滤波器的情况下实现了重要的优化。 在纹理过滤中，查找的模式不规则，并且必须单独计算样本。 这意味着大型高质量重建滤波器的使用成本非常昂贵，因此通常用于纹理的最高质量滤波器是双线性插值。
+
+The calculation of a bilinearly interpolated texture sample is the same as computing one pixel in an image being upsampled with bilinear interpolation. First we express the texture-space sample point in terms of (real-valued) texel coordinates, then we read the values of the four neighboring texels and average them. Textures are usually parameterized over the unit square, and the texels are located in the same way as pixels in any image, spaced a distance $1/n_u$ apart in the $u$ direction and $1/n_v$ in $v$, with texel (0,0) positioned half a texel in from the edge for symmetry. (See Chapter 9 for the full explanation.)
+双线性插值纹理样本的计算与计算使用双线性插值上采样的图像中的一个像素相同。 首先，我们用（实值）纹素坐标来表示纹理空间样本点，然后读取四个相邻纹素的值并对它们进行平均。 纹理通常在单位正方形上参数化，纹素的定位方式与任何图像中的像素相同，在 $u$ 方向上间隔 $1/n_u$ 距离，在 $v$ 上间隔 $1/n_v$ 距离，纹素 (0,0) 从边缘定位半个纹理元素以实现对称。 （完整解释请参见第 9 章。）
+
+```
+Color tex_sample_bilinear(Texture t, float u, float v) {
+	u_p = u * t.width - 0.5
+	v_p = v * t.height - 0.5
+	iu0 = floor(u_p); iu1 = iu0 + 1
+	iv0 = floor(v_p); iv1 = iv0 + 1
+	a_u = (iu1 - u_p); b_u = 1 - a_u
+	a_v = (iv1 - v_p); b_v = 1 - a_v
+	return a_u * a_v * t[iu0][iv0] + a_u * b_v * t[iu0][iv1] +
+		b_u * a_v * t[iu1][iv0] + b_u * b_v * t[iu1][iv1]
+}
+```
+
+In many systems, this operation becomes an important performance bottleneck, mainly because of the memory latency involved in fetching the four texel values from the texture data. The pattern of sample points for textures is irregular, because the mapping from image to texture space is arbitrary, but often coherent, since nearby image points tend to map to nearby texture points that may read the same texels. For this reason, high-performance systems have special hardware devoted to texture sampling that handles interpolation and manages caches of recently used texture data to minimize the number of slow data fetches from the memory where the texture data is stored.
+在许多系统中，此操作成为重要的性能瓶颈，主要是因为从纹理数据获取四个纹素值涉及内存延迟。 纹理的样本点的图案是不规则的，因为从图像到纹理空间的映射是任意的，但通常是连贯的，因为附近的图像点倾向于映射到可以读取相同纹素的附近的纹理点。 因此，高性能系统具有专用于纹理采样的特殊硬件，用于处理插值并管理最近使用的纹理数据的缓存，以最大限度地减少从存储纹理数据的内存中获取缓慢数据的次数。
+
+After reading Chapter 9 you may complain that linear interpolation may not be a smooth enough reconstruction for some demanding applications. However, it can always be made good enough by resampling the texture to a somewhat higher resolution using a better filter, so that the texture is smooth enough that bilinear interpolation works well.
+读完第 9 章后，您可能会抱怨线性插值对于某些要求苛刻的应用程序来说可能不够平滑重建。 然而，通过使用更好的滤波器将纹理重新采样到更高的分辨率，它总是可以变得足够好，以便纹理足够平滑，双线性插值可以很好地工作。
+
+### 11.3.3 Mipmapping Mip 贴图
+
+Doing a good job of interpolation only suffices in situations where the texture is being magnified: where the pixel footprint is small compared to the spacing of texels. When a pixel footprint covers many texels, good antialiasing requires computing the average of many texels to smooth out the signal so that it can be sampled safely.
+只有在纹理被放大的情况下，做好插值工作才足够：与纹理像素的间距相比，像素占用空间很小。 当像素足迹覆盖许多纹素时，良好的抗锯齿需要计算许多纹素的平均值来平滑信号，以便可以安全地对其进行采样。 
+
+One very accurate way to compute the average texture value over the footprint would be to find all the texels within the footprint and add them up. However, this is potentially very expensive when the footprint is large—it could require reading many thousands of texel just for a single lookup. A better approach is to precompute and store the averages of the texture over various areas of different size and position.
+计算足迹上的平均纹理值的一种非常准确的方法是找到足迹内的所有纹理像素并将它们相加。 然而，当占用空间很大时，这可能会非常昂贵——一次查找可能需要读取数千个纹素。 更好的方法是预先计算并存储不同大小和位置的各个区域的纹理平均值。
+
+A very popular version of this idea is known as “MIP mapping” or just mipmapping. A mipmap is a sequence of textures that all contain the same image but at lower and lower resolution. The original, full-resolution texture image is called the base level, or level 0, of the mipmap, and level 1 is generated by taking that image and downsampling it by a factor of 2 in each dimension, resulting in an image with one-fourth as many texels. The texels in this image are, roughly speaking, averages of square areas 2 by 2 texels in size in the level-0 image.
+这个想法的一个非常流行的版本称为“MIP 映射”或简称为 mipmap。 mipmap 是一系列纹理，全部包含相同的图像，但分辨率越来越低。 原始的全分辨率纹理图像称为 mipmap 的基本级别或级别 0，级别 1 是通过获取该图像并在每个维度上按 2 倍下采样生成的，从而生成具有一的图像 第四个纹理像素。 粗略地说，该图像中的纹素是 0 级图像中大小为 2 x 2 纹素的方形区域的平均值。
+
+> The name “mip” stands for the Latin phrase multim in parvo meaning “much in a small space.”
+> “mip”这个名字代表拉丁短语 multim in parvo，意思是“小空间里的很多东西”。
+
+This process can be continued to define as many mipmap levels as desired: the image at level $k$ is computed by downsampling the image at level $k − 1$ by two. A texel at level $k$ corresponds to a square area measuring $2^k$ by $2^k$ texels in the original texture. For instance, starting with a 1024 × 1024 texture image, we could generate a mipmap with 11 levels: level 0 is 1024 × 1024; level 1 is 512 × 512, and so on until level 10, which has just a single texel. This kind of structure, with images that represent the same content at a series of lower and lower sampling rates, is called an image pyramid, based on the visual metaphor of stacking all the smaller images on top of the original.
+可以继续此过程来定义所需数量的 mipmap 级别：级别 $k$ 的图像是通过将级别 $k − 1$ 的图像下采样 2 倍来计算的。 $k$ 级别的纹素对应于原始纹理中 $2^k$ 乘以 $2^k$ 纹素的方形区域。 例如，从 1024 × 1024 纹理图像开始，我们可以生成具有 11 个级别的 mipmap：级别 0 是 1024 × 1024；级别 0 是 1024 × 1024； 第 1 级是 512 × 512，依此类推，直到第 10 级，只有一个纹理像素。 这种结构以一系列越来越低的采样率表示相同内容的图像，被称为图像金字塔，基于将所有较小图像堆叠在原始图像之上的视觉隐喻。
+
+### 11.3.4 Basic Texture Filtering with Mipmaps 使用 Mipmap 进行基本纹理过滤
+
+With the mipmap, or image pyramid, in hand, texture filtering can be done much more efficiently than by accessing many texels individually. When we need a texture value averaged over a large area, we simply use values from higher levels of the mipmap, which are already averages over large areas of the image. The simplest and fastest way to do this is to look up a single value from the mipmap, choosing the level so that the size covered by the texels at that level is roughly the same as the overall size of the pixel footprint. Of course, the pixel footprint might be quite different in shape from the (always square) area represented by the texel, and we can expect that to produce some artifacts.
+有了 mipmap 或图像金字塔，纹理过滤可以比单独访问许多纹素更有效地完成。 当我们需要大面积的平均纹理值时，我们只需使用 mipmap 更高级别的值，这些值已经是图像大面积的平均值。 最简单、最快的方法是从 mipmap 中查找单个值，选择级别，以便该级别的纹素覆盖的大小与像素占用空间的总体大小大致相同。 当然，像素足迹的形状可能与纹素表示的（始终是正方形）区域有很大不同，我们可以预期这会产生一些伪影。
+
+Setting aside for a moment the question of what to do when the pixel footprint has an elongated shape, suppose the footprint is a square of width D, measured in terms of texels in the full-resolution texture. What level of the mipmap is it appropriate to sample? Since the texels at level k cover squares of width $2^k$, it seems appropriate to choose k so that
+暂时搁置当像素足迹具有拉长形状时该怎么办的问题，假设足迹是宽度为 D 的正方形，以全分辨率纹理中的纹素来测量。 什么级别的 mipmap 适合采样？ 由于 k 层的纹素覆盖宽度为 $2^k$ 的正方形，因此选择 k 似乎是合适的：
+$2^k ≈ D  $
+
+so we let $k = \log_2D$. Of course this will give non-integer values of $k$ most of the time, and we only have stored mipmap images for integer levels. Two possible solutions are to look up a value only for the integer nearest to $k$ (efficient but produces seams at the abrupt transitions between levels) or to look up values for the two nearest integers to k and linearly interpolate the values (twice the work, but smoother).
+所以我们让 $k = \log_2D$。 当然，大多数时候这会给出 $k$ 的非整数值，并且我们只存储了整数级别的 mipmap 图像。 两种可能的解决方案是仅查找最接近 $k$ 的整数的值（有效，但会在级别之间的突然过渡处产生接缝）或查找最接近 k 的两个整数的值并线性插值这些值（两倍的值） 工作，但更顺利）。
+
+Before we can actually write down the algorithm for sampling a mipmap, we have to decide how we will choose the “width” D when footprints are not square. Some possibilities might be to use the square root of the area or to find the longest axis of the footprint and call that the width. A practical compromise that is easy to compute is to use the length of the longest edge:
+在我们真正写出对 mipmap 进行采样的算法之前，我们必须决定当足迹不是正方形时如何选择“宽度”D。 一些可能性可能是使用面积的平方根或找到足迹的最长轴并将其称为宽度。 一个易于计算的实用折衷方案是使用最长边的长度：
+$D = max {\|\bold{u}_x\|, \|\bold{u}_y\|} .  $
+
+```
+Color mipmap_sample_trilinear(Texture mip[], float u, float v, matrix J) {
+	D = max_column_norm(J)
+	k = log2(D)
+	k0 = floor(k); k1 = k0 + 1
+	a = k1 - k; b = 1 - a
+	c0 = tex_sample_bilinear(mip[k0], u, v)
+	c1 = tex_sample_bilinear(mip[k1], u, v)
+	return a * c0 + b * c1
+}
+```
+
+Basic mipmapping does a good job of removing aliasing, but because it’s unable to handle elongated, or anisotropic pixel footprints, it doesn’t perform well when surfaces are viewed at grazing angles. This is most commonly seen on large planes that represent a surface the viewer is standing on. Points on the floor that are far away are viewed at very steep angles, resulting in very anisotropic footprints that mipmapping approximates with much larger square areas. The resulting image will appear blurred in the horizontal direction.
+基本 mipmap 在消除锯齿方面做得很好，但由于它无法处理拉长的或各向异性的像素足迹，因此当以掠射角查看表面时，它的表现不佳。 这最常见于代表观看者所站立的表面的大平面上。 以非常陡的角度观察地板上较远的点，从而产生非常各向异性的足迹，mipmap 会用更大的正方形区域来近似。 生成的图像在水平方向上会显得模糊。
+
+### 11.3.5 Anisotropic Filtering 各向异性过滤
+
+A mipmap can be used with multiple lookups to approximate an elongated footprint better. The idea is to select the mipmap level based on the shortest axis of the footprint rather than the largest, then average together several lookups spaced along the long axis. (See Figure 11.21.)
+mipmap 可以与多次查找一起使用，以更好地近似拉长的足迹。 这个想法是根据足迹的最短轴而不是最大轴来选择 mipmap 级别，然后对沿长轴间隔的多个查找进行平均。 （见图 11.21。）
+![Figure 11.21](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.21.png)
+Figure 11.21. The results of antialiasing a challenging test scene (reference images showing detailed structure, at left) using three different strategies: simply taking a single point sample with nearest-neighbor interpolation; using a mipmap pyramid to average a square area in the texture for each pixel; using several samples from a mipmap to average an anisotropic region in the texture.
+图 11.21。 使用三种不同策略对具有挑战性的测试场景（显示详细结构的参考图像，左侧)进行抗锯齿的结果：简单地采用最近邻插值法获取单点样本； 使用 mipmap 金字塔对每个像素的纹理中的方形区域进行平均； 使用 mipmap 中的多个样本来平均纹理中的各向异性区域。
+
+## 11.4 Applications of Texture Mapping 纹理映射的应用 
+
+Once you understand the idea of defining texture coordinates for a surface and the machinery of looking up texture values, this machinery has many uses. In this section we survey a few of the most important techniques in texture mapping, but textures are a very general tool with applications limited only by what the programmer can think up.
+一旦您了解了定义表面纹理坐标的想法以及查找纹理值的机制，这种机制就有很多用途。 在本节中，我们将调查纹理映射中的一些最重要的技术，但纹理是一种非常通用的工具，其应用程序仅受程序员所能想到的限制。 
+
+### 11.4.1 Controlling Shading Parameters 控制着色参数 
+
+The most basic use of texture mapping is to introduce variation in color by making the diffuse color that is used in shading computations—whether in a ray tracer or in a fragment shader—dependent on a value looked up from a texture. A textured diffuse component can be used to paste decals, paint decorations, or print text on a surface, and it can also simulate the variation in material color, for example for wood or stone.
+纹理映射的最基本用途是通过使着色计算中使用的漫反射颜色（无论是在光线追踪器中还是在片段着色器中）依赖于从纹理查找的值来引入颜色变化。 带纹理的漫反射组件可用于在表面上粘贴贴花、油漆装饰或打印文本，它还可以模拟材料颜色的变化，例如木材或石头的颜色。
+
+Nothing limits us to varying only the diffuse color, though. Any other parameters, such as the specular reflectance or specular roughness, can also be textured. For instance, a cardboard box with transparent packing tape stuck to it may have the same diffuse color everywhere but be shinier, with higher specular reflectance and lower roughness, where the tape is than elsewhere. In many cases the maps for different parameters are correlated: for instance, a glossy white ceramic cup with a logo printed on it may be both rougher and darker where it is printed (Figure 11.22), and a book with its title printed in metallic ink might change in diffuse color, specular color, and roughness, all at once.
+不过，没有什么限制我们只能改变漫反射颜色。 任何其他参数，例如镜面反射率或镜面粗糙度，也可以进行纹理化。 例如，粘有透明包装胶带的纸板箱可能到处都有相同的漫反射颜色，但胶带所在的地方比其他地方更闪亮，具有更高的镜面反射率和更低的粗糙度。 在许多情况下，不同参数的贴图是相关的：例如，一个印有徽标的光滑白色陶瓷杯的印刷位置可能会更粗糙且更暗（图 11.22），而一本用金属墨水印刷标题的书 漫反射颜色、镜面反射颜色和粗糙度可能会同时发生变化。
+![Figure 11.22](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.22.png)
+Figure 11.22. A ceramic mug with specular roughness controlled by an inverted copy of the diffuse color texture.
+图 11.22。 陶瓷杯，其镜面粗糙度由漫反射颜色纹理的反转副本控制。
+
+### 11.4.2 Normal Maps and Bump Maps 法线贴图和凹凸贴图
+
+Another quantity that is important for shading is the surface normal. With interpolated normals (Section 8.2), we know that the shading normal does not have to be the same as the geometric normal of the underlying surface. Normal mapping takes advantage of this fact by making the shading normal depend on values read from a texture map. The simplest way to do this is just to store the normals in a texture, with three numbers stored at every texel that are interpreted, instead of as the three components of a color, as the 3D coordinates of the normal vector.
+对于着色来说另一个重要的量是表面法线。 使用插值法线（第 8.2 节），我们知道着色法线不必与底层表面的几何法线相同。 法线贴图利用了这一事实，使着色法线取决于从纹理贴图读取的值。 最简单的方法是将法线存储在纹理中，在每个被解释的纹素处存储三个数字，而不是作为颜色的三个分量，作为法线向量的 3D 坐标。
+
+Before a normal map can be used, though, we need to know what coordinate system the normals read from the map are represented in. Storing normals directly in object space, in the same coordinate system used for representing the surface geometry itself, is simplest: the normal read from the map can be used in exactly the same way as the normal reported by the surface itself: in most cases it will need to be transformed into world space for lighting calculations, just like a normal that came with the geometry.
+不过，在使用法线贴图之前，我们需要知道从贴图读取的法线是用什么坐标系表示的。将法线直接存储在对象空间中（与用于表示表面几何本身的坐标系相同）是最简单的： 从地图上读取的法线可以以与表面本身报告的法线完全相同的方式使用：在大多数情况下，需要将其转换为世界空间以进行照明计算，就像几何体附带的法线一样。 
+
+However, normal maps that are stored in object space are inherently tied to the surface geometry—even for the normal map to have no effect, to reproduce the result with the geometric normals, the contents of the normal map have to track the orientation of the surface. Furthermore, if the surface is going to deform, so that the geometric normal changes, the object-space normal map can no longer be used, since it would keep providing the same shading normals. 
+然而，存储在对象空间中的法线贴图本质上与表面几何体相关联，即使法线贴图没有任何效果，为了使用几何法线重现结果，法线贴图的内容也必须跟踪物体的方向。 表面。 此外，如果表面将变形，从而几何法线发生变化，则不能再使用对象空间法线贴图，因为它将继续提供相同的着色法线。
+
+The solution is to define a coordinate system for the normals that is attached to the surface. Such a coordinate system can be defined based on the tangent space of the surface (see Section 2.5): select a pair of tangent vectors and use them to define an orthonormal basis (Section 2.4.5). The texture coordinate function itself provides a useful way to select a pair of tangent vectors: use the directions tangent to lines of constant $u$ and $v$. These tangents are not generally orthogonal, but we can use the procedure from Section 2.4.7 to “square up” the orthonormal basis, or it can be defined using the surface normal and just one tangent vector. 
+解决方案是为附加到曲面的法线定义一个坐标系。 这样的坐标系可以基于曲面的切线空间来定义（参见第 2.5 节）：选择一对切向量并使用它们来定义正交基（第 2.4.5 节）。 纹理坐标函数本身提供了一种选择一对切向量的有用方法：使用与常数 $u$ 和 $v$ 的线相切的方向。 这些切线通常不是正交的，但我们可以使用第 2.4.7 节中的过程来“平方”正交基，或者可以使用表面法线和一个切向量来定义它。
+
+When normals are expressed in this basis they vary a lot less; since they are mostly pointing near the direction of the normal to the smooth surface, they will be near the vector $(0, 0, 1)^T$ in the normal map.
+当以此为基础表达法线时，它们的变化就会小得多； 由于它们大多指向平滑表面法线方向附近，因此它们将靠近法线贴图中的向量 $(0, 0, 1)^T$ 。
+
+Where do normal maps come from? Often they are computed from a more detailed model to which the smooth surface is an approximation; other times they can be measured directly from real surfaces. They can also be authored as part of the modeling process; in this case it’s often nice to use a bump map to specify the normals indirectly. The idea is that a bump map is a height field: a function that give the local height of the detailed surface above the smooth surface. Where the values are high (where the map looks bright, if you display it as an image) the surface is protruding outside the smooth surface; where the values are low (where the map looks dark) the surface is receding below it. For instance, a narrow dark line in the bump map is a scratch, or a small white dot is a bump. 
+法线贴图从哪里来？ 通常，它们是根据更详细的模型计算得出的，其中光滑表面是其近似值； 有时可以直接从真实表面进行测量。 它们也可以作为建模过程的一部分进行创作； 在这种情况下，使用凹凸贴图间接指定法线通常会很好。 这个想法是，凹凸贴图是一个高度字段：一个给出平滑表面之上的详细表面的局部高度的函数。 如果值较高（如果将其显示为图像，则地图看起来很亮），则表面突出到光滑表面之外； 值较低的地方（地图看起来较暗的地方），地表正在向其下方后退。 例如，凹凸贴图中的一条窄黑线是划痕，或者一个小白点是凹凸。
+
+Deriving a normal map from a bump map is simple: the normal map (expressed in the tangent frame) is the derivative of the bump map. 
+从凹凸贴图导出法线贴图很简单：法线贴图（在切线框架中表示）是凹凸贴图的导数。
+
+Figure 11.23 shows texture maps being used to create woodgrain color and to simulate increased surface roughness due to finish soaking into the more porous parts of the wood, together with a bump map to create an imperfect finish and gaps between boards, to make a realistic wood floor.
+图 11.23 显示了用于创建木纹颜色并模拟由于饰面浸入木材的多孔部分而增加的表面粗糙度的纹理贴图，以及凹凸贴图以创建不完美的饰面和板之间的间隙，从而制作出逼真的木材 地面。
+
+![Figure 11.23](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.23.png)
+Figure 11.23. A wood floor rendered using texture maps to control the shading. (a) Only the diffuse color is modulated by a texture map. (b) The specular roughness is also modulated by a second texture map. (c) The surface normal is modified by a bump map.
+图 11.23。 使用纹理贴图渲染的木地板来控制阴影。 (a) 仅漫反射颜色由纹理贴图调制。 (b) 镜面反射粗糙度也由第二个纹理贴图调制。 (c) 表面法线由凹凸贴图修改。
+
+### 11.4.3 Displacement Maps  位移贴图
+
+A problem with normal maps is that they don’t actually change the surface at all; they are just a shading trick. This becomes obvious when the geometry implied by the normal map should cause noticeable effects in 3D. In still images, the first problem to be noticed is usually that the silhouettes of objects remain smooth despite the appearance of bumps in the interior. In animations, the lack of parallax gives away that the bumps, however convincing, are really just “painted” on the surface. 
+法线贴图的一个问题是它们实际上根本不会改变表面； 它们只是一种阴影技巧。 当法线贴图隐含的几何体在 3D 中产生明显的效果时，这一点就变得很明显。 在静态图像中，首先要注意的问题通常是物体的轮廓保持平滑，尽管内部出现凹凸。 在动画中，视差的缺乏表明，无论多么令人信服，凹凸实际上只是“画”在表面上的。
+
+Textures can be used for more than just shading, though: they can be used to alter geometry. A displacement map is one of the simplest versions of this idea. The concept is the same as a bump map: a scalar (one-channel) map that gives the height above the “average terrain.” But the effect is different. Rather than deriving a shading normal from the height map while using the smooth geometry, a displacement map actually changes the surface, moving each point along the normal of the smooth surface to a new location. The normals are roughly the same in each case, but the surface is different. 
+不过，纹理不仅仅可以用于着色：它们还可以用于改变几何形状。 置换贴图是这个想法最简单的版本之一。 这个概念与凹凸贴图相同：标量（单通道）贴图给出了“平均地形”之上的高度。 但效果不同。 位移贴图实际上改变了表面，沿着平滑表面的法线将每个点移动到新位置，而不是在使用平滑几何体时从高度图导出着色法线。 每种情况下的法线大致相同，但表面不同。
+
+The most common way to implement displacement maps is to tessellate the smooth surface with a large number of small triangles, and then displace the vertices of the resulting mesh using the displacement map. In the graphics pipeline, this can be done using a texture lookup at the vertex stage, and is particularly handy for terrain.
+实现置换贴图的最常见方法是用大量小三角形对平滑表面进行细分，然后使用置换贴图置换所得网格的顶点。 在图形管道中，这可以通过在顶点阶段使用纹理查找来完成，并且对于地形来说特别方便。
+
+### 11.4.4 Shadow Maps 阴影贴图
+
+Shadows are an important cue to object relationships in a scene, and as we have seen, they are simple to include in ray-traced images. However, it’s not obvious how to get shadows in rasterized renderings, because surfaces are considered one at a time, in isolation. Shadow maps are a technique for using the machinery of texture mapping to get shadows from point light sources. 
+阴影是场景中对象关系的重要提示，正如我们所见，它们很容易包含在光线追踪图像中。 然而，如何在光栅化渲染中获取阴影并不明显，因为表面一次被视为一个单独的表面。 阴影贴图是一种使用纹理映射机制从点光源获取阴影的技术。
+
+The idea of a shadow map is to represent the volume of space that is illuminated by a point light source. Think of a source like a spotlight or video projector, which emits light from a point into a limited range of directions. The volume that is illuminated—the set of points where you would see light on your hand if you held it there—is the union of line segments joining the light source to the closest surface point along every ray leaving that point.
+阴影贴图的想法是表示点光源照明的空间体积。 想象一下像聚光灯或视频投影仪这样的光源，它将光从一个点发射到有限的方向范围内。 被照亮的体积（如果您将手握在手上，您会在手上看到光的一组点）是沿着离开该点的每条光线将光源连接到最近的表面点的线段的并集。 
+
+Interestingly, this volume is the same as the volume that is visible to a perspective camera located at the same point as the light source: a point is illuminated by a source if and only if it is visible from the light source location. In both cases, there’s a need to evaluate visibility for points in the scene: for visibility, we needed to know whether a fragment was visible to the camera, to know whether to draw it in the image; and for shadowing, we need to know whether a fragment is visible to the light source, to know whether it’s illuminated by that source or not. (See Figure 11.24.)
+有趣的是，这个体积与与光源位于同一点的透视相机可见的体积相同：当且仅当从光源位置可见时，一个点才会被光源照亮。 在这两种情况下，都需要评估场景中点的可见性：对于可见性，我们需要知道某个片段对相机是否可见，以知道是否将其绘制在图像中； 对于阴影，我们需要知道某个片段对光源是否可见，以及它是否被该光源照亮。 （见图 11.24。）
+![Figure 11.24](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.24.png)
+Figure 11.24. Top: the region of space illuminated by a point light. Bottom: that region as approximated by a 10-pixel-wide shadow map.
+图 11.24。 顶部：点光源照亮的空间区域。 底部：该区域近似为 10 像素宽的阴影贴图。
+
+In both cases, the solution is the same: a depth map that tells the distance to the closest surface along a bunch of rays. In the visibility case, this is the z-buffer (Section 8.2.3), and for the shadowing case, it is called a shadow map. In both cases, visibility is evaluated by comparing the depth of a new fragment to the depth stored in the map, and the surface is hidden from the projection point (occluded or shadowed) if its depth is greater than the depth of the closest visible surface. A difference is that the z buffer is used to keep track of the closest surface seen so far and is updated during rendering, whereas a shadow map tells the distance to the closest surface in the whole scene.
+在这两种情况下，解决方案是相同的：深度图告诉我们沿着一束光线到最近表面的距离。 在可见性情况下，这是 z 缓冲区（第 8.2.3 节），对于阴影情况，它称为阴影贴图。 在这两种情况下，通过将新片段的深度与地图中存储的深度进行比较来评估可见性，如果表面的深度大于最近的可见表面的深度，则表面从投影点隐藏（遮挡或阴影） 。 不同之处在于，z 缓冲区用于跟踪迄今为止看到的最近表面并在渲染期间更新，而阴影贴图则告诉整个场景中到最近表面的距离。
+
+A shadow map is calculated in a separate rendering pass ahead of time: simply rasterize the whole scene as usual, and retain the resulting depth map (there is no need to bother with calculating pixel values). Then, with the shadow map in hand, you perform an ordinary rendering pass, and when you need to know whether a fragment is visible to the source, you project its location in the shadow map (using the same perspective projection that was used to render the shadow map in the first place) and compare the looked-up value $d_{map}$ with the actual distance $d$ to the source. If the distances are the same, the fragment’s point is illuminated; if the $d > d_{map}$, that implies there is a different surface closer to the source, so it is shadowed.
+阴影贴图是提前在单独的渲染通道中计算的：像往常一样简单地光栅化整个场景，并保留生成的深度图（无需费心计算像素值）。 然后，有了阴影贴图，您可以执行普通的渲染过程，当您需要知道片段对源是否可见时，可以将其位置投影到阴影贴图中（使用与渲染时相同的透视投影） 首先是阴影贴图）并将查找值 $d_{map}$ 与到源的实际距离 $d$ 进行比较。 如果距离相同，则片段的点被照亮； 如果 $d > d_{map}$，则意味着有一个更接近源的不同表面，因此它被遮挡。
+
+The phrase “if the distances are the same” should raise some red flags in your mind: since all the quantities involved are approximations with limited precision, we can’t expect them to be exactly the same. For visible points, the $d ≈ d_{map}$ but sometimes d will be a bit larger and sometimes a bit smaller. For this reason, a tolerance is required: a point is considered illuminated if $d − d_{map} < \epsilon$. This tolerance $\epsilon$ is known as shadow bias.
+“如果距离相同”这句话应该会在你的脑海中引起一些危险信号：由于所有涉及的数量都是精度有限的近似值，我们不能期望它们完全相同。 对于可见点，$d ≈ d_{map}$，但有时 d 会大一点，有时小一点。 因此，需要一个容差：如果 $d − d_{map} < \epsilon$，则认为点被照亮。 这种容差 $\epsilon$ 被称为影子偏差。
+
+When looking up in shadow maps it doesn’t make a lot of sense to interpolate between the depth values recorded in the map. This might lead to more accurate depths (requiring less shadow bias) in smooth areas, but will cause bigger problems near shadow boundaries, where the depth value changes suddenly. Therefore, texture lookups in shadow maps are done using nearest-neighbor reconstruction. To reduce aliasing, multiple samples can be used, with the 1-or-0 shadow results (rather than the depths) averaged; this is known as percentage closer filtering.
+在阴影贴图中查找时，在贴图中记录的深度值之间进行插值没有多大意义。 这可能会导致平滑区域中的深度更准确（需要更少的阴影偏差），但会在阴影边界附近引起更大的问题，其中深度值会突然变化。 因此，阴影贴图中的纹理查找是使用最近邻重建来完成的。 为了减少锯齿，可以使用多个样本，并对 1 或 0 阴影结果（而不是深度）进行平均； 这称为百分比更接近过滤。
+
+### 11.4.5 Environment Maps 环境贴图
+
+Just as a texture is handy for introducing detail into the shading on a surface without having to add more detail to the model, a texture can also be used to introduce detail into the illumination without having to model complicated light source geometry. When light comes from far away compared to the size of objects in view, the illumination changes very little from point to point in the scene. It is handy to make the assumption that the illumination depends only on the direction you look, and is the same for all points in the scene, and then to express this dependence of illumination on direction using an environment map. 
+正如纹理可以方便地将细节引入表面上的阴影，而无需向模型添加更多细节一样，纹理也可用于将细节引入照明，而无需对复杂的光源几何形状进行建模。 与视野中物体的大小相比，当光线来自较远的地方时，场景中点与点之间的照明变化很小。 可以方便地假设照明仅取决于您观察的方向，并且对于场景中的所有点都是相同的，然后使用环境贴图来表达照明对方向的依赖性。
+
+The idea of an environment map is that a function defined over directions in 3D is a function on the unit sphere, so it can be represented using a texture map in exactly the same way as we might represent color variation on a spherical object. Instead of computing texture coordinates from the 3D coordinates of a surface point, we use exactly the same formulas to compute texture coordinates from the 3D coordinates of the unit vector that represents the direction from which we want to know the illumination. 
+环境贴图的想法是，在 3D 方向上定义的函数是单位球体上的函数，因此可以使用纹理贴图来表示它，就像我们表示球形对象上的颜色变化一样。 我们不是从表面点的 3D 坐标计算纹理坐标，而是使用完全相同的公式从表示我们想要了解照明的方向的单位向量的 3D 坐标计算纹理坐标。
+
+The simplest application of an environment map is to give colors to rays in a ray tracer that don’t hit any objects:
+环境贴图最简单的应用是为光线追踪器中不击中任何物体的光线赋予颜色：
+
+```
+trace_ray(ray, scene) {
+	if (surface = scene.intersect(ray)) {
+        return surface.shade(ray)
+    } else {
+    	u, v = spheremap_coords(r.direction)
+    	return texture_lookup(scene.env_map, u, v)
+    }
+}
+```
+
+With this change to the ray tracer, shiny objects that reflect other scene objects will now also reflect the background environment. 
+通过对光线追踪器的更改，反射其他场景对象的闪亮对象现在也将反射背景环境。
+
+A similar effect can be achieved in the rasterization context by adding a mirror reflection to the shading computation, which is computed in the same way as in a ray tracer, but simply looks up directly in the environment map with no regard for other objects in the scene:
+通过在着色计算中添加镜面反射，可以在光栅化上下文中实现类似的效果，其计算方式与光线追踪器中相同，但只需直接在环境贴图中查找，而不考虑环境中的其他对象。 场景：
+
+```
+shade_fragment(view_dir, normal) {
+	out_color = diffuse_shading(k_d, normal)
+	out_color += specular_shading(k_s, view_dir, normal)
+	u, v = spheremap_coords(reflect(view_dir, normal))
+	out_color += k_m * texture_lookup(environment_map, u, v)
+}
+```
+
+This technique is known as reflection mapping. 
+这种技术称为反射贴图。
+
+A more advanced used of environment maps computes all the illumination from the environment map, not just the mirror reflection. This is environment lighting, and can be computed in a ray tracer using Monte Carlo integration or in rasterization by approximating the environment with a collection of point sources and computing many shadow maps. 
+环境贴图的更高级用法是计算环境贴图的所有照明，而不仅仅是镜面反射。 这是环境照明，可以在光线追踪器中使用蒙特卡罗积分进行计算，也可以在光栅化中通过使用点源集合来近似环境并计算许多阴影贴图来进行计算。
+
+Environment maps can be stored in any coordinates that could be used for mapping a sphere. Spherical (longitude–latitude) coordinates are one popular option, though the compression of texture at the poles wastes texture resolution and can create artifacts at the poles. Cubemaps are a more efficient choice, widely used in interactive applications (Figure 11.25).
+环境贴图可以存储在可用于映射球体的任何坐标中。 球面（经度 - 纬度）坐标是一种流行的选择，但极点处的纹理压缩会浪费纹理分辨率并可能在极点处产生伪影。 立方体贴图是一种更有效的选择，广泛用于交互式应用程序（图 11.25）。
+![Figure 11.25](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.25.png)
+Figure 11.25. A cube map of St. Peter’s Basilica, with the six faces stored in on image in the unwrapped “horizontal cross” arrangement. (texture: Emil Persson)
+图 11.25。 圣彼得大教堂的立方体贴图，其中六个面以展开的“水平十字”排列存储在图像中。 （材质：埃米尔·佩尔森)
+
+## 11.5 Procedural 3D Textures 程序 3D 纹理
+
+In previous chapters, we used $c_r$ as the diffuse reflectance at a point on an object. For an object that does not have a solid color, we can replace this with a function $c_r(\bold{p})$ which maps 3D points to RGB colors (Peachey, 1985; Perlin, 1985). This function might just return the reflectance of the object that contains $\bold{p}$. But for objects with texture, we should expect $c_r(\bold{p})$ to vary as $\bold{p}$ moves across a surface. 
+在前面的章节中，我们使用 $c_r$ 作为物体上某个点的漫反射率。 对于没有纯色的对象，我们可以用函数 $c_r(\bold{p})$ 替换它，该函数将 3D 点映射到 RGB 颜色（Peachey，1985；Perlin，1985）。 该函数可能只返回包含 $\bold{p}$ 的对象的反射率。 但对于具有纹理的物体，我们应该期望 $c_r(\bold{p})$ 随着 $\bold{p}$ 在表面上移动而变化。
+
+An alternative to defining texture mapping functions that map from a 3D surface to a 2D texture domain is to create a 3D texture that defines an RGB value at every point in 3D space. We will only call it for points p on the surface, but it is usually easier to define it for all 3D points than a potentially strange 2D subset of points that are on an arbitrary surface. The good thing about 3D texture mapping is that it is easy to define the mapping function, because the surface is already embedded in 3D space, and there is no distortion in the mapping from 3D to texture space. Such a strategy is clearly suitable for surfaces that are “carved” from a solid medium, such as a marble sculpture. 
+定义从 3D 表面映射到 2D 纹理域的纹理映射函数的另一种方法是创建一个 3D 纹理，该纹理定义 3D 空间中每个点的 RGB 值。 我们只会为表面上的点 p 调用它，但为所有 3D 点定义它通常比为任意表面上的潜在奇怪的 2D 点子集定义它更容易。 3D纹理映射的好处是很容易定义映射函数，因为表面已经嵌入到3D空间中，并且从3D到纹理空间的映射不存在失真。 这种策略显然适用于由固体介质“雕刻”的表面，例如大理石雕塑。
+
+The downside to 3D textures is that storing them as 3D raster images or volumes consumes a great deal of memory. For this reason, 3D texture coordinates are most commonly used with procedural textures in which the texture values are computed using a mathematical procedure rather than by looking them up from a texture image. In this section, we look at a couple of the fundamental tools used to define procedural textures. These could also be used to define 2D procedural textures, though in 2D it is more common to use raster texture images.
+3D 纹理的缺点是将它们存储为 3D 光栅图像或体积会消耗大量内存。 因此，3D 纹理坐标最常与程序纹理一起使用，其中使用数学过程而不是从纹理图像中查找纹理值来计算纹理值。 在本节中，我们将介绍一些用于定义程序纹理的基本工具。 这些也可用于定义 2D 程序纹理，尽管在 2D 中更常见的是使用光栅纹理图像。
+
+### 11.5.1 3D Stripe Textures 3D 条纹纹理
+
+There are a surprising number of ways to make a striped texture. Let’s assume we have two colors $c_0$ and $c_1$ that we want to use to make the stripe color. We need some oscillating function to switch between the two colors. An easy one is a sine:
+制作条纹纹理的方法有很多种。 假设我们有两种颜色 $c_0$ 和 $c_1$，我们想用它们来制作条纹颜色。 我们需要一些振荡函数来在两种颜色之间切换。 一个简单的函数是正弦：
+
+> RGB stripe( point $\bold{p}$ )
+> 	if $(\sin(x_p) > 0)$ then
+> 		return $c_0$
+> 	else
+> 		return $c_1$  
+
+We can also make the stripe’s width w controllable: 
+我们还可以使条纹的宽度w可控：
+
+> RGB stripe( point $\bold{p}$, real w)
+> 	if $(\sin(πx_p/w) > 0)$ then
+> 		return $c_0$
+> 	else
+> 		return $c_1$  
+
+If we want to interpolate smoothly between the stripe colors, we can use a parameter $t$ to vary the color linearly:
+如果我们想在条纹颜色之间平滑插值，我们可以使用参数 $t$ 来线性改变颜色：
+
+> RGB stripe( point $\bold{p}$, real w )
+> 	$t = (1 + \sin(πp_x/w))/2$
+> 	return $(1 - t)c_0 + tc_1$  
+
+These three possibilities are shown in Figure 11.26.
+这三种可能性如图 11.26 所示。
+![Figure 11.26](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.26.png)
+Figure 11.26. Various stripe textures result from drawing a regular array of $xy$ points while keeping $z$ constant.
+图 11.26。 各种条纹纹理是通过绘制规则的 $xy$ 点数组并保持 $z$ 不变而产生的。
+
+### 11.5.2 Solid Noise  固体噪音
+
+Although regular textures such as stripes are often useful, we would like to be able to make “mottled” textures such as we see on birds’ eggs. This is usually done by using a sort of “solid noise,” usually called Perlin noise after its inventor, who received a technical Academy Award for its impact in the film industry (Perlin, 1985). 
+尽管条纹等规则纹理通常很有用，但我们希望能够制作“斑驳”纹理，例如我们在鸟蛋上看到的纹理。 这通常是通过使用一种“固体噪声”来完成的，通常被称为 Perlin 噪声，以其发明者的名字命名，他因其对电影行业的影响而获得了奥斯卡技术奖（Perlin，1985）。
+
+Getting a noisy appearance by calling a random number for every point would not be appropriate, because it would just be like “white noise” in TV static. We would like to make it smoother without losing the random quality. One possibility is to blur white noise, but there is no practical implementation of this. Another possibility is to make a large lattice with a random number at every lattice point, and then interpolate these random points for new points between lattice nodes; this is just a 3D texture array as described in the last section with random numbers in the array. This technique makes the lattice too obvious. Perlin used a variety of tricks to improve this basic lattice technique so the lattice was not so obvious. This results in a rather baroque-looking set of steps, but essentially there are just three changes from linearly interpolating a 3D array of random values. The first change is to use Hermite interpolation to avoid mach bands, just as can be done with regular textures. The second change is the use of random vectors rather than values, with a dot product to derive a random number; this makes the underlying grid structure less visually obvious by moving the local minima and maxima off the grid vertices. The third change is to use a 1D array and hashing to create a virtual 3D array of random vectors. This adds computation to lower memory use. Here is his basic method:
+通过为每个点调用随机数来获得嘈杂的外观是不合适的，因为它就像电视静态中的“白噪声”。 我们希望在不失去随机质量的情况下使其更加平滑。 一种可能性是模糊白噪声，但目前还没有实际实现。 另一种可能性是制作一个大格子，在每个格子点处都有一个随机数，然后在格子节点之间插入这些随机点以获得新点； 这只是一个 3D 纹理数组，如上一节所述，数组中包含随机数。 这种技术使晶格过于明显。 Perlin 使用了各种技巧来改进这种基本的格子技术，因此格子不那么明显。 这会产生一组看起来相当巴洛克式的步骤，但本质上，与线性插值随机值的 3D 数组相比，只有三个变化。 第一个更改是使用 Hermite 插值来避免马赫带，就像使用常规纹理所做的那样。 第二个变化是使用随机向量而不是值，通过点积得出随机数； 通过将局部最小值和最大值移离网格顶点，使得底层网格结构在视觉上不那么明显。 第三个变化是使用 1D 数组和散列来创建随机向量的虚拟 3D 数组。 这会增加计算量以降低内存使用量。 这是他的基本方法：
+$$
+n(x, y, z) = \sum^{\lfloor x\rfloor + 1}_{i = \lfloor x\rfloor}
+\sum^{\lfloor y\rfloor + 1}_{j = \lfloor y\rfloor}
+\sum^{\lfloor z\rfloor + 1}_{k = \lfloor z\rfloor}
+Ω_{ijk}(x − i, y − j, z − k),
+$$
+where $(x, y, z)$ are the Cartesian coordinates of $\bold{x}$, and 
+其中 $(x, y, z)$ 是 $\bold{x}$ 的笛卡尔坐标，并且
+$Ω_{ijk}(u, v, w) = ω(u)ω(v)ω(w) (Γ_{ijk} · (u, v, w)) ,  $
+
+and $ω(t)$ is the cubic weighting function:
+$ω(t)$ 是三次加权函数：
+$$
+ω(t) = \begin{cases}
+2|t|^3 − 3|t|^2 + 1 \ \ \ \ if\ |t| < 1 \\
+0 \ \ \ \ \ otherwise
+\end{cases}
+$$
+The final piece is that $Γ_{ijk}$ is a random unit vector for the lattice point $(x, y, z) = (i, j, k)$. Since we want any potential $ijk$, we use a pseudorandom table: 
+最后一点是 $Γ_{ijk}$ 是格点 $(x, y, z) = (i, j, k)$ 的随机单位向量。 由于我们想要任何潜在的 $ijk$，因此我们使用伪随机表：
+$Γ_{ijk} = \bold{G} (φ(i + φ(j + φ(k)))) ,  $
+
+where $\bold{G}$ is a precomputed array of $n$ random unit vectors, and $φ(i) = P [i\ mod\ n]$ where $P$ is an array of length n containing a permutation of the integers 0 through $n − 1$. In practice, Perlin reports $n = 256$ works well. To choose a random unit vector $(v_x, v_y, v_z)$ first set
+其中 $\bold{G}$ 是预先计算的 $n$ 个随机单位向量数组，$φ(i) = P [i\ mod\ n]$ 其中 $P$ 是长度为 n 的数组，包含以下排列 整数 0 到 $n − 1$。 实际上，Perlin 报告 $n = 256$ 效果很好。 首先选择一个随机单位向量$(v_x, v_y, v_z)$
+$$
+v_x = 2ξ − 1, \\ 
+v_y = 2ξ' − 1, \\
+v_z = 2ξ'' − 1,
+$$
+where $ξ, ξ', ξ''$ are canonical random numbers (uniform in the interval $[0, 1)$). Then, if $(v_x^2 +v_y^2 +v_z^2) < 1$, make the vector a unit vector. Otherwise keep setting it randomly until its length is less than one, and then make it a unit vector. This is an example of a rejection method, which will be discussed more in Chapter 14. Essentially, the “less than” test gets a random point in the unit sphere, and the vector for the origin to that point is uniformly random. That would not be true of random points in the cube, so we “get rid” of the corners with the test.
+其中 $xi, xi', xi''$ 是规范随机数（在区间 $[0, 1)$ 内均匀）。 然后，如果 $(v_x^2 +v_y^2 +v_z^2) < 1$，则使该向量成为单位向量。 否则继续随机设置，直到其长度小于1，然后将其设为单位向量。 这是拒绝方法的一个示例，将在第 14 章中详细讨论。本质上，“小于”测试会在单位球体中获取一个随机点，并且原点到该点的向量是均匀随机的。 对于立方体中的随机点来说，情况并非如此，因此我们通过测试“摆脱”角点。
+
+Because solid noise can be positive or negative, it must be transformed before being converted to a color. The absolute value of noise over a 10 × 10 square is shown in Figure 11.27, along with stretched versions. These versions are stretched by scaling the points input to the noise function.
+由于固体噪点可以是正值或负值，因此在转换为颜色之前必须对其进行转换。 图 11.27 显示了 10 × 10 正方形上的噪声绝对值以及拉伸版本。 这些版本通过缩放输入到噪声函数的点来拉伸。
+![Figure 11.27](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.27.png)
+Figure 11.27. Absolute value of solid noise, and noise for scaled x and y values.
+图 11.27。 实体噪声的绝对值以及缩放的 x 和 y 值的噪声。
+
+The dark curves are where the original noise function changed from positive to negative. Since noise varies from −1 to 1, a smoother image can be achieved by using (noise+ 1)/2 for color. However, since noise values close to 1 or −1 are rare, this will be a fairly smooth image. Larger scaling can increase the contrast (Figure 11.28).
+深色曲线是原始噪声函数从正变为负的地方。 由于噪声的变化范围为 -1 到 1，因此通过使用 (噪声+ 1)/2 的颜色可以获得更平滑的图像。 然而，由于接近 1 或 -1 的噪声值很少见，因此这将是一个相当平滑的图像。 较大的缩放比例可以增加对比度（图 11.28）。
+![Figure 11.28](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.28.png)
+Figure 11.28. Using 0.5(noise+1) (top) and 0.8(noise+1) (bottom) for intensity.
+图 11.28。 使用 0.5（噪声+1）（顶部）和 0.8（噪声+1）（底部)作为强度。
+
+### 11.5.3 Turbulence 湍流
+
+Many natural textures contain a variety of feature sizes in the same texture. Perlin uses a pseudo fractal “turbulence” function:
+许多自然纹理在同一纹理中包含多种特征尺寸。 Perlin 使用伪分形“湍流”函数：
+$$
+n_t(\bold{x}) = \sum_i\frac{n(2^i\bold{x})}{2^i}
+$$
+This effectively repeatedly adds scaled copies of the noise function on top of itself as shown in Figure 11.29.
+这有效地在其自身之上重复添加噪声函数的缩放副本，如图 11.29 所示。
+![Figure 11.29](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.29.png)
+Figure 11.29. Turbulence function with (from top left to bottom right) one through eight terms in the summation. 
+图 11.29。 求和中包含（从左上到右下)一到八项的湍流函数。
+
+The turbulence can be used to distort the stripe function:
+湍流可用于扭曲条纹函数：
+
+> RGB turbstripe( point $\bold{p}$, double w )
+> 	double $t = (1 + sin(k_1z_p + turbulence(k_2\bold{p}))/w)/2$
+> 	return t ∗ s0 + (1 - t) ∗ s1
+
+Various values for $k_1$ and $k_2$ were used to generate Figure 11.30. 
+$k_1$ 和 $k_2$ 的不同值用于生成图 11.30。
+![Figure 11.30](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 11.30.png)
+Figure 11.30. Various turbulent stripe textures with different $k_1$ , $k_2$. The top row has only the first term of the turbulence series.
+图 11.30。 具有不同 $k_1$ 、 $k_2$ 的各种湍流条纹纹理。 顶行只有湍流级数的第一项。
+
+## Frequently Asked Questions 经常问的问题
+
+### How do I implement displacement mapping in ray tracing? 如何在光线追踪中实现位移贴图？
+
+There is no ideal way to do it. Generating all the triangles and caching the geometry when necessary will prevent memory overload (Pharr & Hanrahan, 1996; Pharr, Kolb, Gershbein, & Hanrahan, 1997). Trying to intersect the displaced surface directly is possible when the displacement function is restricted (Patterson, Hoggar, & Logie, 1991; Heidrich & Seidel, 1998; Smits, Shirley, & Stark, 2000). 
+没有理想的方法来做到这一点。 生成所有三角形并在必要时缓存几何图形将防止内存过载（Pharr & Hanrahan, 1996；Pharr, Kolb, Gershbein, & Hanrahan, 1997）。 当位移函数受到限制时，尝试直接与位移曲面相交是可能的（Patterson、Hoggar 和 Logie，1991；Heidrich 和 Seidel，1998；Smits、Shirley 和 Stark，2000）。
+
+### Why don’t my images with textures look realistic? 为什么我的带有纹理的图像看起来不真实？
+
+Humans are good at seeing small imperfections in surfaces. Geometric imperfections are typically absent in computer-generated images that use texture maps for details, so they look “too smooth.” 
+人类善于发现表面的细小缺陷。 使用纹理贴图获取细节的计算机生成的图像通常不存在几何缺陷，因此它们看起来“太平滑”。
+
+## Notes 注释
+
+The discussion of perspective-correct textures is based on Fast Shadows and Lighting Effects Using Texture Mapping (Segal, Korobkin, van Widenfelt, Foran, & Haeberli, 1992) and on 3D Game Engine Design (Eberly, 2000). 
+对透视正确纹理的讨论基于使用纹理映射的快速阴影和光照效果（Segal、Korobkin、van Widenfelt、Foran 和 Haeberli，1992 年）和 3D 游戏引擎设计（Eberly，2000 年）。
+
+## Exercises 练习
+
+1. Find several ways to implement an infinite 2D checkerboard using surface and solid techniques. Which is best? 
+   找到几种使用曲面和实体技术实现无限二维棋盘的方法。 哪个最好？
+1. Verify that Equation (11.3) is a valid equality using brute-force algebra. 
+   使用强力代数验证方程 (11.3) 是否是有效的等式。
+1. How could you implement solid texturing by using the z-buffer depth and a matrix transform? 
+   如何使用 z 缓冲区深度和矩阵变换来实现实体纹理？
+1. Expand the function mipmap sample trilinear into a single function.
+   将函数 mipmap Sample trilinear 扩展为单个函数。
+
+
+
+# 12  Data Structures for Graphics 图形数据结构
+
+Certain data structures seem to pop up repeatedly in graphics applications, perhaps because they address fundamental underlying ideas like surfaces, space, and scene structure. This chapter talks about several basic and unrelated categories of data structures that are among the most common and useful: mesh structures, spatial data structures, scene graphs, and tiled multidimensional arrays. 
+某些数据结构似乎在图形应用程序中反复出现，也许是因为它们解决了表面、空间和场景结构等基本概念。 本章讨论最常见和最有用的数据结构的几个基本且不相关的类别：网格结构、空间数据结构、场景图和平铺多维数组。
+
+For meshes, we discuss the basic storage schemes used for storing static meshes and for transferring meshes to graphics APIs. We also discuss the winged-edge data structure (Baumgart, 1974) and the related half-edge structure, which are useful for managing models where the tessellation changes, such as in subdivision or model simplification. Although these methods generalize to arbitrary polygon meshes, we focus on the simpler case of triangle meshes here. 
+对于网格，我们讨论用于存储静态网格和将网格传输到图形 API 的基本存储方案。 我们还讨论了翼边数据结构（Baumgart，1974）和相关的半边结构，它们对于管理细分变化的模型很有用，例如在细分或模型简化中。 尽管这些方法可以推广到任意多边形网格，但我们在这里关注的是三角形网格的简单情况。
+
+Next, the scene-graph data structure is presented. Various forms of this data structure are ubiquitous in graphics applications because they are so useful in managing objects and transformations. All new graphics APIs are designed to support scene graphs well. 
+接下来，介绍场景图数据结构。 这种数据结构的各种形式在图形应用程序中无处不在，因为它们在管理对象和转换方面非常有用。 所有新的图形 API 都旨在很好地支持场景图。
+
+For spatial data structures, we discuss three approaches to organizing models in 3D space—bounding volume hierarchies, hierarchical space subdivision, and uniform space subdivision—and the use of hierarchical space subdivision (BSP trees) for hidden surface removal. The same methods are also used for other purposes, including geometry culling and collision detection. 
+对于空间数据结构，我们讨论了在 3D 空间中组织模型的三种方法——包围体层次结构、层次空间细分和均匀空间细分——以及使用层次空间细分（BSP 树）去除隐藏表面。 相同的方法也用于其他目的，包括几何剔除和碰撞检测。
+
+Finally, the tiled multidimensional array is presented. Originally developed to help paging performance in applications where graphics data needed to be swapped in from disk, such structures are now crucial for memory locality on machines regardless of whether the array fits in main memory.
+最后，给出了平铺的多维数组。 最初开发这种结构是为了帮助需要从磁盘换入图形数据的应用程序的分页性能，现在无论阵列是否适合主内存，这种结构对于机器上的内存局部性都至关重要。
+
+## 12.1 Triangle Meshes 三角形网格
+
+Most real-world models are composed of complexes of triangles with shared vertices. These are usually known as triangular meshes, triangle meshes, or triangular irregular networks (TINs), and handling them efficiently is crucial to the performance of many graphics programs. The kind of efficiency that is important depends on the application. Meshes are stored on disk and in memory, and we’d like to minimize the amount of storage consumed. When meshes are transmitted across networks or from the CPU to the graphics system, they consume bandwidth, which is often even more precious than storage. In applications that perform operations on meshes, besides simply storing and drawing them—such as subdivision, mesh editing, mesh compression, or other operations—efficient access to adjacency information is crucial. 
+大多数现实世界的模型都是由具有共享顶点的三角形复合体组成。 这些通常称为三角形网格、三角形网格或不规则三角形网络 (TIN)，有效处理它们对于许多图形程序的性能至关重要。 效率的重要程度取决于应用。 网格存储在磁盘和内存中，我们希望最大限度地减少存储消耗。 当网格通过网络或从 CPU 传输到图形系统时，它们会消耗带宽，而带宽通常比存储更宝贵。 在对网格执行操作的应用程序中，除了简单地存储和绘制网格（例如细分、网格编辑、网格压缩或其他操作）之外，有效访问邻接信息也至关重要。
+
+Triangle meshes are generally used to represent surfaces, so a mesh is not just a collection of unrelated triangles, but rather a network of triangles that connect to one another through shared vertices and edges to form a single continuous surface. This is a key insight about meshes: a mesh can be handled more efficiently than a collection of the same number of unrelated triangles. 
+三角形网格通常用于表示曲面，因此网格不仅仅是不相关三角形的集合，而是通过共享顶点和边相互连接以形成单个连续曲面的三角形网络。 这是关于网格的一个关键见解：与相同数量的不相关三角形的集合相比，网格的处理效率更高。
+
+The minimum information required for a triangle mesh is a set of triangles (triples of vertices) and the positions (in 3D space) of their vertices. But many, if not most, programs require the ability to store additional data at the vertices, edges, or faces to support texture mapping, shading, animation, and other operations. Vertex data is the most common: each vertex can have material parameters, texture coordinates, irradiances—any parameters whose values change across the surface. These parameters are then linearly interpolated across each triangle to define a continuous function over the whole surface of the mesh. However, it is also occasionally important to be able to store data per edge or per face.
+三角形网格所需的最少信息是一组三角形（三个顶点）及其顶点的位置（在 3D 空间中）。 但许多（如果不是大多数）程序需要能够在顶点、边或面存储附加数据，以支持纹理映射、着色、动画和其他操作。 顶点数据是最常见的：每个顶点可以有材质参数、纹理坐标、辐照度——其值在表面上变化的任何参数。 然后，这些参数在每个三角形上进行线性插值，以在网格的整个表面上定义连续函数。 然而，有时能够存储每个边或每个面的数据也很重要。
+
+### 12.1.1 Mesh Topology 网状拓扑
+
+The idea that meshes are surface-like can be formalized as constraints on the mesh topology—the way the triangles connect together, without regard for the vertex positions. Many algorithms will only work, or are much easier to implement, on a mesh with predictable connectivity. The simplest and most restrictive requirement on the topology of a mesh is for the surface to be a manifold. A manifold mesh is “watertight”—it has no gaps and separates the space on the inside of the surface from the space outside. It also looks like a surface everywhere on the mesh.
+网格类似于表面的想法可以形式化为对网格拓扑的约束——三角形连接在一起的方式，而不考虑顶点位置。 许多算法只能在具有可预测连接性的网格上工作，或者更容易实现。 对网格拓扑最简单且最具限制性的要求是表面是流形。 流形网格是“水密的”——它没有间隙，并将表面内部的空间与外部的空间分开。 它看起来也像网格上各处的表面。
+
+> We’ll leave the precise definitions to the mathematicians; see the chapter notes.  
+> 我们将把精确的定义留给数学家； 参见章节注释。
+
+The term manifold comes from the mathematical field of topology: roughly speaking, a manifold (specifically a two-dimensional manifold, or 2-manifold) is  a surface in which a small neighborhood around any point could be smoothed out into a bit of flat surface. This idea is most clearly explained by counterexample: if an edge on a mesh has three triangles connected to it, the neighborhood of a point on the edge is different from the neighborhood of one of the points in the interior of one of the triangles, because it has an extra “fin” sticking out of it (Figure 12.1). If the edge has exactly two triangles attached to it, points on the edge have neighborhoods just like points in the interior, only with a crease down the middle. Similarly, if the triangles sharing a vertex are in a configuration like the left one in Figure 12.2, the neighborhood is like two pieces of surface glued together at the center, which can’t be flattened without doubling it up. The vertex with the simpler neighborhood shown at right is just fine.
+术语流形来自拓扑学的数学领域：粗略地说，流形（特别是二维流形或 2 流形）是一个表面，其中任何点周围的小邻域都可以平滑为一点平坦的表面 。 这个想法可以通过反例得到最清楚的解释：如果网格上的一条边与三个三角形相连，则该边上的点的邻域与其中一个三角形内部的点的邻域不同，因为 它有一个额外的“鳍”伸出（图12.1）。 如果边缘恰好连接有两个三角形，则边缘上的点具有与内部点一样的邻域，只是中间有一条折痕。 类似地，如果共享一个顶点的三角形处于如图 12.2 中左侧所示的配置，则邻域就像在中心粘合在一起的两块表面，如果不将其折叠起来就无法展平。 右侧显示的具有更简单邻域的顶点就很好。
+![Figure 12.1](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.1.png)
+Figure 12.1. Non-manifold (left) and manifold (right) interior edges.
+图 12.1。 非歧管（左）和歧管（右）内边缘。
+![Figure 12.2](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.2.png)
+Figure 12.2. Non-manifold (left) and manifold (right) interior vertices.
+图 12.2。 非流形（左）和流形（右)内部顶点。
+
+Many algorithms assume that meshes are manifold, and it’s always a good idea to verify this property to prevent crashes or infinite loops if you are handed a malformed mesh as input. This verification boils down to checking that all edges are manifold and checking that all vertices are manifold by verifying the following conditions:
+许多算法都假设网格是流形的，如果您收到一个格式错误的网格作为输入，那么验证此属性始终是一个好主意，以防止崩溃或无限循环。 此验证归结为检查所有边是否是流形的，并通过验证以下条件来检查所有顶点是否是流形的：
+
+- Every edge is shared by exactly two triangles. 
+  每条边都由两个三角形共享。
+- Every vertex has a single, complete loop of triangles around it.
+  每个顶点周围都有一个完整的三角形环。
+
+Figure 12.1 illustrates how an edge can fail the first test by having too many triangles, and Figure 12.2 illustrates how a vertex can fail the second test by having two separate loops of triangles attached to it. 
+图 12.1 说明了一条边如何因具有太多三角形而无法通过第一个测试，图 12.2 说明了一个顶点如何通过附加两个单独的三角形环而无法通过第二个测试。
+
+Manifold meshes are convenient, but sometimes it’s necessary to allow meshes to have edges, or boundaries. Such meshes are not manifolds—a point on the boundary has a neighborhood that is cut off on one side. They are not necessarily watertight. However, we can relax the requirements of a manifold mesh to those for a manifold with boundary without causing problems for most mesh processing algorithms. The relaxed conditions are:
+流形网格很方便，但有时需要允许网格具有边缘或边界。 这样的网格不是流形——边界上的点有一个在一侧被切断的邻域。 它们不一定是防水的。 然而，我们可以将流形网格的要求放宽到具有边界的流形的要求，而不会导致大多数网格处理算法出现问题。 放宽的条件是：
+
+- Every edge is used by either one or two triangles. 
+  每条边都由一个或两个三角形使用。
+- Every vertex connects to a single edge-connected set of triangles.
+  每个顶点都连接到一组单条边连接的三角形。
+
+Figure 12.3 illustrates these conditions: from left to right, there is an edge with one triangle, a vertex whose neighboring triangles are in a single edge-connected set, and a vertex with two disconnected sets of triangles attached to it.
+图 12.3 说明了这些情况：从左到右，有一条带有一个三角形的边，一个其相邻三角形位于单个边连接集合中的顶点，以及一个带有两个不相连的三角形集合的顶点。
+![Figure 12.3](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.3.png)
+Figure 12.3. Conditions at the edge of a manifold with boundary.
+图 12.3。 具有边界的流形边缘的条件。
+
+Finally, in many applications it’s important to be able to distinguish the “front” or “outside” of a surface from the “back” or “inside”—this is known as the orientation of the surface. For a single triangle, we define orientation based on the order in which the vertices are listed: the front is the side from which the triangle’s three vertices are arranged in counterclockwise order. A connected mesh is consistently oriented if its triangles all agree on which side is the front—and this is true if and only if every pair of adjacent triangles is consistently oriented.
+最后，在许多应用中，能够区分表面的“正面”或“外部”与“背面”或“内部”非常重要，这称为表面的方向。 对于单个三角形，我们根据顶点列出的顺序定义方向：前面是三角形的三个顶点按逆时针顺序排列的边。 如果连接的网格的三角形都一致以哪一侧为前，则该网格的方向一致 - 当且仅当每对相邻三角形的方向一致时，这才是正确的。
+
+In a consistently oriented pair of triangles, the two shared vertices appear in opposite orders in the two triangles’ vertex lists (Figure 12.4). What’s important is consistency of orientation—some systems define the front using clockwise rather than counterclockwise order.
+在方向一致的三角形对中，两个共享顶点在两个三角形的顶点列表中以相反的顺序出现（图 12.4）。 重要的是方向的一致性——一些系统使用顺时针而不是逆时针顺序定义前端。
+![Figure 12.4](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.4.png)
+Figure 12.4. Triangles (B,A,C) and (D,C,A) are consistently oriented, whereas (B,A,C) and (A,C,D) are inconsistently oriented.
+图 12.4。 三角形 (B,A,C) 和 (D,C,A) 方向一致，而 (B,A,C) 和 (A,C,D) 方向不一致。
+
+Any mesh that has non-manifold edges can’t be oriented consistently. But it’s also possible for a mesh to be a valid manifold with boundary (or even a manifold), and yet have no consistent way to orient the triangles—they are not orientable surfaces. An example is the Möbius band shown in Figure 12.5. This is rarely an issue in practice, however.
+任何具有非流形边的网格都无法一致地定向。 但网格也可能是具有边界的有效流形（甚至是流形），但没有一致的方法来定向三角形 - 它们不是可定向的表面。 图 12.5 所示的莫比乌斯带就是一个例子。 然而，这在实践中很少成为问题。
+![Figure 12.5](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.5.png)
+Figure 12.5. A triangulated Möbius band, which is not orientable.
+图 12.5。 不可定向的三角莫比乌斯带。
+
+### 12.1.2 Indexed Mesh Storage 索引网格存储
+
+A simple triangular mesh is shown in Figure 12.6. You could store these three triangles as independent entities, each of this form:
+一个简单的三角形网格如图 12.6 所示。 您可以将这三个三角形存储为独立的实体，每个形式如下：
+![Figure 12.6](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.6.png)
+Figure 12.6. A three-triangle mesh with four vertices, represented with separate triangles (left) and with shared vertices (right). 
+图 12.6。 具有四个顶点的三三角形网格，用单独的三角形（左）和共享顶点（右)表示。
+
+```
+Triangle {
+	vector3 vertexPosition[3]
+}
+```
+
+This would result in storing vertex $\bold{b}$ three times and the other vertices twice each for a total of nine stored points (three vertices for each of three triangles). Or you could instead arrange to share the common vertices and store only four, resulting in a shared-vertex mesh. Logically, this data structure has triangles which point to vertices which contain the vertex data:
+这将导致存储顶点 $\bold{b}$ 三次，其他顶点各存储两次，总共九个存储点（三个三角形各三个顶点）。 或者，您可以安排共享公共顶点并仅存储四个顶点，从而形成共享顶点网格。 从逻辑上讲，该数据结构具有指向包含顶点数据的顶点的三角形：
+
+```
+Triangle {
+	Vertex v[3]
+}
+Vertex {
+	vector3 position // or other vertex data
+}
+```
+
+Note that the entries in the v array are references, or pointers, to Vertex objects; the vertices are not contained in the triangle.
+请注意，v 数组中的条目是对 Vertex 对象的引用或指针； 顶点不包含在三角形中。
+![Figure 12.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.7.png)
+Figure 12.7. The triangle-to-vertex references in a shared-vertex mesh.
+图 12.7。 共享顶点网格中的三角形到顶点的参考。
+
+In implementation, the vertices and triangles are normally stored in arrays, with the triangle-to-vertex references handled by storing array indices:
+在实现中，顶点和三角形通常存储在数组中，三角形到顶点的引用通过存储数组索引来处理：
+
+```
+IndexedMesh {
+	int tInd[nt][3]
+	vector3 verts[nv]
+}
+```
+
+The index of the $k$th vertex of the $i$th triangle is found in $tInd[i][k]$, and the position of that vertex is stored in the corresponding row of the verts array; see Figure 12.8 for an example. This way of storing a shared-vertex mesh is an indexed triangle mesh. 
+在$tInd[i][k]$中找到第$i$个三角形的第$k$个顶点的索引，并将该顶点的位置存储在verts数组的相应行中； 示例见图 12.8。 这种存储共享顶点网格的方式是索引三角形网格。
+![Figure 12.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.8.png)
+Figure 12.8. A larger triangle mesh, with part of its representation as an indexed triangle mesh.  
+图 12.8。 较大的三角形网格，其部分表示形式为索引三角形网格。
+
+Separate triangles or shared vertices will both work well. Is there a space advantage for sharing vertices? If our mesh has $n_v$ vertices and $n_t$ triangles, and if we assume that the data for floats, pointers, and ints all require the same storage (a dubious assumption), the space requirements are as follows:
+单独的三角形或共享的顶点都可以很好地工作。 共享顶点有空间优势吗？ 如果我们的网格有 $n_v$ 个顶点和 $n_t$ 个三角形，并且如果我们假设浮点数、指针和整数的数据都需要相同的存储（一个可疑的假设），则空间要求如下：
+
+- **Triangle**. Three vectors per triangle, for $9n_t$ units of storage; 
+  **三角形**。 每个三角形三个向量，用于 $9n_t$ 存储单元；
+- **IndexedMesh**. One vector per vertex and three ints per triangle, for $3n_v + 3n_t$ units of storage.
+  **索引网格**。 每个顶点一个向量，每个三角形三个整数，存储单元为 $3n_v + 3n_t$。
+
+The relative storage requirements depend on the ratio of $n_t$ to $n_v$.
+相对存储要求取决于 $n_t$ 与 $n_v$ 的比率。
+
+As a rule of thumb, a large mesh has each vertex connected to about six triangles (although there can be any number for extreme cases). Since each triangle connects to three vertices, this means that there are generally twice as many triangles as vertices in a large mesh: $nt ≈ 2n_v$. Making this substitution, we can conclude that the storage requirements are $18n_v$ for the Triangle structure and $9n_v$ for IndexedMesh. Using shared vertices reduces storage requirements by about a factor of two; and this seems to hold in practice for most implementations.
+根据经验，大网格的每个顶点连接到大约六个三角形（尽管极端情况下可以有任意数量）。 由于每个三角形连接到三个顶点，这意味着大网格中三角形的数量通常是顶点的两倍：$nt ≈ 2n_v$。 通过这种替换，我们可以得出结论，Triangle 结构的存储需求为 $18n_v$，IndexedMesh 的存储需求为 $9n_v$。 使用共享顶点可将存储需求减少大约两倍； 对于大多数实现来说，这似乎在实践中是成立的。
+
+> Is this factor of two worth the complication? I think the answer is yes, and it becomes an even bigger win as soon as you start adding “properties” to the vertices.
+> 这个二的因素值得复杂化吗？ 我认为答案是肯定的，一旦你开始向顶点添加“属性”，它就会成为一个更大的胜利。
+
+### 12.1.3 Triangle Strips and Fans 三角条和扇子
+
+Indexed meshes are the most common in-memory representation of triangle meshes, because they achieve a good balance of simplicity, convenience, and compactness. They are also commonly used to transfer meshes over networks and between the application and graphics pipeline. In applications where even more compactness is desirable, the triangle vertex indices (which take up two-thirds of the space in an indexed mesh with only positions at the vertices) can be expressed more efficiently using triangle strips and triangle fans.
+索引网格是三角形网格最常见的内存表示形式，因为它们实现了简单性、便利性和紧凑性的良好平衡。 它们还通常用于通过网络以及应用程序和图形管道之间传输网格。 在需要更紧凑的应用中，可以使用三角形条和三角形扇更有效地表达三角形顶点索引（在仅包含顶点位置的索引网格中占据三分之二的空间）。
+
+A triangle fan is shown in Figure 12.9. In an indexed mesh, the triangles array would contain [(0, 1, 2), (0, 2, 3), (0, 3, 4), (0, 4, 5)]. We are storing 12 vertex indices, although there are only six distinct vertices. In a triangle fan, all the triangles share one common vertex, and the other vertices generate a set of triangles like the vanes of a collapsible fan. The fan in the figure could be specified with the sequence [0, 1, 2, 3, 4, 5]: the first vertex establishes the center, and subsequently each pair of adjacent vertices (1-2, 2-3, etc.) 
+三角扇如图 12.9 所示。 在索引网格中，三角形数组将包含 [(0, 1, 2), (0, 2, 3), (0, 3, 4), (0, 4, 5)]。 尽管只有 6 个不同的顶点，但我们存储了 12 个顶点索引。 在三角形风扇中，所有三角形共享一个公共顶点，其他顶点生成一组三角形，就像可折叠风扇的叶片一样。 图中的扇形可以用序列 [0, 1, 2, 3, 4, 5] 指定：第一个顶点建立中心，随后每对相邻顶点（1-2、2-3 等）建立中心。 ) 创建一个三角形。creates a triangle.
+![Figure 12.9](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.9.png)
+Figure 12.9. A triangle fan. 
+图 12.9。 一把三角扇。
+
+The triangle strip is a similar concept, but it is useful for a wider range of meshes. Here, vertices are added alternating top and bottom in a linear strip as shown in Figure 12.10. The triangle strip in the figure could be specified by the sequence [0 1 2 3 4 5 6 7], and every subsequence of three adjacent vertices (0- 1-2, 1-2-3, etc.) creates a triangle. For consistent orientation, every other triangle needs to have its order reversed. In the example, this results in the triangles (0, 1, 2), (2, 1, 3), (2, 3, 4), (4, 3, 5), etc. For each new vertex that comes in, the oldest vertex is forgotten and the order of the two remaining vertices is swapped. See Figure 12.11 for a larger example.
+三角形带是一个类似的概念，但它适用于更广泛的网格。 在这里，顶点以线性条带的顶部和底部交替添加，如图 12.10 所示。 图中的三角形带可以由序列[0 1 2 3 4 5 6 7]指定，并且三个相邻顶点（0-1-2、1-2-3等）的每个子序列创建一个三角形。 为了保持方向一致，所有其他三角形都需要颠倒顺序。 在本例中，这会产生三角形 (0, 1, 2)、(2, 1, 3)、(2, 3, 4)、(4, 3, 5) 等。对于进入的每个新顶点 ，最旧的顶点被遗忘，剩下的两个顶点的顺序被交换。 更大的例子见图 12.11。
+![Figure 12.10](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.10.png)
+Figure 12.10. A triangle strip. 
+图 12.10。 一条三角带。
+
+![Figure 12.11](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.11.png)
+Figure 12.11. Two triangle strips in the context of a larger mesh. Note that neither strip can be extended to include the triangle marked with an asterisk. 
+图 12.11。 较大网格中的两个三角形条带。 请注意，这两个条带都不能扩展以包含标有星号的三角形。
+
+In both strips and fans, $n + 2$ vertices suffice to describe $n$ triangles—a substantial savings over the $3n$ vertices required by a standard indexed mesh. Long triangle strips will save approximately a factor of three if the program is vertex-bound. 
+在条带和扇形中，$n + 2$ 个顶点足以描述 $n$ 个三角形，这比标准索引网格所需的 $3n$ 个顶点节省了很多。 如果程序是顶点绑定的，长三角形带将节省大约三倍的时间。
+
+It might seem that triangle strips are only useful if the strips are very long, but even relatively short strips already gain most of the benefits. The savings in storage space (for only the vertex indices) are as follows:
+看起来三角形条带只有在条带很长的情况下才有用，但即使是相对较短的条带也已经获得了大部分好处。 节省的存储空间（仅针对顶点索引）如下：
+
+| strip length  |  1   |  2   |  3   |  4   |  5   |  6   |  7   |  8   |  16  | 100  | $∞$  |
+| :-----------: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| relative size | 1.00 | 0.67 | 0.56 | 0.50 | 0.47 | 0.44 | 0.43 | 0.42 | 0.38 | 0.34 | 0.33 |
+
+So, in fact, there is a rather rapid diminishing return as the strips grow longer. Thus, even for an unstructured mesh, it is worthwhile to use some greedy algorithm to gather them into short strips.
+因此，事实上，随着条带变长，回报会迅速递减。 因此，即使对于非结构化网格，也值得使用一些贪心算法将它们聚集成短条。
+
+### 12.1.4 Data Structures for Mesh Connectivity 网格连接的数据结构
+
+Indexed meshes, strips, and fans are all good, compact representations for static meshes. However, they do not readily allow for meshes to be modified. In order to efficiently edit meshes, more complicated data structures are needed to efficiently answer queries such as:
+索引网格、条带和扇形都是静态网格的良好、紧凑的表示形式。 然而，它们不容易允许修改网格。 为了有效地编辑网格，需要更复杂的数据结构来有效地回答查询，例如：
+
+- Given a triangle, what are the three adjacent triangles?
+  给定一个三角形，三个相邻的三角形是什么？
+- Given an edge, which two triangles share it?
+  给定一条边，哪两个三角形共享它？
+- Given a vertex, which faces share it?
+  给定一个顶点，哪些面共享它？
+- Given a vertex, which edges share it?
+  给定一个顶点，哪些边共享它？
+
+There are many data structures for triangle meshes, polygonal meshes, and polygonal meshes with holes (see the notes at the end of the chapter for references). In many applications the meshes are very large, so an efficient representation can be crucial. 
+三角形网格、多边形网格、带孔多边形网格的数据结构有很多种（参考见本章末尾的注释）。 在许多应用中，网格非常大，因此有效的表示至关重要。
+
+The most straightforward, though bloated, implementation would be to have three types, Vertex, Edge, and Triangle, and to just store all the relationships directly:
+最直接但臃肿的实现是具有三种类型：顶点、边和三角形，并直接存储所有关系：
+
+```
+Triangle {
+	Vertex v[3]
+	Edge e[3]
+}
+Edge {
+	Vertex v[2]
+	Triangle t[2]
+}
+Vertex {
+	Triangle t[]
+	Edge e[]
+}
+```
+
+This lets us directly look up answers to the connectivity questions above, but because this information is all inter-related, it stores more than is really needed. Also, storing connectivity in vertices makes for variable-length data structures (since vertices can have arbitrary numbers of neighbors), which are generally less efficient to implement. Rather than committing to store all these relationships explicitly, it is best to define a class interface to answer these questions, behind which a more efficient data structure can hide. It turns out we can store only some of the connectivity and efficiently recover the other information when needed. 
+这使我们可以直接查找上述连接问题的答案，但由于这些信息都是相互关联的，因此它存储的信息超出了实际需要的信息。 此外，在顶点中存储连接性会产生可变长度的数据结构（因为顶点可以具有任意数量的邻居），这通常实现起来效率较低。 与其致力于显式存储所有这些关系，不如定义一个类接口来回答这些问题，在其后面可以隐藏更高效的数据结构。 事实证明，我们可以只存储一些连接性，并在需要时有效地恢复其他信息。
+
+The fixed-size arrays in the Edge and Triangle classes suggest that it will be more efficient to store the connectivity information there. In fact, for polygon meshes, in which polygons have arbitrary numbers of edges and vertices, only edges have fixed-size connectivity information, which leads to many traditional mesh data structures being based on edges. But for triangle-only meshes, storing connectivity in the (less numerous) faces is appealing. 
+Edge 和 Triangle 类中的固定大小数组表明在那里存储连接信息会更有效。 事实上，对于多边形网格来说，多边形具有任意数量的边和顶点，只有边具有固定大小的连通性信息，这导致许多传统的网格数据结构都是基于边的。 但对于纯三角形网格来说，在（数量较少的）面中存储连接性很有吸引力。
+
+A good mesh data structure should be reasonably compact and allow efficient answers to all adjacency queries. Efficient means constant-time: the time to find neighbors should not depend on the size of the mesh. We’ll look at three data structures for meshes, one based on triangles and two based on edges.
+一个好的网格数据结构应该相当紧凑，并且能够有效地回答所有邻接查询。 高效意味着恒定时间：寻找邻居的时间不应取决于网格的大小。 我们将研究三种网格数据结构，一种基于三角形，两种基于边缘。
+
+#### The Triangle-Neighbor Structure 三角形相邻结构
+
+We can create a compact mesh data structure based on triangles by augmenting the basic shared-vertex mesh with pointers from the triangles to the three neighboring triangles, and a pointer from each vertex to one of the adjacent triangles (it doesn’t matter which one); see Figure 12.12:
+我们可以创建一个基于三角形的紧凑网格数据结构，通过使用从三角形到三个相邻三角形的指针以及从每个顶点到相邻三角形之一的指针（无论是哪一个）来扩充基本共享顶点网格。 ）； 见图12.12：
+![Figure 12.12](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.12.png)
+Figure 12.12. The references between triangles and vertices in the triangle-neighbor structure.
+图 12.12。 三角形邻居结构中三角形和顶点之间的引用。
+
+```
+Triangle {
+	Triangle nbr[3];
+	Vertex v[3];
+}
+Vertex {
+	// ... per-vertex data ...
+	Triangle t; // any adjacent tri
+}
+```
+
+In the array Triangle.nbr, the kth entry points to the neighboring triangle that shares vertices k and k + 1. We call this structure the triangle-neighbor structure. Starting from standard indexed mesh arrays, it can be implemented with two additional arrays: one that stores the three neighbors of each triangle, and one that stores a single neighboring triangle for each vertex (see Figure 12.13 for an example):
+在数组 Triangle.nbr 中，第 k 个条目指向共享顶点 k 和 k + 1 的相邻三角形。我们将此结构称为三角形相邻结构。 从标准索引网格数组开始，它可以通过两个附加数组来实现：一个存储每个三角形的三个邻居，另一个存储每个顶点的单个相邻三角形（参见图 12.13 的示例）：
+![Figure 12.13](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.13.png)
+
+Figure 12.13. The triangle-neighbor structure as encoded in arrays, and the sequence that is followed in traversing the neighboring triangles of vertex 2. 
+图 12.13。 数组中编码的三角形相邻结构，以及遍历顶点 2 的相邻三角形时遵循的序列。
+
+```
+Mesh {
+	// ... per-vertex data ...
+	int tInd[nt][3]; // vertex indices
+	int tNbr[nt][3]; // indices of neighbor triangles
+	int vTri[nv]; // index of any adjacent triangle
+}
+```
+
+Clearly the neighboring triangles and vertices of a triangle can be found directly in the data structure, but by using this triangle adjacency information carefully it is also possible to answer connectivity queries about vertices in constant time. The idea is to move from triangle to triangle, visiting only the triangles adjacent to the relevant vertex. If triangle t has vertex v as its kth vertex, then the triangle $t.nbr[k]$ is the next triangle around v in the clockwise direction. This observation leads to the following algorithm to traverse all the triangles adjacent to a given vertex:
+显然，可以直接在数据结构中找到相邻三角形和三角形的顶点，但是通过仔细使用该三角形邻接信息，也可以在恒定时间内回答有关顶点的连通性查询。 这个想法是从一个三角形移动到另一个三角形，仅访问与相关顶点相邻的三角形。 如果三角形 t 将顶点 v 作为其第 k 个顶点，则三角形 $t.nbr[k]$ 是沿顺时针方向围绕 v 的下一个三角形。 这一观察导致以下算法来遍历与给定顶点相邻的所有三角形：
+
+```
+TrianglesOfVertex(v) {
+	t = v.t
+	do {
+		find i such that (t.v[i] == v)
+		t = t.nbr[i]
+	} while (t != v.t)
+}
+```
+
+> Of course, a real program would do something with the triangles as it found them.
+> 当然，真正的程序会在找到三角形时对其进行处理。
+
+This operation finds each subsequent triangle in constant time—even though a search is required to find the position of the central vertex in each triangle’s vertex list, the vertex lists have constant size so the search takes constant time. However, that search is awkward and requires extra branching. 
+此操作在恒定时间内找到每个后续三角形 - 尽管需要搜索来查找每个三角形顶点列表中中心顶点的位置，但顶点列表具有恒定大小，因此搜索需要恒定时间。 然而，这种搜索很尴尬并且需要额外的分支。
+
+A small refinement can avoid these searches. The problem is that once we follow a pointer from one triangle to the next, we don’t know from which way we came: we have to search the triangle’s vertices to find the vertex that connects back to the previous triangle. To solve this, instead of storing pointers to neighboring triangles, we can store pointers to specific edges of those triangles by storing an index with the pointer:
+一个小的改进可以避免这些搜索。 问题是，一旦我们沿着指针从一个三角形到下一个三角形，我们就不知道我们是从哪条路来的：我们必须搜索三角形的顶点以找到连接回前一个三角形的顶点。 为了解决这个问题，我们可以通过存储指针的索引来存储指向这些三角形的特定边的指针，而不是存储指向相邻三角形的指针：
+
+```
+Triangle {
+	Edge nbr[3];
+	Vertex v[3];
+}
+Edge { // the i-th edge of triangle t
+	Triangle t;
+	int i; // in {0,1,2}
+}
+Vertex {
+	// ... per-vertex data ...
+	Edge e; // any edge leaving vertex
+}
+```
+
+In practice the Edge is stored by borrowing two bits of storage from the triangle index $t$ to store the edge index $i$, so that the total storage requirements remain the same.
+实际上，边的存储是通过从三角形索引$t$借用两位存储来存储边索引$i$，使得总存储需求保持不变。
+
+In this structure the neighbor array for a triangle tells which of the neighboring triangles’ edges are shared with the three edges of that triangle. With this extra information, we always know where to find the original triangle, which leads to an invariant of the data structure: for any $j$th edge of any triangle $t$,
+在这个结构中，三角形的邻居数组告诉我们相邻三角形的哪条边与该三角形的三个边共享。 有了这些额外的信息，我们总是知道在哪里可以找到原始三角形，这导致了数据结构的不变性：对于任何三角形$t$的任何$j$th边，
+$t.nbr[j].t.nbr[t.nbr[j].i].t == t.$
+
+Knowing which edge we came in through lets us know immediately which edge to leave through in order to continue traversing around a vertex, leading to a streamlined algorithm:
+知道我们通过哪条边进入可以让我们立即知道要离开哪条边以便继续围绕顶点遍历，从而形成简化的算法：
+
+```
+TrianglesOfVertex(v) {
+	{t, i} = v.e;
+	do {
+		{t, i} = t.nbr[i];
+		i = (i+1) mod 3;
+	} while (t != v.e.t);
+}
+```
+
+The triangle-neighbor structure is quite compact. For a mesh with only vertex positions, we are storing four numbers (three coordinates and an edge) per vertex and six (three vertex indices and three edges) per face, for a total of $4n_v + 6n_t ≈ 16n_v$ units of storage per vertex, compared with $9n_v$ for the basic indexed mesh. 
+三角形邻居结构非常紧凑。 对于仅包含顶点位置的网格，我们为每个顶点存储 4 个数字（三个坐标和一条边），为每个面存储 6 个数字（三个顶点索引和三个边），总共为每个存储 $4n_v + 6n_t ≈ 16n_v$ 单位。 顶点，与基本索引网格的 $9n_v$ 相比。
+
+The triangle neighbor structure as presented here works only for manifold meshes, because it depends on returning to the starting triangle to terminate the traversal of a vertex’s neighbors, which will not happen at a boundary vertex that doesn’t have a full cycle of triangles. However, it is not difficult to generalize it to manifolds with boundary, by introducing a suitable sentinel value (such as −1) for the neighbors of boundary triangles and taking care that the boundary vertices point to the most counterclockwise neighboring triangle, rather than to any arbitrary triangle.
+这里介绍的三角形邻居结构仅适用于流形网格，因为它依赖于返回起始三角形来终止顶点邻居的遍历，这不会发生在没有完整三角形循环的边界顶点上。 然而，将其推广到有边界的流形并不困难，通过为边界三角形的邻居引入合适的哨兵值（例如-1），并注意边界顶点指向最逆时针相邻的三角形，而不是指向 任意三角形。
+
+#### The Winged-Edge Structure 翼缘结构
+
+One widely used mesh data structure that stores connectivity information at the edges instead of the faces is the winged-edge data structure. This data structure makes edges the first-class citizen of the data structure, as illustrated in Figures 12.14 and 12.15.
+翼边数据结构是一种广泛使用的网格数据结构，它存储边缘而不是面的连接信息。 这种数据结构使边成为数据结构的一等公民，如图 12.14 和 12.15 所示。
+![Figure 12.14](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.14.png)
+Figure 12.14. An example of a winged-edge mesh structure, stored in arrays. 
+图 12.14。 存储在数组中的翼边网格结构的示例。
+
+![Figure 12.15](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.15.png)
+Figure 12.15. A tetrahedron and the associated elements for a winged-edge data structure. The two small tables are not unique; each vertex and face stores any one of the edges with which it is associated.
+图 12.15。 翼边数据结构的四面体和相关元素。 这两张小桌子并不独特； 每个顶点和面都存储与其关联的任何一条边。
+
+In a winged-edge mesh, each edge stores pointers to the two vertices it connects (the head and tail vertices), the two faces it is part of (the left and right faces), and, most importantly, the next and previous edges in the counterclockwise traversal of its left and right faces (Figure 12.16). Each vertex and face also stores a pointer to a single, arbitrary edge that connects to it:
+在翼边网格中，每条边都存储指向它连接的两个顶点（头顶点和尾顶点）、它所属的两个面（左面和右面）的指针，以及最重要的下一条边和上一条边 逆时针遍历其左右面（图12.16）。 每个顶点和面还存储一个指向连接到它的单个任意边的指针：
+![Figure 12.16](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.16.png)
+Figure 12.16. The references from an edge to the neighboring edges, faces, and vertices in the winged-edge structure.
+图 12.16。 翼边结构中从边到相邻边、面和顶点的参考。
+
+```
+Edge {
+	Edge lprev, lnext, rprev, rnext;
+	Vertex head, tail;
+	Face left, right;
+}
+Face {
+	// ... per-face data ...
+	Edge e; // any adjacent edge
+}
+Vertex {
+	// ... per-vertex data ...
+	Edge e; // any incident edge
+}
+```
+
+The winged-edge data structure supports constant-time access to the edges of a face or of a vertex, and from those edges the adjoining vertices or faces can be found:
+翼边数据结构支持对面或顶点的边进行恒定时间访问，并且可以从这些边找到相邻的顶点或面：
+
+```
+EdgesOfVertex(v) {
+	e = v.e;
+	do {
+		if (e.tail == v)
+			e = e.lprev;
+		else
+			e = e.rprev;
+	} while (e != v.e);
+}
+EdgesOfFace(f) {
+	e = f.e;
+	do {
+		if (e.left == f)
+			e = e.lnext;
+		else
+			e = e.rnext;
+	} while (e != f.e);
+}
+```
+
+These same algorithms and data structures will work equally well in a polygon mesh that isn’t limited to triangles; this is one important advantage of edge-based structures. 
+这些相同的算法和数据结构在多边形网格中同样适用，不仅限于三角形； 这是基于边缘的结构的一个重要优势。
+
+As with any data structure, the winged-edge data structure makes a variety of time/space tradeoffs. For example, we can eliminate the prev references. This makes it more difficult to traverse clockwise around faces or counterclockwise around vertices, but when we need to know the previous edge, we can always follow the successor edges in a circle until we get back to the original edge. This saves space, but it makes some operations slower. (See the chapter notes for more information on these tradeoffs).
+与任何数据结构一样，翼缘数据结构会进行各种时间/空间权衡。 例如，我们可以删除以前的引用。 这使得绕面顺时针遍历或绕顶点逆时针遍历变得更加困难，但是当我们需要知道前一条边时，我们总是可以沿着一圈跟随后继边，直到回到原始边。 这可以节省空间，但会使某些操作变慢。 （有关这些权衡的更多信息，请参阅章节注释）。
+
+#### The Half-Edge Structure 半边结构
+
+The winged-edge structure is quite elegant, but it has one remaining awkwardness—the need to constantly check which way the edge is oriented before moving to the next edge. This check is directly analogous to the search we saw in the basic version of the triangle neighbor structure: we are looking to find out whether we entered the present edge from the head or from the tail. The solution is also almost indistinguishable: rather than storing data for each edge, we store data for each half-edge. There is one half-edge for each of the two triangles that share an edge, and the two half-edges are oriented oppositely, each oriented consistently with its own triangle. 
+翼缘结构非常优雅，但它还有一个尴尬之处——在移动到下一个边缘之前需要不断检查边缘的方向。 这种检查直接类似于我们在三角形邻居结构的基本版本中看到的搜索：我们正在寻找我们是从头部还是从尾部进入当前边缘。 该解决方案也几乎无法区分：我们不是为每个边存储数据，而是为每个半边存储数据。 共享一条边的两个三角形各有一个半边，并且这两个半边的方向相反，每个半边的方向与其自己的三角形一致。
+
+The data normally stored in an edge is split between the two half-edges. Each half-edge points to the face on its side of the edge and to the vertex at its head, and each contains the edge pointers for its face. It also points to its neighbor on the other side of the edge, from which the other half of the information can be found. Like the winged-edge, a half-edge can contain pointers to both the previous and next half-edges around its face, or only to the next half-edge. We’ll show the example that uses a single pointer.
+通常存储在边缘中的数据被分割在两个半边缘之间。 每个半边都指向该边一侧的面和其头部的顶点，并且每个半边都包含其面的边指针。 它还指向边缘另一侧的邻居，从中可以找到另一半信息。 与翼边一样，半边可以包含指向其面周围的前一个半边和下一个半边的指针，或者仅包含指向下一个半边的指针。 我们将展示使用单个指针的示例。
+
+```
+HEdge {
+	HEdge pair, next;
+	Vertex v;
+	Face f;
+}
+Face {
+	// ... per-face data ...
+	HEdge h; // any h-edge of this face
+}
+Vertex {
+	// ... per-vertex data ...
+	HEdge h; // any h-edge pointing toward this vertex
+}
+```
+
+![Figure 12.17](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.17.png)
+Figure 12.17. The references from a half-edge to its neighboring mesh components.
+图 12.17。 从半边到其相邻网格组件的引用。
+
+Traversing a half-edge structure is just like traversing a winged-edge structure except that we no longer need to check orientation, and we follow the pair pointer to access the edges in the opposite face.
+遍历半边结构就像遍历翼边结构一样，只不过我们不再需要检查方向，并且我们沿着对指针访问相反面的边。
+
+```
+EdgesOfVertex(v) {
+	h = v.h;
+	do {
+		h = h.pair.next;
+	} while (h != v.h);
+}
+EdgesOfFace(f) {
+	h = f.h;
+	do {
+		h = h.next;
+	} while (h != f.h);
+}
+```
+
+The vertex traversal here is clockwise, which is necessary because of omitting the prev pointer from the structure.
+这里的顶点遍历是顺时针的，这是必要的，因为从结构中省略了 prev 指针。
+
+Because half-edges are generally allocated in pairs (at least in a mesh with no boundaries), many implementations can do away with the pair pointers. For instance, in an implementation based on array indexing (such as shown in Figure 12.18), the array can be arranged so that an even-numbered edge $i$ always pairs with edge $i + 1$ and an odd-numbered edge $j$ always pairs with edge $j − 1$. 
+由于半边通常成对分配（至少在没有边界的网格中），因此许多实现可以取消对指针。 例如，在基于数组索引的实现中（如图 12.18 所示），可以对数组进行排列，使得偶数边 $i$ 始终与边 $i + 1$ 和奇数边 $ 配对 j$ 总是与边 $j − 1$ 配对。
+![Figure 12.18](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.18.png)
+Figure 12.18. An example of a half-edge mesh structure, stored in arrays.
+图 12.18。 存储在数组中的半边网格结构的示例。
+
+In addition to the simple traversal algorithms shown in this chapter, all three of these mesh topology structures can support “mesh surgery” operations of various sorts, such as splitting or collapsing vertices, swapping edges, adding or removing triangles, etc.
+除了本章所示的简单遍历算法之外，所有这三种网格拓扑结构都可以支持各种类型的“网格手术”操作，例如分裂或折叠顶点、交换边、添加或删除三角形等。
+
+## 12.2 Scene Graphs 场景图
+
+A triangle mesh manages a collection of triangles that constitute an object in a scene, but another universal problem in graphics applications is arranging the objects in the desired positions. As we saw in Chapter 6, this is done using transformations, but complex scenes can contain a great many transformations and organizing them well makes the scene much easier to manipulate. Most scenes admit to a hierarchical organization, and the transformations can be managed according to this hierarchy using a scene graph.
+三角形网格管理构成场景中对象的三角形集合，但图形应用程序中的另一个普遍问题是将对象排列在所需的位置。 正如我们在第 6 章中看到的，这是使用变换来完成的，但是复杂的场景可以包含大量变换，并且良好地组织它们使场景更容易操作。 大多数场景都允许分层组织，并且可以使用场景图根据该分层结构来管理转换。
+
+To motivate the scene-graph data structure, we will use the hinged pendulum shown in Figure 12.19. Consider how we would draw the top part of the pendulum:
+为了激发场景图数据结构，我们将使用如图 12.19 所示的铰链摆。 考虑一下我们如何绘制钟摆的顶部：
+![Figure 12.19](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.19.png)
+Figure 12.19. A hinged pendulum. On the left are the two pieces in their “local” coordinate systems. The hinge of the bottom piece is at point $\bold{b}$ and the attachment for the bottom piece is at its local origin. The degrees of freedom for the assembled object are the angles $(θ,φ)$ and the location $\bold{p}$ of the top hinge.
+图 12.19。 一个铰接摆。 左边是“局部”坐标系中的两个部分。 底部部件的铰链位于点 $\bold{b}$ 处，底部部件的附件位于其本地原点。 组装物体的自由度是角度 $(θ,φ)$ 和顶部铰链的位置 $\bold{p}$。
+
+> $\bold{M}_1 = rotate(θ)$
+> $\bold{M}_2 = translate(\bold{p})$
+> $\bold{M}_3 = \bold{M}_2\bold{M}_1$
+> Apply $\bold{M}_3$ to all points in upper pendulum  
+
+The bottom is more complicated, but we can take advantage of the fact that it is attached to the bottom of the upper pendulum at point $\bold{b}$ in the local coordinate system. First, we rotate the lower pendulum so that it is at an angle φ relative to its initial position. Then, we move it so that its top hinge is at point b. Now it is at the appropriate position in the local coordinates of the upper pendulum, and it can then be moved along with that coordinate system. The composite transform for the lower pendulum is:
+底部更复杂，但我们可以利用它在局部坐标系中的点 $\bold{b}$ 处连接到上摆底部的事实。 首先，我们旋转下摆，使其相对于初始位置成角度 φ。 然后，我们移动它，使其顶部铰链位于 b 点。 现在它位于上摆局部坐标中的适当位置，然后它可以沿着该坐标系移动。 下摆的复合变换为：
+
+> $\bold{M}_a = rotate(φ)$
+> $\bold{M}_b = translate(\bold{b})$
+> $\bold{M}_c = \bold{M}_b\bold{M}_a$
+> $\bold{M}_d = \bold{M}_3\bold{M}_c$
+> Apply $\bold{M}_d$ to all points in lower pendulum  
+
+Thus, we see that the lower pendulum not only lives in its own local coordinate system, but also that coordinate system itself is moved along with that of the upper pendulum. 
+因此，我们看到下摆不仅存在于自己的局部坐标系中，而且该坐标系本身也随着上摆的坐标系一起移动。
+
+We can encode the pendulum in a data structure that makes management of these coordinate system issues easier, as shown in Figure 12.20. The appropriate matrix to apply to an object is just the product of all the matrices in the chain from the object to the root of the data structure. For example, consider the model of a ferry that has a car that can move freely on the deck of the ferry, and wheels that each move relative to the car as shown in Figure 12.21.
+我们可以将摆编码为数据结构，从而使这些坐标系问题的管理变得更加容易，如图 12.20 所示。 应用于对象的适当矩阵只是从对象到数据结构根的链中所有矩阵的乘积。 例如，考虑一个渡轮模型，其中有一辆可以在渡轮甲板上自由移动的汽车，以及每个相对于汽车移动的轮子，如图 12.21 所示。
+
+![Figure 12.20](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.20.png)
+Figure 12.20. The scene graph for the hinged pendulum of Figure 12.19.
+图 12.20。 图 12.19 的铰接摆场景图。
+
+![Figure 12.21](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.21.png)
+Figure 12.21. A ferry, a car on the ferry, and the wheels of the car (only two shown) are stored in a scene-graph.
+图 12.21。 渡轮、渡轮上的汽车以及汽车的车轮（仅显示两个)都存储在场景图中。
+
+As with the pendulum, each object should be transformed by the product of the matrices in the path from the root to the object: 
+与钟摆一样，每个对象都应该通过从根到对象的路径中的矩阵乘积进行变换：
+
+- ferry transform using $M_0$; 
+  使用 $M_0$ 进行轮渡变换；
+- car body transform using $M_0M_1$; 
+  使用$M_0M_1$进行车身变换；
+- left wheel transform using $M_0M_1M_2$; 
+  使用 $M_0M_1M_2$ 进行左轮变换；
+- left wheel transform using $M_0M_1M_3$.
+  使用$M_0M_1M_3$进行左轮变换。
+
+An efficient implementation can be achieved using a matrix stack, a data structure supported by many APIs. A matrix stack is manipulated using push and pop operations that add and delete matrices from the right-hand side of a matrix product. For example, calling:
+使用矩阵堆栈（许多 API 支持的数据结构）可以实现高效的实现。 矩阵堆栈是使用压入和弹出操作来操作的，这些操作从矩阵乘积的右侧添加和删除矩阵。 例如，调用：
+
+> push($\bold{M}_0$)
+> push($\bold{M}_1$)
+> push($\bold{M}_2$)
+
+creates the active matrix $\bold{M} = \bold{M}_0\bold{M}_1\bold{M}_2$. A subsequent call to pop() strips the last matrix added so that the active matrix becomes $\bold{M} = \bold{M}_0\bold{M}_1$. Combining the matrix stack with a recursive traversal of a scene graph gives us:
+创建活动矩阵 $\bold{M} = \bold{M}_0\bold{M}_1\bold{M}_2$。 随后调用 pop() 会删除最后添加的矩阵，以便活动矩阵变为 $\bold{M} = \bold{M}_0\bold{M}_1$。 将矩阵堆栈与场景图的递归遍历相结合，我们可以得到：
+
+> function traverse(node)
+> 	push($\bold{M}_{local}$)
+> 	draw object using composite matrix from stack
+> 	traverse(left child)
+> 	traverse(right child)
+> 	pop()
+
+There are many variations on scene graphs but all follow the basic idea above.
+场景图有很多变化，但都遵循上述基本思想。
+
+## 12.3 Spatial Data Structures 空间数据结构
+
+In many, if not all, graphics applications, the ability to quickly locate geometric objects in particular regions of space is important. Ray tracers need to find objects that intersect rays; interactive applications navigating an environment need to find the objects visible from any given viewpoint; games and physical simulations require detecting when and where objects collide. All these needs can be supported by various spatial data structures designed to organize objects in space so they can be looked up efficiently. 
+在许多（如果不是全部）图形应用程序中，快速定位特定空间区域中的几何对象的能力非常重要。 光线追踪器需要找到与光线相交的物体； 在环境中导航的交互式应用程序需要找到从任何给定视点可见的对象； 游戏和物理模拟需要检测物体碰撞的时间和地点。 所有这些需求都可以通过各种空间数据结构来支持，这些空间数据结构旨在组织空间中的对象，以便可以有效地查找它们。
+
+In this section we will discuss examples of three general classes of spatial data structures. Structures that group objects together into a hierarchy are object partitioning schemes: objects are divided into disjoint groups, but the groups may end up overlapping in space. Structures that divide space into disjoint regions are space partitioning schemes: space is divided into separate partitions, but one object may have to intersect more than one partition. Space partitioning schemes can be regular, in which space is divided into uniformly shaped pieces, or irregular, in which space is divided adaptively into irregular pieces, with smaller pieces where there are more and smaller objects. 
+在本节中，我们将讨论三类通用空间数据结构的示例。 将对象分组到层次结构中的结构是对象分区方案：对象被分为不相交的组，但这些组最终可能在空间上重叠。 将空间划分为不相交区域的结构是空间划分方案：空间被划分为单独的分区，但一个对象可能必须与多个分区相交。 空间划分方案可以是规则的，其中空间被划分为均匀形状的块，或者是不规则的，其中空间被适应性地划分为不规则的块，其中存在更多和更小的对象的块更小。
+
+We will use ray tracing as the primary motivation while discussing these structures, though they can all also be used for view culling or collision detection. In Chapter 4, all objects were looped over while checking for intersections. For N objects, this is an O(N) linear search and is thus slow for large scenes. Like most search problems, the ray-object intersection can be computed in sub-linear time using “divide and conquer” techniques, provided we can create an ordered data structure as a preprocess. There are many techniques to do this. 
+在讨论这些结构时，我们将使用光线追踪作为主要动机，尽管它们也可以用于视图剔除或碰撞检测。 在第 4 章中，在检查交叉点时循环遍历所有对象。 对于 N 个对象，这是一个 O(N) 线性搜索，因此对于大场景来说速度很慢。 与大多数搜索问题一样，只要我们可以创建有序数据结构作为预处理，就可以使用“分而治之”技术在亚线性时间内计算光线与对象的交集。 有很多技术可以做到这一点。
+
+This section discusses three of these techniques in detail: bounding volume hierarchies (Rubin & Whitted, 1980; Whitted, 1980; Goldsmith & Salmon, 1987), uniform spatial subdivision (Cleary, Wyvill, Birtwistle, & Vatti, 1983; Fujimoto, Tanaka, & Iwata, 1986; Amanatides & Woo, 1987), and binary space partitioning (Glassner, 1984; Jansen, 1986; Havran, 2000). An example of the first two strategies is shown in Figure 12.22.
+本节详细讨论其中三种技术：包围体层次结构（Rubin & Whitted，1980；Whitted，1980；Goldsmith & Salmon，1987）、统一空间细分（Cleary、Wyvill、Birtwistle 和 Vatti，1983；Fujimoto、Tanaka， & Iwata，1986；Amanatides & Woo，1987），以及二进制空间划分（Glassner，1984；Jansen，1986；Havran，2000）。 前两种策略的示例如图 12.22 所示。
+![Figure 12.22](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.22.png)
+
+Figure 12.22. Left: a uniform partitioning of space. Right: adaptive bounding-box hierarchy. Image courtesy David DeMarle.  
+图 12.22。 左：统一的空间划分。 右：自适应边界框层次结构。 图片由大卫·德马尔提供。
+
+### 12.3.1 Bounding Boxes 边界框
+
+A key operation in most intersection-acceleration schemes is computing the intersection of a ray with a bounding box (Figure 12.23). This differs from conventional intersection tests in that we do not need to know where the ray hits the box; we only need to know whether it hits the box. 
+大多数相交加速方案中的一个关键操作是计算射线与边界框的相交（图 12.23）。 这与传统的相交测试不同，我们不需要知道光线击中盒子的位置； 我们只需要知道它是否击中盒子即可。
+![Figure 12.23](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.23.png)
+Figure 12.23. The ray is only tested for intersection with the surfaces if it hits the bounding box.
+图 12.23。 仅当光线击中边界框时才测试光线与表面的相交。
+
+To build an algorithm for ray-box intersection, we begin by considering a 2D ray whose direction vector has positive x and y components. We can generalize this to arbitrary 3D rays later. The 2D bounding box is defined by two horizontal and two vertical lines: 
+为了构建射线盒相交的算法，我们首先考虑方向向量具有正 x 和 y 分量的 2D 射线。 稍后我们可以将其推广到任意 3D 射线。 2D 边界框由两条水平线和两条垂直线定义：
+
+> $x = x_{min}$, 
+> $x = x_{max}$,
+> $y = y_{min}$,
+> $y = y_{max}.  $
+
+The points bounded by these lines can be described in interval notation: 
+这些线所包围的点可以用区间表示法来描述：
+$(x, y) ∈ [x_{min}, x_{max}] × [y_{min}, y_{max}]  $
+
+As shown in Figure 12.24, the intersection test can be phrased in terms of these intervals. First, we compute the ray parameter where the ray hits the line $x = x_{min}$:
+如图 12.24 所示，交叉测试可以用这些间隔来表达。 首先，我们计算光线撞击线 $x = x_{min}$ 的光线参数：
+$t_{xmin} = \frac{x_{min}-x_e}{x_d}\\$
+![Figure 12.24](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.24.png)
+Figure 12.24. The ray will be inside the interval $x ∈ [x_{min}, x_{max}]$ for some interval in its parameter space $t ∈ [t_{xmin}, t_{xmax}]$. A similar interval exists for the y interval. The ray intersects the box if it is in both the x interval and y interval at the same time, i.e., the intersection of the two one-dimensional intervals is not empty.
+图 12.24。 对于参数空间 $t ∈ [t_{xmin}, t_{xmax}]$ 中的某个区间，射线将位于区间 $x ∈ [x_{min}, x_{max}]$ 内。 y 区间也存在类似的区间。 如果射线同时位于 x 区间和 y 区间，即两个一维区间的交集不为空，则射线与盒子相交。
+
+We then make similar computations for $t_{xmax}$, $t_{ymin}$, and $t_{ymax}$. The ray hits the box if and only if the intervals $[t_{xmin}, t_{xmax}]$ and $[t_{ymin}, t_{ymax}]$ overlap, i.e., their intersection is nonempty. In pseudocode this algorithm is:
+然后我们对 $t_{xmax}$、$t_{ymin}$ 和 $t_{ymax}$ 进行类似的计算。 当且仅当区间 $[t_{xmin}, t_{xmax}]$ 和 $[t_{ymin}, t_{ymax}]$ 重叠时，光线才会击中盒子，即它们的交集非空。 该算法的伪代码为：
+
+> $t_{xmin} = (x_{min} - x_e)/x_d$
+> $t_{xmax} = (x_{max} - x_e)/x_d$
+> $t_{ymin} = (y_{min} - y_e)/y_d$
+> $tymax = (ymax - ye)/y_d$
+> if $(t_{xmin} > t_{ymax})$ or $(t_{ymin} > t_{xmax})$ then
+> 	return false
+> else
+> 	return true  
+
+The if statement may seem non-obvious. To see the logic of it, note that there is no overlap if the first interval is either entirely to the right or entirely to the left of the second interval.
+if 语句可能看起来不明显。 要了解其逻辑，请注意，如果第一个间隔完全位于第二个间隔的右侧或完全左侧，则不存在重叠。
+
+The first thing we must address is the case when $x_d$ or $y_d$ is negative. If $x_d$ is negative, then the ray will hit $x_{max}$ before it hits $x_{min}$. Thus the code for computing $t_{xmin}$ and $t_{xmax}$ expands to:
+我们必须解决的第一件事是 $x_d$ 或 $y_d$ 为负数的情况。 如果 $x_d$ 为负数，则光线将在到达 $x_{min}$ 之前先到达 $x_{max}$。 因此，计算 $t_{xmin}$ 和 $t_{xmax}$ 的代码扩展为：
+
+> if ($x_d ≥ 0$) then
+> 	$t_{xmin} = (x_{min} - x_e)/x_d$
+> 	$t_{xmax} = (x_{max} - x_e)/x_d$
+> else
+> 	$t_{xmin} = (x_{max} - x_{e})/x_d$
+> 	$t_{xmax} = (x_{min} - x_e)/x_d  $
+
+A similar code expansion must be made for the $y$ cases. A major concern is that horizontal and vertical rays have a zero value for $y_d$ and $x_d$, respectively. This will cause divide by zero which may be a problem. However, before addressing this directly, we check whether IEEE floating point computation handles these cases gracefully for us. Recall from Section 1.5 the rules for divide by zero: for any positive real number $a$,
+必须对 $y$ 情况进行类似的代码扩展。 主要问题是水平和垂直光线的 $y_d$ 和 $x_d$ 分别为零值。 这将导致除以零，这可能是一个问题。 然而，在直接解决这个问题之前，我们检查 IEEE 浮点计算是否可以很好地为我们处理这些情况。 回想一下 1.5 节除以零的规则：对于任何正实数 $a$，
+$+a/0 = +∞;\\
+-a/0 = -∞.  $
+
+Consider the case of a vertical ray where $x_d = 0$ and $y_d > 0$. We can then calculate
+考虑垂直射线的情况，其中 $x_d = 0$ 且 $y_d > 0$。 然后我们可以计算
+$$
+t_{xmin} = \frac{x_{min} - x_e}{0}\\
+t_{xmax} = \frac{x_{max} - x_e}{0}
+$$
+There are three possibilities of interest:
+感兴趣的有以下三种可能性：
+
+1. $x_e ≤ x_{min}$ (no hit);
+2. $x_{min} < x_e < x_{max}$ (hit);
+3. $x_{max} ≤ x_e$ (no hit).
+
+For the first case we have
+对于第一种情况，我们有
+$$
+t_{xmin} = \frac{positive\ number}{0} \\
+t_{xmax} = \frac{positive\ number}{0} \\
+$$
+This yields the interval $(t_{xmin}, t_{xmin}) = (∞, ∞)$. That interval will not overlap with any interval, so there will be no hit, as desired. For the second case, we have
+由此得出区间 $(t_{xmin}, t_{xmin}) = (∞, ∞)$。 该间隔不会与任何间隔重叠，因此不会出现所需的命中。 对于第二种情况，我们有
+$$
+t_{xmin} = \frac{negative\ number}{0} \\
+t_{xmax} = \frac{positive\ number}{0} \\
+$$
+This yields the interval $(t_{xmin}, t_{xmin}) = (−∞, ∞)$ which will overlap with all intervals and thus will yield a hit as desired. The third case results in the interval $(−∞, −∞)$ which yields no hit, as desired. Because these cases work as desired, we need no special checks for them. As is often the case, IEEE floating point conventions are our ally. However, there is still a problem with this approach. 
+这会产生区间 $(t_{xmin}, t_{xmin}) = (−∞, ∞)$ ，它将与所有区间重叠，从而产生所需的命中。 第三种情况导致区间 $(−∞, −∞)$ 不产生所需的命中。 因为这些情况按预期工作，所以我们不需要对它们进行特殊检查。 通常情况下，IEEE 浮点约定是我们的盟友。 然而，这种方法仍然存在一个问题。
+
+Consider the code segment:
+考虑代码段：
+
+> if $(x_d ≥ 0)$ then
+> 	$t_{min} = (x_{min} - x_e)/x_d$
+> 	$t_{max} = (x_{max} - x_e)/x_d$ 
+> else
+> 	$t_{min} = (x_{max} − x_e)/x_d$
+> 	$t_{max} = (x_{min} − x_e)/x_d$
+
+This code breaks down when $x_d = -0$. This can be overcome by testing on the reciprocal of $x_d$ (A. Williams, Barrus, Morley, & Shirley, 2005): 
+当 $x_d = -0$ 时，此代码将崩溃。 这可以通过测试 $x_d$ 的倒数来克服（A. Williams, Barrus, Morley, & Shirley, 2005）：
+
+> $a = 1/x_d$
+> if $(a ≥ 0)$ then
+> 	$t_{min} = a(x_{min} - x_e)$
+> 	$t_{max} = a(x_{max} - x_e)$
+> else
+> 	$t_{min} = a(x_{max} - x_e)$
+> 	$t_{max} = a(x_{min} - x_e)$
+
+### 12.3.2 Hierarchical Bounding Boxes 分层边界框
+
+The basic idea of hierarchical bounding boxes can be seen by the common tactic of placing an axis-aligned 3D bounding box around all the objects as shown in Figure 12.25. Rays that hit the bounding box will actually be more expensive to compute than in a brute force search, because testing for intersection with the box is not free. However, rays that miss the box are cheaper than the brute force search. Such bounding boxes can be made hierarchical by partitioning the set of objects in a box and placing a box around each partition as shown in Figure 12.26. The data structure for the hierarchy shown in Figure 12.27 might be a tree with the large bounding box at the root and the two smaller bounding boxes as left and right subtrees. These would in turn each point to a list of three triangles. The intersection of a ray with this particular hard-coded tree would be: 
+分层边界框的基本思想可以通过在所有对象周围放置轴对齐的 3D 边界框的常见策略来看出，如图 12.25 所示。 击中边界框的光线实际上比暴力搜索的计算成本更高，因为与边界框相交的测试并不是免费的。 然而，错过盒子的射线比强力搜索便宜。 这种边界框可以通过划分框中的对象集并在每个分区周围放置一个框来分层，如图 12.26 所示。 图 12.27 所示的层次结构的数据结构可能是一棵树，其中大边界框位于根，两个较小的边界框作为左子树和右子树。 这些将依次指向三个三角形的列表。 射线与这个特定的硬编码树的交集将是：
+
+```
+if (ray hits root box) then
+	if (ray hits left subtree box) then
+		check three triangles for intersection
+	if (ray intersects right subtree box) then
+		check other three triangles for intersection
+	if (an intersections returned from each subtree) then
+		return the closest of the two hits
+	else if (a intersection is returned from exactly one subtree) then
+		return that intersection
+	else
+		return false
+else
+	return false
+```
+
+![Figure 12.25](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.25.png)
+Figure 12.25. A 2D ray $\bold{e} + t\bold{d}$ is tested against a 2D bounding box.
+图 12.25。 2D 射线 $\bold{e} + t\bold{d}$ 针对 2D 边界框进行测试。
+
+![Figure 12.26](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.26.png)
+Figure 12.26. The bounding boxes can be nested by creating boxes around subsets of the model.
+图 12.26。 可以通过在模型子集周围创建框来嵌套边界框。
+
+![Figure 12.27](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.27.png)
+Figure 12.27. The gray box is a tree node that points to the three gray spheres, and the thick black box points to the three black spheres. Note that not all spheres enclosed by the box are guaranteed to be pointed to by the corresponding tree node.
+图 12.27。 灰色框是一个树节点，指向三个灰色球体，粗黑框指向三个黑色球体。 请注意，并非所有被盒子包围的球体都保证被相应的树节点指向。
+
+Some observations related to this algorithm are that there is no geometric ordering between the two subtrees, and there is no reason a ray might not hit both subtrees. Indeed, there is no reason that the two subtrees might not overlap.
+与该算法相关的一些观察结果是，两个子树之间没有几何顺序，并且光线没有理由不击中两个子树。 事实上，两个子树没有理由不重叠。
+
+A key point of such data hierarchies is that a box is guaranteed to bound all objects that are below it in the hierarchy, but they are not guaranteed to contain all objects that overlap it spatially, as shown in Figure 12.27. This makes this geometric search somewhat more complicated than a traditional binary search on strictly ordered one-dimensional data. The reader may note that several possible optimizations present themselves. We defer optimizations until we have a full hierarchical algorithm.
+这种数据层次结构的一个关键点是，一个盒子保证绑定层次结构中低于它的所有对象，但不能保证它们包含空间上与其重叠的所有对象，如图 12.27 所示。 这使得这种几何搜索比严格排序的一维数据上的传统二分搜索更加复杂。 读者可能会注意到，存在几种可能的优化。 我们推迟优化，直到我们拥有完整的分层算法。
+
+If we restrict the tree to be binary and require that each node in the tree have a bounding box, then this traversal code extends naturally. Further, assume that all nodes are either leaves in the tree and contain a primitive, or that they contain one or two subtrees.
+如果我们将树限制为二叉树，并要求树中的每个节点都有一个边界框，那么这个遍历代码就会自然地扩展。 此外，假设所有节点要么是树中的叶子并包含基元，要么它们包含一两个子树。
+
+The bvh-node class should be of type surface, so it should implement surface::hit. The data it contains should be simple:
+bvh-node 类应该是surface 类型，因此它应该实现surface::hit。 它包含的数据应该很简单：
+
+> class bvh-node subclass of surface
+> 	virtual bool hit(ray $\bold{e} + t\bold{d}$, real $t_0$, real $t_1$, hit-record rec)
+> 	virtual box bounding-box()
+> 	surface-pointer left
+> 	surface-pointer right
+> 	box bbox
+
+The traversal code can then be called recursively in an object-oriented style:
+然后可以以面向对象的方式递归调用遍历代码：
+
+> function bool bvh-node::hit(ray $\bold{a} + t\bold{b}$, real $t_0$, real $t_1$, hit-record rec)
+> 	if (bbox.hitbox($\bold{a} + t\bold{b}$, $t_0$, $t_1$)) then
+> 		hit-record lrec, rrec
+> 		left-hit = (left ≠ NULL) and (left → hit($\bold{a} + t\bold{b}$, $t_0$, $t_1$, lrec))
+> 		right-hit = (right ≠ NULL) and (right → hit($\bold{a}+t\bold{b}$, $t_0$, $t_1$, rrec))
+> 		if (left-hit and right-hit) then
+> 			if (lrec.t < rrec.t) then
+> 				rec = lrec
+> 			else
+> 				rec = rrec
+> 			return true
+> 		else if (left-hit) then
+> 			rec = lrec
+> 			return true
+> 		else if (right-hit) then
+> 			rec = rrec
+> 			return true
+> 		else
+> 			return false
+> 	else
+> 		return false  
+
+Note that because left and right point to surfaces rather than bvh-nodes specifically, we can let the virtual functions take care of distinguishing between internal and leaf nodes; the appropriate hit function will be called. Note that if the tree is built properly, we can eliminate the check for left being NULL. If we want to eliminate the check for right being NULL, we can replace NULL right pointers with a redundant pointer to left. This will end up checking left twice, but will eliminate the check throughout the tree. Whether that is worth it will depend on the details of tree construction.
+请注意，因为 left 和 right 专门指向表面而不是 bvh 节点，所以我们可以让虚函数负责区分内部节点和叶节点； 将调用适当的命中函数。 请注意，如果树构建正确，我们可以消除对 left 为 NULL 的检查。 如果我们想消除对右为 NULL 的检查，我们可以用指向左的冗余指针替换 NULL 右指针。 这将最终检查左两次，但会消除整个树的检查。 这是否值得将取决于树木构造的细节。
+
+There are many ways to build a tree for a bounding volume hierarchy. It is convenient to make the tree binary, roughly balanced, and to have the boxes of sibling subtrees not overlap too much. A heuristic to accomplish this is to sort the surfaces along an axis before dividing them into two sublists. If the axes are defined by an integer with $x = 0$, $y = 1$, and $z = 2$ we have:
+有多种方法可以构建包围体层次结构的树。 方便使树成为二叉树，大致平衡，并且兄弟子树的框不会重叠太多。 实现此目的的启发式方法是先沿轴对曲面进行排序，然后再将其划分为两个子列表。 如果轴由整数定义，其中 $x = 0$、$y = 1$ 和 $z = 2$，我们有：
+
+> function bvh-node::create(object-array A, int AXIS)
+> 	N = A.length
+> 	if (N= 1) then
+> 		left = A[0]
+> 		right = NULL
+> 		bbox = bounding-box(A[0])
+> 	else if (N= 2) then
+> 		left-node = A[0]
+> 		right-node = A[1]
+> 		bbox = combine(bounding-box(A[0]), bounding-box(A[1]))
+> 	else
+> 		sort A by the object center along AXIS
+> 		left= new bvh-node(A[0..N/2 - 1], (AXIS +1) mod 3)
+> 		right = new bvh-node(A[N/2..N-1], (AXIS +1) mod 3)
+> 		bbox = combine(left → bbox, right → bbox)  
+
+The quality of the tree can be improved by carefully choosing AXIS each time. One way to do this is to choose the axis such that the sum of the volumes of the bounding boxes of the two subtrees is minimized. This change compared to rotating through the axes will make little difference for scenes composed of isotopically distributed small objects, but it may help significantly in less well-behaved scenes. This code can also be made more efficient by doing just a partition rather than a full sort. 
+每次仔细选择 AXIS 都可以提高树的质量。 实现此目的的一种方法是选择轴，以使两个子树的边界框的体积之和最小化。 与通过轴旋转相比，这种变化对于由同位素分布的小物体组成的场景几乎没有什么影响，但对于表现不佳的场景可能会有很大帮助。 通过仅执行分区而不是完整排序，还可以提高此代码的效率。
+
+Another, and probably better, way to build the tree is to have the subtrees contain about the same amount of space rather than the same number of objects. To do this we partition the list based on space:
+另一种可能更好的构建树的方法是让子树包含大约相同数量的空间而不是相同数量的对象。 为此，我们根据空间对列表进行分区：
+
+> function bvh-node::create(object-array A, int AXIS)
+> 	N = A.length
+> 	if (N = 1) then
+> 		left = A[0]
+> 		right = NULL
+> 		bbox = bounding-box(A[0])
+> 	else if (N = 2) then
+> 		left = A[0]
+> 		right = A[1]
+> 		bbox = combine(bounding-box(A[0]), bounding-box(A[1]))
+> 	else
+> 		find the midpoint m of the bounding box of A along AXIS
+> 		partition A into lists with lengths k and (N − k) surrounding m
+> 		left = new bvh-node(A[0..k], (AXIS +1) mod 3)
+> 		right = new bvh-node(A[k + 1..N − 1], (AXIS +1) mod 3)
+> 		bbox = combine(left → bbox, right → bbox)
+
+Although this results in an unbalanced tree, it allows for easy traversal of empty space and is cheaper to build because partitioning is cheaper than sorting. 
+尽管这会导致树不平衡，但它可以轻松遍历空白空间，并且构建成本更低，因为分区比排序更便宜。
+
+### 12.3.3 Uniform Spatial Subdivision 统一空间细分
+
+Another strategy to reduce intersection tests is to divide space. This is fundamentally different from dividing objects as was done with hierarchical bounding volumes: 
+减少交叉测试的另一个策略是划分空间。 这与使用分层包围体划分对象有本质上的不同：
+
+- In hierarchical bounding volumes, each object belongs to one of two sibling nodes, whereas a point in space may be inside both sibling nodes. 
+  在分层包围体中，每个对象属于两个兄弟节点之一，而空间中的点可能位于两个兄弟节点内。
+- In spatial subdivision, each point in space belongs to exactly one node, whereas objects may belong to many nodes. 
+  在空间细分中，空间中的每个点恰好属于一个节点，而对象可能属于多个节点。
+
+In uniform spatial subdivision, the scene is partitioned into axis-aligned boxes. These boxes are all the same size, although they are not necessarily cubes. The ray traverses these boxes as shown in Figure 12.28. When an object is hit, the traversal ends.
+在均匀空间细分中，场景被划分为轴对齐的框。 这些盒子大小相同，但不一定是立方体。 光线穿过这些盒子，如图 12.28 所示。 当物体被击中时，遍历结束。
+![Figure 12.28](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.28.png)
+Figure 12.28. In uniform spatial subdivision, the ray is tracked forward through cells until an object in one of those cells is hit. In this example, only objects in the shaded cells are checked. 
+图 12.28。 在均匀空间细分中，光线向前跟踪穿过细胞，直到击中其中一个细胞中的物体。 在此示例中，仅检查阴影单元格中的对象。
+
+The grid itself should be a subclass of surface and should be implemented as a 3D array of pointers to surface. For empty cells these pointers are NULL. For cells with one object, the pointer points to that object. For cells with more than one object, the pointer can point to a list, another grid, or another data structure, such as a bounding volume hierarchy.
+网格本身应该是表面的子类，并且应该作为表面指针的 3D 数组来实现。 对于空单元格，这些指针为 NULL。 对于具有一个对象的单元格，指针指向该对象。 对于具有多个对象的单元格，指针可以指向列表、另一个网格或另一个数据结构，例如包围体层次结构。 
+
+This traversal is done in an incremental fashion. The regularity comes from the way that a ray hits each set of parallel planes, as shown in Figure 12.29. To see how this traversal works, first consider the 2D case where the ray direction has positive x and y components and starts outside the grid. Assume the grid is bounded by points $(x_{min}, y_{min})$ and $(x_{max}, y_{max})$. The grid has $n_x × n_y$ cells.
+这种遍历是以增量方式完成的。 规律性来自于光线撞击每组平行平面的方式，如图 12.29 所示。 要了解这种遍历的工作原理，首先考虑 2D 情况，其中射线方向具有正 x 和 y 分量并从网格外部开始。 假设网格以点 $(x_{min}, y_{min})$ 和 $(x_{max}, y_{max})$ 为边界。 网格有 $n_x × n_y$ 个单元格。
+![Figure 12.29](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.29.png)
+Figure 12.29. Although the pattern of cell hits seems irregular (left), the hits on sets of parallel planes are very even.
+图 12.29。 尽管细胞命中的模式看起来不规则（左)，但平行平面组上的命中非常均匀。
+
+Our first order of business is to find the index $(i, j)$ of the first cell hit by the ray $\bold{e} + t\bold{d}$. Then, we need to traverse the cells in an appropriate order. The key parts to this algorithm are finding the initial cell $(i, j)$ and deciding whether to increment $i$ or $j$ (Figure 12.30). Note that when we check for an intersection with objects in a cell, we restrict the range of t to be within the cell (Figure 12.31). Most implementations make the 3D array of type “pointer to surface.” To improve the locality of the traversal, the array can be tiled as discussed in Section 12.5.
+我们的首要任务是找到光线 $\bold{e} + t\bold{d}$ 击中的第一个单元格的索引 $(i, j)$。 然后，我们需要以适当的顺序遍历单元格。 该算法的关键部分是找到初始单元$(i, j)$并决定是否增加$i$或$j$（图12.30）。 请注意，当我们检查与单元格中的对象的交集时，我们将 t 的范围限制在单元格内（图 12.31）。 大多数实现将 3D 数组设为“指向表面的指针”类型。 为了提高遍历的局部性，可以按照 12.5 节中的讨论对数组进行平铺。
+![](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.30.png)
+Figure 12.30. To decide whether we advance right or upward, we keep track of the intersections with the next vertical and horizontal boundary of the cell.
+图 12.30。 为了决定是向右还是向上前进，我们跟踪与单元格的下一个垂直和水平边界的交点。
+
+![](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.31.png)
+Figure 12.31. Only hits within the cell should be reported. Otherwise the case above would cause us to report hitting object $b$ rather than object $a$.
+图 12.31。 仅应报告细胞内的命中。 否则，上面的情况会导致我们报告击中对象 $b$ 而不是对象 $a$。
+
+### 12.3.4 Axis-Aligned Binary Space Partitioning  轴对齐的二进制空间分区
+
+We can also partition space in a hierarchical data structure such as a binary space partitioning tree (BSP tree). This is similar to the BSP tree used for visibility sorting in Section 12.4, but it’s most common to use axis-aligned, rather than polygon-aligned, cutting planes for ray intersection. 
+我们还可以在分层数据结构中划分空间，例如二元空间划分树（BSP 树）。 这类似于第 12.4 节中用于可见性排序的 BSP 树，但最常见的是使用轴对齐而不是多边形对齐的切割平面来进行射线相交。
+
+A node in this structure contains a single cutting plane and a left and right subtree. Each subtree contains all the objects on one side of the cutting plane. Objects that pass through the plane are stored in in both subtrees. If we assume the cutting plane is parallel to the $yz$ plane at $x = D$, then the node class is:
+该结构中的节点包含单个切割平面和左右子树。 每个子树包含切割平面一侧的所有对象。 通过平面的对象存储在两个子树中。 如果我们假设切割平面在 $x = D$ 处平行于 $yz$ 平面，则节点类为：
+
+> class bsp-node subclass of surface
+> 	virtual bool hit(ray $\bold{e} + t\bold{d}$, real $t_0$, real $t_1$, hit-record rec)
+> 	virtual box bounding-box()
+> 	surface-pointer left
+> 	surface-pointer right
+> 	real D  
+
+We generalize this to y and z cutting planes later. The intersection code can then be called recursively in an object-oriented style. The code considers the four cases shown in Figure 12.32. For our purposes, the origin of these rays is a point at parameter $t_0$:
+稍后我们将其推广到 y 和 z 切割平面。 然后可以以面向对象的方式递归调用交集代码。 该代码考虑了图 12.32 中所示的四种情况。 出于我们的目的，这些光线的原点是参数 $t_0$ 处的点：
+$\bold{p} = \bold{a} + t_0\bold{b}.  $
+![Figure 12.32](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.32.png)
+Figure 12.32. The four cases of how a ray relates to the BSP cutting plane $x = D$.
+图 12.32。 射线与 BSP 剖切面 $x = D$ 的关系的四种情况。
+
+The four cases are: 
+这四种情况是：
+
+1. The ray only interacts with the left subtree, and we need not test it for intersection with the cutting plane. It occurs for $x_p < D$ and $x_b < 0$. 
+   射线仅与左子树相互作用，我们不需要测试它与切割平面的相交。 当 $x_p < D$ 且 $x_b < 0$ 时会发生这种情况。
+2. The ray is tested against the left subtree, and if there are no hits, it is then tested against the right subtree. We need to find the ray parameter at $x = D$, so we can make sure we only test for intersections within the subtree. This case occurs for $x_p < D$ and $x_b > 0$.
+   射线针对左子树进行测试，如果没有命中，则针对右子树进行测试。 我们需要找到 $x = D$ 处的射线参数，这样我们就可以确保只测试子树内的相交。 这种情况发生在 $x_p < D$ 和 $x_b > 0$ 时。
+3. This case is analogous to case 1 and occurs for $x_p > D$ and $x_b > 0$. 
+   这种情况与情况 1 类似，发生在 $x_p > D$ 且 $x_b > 0$ 的情况下。
+4. This case is analogous to case 2 and occurs for $x_p > D$ and $x_b < 0$.
+   这种情况与情况 2 类似，发生在 $x_p > D$ 且 $x_b < 0$ 的情况下。
+
+The resulting traversal code handling these cases in order is:
+按顺序处理这些情况的最终遍历代码是：
+
+> function bool bsp-node::hit(ray $\bold{a} + t\bold{b}$, real $t_0$, real $t_1$,hit-record rec)
+> 	$x_p = x_a + t_0x_b$
+> 	if $(x_p < D)$ then
+> 		if $(x_b < 0)$ then
+> 			return (left ≠ NULL) and (left→hit($\bold{a} + t\bold{b}, t_0, t_1, rec$))
+> 		$t = (D - x_a)/x_b$
+> 		if $(t > t_1)$ then
+> 			return (left ≠ NULL) and (left→hit($\bold{a} + t\bold{b}, t_0, t_1$, rec))
+> 		if (left ≠ NULL) and (left→hit($\bold{a} + t\bold{b}, t_0, t$, rec)) then
+> 			return true
+> 		return (right ≠ NULL) and (right→hit($\bold{a} + t\bold{b}, t, t_1$, rec))
+> 	else
+> 		analogous code for cases 3 and 4
+
+This is very clean code. However, to get it started, we need to hit some root object that includes a bounding box so we can initialize the traversal, t0 and t1. An issue we have to address is that the cutting plane may be along any axis. We can add an integer index axis to the bsp-node class. If we allow an indexing operator for points, this will result in some simple modifications to the code above, for example,
+这是非常干净的代码。 然而，为了开始它，我们需要命中一些包含边界框的根对象，以便我们可以初始化遍历 t0 和 t1。 我们必须解决的一个问题是切割平面可以沿着任何轴。 我们可以向 bsp-node 类添加一个整数索引轴。 如果我们允许点的索引运算符，这将导致对上面的代码进行一些简单的修改，例如，
+$x_p = x_a + t_0x_b  $
+
+would become
+会成为
+$u_p = a[axis] + t_0b[axis]  $
+
+which will result in some additional array indexing, but will not generate more branches. 
+这将导致一些额外的数组索引，但不会生成更多分支。
+
+While the processing of a single bsp-node is faster than processing a bvh-node, the fact that a single surface may exist in more than one subtree means there are more nodes and, potentially, a higher memory use. How “well” the trees are built determines which is faster. Building the tree is similar to building the BVH tree. We can pick axes to split in a cycle, and we can split in half each time, or we can try to be more sophisticated in how we divide.
+虽然处理单个 bsp 节点比处理 bvh 节点更快，但单个表面可能存在于多个子树中这一事实意味着存在更多节点，并且可能会使用更高的内存。 树木建造的“好”程度决定了哪一个更快。 构建树与构建 BVH 树类似。 我们可以选择一个循环中的轴进行分割，并且每次都可以分割成两半，或者我们可以尝试更复杂的分割方式。
+
+## 12.4 BSP Trees for Visibility BSP 树的可见性
+
+Another geometric problem in which spatial data structures can be used is determining the visibility ordering of objects in a scene with changing viewpoint. 
+可以使用空间数据结构的另一个几何问题是确定视点变化的场景中对象的可见性顺序。
+
+If we are making many images of a fixed scene composed of planar polygons, from different viewpoints—as is often the case for applications such as games— we can use a binary space partitioning scheme closely related to the method for ray intersection discussed in the previous section. The difference is that for visibility sorting we use non–axis-aligned splitting planes, so that the planes can be made coincident with the polygons. This leads to an elegant algorithm known as the BSP tree algorithm to order the surfaces from front to back. The key aspect of the BSP tree is that it uses a preprocess to create a data structure that is useful for any viewpoint. So, as the viewpoint changes, the same data structure is used without change.
+如果我们从不同的角度制作由平面多边形组成的固定场景的许多图像（游戏等应用程序经常出现这种情况），我们可以使用与前面讨论的光线相交方法密切相关的二元空间划分方案 部分。 不同之处在于，对于可见性排序，我们使用非轴对齐的分割平面，以便平面可以与多边形重合。 这导致了一种称为 BSP 树算法的优雅算法，用于从前到后对表面进行排序。 BSP 树的关键方面是它使用预处理来创建对任何观点都有用的数据结构。 因此，随着观点的变化，使用相同的数据结构而不改变。 
+
+### 12.4.1 Overview of BSP Tree Algorithm BSP树算法概述
+
+The BSP tree algorithm is an example of a painter’s algorithm. A painter’s algorithm draws every object from back-to-front, with each new polygon potentially overdrawing previous polygons, as is shown in Figure 12.33. It can be implemented as follows:
+BSP 树算法是画家算法的一个例子。 画家的算法从后到前绘制每个对象，每个新的多边形都可能会过度绘制先前的多边形，如图 12.33 所示。 可以按如下方式实现：
+
+```
+sort objects back to front relative to viewpoint
+for each object do
+	draw object on screen
+```
+
+![Figure 12.33](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.33.png)
+Figure 12.33. A painter’s algorithm starts with a blank image and then draws the scene one object at a time from back-to-front, overdrawing whatever is already there. This automatically eliminates hidden surfaces.
+图 12.33。 画家的算法从一张空白图像开始，然后从后到前一次绘制场景中的一个对象，过度绘制已经存在的任何内容。 这会自动消除隐藏的曲面。
+
+The problem with the first step (the sort) is that the relative order of multiple objects is not always well defined, even if the order of every pair of objects is. This problem is illustrated in Figure 12.34 where the three triangles form a cycle.
+第一步（排序）的问题在于，多个对象的相对顺序并不总是明确定义的，即使每对对象的顺序都是如此。 这个问题如图 12.34 所示，其中三个三角形形成一个循环。
+![Figure 12.34](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.34.png)
+Figure 12.34. A cycle occurs if a global back-to-front ordering is not possible for a particular eye position.
+图 12.34。 如果对于特定眼睛位置不可能进行全局从后到前排序，则会发生循环。
+
+The BSP tree algorithm works on any scene composed of polygons where no polygon crosses the plane defined by any other polygon. This restriction is then relaxed by a preprocessing step. For the rest of this discussion, triangles are assumed to be the only primitive, but the ideas extend to arbitrary polygons.
+BSP 树算法适用于由多边形组成的任何场景，其中没有多边形与任何其他多边形定义的平面相交。 然后通过预处理步骤放宽此限制。 在本次讨论的其余部分中，假设三角形是唯一的基元，但这些想法可以扩展到任意多边形。
+
+The basic idea of the BSP tree can be illustrated with two triangles, $T_1$ and $T_2$. We first recall (see Section 2.5.3) the implicit plane equation of the plane containing $T_1: f_1(\bold{p}) = 0$. The key property of implicit planes that we wish to take advantage of is that for all points $\bold{p}^+$ on one side of the plane, $f_1(\bold{p}^+) > 0$; and for all points $\bold{p}^−$ on the other side of the plane, $f_1(\bold{p}^−) < 0$. Using this property, we can find out on which side of the plane $T_2$ lies. Again, this assumes all three vertices of T2 are on the same side of the plane. For discussion, assume that $T_2$ is on the $f_1(\bold{p}) < 0$ side of the plane. Then, we can draw $T_1$ and $T_2$ in the right order for any eyepoint $\bold{e}$: 
+BSP树的基本思想可以用两个三角形T1和T2来说明。我们首先回顾一下（见第2.5.3节）包含T1的平面的隐式方程：$T_1: f_1(\bold{p}) = 0$。我们希望利用隐式平面的一个关键性质，即对于平面一侧的所有点$\bold{p}^+$，有$f_1(\bold{p}^+) > 0$；对于平面另一侧的所有点$\bold{p}^−$，有$f_1(\bold{p}^−) < 0$。利用这个性质，我们可以找出$T_2$位于平面的哪一侧。这里假设$T_2$的三个顶点都在平面的同一侧。为了讨论，假设$T_2$在$f_1(\bold{p}) < 0$的平面一侧。那么，我们可以按照任意视点$\bold{e}$的正确顺序绘制 $T_1$和 $T_2$：
+
+> if $(f_1(\bold{e}) < 0)$ then
+> 	draw $T_1$
+> 	draw $T_2$
+> else
+> 	draw $T_2$
+> 	draw $T_1$
+
+The reason this works is that if $T_2$ and e are on the same side of the plane containing $T_1$, there is no way for $T_2$ to be fully or partially blocked by $T_1$ as seen from $\bold{e}$, so it is safe to draw $T_1$ first. If $\bold{e}$ and $T_2$ are on opposite sides of the plane containing $T_1$, then $T_2$ cannot fully or partially block $T_1$, and the opposite drawing order is safe (Figure 12.35).
+这样做的原因是，如果$T_2$和e在包含$T_1$的平面的同一侧，则从$\bold{e}$中可以看出，$T_2$不可能被$T_1$完全或部分阻塞，因此先绘制$T_1$是安全的。如果$\bold{e}$和$T_2$在包含$T_1$的平面的对面，则$T_2$不能完全或部分阻塞$T_1$，相反的绘制顺序是安全的(图12.35)。
+![Figure 12.35](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.35.png)
+Figure 12.35. When $\bold{e}$ and $T_2$ are on opposite sides of the plane containing $T_1$, then it is safe to draw $T_2$ first and $T_1$ second. If $\bold{e}$ and $T_2$ are on the same side of the plane, then $T_1$ should be drawn before $T_2$. This is the core idea of the BSP tree algorithm.
+图12.35。当$\bold{e}$和$T_2$位于包含$T_1$的平面的相对两侧时，则可以安全地绘制$T_2$ first和$T_1$ second。如果$\bold{e}$和$T_2$在平面的同一侧，则$T_1$应在$T_2$之前绘制。这是BSP树算法的核心思想。
+
+This observation can be generalized to many objects provided none of them span the plane defined by $T_1$. If we use a binary tree data structure with $T_1$ as root, the negative branch of the tree contains all the triangles whose vertices have $f_i(\bold{p}) < 0$, and the positive branch of the tree contains all the triangles whose vertices have $f_i(\bold{p}) > 0$. We can draw in proper order as follows:
+这种观察可以推广到许多对象，只要它们都不跨越 $T_1$ 定义的平面。 如果我们使用以$T_1$为根的二叉树数据结构，树的负分支包含所有顶点$f_i(\bold{p}) < 0$的三角形，树的正分支包含所有顶点为$f_i(\bold{p}) < 0$的三角形。 顶点 $f_i(\bold{p}) > 0$ 的三角形。 我们可以按照正确的顺序绘制如下：
+
+> function draw(bsptree tree, point $\bold{e}$)
+> 	if (tree.empty) then
+> 		return
+> 	if $(f_{tree.root}(\bold{e}) < 0)$ then
+> 		draw(tree.plus, $\bold{e}$)
+> 		rasterize tree.triangle
+> 		draw(tree.minus, $\bold{e}$)
+> 	else
+> 		draw(tree.minus, $\bold{e}$)
+> 		rasterize tree.triangle
+> 		draw(tree.plus, $\bold{e}$)  
+
+The nice thing about that code is that it will work for any viewpoint $\bold{e}$, so the tree can be precomputed. Note that, if each subtree is itself a tree, where the root triangle divides the other triangles into two groups relative to the plane containing it, the code will work as is. It can be made slightly more efficient by terminating the recursive calls one level higher, but the code will still be simple. A tree illustrating this code is shown in Figure 12.36. As discussed in Section 2.5.5, the implicit equation for a point $\bold{p}$ on a plane containing three non-colinear points $\bold{a}$, $\bold{b}$, and $\bold{c}$ is
+这段代码的好处是，它将适用于任何视点$\bold{e}$，因此树可以预先计算。注意，如果每个子树本身是一个树，其中根三角形将其他三角形相对于包含它的平面分成两组，则代码将按原样工作。通过在更高一级终止递归调用，可以稍微提高效率，但代码仍然很简单。图12.36中显示了一个树来说明这段代码。如第2.5.5节所述，在包含三个非共线点$\bold{a}$、$\bold{b}$和$\bold{c}$的平面上，点$\bold{p}$的隐式方程为
+$$
+f(\bold{p}) = ((\bold{b} − \bold{a}) × (\bold{c} − \bold{a})) · (\bold{p} − \bold{a}) = 0. (12.1)
+$$
+![Figure 12.36](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.36.png)
+Figure 12.36. Three triangles and a BSP tree that is valid for them. The “positive” and “negative” are encoded by right and left subtree position, respectively. 
+图12.36。三个三角形和一个对它们有效的BSP树。“正”和“负”分别由右子树和左子树位置编码。
+
+It can be faster to store the (A, B, C, D) of the implicit equation of the form
+它可以更快地存储(A, B, C, D)的隐式方程的形式 
+$$
+f(x, y, z) = Ax + By + Cz + D = 0. (12.2)
+$$
+Equations (12.1) and (12.2) are equivalent, as is clear when you recall that the gradient of the implicit equation is the normal to the triangle. The gradient of Equation (12.2) is $\bold{n} = (A, B, C)$ which is just the normal vector
+方程 (12.1) 和 (12.2) 是等价的，当您回想隐式方程的梯度是三角形的法线时就清楚了。 方程（12.2）的梯度为$\bold{n} = (A, B, C)$，它只是法向量
+$\bold{n} = (\bold{b} - \bold{a}) × (\bold{c} - \bold{a}).  $
+
+We can solve for D by plugging in any point on the plane, e.g., $\bold{a}$:
+我们可以通过代入平面上的任意点来求解 D，例如 $\bold{a}$：
+$D = -Ax_a - By_a - Cz_a = -\bold{n} · \bold{a}。 $
+$D = -Ax_a - By_a - Cz_a = -\bold{n} · \bold{a}.  $  
+
+This suggests the form:
+这建议采用以下形式：
+$f(\bold{p}) = \bold{n} · \bold{p} - \bold{n} · \bold{a} = \bold{n} · (\bold{p} - \bold{a}) = 0,  $
+
+which is the same as Equation (12.1) once you recall that $\bold{n}$ is computed using the cross product. Which form of the plane equation you use and whether you store only the vertices, $\bold{n}$ and the vertices, or $\bold{n}$, $D$, and the vertices, is probably a matter of taste—a classic time-storage tradeoff that will be settled best by profiling. For debugging, using Equation (12.1) is probably the best.
+一旦您回想起 $\bold{n}$ 是使用叉积计算的，它就与方程 (12.1) 相同。 使用哪种形式的平面方程以及是否仅存储顶点、$\bold{n}$ 和顶点，或者 $\bold{n}$、$D$ 和顶点，可能是一个品味问题 ——一个经典的时间存储权衡，最好通过分析来解决。 对于调试，使用方程（12.1）可能是最好的。
+
+The only issue that prevents the code above from working in general is that one cannot guarantee that a triangle can be uniquely classified on one side of a plane or the other. It can have two vertices on one side of the plane and the third on the other. Or it can have vertices on the plane. This is handled by splitting the triangle into smaller triangles using the plane to “cut” them.
+阻止上述代码正常工作的唯一问题是，无法保证三角形可以唯一地分类在平面的一侧或另一侧。 它可以在平面的一侧有两个顶点，在另一侧有第三个顶点。 或者它可以在平面上有顶点。 这是通过使用平面“切割”三角形将三角形分割成更小的三角形来处理的。
+
+### 12.4.2 Building the Tree 构建树
+
+If none of the triangles in the dataset cross each other’s planes, so that all triangles are on one side of all other triangles, a BSP tree that can be traversed using the code above can be built using the following algorithm:
+如果数据集中没有一个三角形彼此相交，因此所有三角形都位于所有其他三角形的一侧，则可以使用以下算法构建可以使用上述代码遍历的 BSP 树：
+
+> ​	tree-root = node($T_1$)
+> ​	for $i ∈ {2, . . . , N}$ do
+> ​		tree-root.add($T_i$)
+> function add ( triangle T )
+> ​	if (f($\bold{a}$) < 0 and f($\bold{b}$) < 0 and f($\bold{c}$) < 0) then
+> ​		if (negative subtree is empty) then
+> ​			negative-subtree = node(T)
+> ​		else
+> ​			negative-subtree.add (T)
+> ​	else if (f($\bold{a}$) > 0 and f($\bold{b}$) > 0 and f($\bold{c}$) > 0) then
+> ​		if positive subtree is empty then
+> ​			positive-subtree = node(T)
+> ​		else
+> ​			positive-subtree.add (T)
+> ​	else
+> ​		we have assumed this case is impossible  
+
+The only thing we need to fix is the case where the triangle crosses the dividing plane, as shown in Figure 12.37. Assume, for simplicity, that the triangle has vertices $\bold{a}$ and $\bold{b}$ on one side of the plane, and vertex $\bold{c}$ is on the other side. In this case, we can find the intersection points $\bold{A}$ and $\bold{B}$ and cut the triangle into three new triangles with vertices
+我们唯一需要修复的是三角形与分割面相交的情况，如图 12.37 所示。 为简单起见，假设三角形的顶点 $\bold{a}$ 和 $\bold{b}$ 位于平面的一侧，顶点 $\bold{c}$ 位于平面的另一侧。 在这种情况下，我们可以找到交点 $\bold{A}$ 和 $\bold{B}$ 并将三角形切割成三个带有顶点的新三角形
+$$
+T_1 = (\bold{a}, \bold{b}, \bold{A}), \\
+T_2 = (\bold{b}, \bold{B}, \bold{A}), \\
+T_3 = (\bold{A}, \bold{B}, \bold{c}),
+$$
+![Figure 12.37](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.37.png)
+Figure 12.37. When a triangle spans a plane, there will be one vertex on one side and two on the other.
+图 12.37。 当三角形跨越一个平面时，一侧有一个顶点，另一侧有两个顶点。
+
+as shown in Figure 12.38. This order of vertices is important so that the direction of the normal remains the same as for the original triangle. If we assume that $f(\bold{c}) < 0$, the following code could add these three triangles to the tree assuming the positive and negative subtrees are not empty:
+如图12.38所示。 顶点的这种顺序很重要，这样法线的方向与原始三角形的法线方向保持相同。 如果我们假设 $f(\bold{c}) < 0$，则假设正子树和负子树不为空，以下代码可以将这三个三角形添加到树中：
+$$
+positive-subtree = node (T_1) \\
+positive-subtree = node (T_2) \\
+negative-subtree = node (T_3) \\
+$$
+![Figure 12.38](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.38.png)
+Figure 12.38. When a triangle is cut, we break it into three triangles, none of which span the cutting plane.
+图 12.38。 当一个三角形被切割时，我们把它分成三个三角形，三个三角形都不跨越切割平面。
+
+A precision problem that will plague a naive implementation occurs when a vertex is very near the splitting plane. For example, if we have two vertices on one side of  the splitting plane and the other vertex is only an extremely small distance on the other side, we will create a new triangle almost the same as the old one, a triangle that is a sliver, and a triangle of almost zero size. It would be better to detect this as a special case and not split into three new triangles. One might expect this case to be rare, but because many models have tessellated planes and triangles with shared vertices, it occurs frequently, and thus must be handled carefully. Some simple manipulations that accomplish this are:
+当顶点非常靠近分割平面时，就会出现困扰简单实现的精度问题。 例如，如果我们在分割平面的一侧有两个顶点，而另一个顶点在另一侧只有极小的距离，我们将创建一个与旧三角形几乎相同的新三角形，一个是条子的三角形 ，以及一个大小几乎为零的三角形。 最好将其检测为特殊情况，而不是将其分成三个新三角形。 人们可能认为这种情况很少见，但由于许多模型都具有细分平面和具有共享顶点的三角形，因此这种情况经常发生，因此必须小心处理。 完成此操作的一些简单操作是：
+
+> function add( triangle T )
+> 	$fa = f(\bold{a})$
+> 	$fb = f(\bold{b})$
+> 	$fc = f(\bold{c})$
+> 	if $(abs(fa) < \epsilon)$ then
+> 		fa = 0
+> 	if $(abs(fb) < \epsilon)$ then
+> 		fb = 0
+> 	if $(abs(fc) < \epsilon)$ then
+> 		fc = 0
+> 	if ($fa ≤ 0$ and $fb ≤ 0$ and $fc ≤ 0$) then
+> 		if (negative subtree is empty) then
+> 			negative-subtree = node(T) 
+> 		else
+> 			negative-subtree.add(T )
+> 	else if ($fa ≥ 0$ and $fb ≥ 0$ and $fc ≥ 0$) then
+> 		if (positive subtree is empty) then
+> 			positive-subtree = node(T)
+> 		else
+> 			positive-subtree.add(T)
+> 	else
+> 		cut triangle into three triangles and add to each side  
+
+This takes any vertex whose $f$ value is within $\epsilon$ of the plane and counts it as positive or negative. The constant $\epsilon$ is a small positive real chosen by the user. The technique above is a rare instance where testing for floating-point equality is useful and works because the zero value is set rather than being computed. Comparing for equality with a computed floating-point value is almost never advisable, but we are not doing that.
+这采用 $f$ 值在平面 $\epsilon$ 范围内的任何顶点，并将其计为正数或负数。 常数 $\epsilon$ 是用户选择的一个小的正实数。 上面的技术是一个罕见的实例，其中测试浮点相等性非常有用并且有效，因为零值是设置的而不是计算的。 与计算的浮点值进行比较是否相等几乎是不可取的，但我们不会这样做。
+
+### 12.4.3 Cutting Triangles 切割三角形
+
+Filling out the details of the last case “cut triangle into three triangles and add to each side” is straightforward, but tedious. We should take advantage of the BSP tree construction as a preprocess where highest efficiency is not key. Instead, we should attempt to have a clean compact code. A nice trick is to force many of the cases into one by ensuring that c is on one side of the plane and the other two vertices are on the other. This is easily done with swaps. Filling out the details in the final else statement (assuming the subtrees are nonempty for simplicity) gives:
+填写最后一个案例“将三角形切成三个三角形并添加到每个边”的详细信息很简单，但很乏味。 我们应该利用 BSP 树构建作为预处理，其中最高效率不是关键。 相反，我们应该尝试拥有干净紧凑的代码。 一个不错的技巧是通过确保 c 位于平面的一侧而其他两个顶点位于另一侧，将许多情况强制合并为一个。 这可以通过交换轻松完成。 在最后的 else 语句中填写详细信息（为简单起见，假设子树非空）给出：
+
+> if $(fa ∗ fc ≥ 0)$ then
+> 	swap(fb, fc)
+> 	swap$(\bold{b}, \bold{c})$
+> 	swap(fa, fb)
+> 	swap$(\bold{a}, \bold{b})$
+> else if (fb ∗ fc ≥ 0) then
+> 	swap(fa, fc)
+> 	swap$(\bold{a}, \bold{c})$
+> 	swap$(fa, fb)$
+> 	swap($\bold{a}$, $\bold{b}$)
+> compute $\bold{A}$
+> compute $\bold{B}$
+> $T_1 = (\bold{a}, \bold{b}, \bold{A})$
+> $T_2 = (\bold{b}, \bold{B}, \bold{A})$
+> $T_3 = (\bold{A}, \bold{B}, \bold{c})$
+> if (fc ≥ 0) then
+> 	negative-subtree.add($T_1$)
+> 	negative-subtree.add($T_2$)
+> 	positive-subtree.add($T_3$)
+> else
+> 	positive-subtree.add($T_1$)
+> 	positive-subtree.add($T_2$)
+> 	negative-subtree.add($T_3$)  
+
+This code takes advantage of the fact that the product of a and b are positive if they have the same sign—thus, the first if statement. If vertices are swapped, we must do two swaps to keep the vertices ordered counterclockwise. Note that exactly one of the vertices may lie exactly on the plane, in which case the code above will work, but one of the generated triangles will have zero area. This can be handled by ignoring the possibility, which is not that risky, because the rasterization code must handle zero-area triangles in screen space (i.e., edge-on triangles). You can also add a check that does not add zero-area triangles to the tree. Finally, you can put in a special case for when exactly one of $fa$, $fb$, and $fc$ is zero which cuts the triangle into two triangles. 
+此代码利用了这样一个事实：如果 a 和 b 具有相同的符号，则它们的乘积为正，因此是第一个 if 语句。 如果交换顶点，我们必须进行两次交换以保持顶点逆时针排序。 请注意，其中一个顶点可能恰好位于平面上，在这种情况下，上面的代码将起作用，但生成的三角形之一的面积将为零。 这可以通过忽略这种可能性来处理，这并没有那么危险，因为光栅化代码必须处理屏幕空间中的零面积三角形（即边缘三角形）。 您还可以添加一个不将零面积三角形添加到树中的检查。 最后，您可以添加一种特殊情况，即当 $fa$、$fb$ 和 $fc$ 中的一个正好为零时，将三角形切成两个三角形。
+
+To compute $\bold{A}$ and $\bold{B}$, a line segment and implicit plane intersection is needed. For example, the parametric line connecting $\bold{a}$ and $\bold{c}$ is
+为了计算 $\bold{A}$ 和 $\bold{B}$，需要线段和隐式平面相交。 例如，连接 $\bold{a}$ 和 $\bold{c}$ 的参数线为
+$\bold{p}(t) = \bold{a} + t(\bold{c} - \bold{a}).  $
+
+The point of intersection with the plane $\bold{n} · \bold{p} + D = 0$ is found by plugging $\bold{p}(t)$ into the plane equation:
+将 $\bold{p}(t)$ 代入平面方程即可找到与平面 $\bold{n} · \bold{p} + D = 0$ 的交点： 
+$\bold{n} · (\bold{a} + t(\bold{c} - \bold{a})) + D = 0,  $
+
+and solving for $t$:
+并求解$t$：
+$$
+t = −\frac{\bold{n} \cdot \bold{a} + D}{\bold{n} \cdot (\bold{c} - \bold{a})}
+$$
+Calling this solution $t_A$, we can write the expression for $\bold{A}$: 
+调用这个解决方案$t_A$，我们可以编写$\bold{A}$的表达式：
+$\bold{A} = \bold{a} + t_A(\bold{c} - \bold{a})  $
+
+A similar computation will give $\bold{B}$. 
+类似的计算将给出$\bold{B}$。
+
+### 12.4.4 Optimizing the Tree 优化树
+
+The efficiency of tree creation is much less of a concern than tree traversal because it is a preprocess. The traversal of the BSP tree takes time proportional to the number of nodes in the tree. (How well balanced the tree is does not matter.) There will be one node for each triangle, including the triangles that are created as a result of splitting. This number can depend on the order in which triangles are added to the tree. For example, in Figure 12.39, if $T_1$ is the root, there will be two nodes in the tree, but if $T_2$ is the root, there will be more nodes, because $T_1$ will be split.
+树创建的效率远不如树遍历那么重要，因为它是一个预处理。 遍历 BSP 树所需的时间与树中节点的数量成正比。 （树的平衡程度如何并不重要。）每个三角形都有一个节点，包括由于分裂而创建的三角形。 该数字取决于三角形添加到树中的顺序。 例如，在图12.39中，如果$T_1$是根，树中将有两个节点，但如果$T_2$是根，则会有更多节点，因为$T_1$将被分裂。
+![Figure 12.39](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.39.png)
+Figure 12.39. Using $T_1$ as the root of a BSP tree will result in a tree with two nodes. Using $T_2$ as the root will require a cut and thus make a larger tree.
+图 12.39。 使用 $T_1$ 作为 BSP 树的根将生成具有两个节点的树。 使用 $T_2$ 作为根需要进行切割，从而形成更大的树。
+
+It is difficult to find the “best” order of triangles to add to the tree. For N triangles, there are N! orderings that are possible. So trying all orderings is not usually feasible. Alternatively, some predetermined number of orderings can be tried from a random collection of permutations, and the best one can be kept for the final tree.
+很难找到添加到树中的三角形的“最佳”顺序。 对于 N 个三角形，有 N 个！ 可能的订单。 因此尝试所有订单通常是不可行的。 或者，可以从随机排列集合中尝试一些预定数量的排序，并且可以为最终树保留最好的排序。
+
+The splitting algorithm described above splits one triangle into three triangles. It could be more efficient to split a triangle into a triangle and a convex quadrilateral. This is probably not worth it if all input models have only triangles, but would be easy to support for implementations that accommodate arbitrary polygons.
+上述分割算法将一个三角形分割成三个三角形。 将三角形分割成三角形和凸四边形可能会更有效。 如果所有输入模型都只有三角形，这可能不值得，但很容易支持容纳任意多边形的实现。
+
+## 12.5 Tiling Multidimensional Arrays 平铺多维数组
+
+Effectively utilizing the memory hierarchy is a crucial task in designing algorithms for modern architectures. Making sure that multidimensional arrays have data in a “nice” arrangement is accomplished by tiling, sometimes also called bricking. A traditional 2D array is stored as a 1D array together with an indexing mechanism; for example, an $N_x$ by $N_y$ array is stored in a 1D array of length $N_xN_y$ and the 2D index $(x, y)$ (which runs from $(0, 0)$ to $(N_x −1, N_y −1)$) maps to the 1D index (running from 0 to $N_xN_y − 1$) using the formula
+有效利用内存层次结构是设计现代架构算法的一项关键任务。 确保多维数组的数据以“良好”的方式排列是通过平铺（有时也称为分砖）来完成的。 传统的二维数组与索引机制一起存储为一维数组； 例如，$N_x$ by $N_y$ 数组存储在长度为 $N_xN_y$ 的一维数组中，二维索引为 $(x, y)$（从 $(0, 0)$ 到 $(N_x - 1, N_y −1)$) 使用以下公式映射到一维索引（从 0 到 $N_xN_y − 1$）
+$index = x + N_xy.  $
+
+An example of how that memory lays out is shown in Figure 12.40. A problem with this layout is that although two adjacent array elements that are in the same row are next to each other in memory, two adjacent elements in the same column will be separated by $N_x$ elements in memory. This can cause poor memory locality for large $N_x$. The standard solution to this is to use tiles to make memory locality for rows and columns more equal. An example is shown in Figure 12.41 where 2 × 2 tiles are used. The details of indexing such an array are discussed in the next section. A more complicated example, with two levels of tiling on a 3D array, is covered after that.
+图 12.40 显示了该内存布局的示例。 这种布局的一个问题是，虽然同一行中的两个相邻数组元素在内存中彼此相邻，但同一列中的两个相邻元素在内存中将被 $N_x$ 个元素分隔开。 这可能会导致较大的 $N_x$ 的内存局部性较差。 对此的标准解决方案是使用切片来使行和列的内存局部性更加平等。 图 12.41 显示了一个使用 2 × 2 块的示例。 下一节将讨论对此类数组进行索引的详细信息。 之后介绍了一个更复杂的示例，在 3D 阵列上有两层平铺。
+![Figure 12.40](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.40.png)
+Figure 12.40. The memory layout for an untiled 2D array with $N_x = 4$ and $N_y = 3$.
+图 12.40。 $N_x = 4$ 和 $N_y = 3$ 的无齿二维数组的内存布局。
+
+![Figure 12.41](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.41.png)
+Figure 12.41. The memory layout for a tiled 2D array with $N_x = 4$ and $N_y = 3$ and 2 × 2 tiles. Note that padding on the top of the array is needed because $N_y$ is not a multiple of the tile size two.
+图 12.41。 平铺二维数组的内存布局，其中 $N_x = 4$ 和 $N_y = 3$ 以及 2 × 2 个平铺。 请注意，需要在数组顶部进行填充，因为 $N_y$ 不是图块大小 2 的倍数。
+
+A key question is what size to make the tiles. In practice, they should be similar to the memory-unit size on the machine. For example, if we are using 16-bit (2-byte) data values on a machine with 128-byte cache lines, 8 × 8 tiles fit exactly in a cache line. However, using 32-bit floating-point numbers, which fit 32 elements to a cache line, 5 × 5 tiles are a bit too small and 6 × 6 tiles are a bit too large. Because there are also coarser-sized memory units such as pages, hierarchical tiling with similar logic can be useful.
+一个关键问题是制作瓷砖的尺寸。 实际上，它们应该与机器上的内存单元大小相似。 例如，如果我们在具有 128 字节缓存行的机器上使用 16 位（2 字节）数据值，则 8 × 8 块正好适合缓存行。 然而，使用 32 位浮点数（可容纳 32 个元素到一个缓存行），5 × 5 块有点太小，6 × 6 块有点太大。 由于还存在尺寸较粗的内存单元（例如页面），因此具有类似逻辑的分层平铺可能会很有用。
+
+### 12.5.1 One-Level Tiling for 2D Arrays 2D 数组的一级平铺
+
+If we assume an $N_x×N_y$ array decomposed into square n×n tiles (Figure 12.42), then the number of tiles required is
+如果我们假设 $N_x×N_y$ 数组分解为方形 n×n 个图块（图 12.42），则所需的图块数量为
+$$
+B_x = N_x/n, \\
+B_y = N_y/n.
+$$
+![Figure 12.42](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 12.42.png)
+Figure 12.42. A tiled 2D array composed of $B_x × B_y$ tiles each of size $n$ by $n$. 
+图 12.42。 由 $B_x × B_y$ 组成的平铺二维数组将每个大小为 $n$ 的平铺为 $n$。
+
+Here, we assume that $n$ divides $N_x$ and $N_y$ exactly. When this is not true, the array should be padded. For example, if $N_x = 15$ and $n = 4$, then $N_x$ should be changed to 16. To work out a formula for indexing such an array, we first find the tile indices $(b_x, b_y)$ that give the row/column for the tiles (the tiles themselves form a 2D array):
+这里，我们假设 $n$ 正好整除 $N_x$ 和 $N_y$。 当这不成立时，应该填充数组。 例如，如果 $N_x = 15$ 且 $n = 4$，则 $N_x$ 应更改为 16。要计算出索引此类数组的公式，我们首先找到图块索引 $(b_x, b_y)$ 给出图块的行/列（图块本身形成一个 2D 数组）：
+$b_x = x ÷ n, \\
+b_y = y ÷ n,  $
+
+where ÷ is integer division, e.g., $12 ÷ 5 = 2$. If we order the tiles along rows as shown in Figure 12.40, then the index of the first element of the tile $(b_x, b_y)$ is
+其中 ÷ 是整数除法，例如 $12 ÷ 5 = 2$。 如果我们按行对图块进行排序，如图 12.40 所示，则图块 $(b_x, b_y)$ 的第一个元素的索引为
+$index = n^2(B_xb_y + b_x).  $
+
+The memory in that tile is arranged like a traditional 2D array as shown in Figure 12.41. The partial offsets $(x', y')$ inside the tile are
+该图块中的内存排列方式类似于传统的 2D 数组，如图 12.41 所示。 图块内的部分偏移量 $(x', y')$ 为
+$x' = x\ mod\ n, \\
+y' = y\ mod\ n,  $
+
+where mod is the remainder operator, e.g., $12 mod 5 = 2$. Therefore, the offset inside the tile is
+其中 mod 是余数运算符，例如 $12 mod 5 = 2$。 因此，图块内部的偏移量为
+$offset = y'n + x'$
+
+Thus the full formula for finding the 1D index element $(x, y)$ in an $N_x × N_y$ array with $n × n$ tiles is
+因此，在具有 $n × n$ 块的 $N_x × N_y$ 数组中查找一维索引元素 $(x, y)$ 的完整公式为
+$index = n^2(B_xb_y + b_x) + y'n + x', \\
+= n^2((N_x ÷ n)(y ÷ n) + x ÷ n) + (y\ mod\ n)n + (x\ mod\ n).  $  
+
+This expression contains many integer multiplication, divide and modulus operations, which are costly on some processors. When $n$ is a power of two, these operations can be converted to bitshifts and bitwise logical operations. However, as noted above, the ideal size is not always a power of two. Some of the multiplications can be converted to shift/add operations, but the divide and modulus operations are more problematic. The indices could be computed incrementally, but this would require tracking counters, with numerous comparisons and poor branch prediction performance.
+该表达式包含许多整数乘法、除法和模运算，这些运算在某些处理器上成本很高。 当$n$是2的幂时，这些运算可以转换为位移位和按位逻辑运算。 然而，如上所述，理想的大小并不总是 2 的幂。 一些乘法可以转换为移位/加法运算，但除法和模运算问题较多。 索引可以增量计算，但这需要跟踪计数器，需要进行大量比较并且分支预测性能较差。
+
+However, there is a simple solution; note that the index expression can be written as
+然而，有一个简单的解决方案； 请注意，索引表达式可以写为
+$index = F_x(x) + F_y(y),  $
+
+where
+其中
+$$
+F_x(x) = n^2(x ÷ n) + (x\ mod\ n), \\
+F_y(y) = n^2(N_x ÷ n)(y ÷ n) + (y\ mod\ n)n.
+$$
+We tabulate $F_x$ and $F_y$, and use $x$ and $y$ to find the index into the data array. These tables will consist of $N_x$ and $N_y$ elements, respectively. The total size of the tables will fit in the primary data cache of the processor, even for very large data set sizes.
+我们将 $F_x$ 和 $F_y$ 制成表格，并使用 $x$ 和 $y$ 查找数据数组的索引。 这些表将分别由 $N_x$ 和 $N_y$ 元素组成。 表的总大小将适合处理器的主数据缓存，即使对于非常大的数据集大小也是如此。
+
+### 12.5.2 Example: Two-Level Tiling for 3D Arrays 示例：3D 数组的两级平铺
+
+Effective TLB utilization is also becoming a crucial factor in algorithm performance. The same technique can be used to improve TLB hit rates in a 3D array by creating m × m × m bricks of n × n × n cells. For example, a 40 × 20 × 19 volume could be decomposed into 4 × 2 × 2 macrobricks of 2 × 2 × 2 bricks of 5 × 5 × 5 cells. This corresponds to $m = 2$ and $n = 5$. Because 19 cannot be factored by $mn = 10$, one level of padding is needed. Empirically useful sizes are $m = 5$ for 16-bit datasets and $m = 6$ for float datasets.
+有效的 TLB 利用率也正在成为算法性能的关键因素。 通过创建 n × n × n 单元的 m × m × m 块，可以使用相同的技术来提高 3D 阵列中的 TLB 命中率。 例如，40 × 20 × 19 的体积可以分解为 4 × 2 × 2 的宏块，2 × 2 × 2 的块，5 × 5 × 5 的单元。 这对应于 $m = 2$ 和 $n = 5$。 由于 19 无法被 $mn = 10$ 分解，因此需要一级填充。 根据经验，对于 16 位数据集，有用的大小为 $m = 5$；对于浮点数据集，有用的大小为 $m = 6$。
+
+> TLB: translation lookaside buffer, a cache that is part of the virtual memory system.
+> TLB：转换后备缓冲区，是虚拟内存系统一部分的高速缓存。
+
+The resulting index into the data array can be computed for any $(x, y, z)$ triple with the expression
+可以使用表达式计算任何 $(x, y, z)$ 三元组的数据数组结果索引
+$$
+index = ((x ÷ n) ÷ m)n^3m^3((N_z ÷ n) ÷ m)((N_y ÷ n) ÷ m) \\
++((y ÷ n) ÷ m)n^3m^3((N_z ÷ n) ÷ m) \\
++((z ÷ n) ÷ m)n^3m^3 \\
++((x ÷ n)\ mod\ m)n^3m^2 \\
++((y ÷ n)\ mod\ m)n^3m \\ 
++((z ÷ n)\ mod\ m)n^3 \\
++(x\ mod\ (n^2))n^2 \\
++(y\ mod\ n)n \\
++(z\ mod\ n), \\
+$$
+where $N_x$, $N_y$ and $N_z$ are the respective sizes of the dataset.
+其中 $N_x$、$N_y$ 和 $N_z$ 分别是数据集的大小。
+
+Note that, as in the simpler 2D one-level case, this expression can be written as
+请注意，与更简单的 2D 单层情况一样，该表达式可以写为
+$index = F_x(x) + F_y(y) + F_z(z),  $
+
+where
+其中
+$$
+F_x(x) = ((x ÷ n) ÷ m)n^3m^3((N_z ÷ n) ÷ m)((N_y ÷ n) ÷ m) \\
++((x ÷ n)\ mod\ m)n^3m^2 \\
++(x\ mod\ n)n^2, \\ \\ 
+
+F_y(y) = ((y ÷ n) ÷ m)n^3m^3((N_z ÷ n) ÷ m) \\
++((y ÷ n)\ mod\ m)n^3m \\
++(y\ mod\ n)n, \\ \\ 
+
+F_z(z) = ((z ÷ n) ÷ m)n^3m^3 \\
++((z ÷ n)\ mod\ m)n^3 \\
++(z\ mod\ n). \\
+$$
+
+## Frequently Asked Questions 经常问的问题
+
+### Does tiling really make that much difference in performance? 平铺真的会对性能产生如此大的影响吗？
+
+On some volume rendering applications, a two-level tiling strategy made as much as a factor-of-ten performance difference. When the array does not fit in main memory, it can effectively prevent thrashing in some applications such as image editing. 
+在某些体渲染应用程序中，两级平铺策略造成的性能差异高达十倍。 当数组无法容纳在主存中时，它可以有效防止某些应用程序（例如图像编辑）中的抖动。
+
+### How do I store the lists in a winged-edge structure? 如何将列表存储在翼缘结构中？
+
+For most applications, it is feasible to use arrays and indices for the references. However, if many delete operations are to be performed, then it is wise to use linked lists and pointers. 
+对于大多数应用程序，使用数组和索引作为引用是可行的。 然而，如果要执行很多删除操作，那么使用链表和指针是明智的。
+
+## Notes 注释
+
+The discussion of the winged-edge data structure is based on the course notes of Ching-Kuang Shene (Shene, 2003). There are smaller mesh data structures than winged-edge. The tradeoffs in using such structures is discussed in Directed Edges—A Scalable Representation for Triangle Meshes (Campagna, Kobbelt, & Seidel, 1998). The tiled-array discussion is based on Interactive Ray Tracing for Volume Visualization (S. Parker et al., 1999). A structure similar to the triangle neighbor structure is discussed in a technical report by Charles Loop (Loop, 2000). A discussion of manifolds can be found in an introductory topology text (Munkres, 2000). 
+翼边数据结构的讨论基于 Ching-Kuang Shene 的课程笔记 (Shene, 2003)。 有比翼边更小的网格数据结构。 使用此类结构的权衡在《Directed Edges—A Scalable Representation for Triangle Meshes》（Campagna、Kobbelt 和 Seidel，1998）中进行了讨论。 平铺阵列的讨论基于体积可视化的交互式光线追踪（S. Parker 等人，1999）。 Charles Loop（Loop，2000）的技术报告中讨论了类似于三角形邻居结构的结构。 关于流形的讨论可以在介绍性拓扑文本中找到（Munkres，2000）。
+
+## Exercises 练习
+
+1. What is the memory difference for a simple tetrahedron stored as four independent triangles and one stored in a winged-edge data structure? 
+   一个简单的四面体存储为四个独立的三角形和一个存储在翼边数据结构中的内存差异是什么？
+1. Diagram a scene graph for a bicycle. 
+   绘制自行车的场景图。
+1. How many look-up tables are needed for a single-level tiling of an n-dimensional array? 
+   n 维数组的单层平铺需要多少个查找表？
+1. Given N triangles, what is the minimum number of triangles that could be added to a resulting BSP tree? What is the maximum number?
+   给定 N 个三角形，可以添加到生成的 BSP 树中的三角形的最小数量是多少？ 最大数量是多少？
+
+
+
+# 13  More Ray Tracing  更多光线追踪
+
+A ray tracer is a great substrate on which to build all kinds of advanced rendering effects. Many effects that take significant work to fit into the object-order rasterization framework, including basics like the shadows and reflections already presented in Chapter 4, are simple and elegant in a ray tracer. In this chapter, we discuss some fancier techniques that can be used to ray-trace a wider variety of scenes and to include a wider variety of effects. Some extensions allow more general geometry: instancing and constructive solid geometry (CSG) are two ways to make models more complex with minimal complexity added to the program. Other extensions add to the range of materials we can handle: refraction through transparent materials, like glass and water, and glossy reflections on a variety of surfaces are essential for realism in many scenes.
+光线追踪器是构建各种高级渲染效果的绝佳基础。 许多需要大量工作才能适应对象顺序光栅化框架的效果，包括第 4 章中已经介绍的阴影和反射等基础知识，在光线追踪器中都是简单而优雅的。 在本章中，我们将讨论一些更高级的技术，这些技术可用于对更广泛的场景进行光线追踪并包含更广泛的效果。 一些扩展允许更通用的几何图形：实例化和构造实体几何图形（CSG）是使模型变得更加复杂的两种方法，同时将添加到程序中的复杂性降至最低。 其他扩展增加了我们可以处理的材质范围：通过玻璃和水等透明材质的折射以及各种表面上的光泽反射对于许多场景中的真实感至关重要。
+
+This chapter also discusses the general framework of distribution ray tracing (Cook, Porter, & Carpenter, 1984), a powerful extension to the basic raytracing idea in which multiple random rays are sent through each pixel in an image to produce images with smooth edges and to simply and elegantly (if slowly) produce a wide range of effects from soft shadows to camera depth-of-field.
+本章还讨论了分布光线追踪的一般框架（Cook、Porter 和 Carpenter，1984），它是基本光线追踪思想的强大扩展，其中多条随机光线穿过图像中的每个像素，以生成具有平滑边缘和边缘的图像。 简单而优雅（如果缓慢）产生从柔和阴影到相机景深的各种效果。
+
+> If you start with a brute-force ray intersection loop, you’ll have ample time to implement an acceleration structure while you wait for images to render.
+> 如果您从强力射线相交循环开始，那么在等待图像渲染时您将有充足的时间来实现加速结构。
+
+The price of the elegance of ray tracing is exacted in terms of computer time: most of these extensions will trace a very large number of rays for any nontrivial scene. Because of this, it’s crucial to use the methods described in Chapter 12 to accelerate the tracing of rays.
+光线追踪的优雅代价是根据计算机时间来计算的：大多数这些扩展都会为任何重要的场景追踪大量光线。 因此，使用第 12 章中描述的方法来加速光线追踪至关重要。
+
+## 13.1 Transparency and Refraction 透明度和折射
+
+In Chapter 4, we discussed the use of recursive ray tracing to compute specular, or mirror, reflection from surfaces. Another type of specular object is a dielectric—a transparent material that refracts light. Diamonds, glass, water, and air are dielectrics. Dielectrics also filter light; some glass filters out more red and blue light than green light, so the glass takes on a green tint. When a ray travels from a medium with refractive index n into one with a refractive index $n_t$, some of the light is transmitted, and it bends. This is shown for $n_t > n$ in Figure 13.1. Snell’s Law tells us that
+在第 4 章中，我们讨论了使用递归光线追踪来计算表面的镜面反射或镜面反射。 另一种类型的镜面物体是电介质——一种折射光的透明材料。 钻石、玻璃、水和空气都是电介质。 电介质还可以过滤光； 有些玻璃过滤掉的红光和蓝光多于绿光，因此玻璃呈现出绿色色调。 当光线从折射率为 n 的介质传播到折射率为 $n_t$ 的介质时，部分光会被透射，并且会发生弯曲。 图 13.1 中显示了 $n_t > n$ 的情况。 斯涅尔定律告诉我们
+$n \sin θ = n_t \sin φ.  $
+
+> Example values of n:
+> air: 1.00;
+> water: 1.33–1.34;
+> window glass: 1.51;
+> optical glass: 1.49–1.92;
+> diamond: 2.42.  
+
+![Figure 13.1](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.1.png)
+Figure 13.1. Snell’s Law describes how the angle $φ$ depends on the angle $θ$ and the refractive indices of the object and the surrounding medium. 
+图 13.1。 斯涅尔定律描述了角度 $φ$ 如何取决于角度 $θ$ 以及物体和周围介质的折射率。
+
+Computing the sine of an angle between two vectors is usually not as convenient as computing the cosine, which is a simple dot product for the unit vectors such as we have here. Using the trigonometric identity $\sin^2 θ + \cos^2 θ = 1$, we can derive a refraction relationship for cosines:
+计算两个向量之间角度的正弦通常不如计算余弦那么方便，余弦是单位向量的简单点积，就像我们这里的那样。 利用三角恒等式 $\sin^2 θ + \cos^2 θ = 1$，我们可以推导出余弦的折射关系：
+$$
+\cos^2 φ = 1 − \frac{n^2 (1 − \cos^2 θ)}{n^2_t}
+$$
+Note that if $n$ and $n_t$ are reversed, then so are $θ$ and $φ$ as shown on the right of Figure 13.1.
+请注意，如果 $n$ 和 $n_t$ 颠倒，那么 $θ$ 和 $φ$ 也颠倒，如图 13.1 右侧所示。 
+
+To convert $\sin φ$ and $\cos φ$ into a 3D vector, we can set up a 2D orthonormal basis in the plane of the surface normal, $\bold{n}$, and the ray direction, $\bold{d}$. 
+为了将$\sin φ$和$\cos φ$转换成一个3D向量，我们可以在表面法线$\bold{n}$和射线方向$\bold{d}$的平面上建立一个二维正交基。
+
+From Figure 13.2, we can see that $\bold{n}$ and $\bold{b}$ form an orthonormal basis for the plane of refraction. By definition, we can describe the direction of the transformed ray, $\bold{t}$, in terms of this basis:
+从图13.2中，我们可以看到$\bold{n}$和$\bold{b}$构成了折射平面的正交基。 根据定义，我们可以根据这个基础来描述变换后的光线 $\bold{t}$ 的方向：
+$\bold{t} = \sin φ\bold{b} - \cos φ\bold{n}.  $
+![Figure 13.2](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.2.png)
+Figure 13.2. The vectors $\bold{n}$  and $\bold{b}$ form a 2D orthonormal basis that is parallel to the transmission vector $\bold{t}$.
+图 13.2。 向量 $\bold{n}$ 和 $\bold{b}$ 形成与传输向量 $\bold{t}$ 平行的 2D 正交基。 
+
+Since we can describe $\bold{d}$ in the same basis, and $\bold{d}$ is known, we can solve for $\bold{b}$:
+由于我们可以在相同的基础上描述$\bold{d}$，并且$\bold{d}$已知，因此我们可以求解$\bold{b}$：
+$$
+\bold{d} = \sin θ\bold{b} − \cos θ\bold{n}, \\
+\bold{n} = \frac{\bold{d} + \bold{n} \cos θ}{\sin θ}
+$$
+
+This means that we can solve for $\bold{t}$ with known variables: 
+这意味着我们可以用已知变量求解 $\bold{t}$：
+$$
+\bold{t} = \frac{n(\bold{d} + \bold{n}\cosθ )}{n-t} - \bold{n}φ \\
+= \frac{\bold{n}-(\bold{d} − \bold{n}(\bold{d} · \bold{n}))}{n_t} - 
+\bold{n}\sqrt{1 - \frac{n^2(1 - (\bold{d}\cdot \bold{n}))^2)}{n^2_t}}
+$$
+Note that this equation works regardless of which of n and $n_t$ is larger. An immediate question is, “What should you do if the number under the square root is negative?” In this case, there is no refracted ray and all of the energy is reflected. This is known as total internal reflection, and it is responsible for much of the rich appearance of glass objects. 
+请注意，无论 n 和 $n_t$ 中哪一个更大，该方程都有效。 一个直接的问题是，“如果平方根下的数字是负数，你该怎么办？” 在这种情况下，没有折射光线，所有能量都被反射。 这被称为全内反射，它是玻璃物体丰富外观的主要原因。
+
+The reflectivity of a dielectric varies with the incident angle according to the Fresnel equations. A nice way to implement something close to the Fresnel equations is to use the Schlick approximation (Schlick, 1994a),
+根据菲涅尔方程，电介质的反射率随入射角变化。 实现接近菲涅耳方程的一个好方法是使用 Schlick 近似（Schlick，1994a），
+$R(θ) = R_0 + (1 - R_0) (1 - \cos θ)^5 ,  $
+
+where $R_0$ is the reflectance at normal incidence:
+其中 $R_0$ 是法向入射时的反射率：
+$$
+R_0 = (\frac{n_t - 1}{n_t + 1})^2
+$$
+Note that the $\cos θ$ terms above are always for the angle in air (the larger of the internal and external angles relative to the normal). 
+请注意，上面的 $\cos θ$ 项始终针对空气中的角度（相对于法线的内角和外角中较大的一个）。
+
+For homogeneous impurities, as is found in typical colored glass, a lightcarrying ray’s intensity will be attenuated according to Beer’s Law. As the ray travels through the medium it loses intensity according to $dI = −CI dx$, where dx is distance. Thus, $dI/dx = −CI$. We can solve this equation and get the exponential $I = k exp(−Cx)$. The degree of attenuation is described by the RGB attenuation constant a, which is the amount of attenuation after one unit of distance. Putting in boundary conditions, we know that $I(0) = I_0$, and $I(1) = aI(0)$. The former implies $I(x) = I_0exp(-Cx)$. The latter implies $I_0a = I_0 exp(-C)$, so $-C = ln(a)$. Thus, the final formula is
+对于均匀的杂质，如典型的彩色玻璃中所发现的，携带光线的射线的强度将根据比尔定律衰减。当射线穿过介质时，它的强度会根据$dI = −CI dx$,减小，其中dx是距离。因此，$dI/dx = −CI$。我们可以解这个方程，得到指数$I = k exp(−Cx)$。衰减的程度由RGB衰减常数a描述，它是单位距离后的衰减量。代入边界条件，我们知道$I(0) = I_0$，并且$I(1) = aI(0)$。前者意味着$I(x) = I_0exp(-Cx)$。后者意味着$I_0a = I_0 exp(-C)$，所以$-C = ln(a)$。因此，最终的公式是
+$I(s) = I(0)e^{ln(a)s,}  $
+
+where I(s) is the intensity of the beam at distance s from the interface. In practice, we reverse-engineer a by eye, because such data is rarely easy to find. The effect of Beer’s Law can be seen in Figure 13.3, where the glass takes on a green tint. 
+其中 I(s) 是距界面距离 s 处的光束强度。 在实践中，我们通过肉眼进行逆向工程，因为此类数据很少容易找到。 比尔定律的影响如图 13.3 所示，其中玻璃呈现绿色。
+![Figure 13.3](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.3.png)
+Figure 13.3. The color of the glass is affected by total internal reflection and Beer’s Law. The amount of light transmitted and reflected is determined by the Fresnel equations. The complex lighting on the ground plane was computed using particle tracing as described in Chapter 23.
+图 13.3。 玻璃的颜色受全内反射和比尔定律的影响。 透射和反射的光量由菲涅尔方程确定。 地平面上的复杂光照是使用第 23 章中所述的粒子追踪来计算的。
+
+To add transparent materials to our code, we need a way to determine when a ray is going “into” an object. The simplest way to do this is to assume that all objects are embedded in air with refractive index very close to 1.0, and that surface normals point “out” (toward the air). The code segment for rays and dielectrics with these assumptions is:
+为了将透明材质添加到我们的代码中，我们需要一种方法来确定光线何时“进入”对象。 最简单的方法是假设所有物体都嵌入空气中，折射率非常接近 1.0，并且表面法线指向“外面”（朝向空气）。 具有这些假设的射线和电介质的代码段是：
+
+> if ($\bold{p}$ is on a dielectric) then
+> 	$\bold{r}$ = reflect$(\bold{d}, \bold{n} )$
+> 	if $(\bold{d} · \bold{n} < 0)$ then
+> 		refract$(\bold{d}, \bold{n}, n, \bold{t})$
+> 		$c = -\bold{d} · \bold{n}$
+> 		$k_r = k_g = k_b = 1$
+> 	else
+> 		$k_r = exp(-a_rt)$
+> 		$kg = exp(-a_gt)$
+> 		$k_b = exp(-a_bt)$
+> 		if refract$(\bold{d}, -\bold{n}, 1/n, \bold{t})$ then
+> 			$c = \bold{t} · \bold{n}$
+> 		else
+> 			return $k ∗ color(\bold{p} + t\bold{r})$
+> 	$R_0 = (n - 1)^2/(n + 1)^2$
+> 	$R = R_0 + (1 - R_0)(1 - c)^5$
+> 	return $k(R color(\bold{p} + t\bold{r}) + (1 - R)$ color$(\bold{p} + t\bold{t}))$  
+
+The code above assumes that the natural log has been folded into the constants $(a_r, a_g, a_b)$. The refract function returns false if there is total internal reflection, and otherwise it fills in the last argument of the argument list.
+上面的代码假设自然对数已折叠为常量 $(a_r, a_g, a_b)$。 如果存在全内反射，则 refract 函数返回 false，否则将填充参数列表的最后一个参数。
+
+## 13.2 Instancing 实例化
+
+An elegant property of ray tracing is that it allows very natural instancing. The basic idea of instancing is to distort all points on an object by a transformation matrix before the object is displayed. For example, if we transform the unit circle (in 2D) by a scale factor (2, 1) in x and y, respectively, then rotate it by 45◦, and move one unit in the x-direction, the result is an ellipse with an eccentricity of 2 and a long axis along the $(x = −y)$-direction centered at (0, 1) (Figure 13.4). The key thing that makes that entity an “instance” is that we store the circle and the composite transform matrix. Thus, the explicit construction of the ellipse is left as a future operation at render time.
+光线追踪的一个优雅特性是它允许非常自然的实例化。 实例化的基本思想是在显示对象之前通过变换矩阵扭曲对象上的所有点。 例如，如果我们将单位圆（二维）在 x 和 y 方向上分别按比例因子 (2, 1) 进行变换，然后将其旋转 45°，并在 x 方向上移动一个单位，则结果是 椭圆，偏心率为 2，长轴沿 $(x = −y)$ 方向，中心为 (0, 1)（图 13.4）。 使该实体成为“实例”的关键是我们存储圆和复合变换矩阵。 因此，椭圆的显式构造留作渲染时的未来操作。
+![Figure 13.4](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.4.png)
+Figure 13.4. An instance of a circle with a series of three transforms is an ellipse.
+图 13.4。 具有一系列三个变换的圆的一个实例是椭圆。
+
+The advantage of instancing in ray tracing is that we can choose the space in which to do intersection. If the base object is composed of a set of points, one of which is $\bold{p}$, then the transformed object is composed of that set of points transformed by matrix $\bold{M}$, where the example point is transformed to $\bold{Mp}$. If we have a ray $\bold{a} + t\bold{b}$ that we want to intersect with the transformed object, we can instead intersect an inverse-transformed ray with the untransformed object (Figure 13.5). There are two potential advantages to computing in the untransformed space (i.e., the right-hand side of Figure 13.5):
+光线追踪中实例化的优点是我们可以选择进行相交的空间。 如果基础对象由一组点组成，其中一个为 $\bold{p}$，则变换后的对象由矩阵 $\bold{M}$ 变换的该组点组成，其中示例点 转换为$\bold{Mp}$。 如果我们有一条射线 $\bold{a} + t\bold{b}$ 想要与变换后的对象相交，我们可以将逆变换的射线与未变换的对象相交（图 13.5）。 在未变换空间（即图 13.5 的右侧）中进行计算有两个潜在优势：
+![Figure 13.5](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.5.png)
+Figure 13.5. The ray intersection problem in the two spaces are just simple transforms of each other. The object is specified as a sphere plus matrix $\bold{M}$. The ray is specified in the transformed (world) space by location $\bold{a}$ and direction $\bold{b}$.
+图 13.5。 两个空间中的射线相交问题只是彼此的简单变换。 该对象被指定为球体加矩阵 $\bold{M}$。 光线在变换后的（世界)空间中通过位置 $\bold{a}$ 和方向 $\bold{b}$ 指定。
+
+1. The untransformed object may have a simpler intersection routine, e.g., a sphere versus an ellipsoid. 
+   未变换的对象可能具有更简单的相交例程，例如球体与椭球体。
+2. Many transformed objects can share the same untransformed object thus reducing storage, e.g., a traffic jam of cars, where individual cars are just transforms of a few base (untransformed) models.
+   许多转换后的对象可以共享相同的未转换对象，从而减少存储，例如，汽车交通拥堵，其中各个汽车只是一些基本（未转换）模型的转换。
+
+As discussed in Section 6.2.2, surface normal vectors transform differently. With this in mind and using the concepts illustrated in Figure 13.5, we can determine the intersection of a ray and an object transformed by matrix $\bold{M}$. If we create an instance class of type surface, we need to create a hit function:
+正如第 6.2.2 节中所讨论的，表面法线向量的变换方式不同。 考虑到这一点并使用图 13.5 中所示的概念，我们可以确定光线与由矩阵 $\bold{M}$ 变换的物体的交集。 如果我们创建一个surface类型的实例类，我们需要创建一个hit函数：
+
+> instance::hit(ray $\bold{a} + t\bold{b}$, real $t_0$, real $t_1$, hit-record rec)
+> 	ray $\bold{r}' = \bold{M}^{-1}\bold{a} + t\bold{M}^{-1}\bold{b}$
+> 	if (base-object→hit$(\bold{r}', t_0, t_1, rec))$ then
+> 		$rec.\bold{n} = (\bold{M}^{-1})^Trec.\bold{n}$
+> 		return true
+> 	else
+> 		return false  
+
+An elegant thing about this function is that the parameter rec.t does not need to be changed, because it is the same in either space. Also note that we need not compute or store the matrix $\bold{M}$. 
+该函数的一个优雅之处在于参数 rec.t 不需要更改，因为它在两个空间中都是相同的。 另请注意，我们不需要计算或存储矩阵 $\bold{M}$。
+
+This brings up a very important point: the ray direction $\bold{b}$ must not be restricted to a unit-length vector, or none of the infrastructure above works. For this reason, it is useful not to restrict ray directions to unit vectors.
+这提出了一个非常重要的点：光线方向 $\bold{b}$ 不得限制为单位长度向量，否则上述基础设施都不起作用。 因此，不将射线方向限制为单位向量是有用的。
+
+## 13.3 Constructive Solid Geometry  构造立体几何
+
+One nice thing about ray tracing is that any geometric primitive whose intersection with a 3D line can be computed can be seamlessly added to a ray tracer. It turns out to also be straightforward to add constructive solid geometry (CSG) to a ray tracer (Roth, 1982). The basic idea of CSG is to use set operations to combine solid shapes. These basic operations are shown in Figure 13.6. The operations can be viewed as set operations. For example, we can consider $C$ the set of all points in the circle and $S$ the set of all points in the square. The intersection operation $C ∩ S$ is the set of all points that are both members of $C$ and $S$. The other operations are analogous.
+光线追踪的一个好处是，任何可以计算与 3D 线相交的几何图元都可以无缝添加到光线追踪器中。 事实证明，将构造实体几何 (CSG) 添加到光线追踪器中也很简单（Roth，1982）。 CSG的基本思想是使用集合运算来组合实体形状。 这些基本操作如图 13.6 所示。 这些操作可以被视为集合操作。 例如，我们可以认为$C$是圆中所有点的集合，$S$是正方形中所有点的集合。 交集运算 $C ∩ S$ 是同时属于 $C$ 和 $S$ 成员的所有点的集合。 其他操作类似。
+![Figure 13.6](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.6.png)
+Figure 13.6. The basic CSG operations on a 2D circle and square.
+图 13.6。 二维圆形和正方形上的基本 CSG 运算。
+
+Although one can do CSG directly on the model, if all that is desired is an image, we do not need to explicitly change the model. Instead, we perform the set operations directly on the rays as they interact with a model. To make this natural, we find all the intersections of a ray with a model rather than just the closest. For example, a ray $\bold{a} + t\bold{b}$ might hit a sphere at $t = 1$ and $t = 2$. In the context of CSG, we think of this as the ray being inside the sphere for $t ∈ [1, 2]$. We can compute these “inside intervals” for all of the surfaces and do set operations on those intervals (recall Section 2.1.2). This is illustrated in Figure 13.7, where the hit intervals are processed to indicate that there are two intervals inside the difference object. The first hit for $t > 0$ is what the ray actually intersects.
+虽然可以直接在模型上进行 CSG，但如果需要的只是一张图像，则不需要显式更改模型。 相反，当光线与模型交互时，我们直接对光线执行集合操作。 为了使其自然，我们找到光线与模型的所有交点，而不仅仅是最接近的交点。 例如，光线 $\bold{a} + t\bold{b}$ 可能会在 $t = 1$ 和 $t = 2$ 处撞击球体。 在 CSG 的上下文中，我们将其视为 $t ∈ [1, 2]$ 球体内的射线。 我们可以计算所有曲面的这些“内部区间”，并对这些区间进行集合运算（回想第 2.1.2 节）。 图 13.7 对此进行了说明，其中处理命中间隔以指示差异对象内有两个间隔。 $t > 0$ 的第一次命中是射线实际相交的地方。
+![Figure 13.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.7.png)
+Figure 13.7. Intervals are processed to indicate how the ray hits the composite object.
+图 13.7。 处理间隔以指示光线如何撞击复合对象。
+
+In practice, the CSG intersection routine must maintain a list of intervals. When the first hitpoint is determined, the material property and surface normal is that associated with the hitpoint. In addition, you must pay attention to precision issues because there is nothing to prevent the user from taking two objects that abut and taking an intersection. This can be made robust by eliminating any interval whose thickness is below a certain tolerance.
+实际上，CSG 交叉例程必须维护一个间隔列表。 当确定第一个命中点时，材质属性和表面法线就是与该命中点相关的属性和表面法线。 此外，您必须注意精度问题，因为没有什么可以阻止用户获取相邻的两个对象并进行相交。 通过消除厚度低于特定公差的任何间隔，可以使这一点变得稳健。
+
+## 13.4 Distribution Ray Tracing 分布光线追踪
+
+For some applications, ray-traced images are just too “clean.” This effect can be mitigated using distribution ray tracing (Cook et al., 1984). The conventionally ray-traced images look clean, because everything is crisp; the shadows are perfectly sharp, the reflections have no fuzziness, and everything is in perfect focus. Sometimes we would like to have the shadows be soft (as they are in real life), the reflections be fuzzy as with brushed metal, and the image have variable degrees of focus as in a photograph with a large aperture. While accomplishing these things from first principles is somewhat involved (as is developed in Chapter 23), we can get most of the visual impact with some fairly simple changes to the basic ray tracing algorithm. In addition, the framework gives us a relatively simple way to antialias (recall Section 8.3) the image.
+对于某些应用程序来说，光线追踪图像太“干净”。 使用分布光线追踪可以减轻这种影响（Cook 等人，1984）。 传统的光线追踪图像看起来很干净，因为一切都很清晰； 阴影非常清晰，反射没有模糊，一切都完美聚焦。 有时我们希望阴影是柔和的（就像现实生活中的那样），反射是模糊的，就像拉丝金属一样，并且图像具有可变的焦度，就像大光圈照片中的那样。 虽然从第一原理完成这些事情有些复杂（如第 23 章中所述），但我们可以通过对基本光线追踪算法进行一些相当简单的更改来获得大部分视觉效果。 此外，该框架为我们提供了一种相对简单的方法来对图像进行抗锯齿（回忆第 8.3 节）。
+
+### 13.4.1 Antialiasing 抗锯齿
+
+Recall that a simple way to antialias an image is to compute the average color for the area of the pixel rather than the color at the center point. In ray tracing, our computational primitive is to compute the color at a point on the screen. If we average many of these points across the pixel, we are approximating the true average. If the screen coordinates bounding the pixel are $[i, i + 1] × [j, j + 1]$, then we can replace the loop:
+回想一下，对图像进行抗锯齿的一种简单方法是计算像素区域的平均颜色而不是中心点的颜色。 在光线追踪中，我们的计算原语是计算屏幕上某个点的颜色。 如果我们对像素上的许多点进行平均，我们就接近真实的平均值。 如果围绕像素的屏幕坐标是 $[i, i + 1] × [j, j + 1]$，那么我们可以替换循环：
+
+> for each pixel (i, j) do
+> 	c_{ij} = ray-color(i + 0.5, j + 0.5)  
+
+with code that samples on a regular n × n grid of samples within each pixel: 
+使用在每个像素内的规则 n × n 样本网格上进行采样的代码：
+
+> for each pixel (i, j) do
+> 	c = 0
+> 	for p = 0 to n - 1 do
+> 		for q = 0 to n - 1 do
+> 			c = c + ray-color(i + (p + 0.5)/n, j + (q + 0.5)/n)
+> 	$c_{ij} = c/n^2$  
+
+![Figure 13.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.8.png)
+Figure 13.8. A simple scene rendered with one sample per pixel (lower left half) and nine samples per pixel (upper right half).
+图 13.8。 一个简单的场景，每个像素一个样本（左下半部分）和每个像素九个样本（右上半部分)渲染。
+
+This is usually called regular sampling. The 16 sample locations in a pixel for $n = 4$ are shown in Figure 13.9. Note that this produces the same answer as rendering a traditional ray-traced image with one sample per pixel at $n_xn$ by $n_yn$ resolution and then averaging blocks of n by n pixels to get a $n_x$ by $n_y$ image.
+这通常称为定期抽样。 $n = 4$ 的像素中的 16 个样本位置如图 13.9 所示。 请注意，这与以 $n_xn$ x $n_yn$ 分辨率渲染每个像素一个样本的传统光线追踪图像相同，然后对 n x n 像素块进行平均以获得 $n_x$ x $n_y$ 图像。
+![Figure 13.9](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.9.png)
+Figure 13.9. Sixteen regular samples for a single pixel. 
+图 13.9。 单个像素的十六个常规样本。
+
+One potential problem with taking samples in a regular pattern within a pixel is that regular artifacts such as moiré patterns can arise. These artifacts can be turned into noise by taking samples in a random pattern within each pixel as shown in Figure 13.10. This is usually called random sampling and involves just a small change to the code:
+在像素内以规则图案采样的一个潜在问题是可能会出现规则伪像，例如莫尔图案。 通过在每个像素内以随机模式采样，这些伪影可以变成噪声，如图 13.10 所示。 这通常称为随机采样，只需要对代码进行很小的更改：
+
+> for each pixel (i, j) do
+> 	c = 0
+> 	for p = 1 to $n^2$ do
+> 		c = c+ ray-color(i + ξ, j + ξ)
+> 	$c_{ij} = c/n^2$ 
+
+![Figure 13.10](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.10.png)
+Figure 13.10. Sixteen random samples for a single pixel.
+图 13.10。 单个像素的十六个随机样本。
+
+Here ξ is a call that returns a uniform random number in the range $[0, 1)$. Unfortunately, the noise can be quite objectionable unless many samples are taken. A compromise is to make a hybrid strategy that randomly perturbs a regular grid:
+这里 Ψ 是一个返回 $[0, 1)$ 范围内的均匀随机数的调用。 不幸的是，除非采集大量样本，否则噪声可能会非常令人讨厌。 一种折衷方案是制定一种随机扰动规则网格的混合策略：
+
+> for each pixel (i, j) do
+> 	c = 0
+> 	for p = 0 to n - 1 do
+> 		for q = 0 to n - 1 do
+> 			c = c + ray-color(i + (p + ξ)/n, j + (q + ξ)/n)
+> 	$c_{ij} = c/n^2$
+
+That method is usually called jittering or stratified sampling (Figure 13.11). 
+该方法通常称为抖动或分层采样（图 13.11）。
+![Figure 13.11](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.11.png)
+Figure 13.11. Sixteen stratified (jittered) samples for a single pixel shown with and without the bins highlighted. There is exactly one random sample taken within each bin.
+图 13.11。 单个像素的十六个分层（抖动)样本显示有和没有突出显示的垃圾箱。 每个箱内仅抽取一个随机样本。
+
+### 13.4.2 Soft Shadows 软阴影
+
+The reason shadows are hard to handle in standard ray tracing is that lights are infinitesimal points or directions and are thus either visible or invisible. In real life, lights have nonzero area and can thus be partially visible. This idea is shown in 2D in Figure 13.12. The region where the light is entirely invisible is called the umbra. The partially visible region is called the penumbra. There is not a commonly used term for the region not in shadow, but it is sometimes called the anti-umbra.
+在标准光线追踪中阴影难以处理的原因是灯光是无限小的点或方向，因此要么可见，要么不可见。 在现实生活中，灯光具有非零面积，因此可以部分可见。 这个想法在图 13.12 中以 2D 形式显示。 光完全不可见的区域称为本影。 部分可见的区域称为半影。 对于不在阴影中的区域没有常用的术语，但它有时被称为反本影。
+![Figure 13.12](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.12.png)
+Figure 13.12. A soft shadow has a gradual transition from the unshadowed to shadowed region. The transition zone is the “penumbra” denoted by $p$ in the figure.
+图 13.12。 软阴影从非阴影区域逐渐过渡到阴影区域。 过渡区就是图中用$p$表示的“半影”。
+
+The key to implementing soft shadows is to somehow account for the light being an area rather than a point. An easy way to do this is to approximate the light with a distributed set of N point lights each with one Nth of the intensity of the base light. This concept is illustrated at the left of Figure 13.13 where nine lights are used. You can do this in a standard ray tracer, and it is a common trick to get soft shadows in an off-the-shelf renderer. There are two potential problems with this technique. First, typically dozens of point lights are needed to achieve visually smooth results, which slows down the program a great deal. The second problem is that the shadows have sharp transitions inside the penumbra.
+实现软阴影的关键是以某种方式将光视为一个区域而不是一个点。 实现此目的的一种简单方法是使用一组分布的 N 个点光源来近似光源，每个点光源的强度为基础光源的 N 分之一。 这个概念如图 13.13 左侧所示，其中使用了九个灯。 您可以在标准光线追踪器中执行此操作，并且在现成的渲染器中获得柔和阴影是一种常见的技巧。 这种技术有两个潜在的问题。 首先，通常需要数十个点光源才能获得视觉上平滑的结果，这会大大减慢程序速度。 第二个问题是阴影在半影内有急剧的过渡。
+![Figure 13.13](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.13.png)
+Figure 13.13. Left: an area light can be approximated by some number of point lights; four of the nine points are visible to $\bold{p}$ so it is in the penumbra. Right: a random point on the light is chosen for the shadow ray, and it has some chance of hitting the light or not.
+图 13.13。 左：区域光可以用一定数量的点光源来近似； 九个点中的四个对 $\bold{p}$ 可见，因此位于半影中。 右：为阴影光线选择灯光上的随机点，并且它有一定的机会击中或不击中灯光。
+
+Distribution ray tracing introduces a small change in the shadowing code. Instead of representing the area light at a discrete number of point sources, we represent it as an infinite number and choose one at random for each viewing ray. This amounts to choosing a random point on the light for any surface point being lit as is shown at the right of Figure 13.13.
+分布光线追踪在阴影代码中引入了一个小变化。 我们不是将区域光表示为离散数量的点光源，而是将其表示为无限数量，并为每条观察光线随机选择一个。 这相当于为任何被照亮的表面点选择灯光上的随机点，如图 13.13 右侧所示。
+
+If the light is a parallelogram specified by a corner point $\bold{c}$ and two edge vectors $\bold{a}$ and $\bold{b}$ (Figure 13.14), then choosing a random point $\bold{r}$ is straightforward:
+如果光线是由角点 $\bold{c}$ 和两个边缘向量 $\bold{a}$ 和 $\bold{b}$ 指定的平行四边形（图 13.14），则选择一个随机点 $\bold {r}$ 很简单：
+$\bold{r} = \bold{c} + ξ_1\bold{a} + ξ_2\bold{b},  $
+where $ξ_1$ and $ξ_2$ are uniform random numbers in the range [0, 1). 
+其中$ξ_1$和$ξ_2$是[0, 1)范围内的均匀随机数。
+![Figure 13.14](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.14.png)
+Figure 13.14. The geometry of a parallelogram light specified by a corner point and two edge vectors.
+图 13.14。 由角点和两个边缘向量指定的平行四边形光的几何形状。
+
+We then send a shadow ray to this point as shown at the right in Figure 13.13. Note that the direction of this ray is not unit length, which may require some modification to your basic ray tracer depending upon its assumptions. 
+然后我们向该点发送阴影射线，如图 13.13 右侧所示。 请注意，该光线的方向不是单位长度，这可能需要根据其假设对基本光线追踪器进行一些修改。
+
+We would really like to jitter points on the light. However, it can be dangerous to implement this without some thought. We would not want to always have the ray in the upper left-hand corner of the pixel generate a shadow ray to the upper left-hand corner of the light. Instead we would like to scramble the samples, such that the pixel samples and the light samples are each themselves jittered, but so that there is no correlation between pixel samples and light samples. A good way to accomplish this is to generate two distinct sets of $n^2$ jittered samples and pass samples into the light source routine:
+我们真的很想在灯光上抖动点。 然而，不经过深思熟虑就实施这一点可能会很危险。 我们不希望像素左上角的光线始终生成到光源左上角的阴影光线。 相反，我们想对样本进行置乱，使得像素样本和光样本本身都抖动，但像素样本和光样本之间不存在相关性。 实现此目的的一个好方法是生成两组不同的 $n^2$ 抖动样本并将样本传递到光源例程中：
+
+> for each pixel (i, j) do
+> 	c = 0
+> 	generate $N = n^2$ jittered 2D points and store in array r[ ]
+> 	generate $N = n^2$ jittered 2D points and store in array s[ ]
+> 	shuffle the points in array s[ ]
+> 	for p = 0 to N - 1 do
+> 		c = c + ray-color(i + r[p].x(), j + r[p].y(), s[p])
+> 	$c_{ij} = c/N$
+
+This shuffle routine eliminates any coherence between arrays $r$ and $s$. The shadow routine will just use the 2D random point stored in s[p] rather than calling the random number generator. A shuffle routine for an array indexed from 0 to N − 1 is:
+这个随机例程消除了数组 $r$ 和 $s$ 之间的任何一致性。 影子例程将仅使用存储在 s[p] 中的 2D 随机点，而不是调用随机数生成器。 索引从 0 到 N − 1 的数组的洗牌例程是：
+
+> for i = N - 1 downto 1 do
+> 	choose random integer j between 0 and i inclusive
+> 	swap array elements i and j  
+
+### 13.4.3 Depth of Field 景深
+
+The soft focus effects seen in most photos can be simulated by collecting light at a nonzero size “lens” rather than at a point. This is called depth of field. The lens collects light from a cone of directions that has its apex at a distance where everything is in focus (Figure 13.15). We can place the “window” we are sampling on the plane where everything is in focus (rather than at the $z = n$ plane as we did previously) and the lens at the eye. The distance to the plane where everything is in focus we call the focus plane, and the distance to it is set by the user, just as the distance to the focus plane in a real camera is set by the user or range finder.
+大多数照片中看到的柔焦效果可以通过在非零尺寸“镜头”而不是在一个点收集光线来模拟。 这称为景深。 透镜从一个方向锥收集光线，该锥的顶点位于所有物体都聚焦的距离处（图 13.15）。 我们可以将采样的“窗口”放置在一切都聚焦的平面上（而不是像我们之前那样放置在 $z = n$ 平面上）并将晶状体放置在眼睛上。 到一切都聚焦的平面的距离我们称为焦平面，到它的距离由用户设置，就像真实相机中到焦平面的距离由用户或测距仪设置一样。
+![Figure 13.15](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.15.png)
+Figure 13.15. The lens averages over a cone of directions that hit the pixel location being sampled.
+图 13.15。 镜头对撞击正在采样的像素位置的方向锥进行平均。
+
+To be most faithful to a real camera, we should make the lens a disk. However, we will get very similar effects with a square lens (Figure 13.16). So we choose the side-length of the lens and take random samples on it. The origin of the view rays will be these perturbed positions rather than the eye position. Again, a shuffling routine is used to prevent correlation with the pixel sample positions. An example using 25 samples per pixel and a large disk lens is shown in Figure 13.17.
+为了最忠实于真实的相机，我们应该将镜头做成圆盘。 然而，使用方形透镜我们会得到非常相似的效果（图 13.16）。 因此，我们选择透镜的边长并对其进行随机采样。 视线的来源将是这些扰动的位置而不是眼睛的位置。 再次，使用改组例程来防止与像素样本位置的相关性。 图 13.17 显示了使用每像素 25 个样本和大圆盘透镜的示例。
+![Figure 13.16](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.16.png)
+Figure 13.16. To create depth-of-field effects, the eye is randomly selected from a square region.
+图 13.16。 为了创建景深效果，眼睛是从方形区域中随机选择的。
+![Figure 13.17](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.17.png)
+Figure 13.17. An example of depth of field. The caustic in the shadow of the wine glass is computed using particle tracing as described in Chapter 23. 
+图 13.17。 景深的示例。 酒杯阴影中的焦散度是使用第 23 章中所述的粒子追踪来计算的。
+
+### 13.4.4 Glossy Reflection 光泽反射
+
+Some surfaces, such as brushed metal, are somewhere between an ideal mirror and a diffuse surface. Some discernible image is visible in the reflection, but it is blurred. We can simulate this by randomly perturbing ideal specular reflection rays as shown in Figure 13.18.
+某些表面（例如拉丝金属）介于理想镜面和漫射表面之间。 反射中可以看到一些可辨别的图像，但它是模糊的。 我们可以通过随机扰动理想镜面反射光线来模拟这一点，如图 13.18 所示。
+![Figure 13.18](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.18.png)
+Figure 13.18. The reflection ray is perturbed to a random vector $\bold{r}'$.
+图 13.18。 反射光线受到随机向量 $\bold{r}'$ 的扰动。
+
+Only two details need to be worked out: how to choose the vector $\bold{r}'$ and what to do when the resulting perturbed ray is below the surface from which the ray is reflected. The latter detail is usually settled by returning a zero color when the ray is below the surface.
+只需要解决两个细节：如何选择向量 $\bold{r}'$ 以及当产生的扰动光线低于反射光线的表面时该怎么办。 当光线低于表面时，后一个细节通常通过返回零颜色来解决。
+
+To choose $r'$, we again sample a random square. This square is perpendicular to $\bold{r}$ and has width a which controls the degree of blur. We can set up the square’s orientation by creating an orthonormal basis with $\bold{w} = \bold{r}$ using the techniques in Section 2.4.6. Then, we create a random point in the 2D square with side length a centered at the origin. If we have 2D sample points $(ξ, ξ') ∈ [0, 1]^2$, then the analogous point on the desired square is
+为了选择 $r'$，我们再次对随机正方形进行采样。 这个正方形垂直于$\bold{r}$，宽度a控制模糊程度。 我们可以使用第 2.4.6 节中的技术通过 $\bold{w} = \bold{r}$ 创建正交基来设置正方形的方向。 然后，我们在 2D 正方形中创建一个边长为 a、以原点为中心的随机点。 如果我们有 2D 样本点 $(ξ, ξ') ∈ [0, 1]^2$，那么所需正方形上的类似点是
+$$
+u = -\frac{a}{2} + ξa, \\
+v = −\frac{a}{2} + ξ'a.
+$$
+Because the square over which we will perturb is parallel to both the $\bold{u}$ and $\bold{v}$ vectors, the ray $\bold{r}'$ is just
+因为我们要扰动的正方形与 $\bold{u}$ 和 $\bold{v}$ 向量平行，所以射线 $\bold{r}'$ 只是
+$\bold{r}' = \bold{r }+ u\bold{u} + v\bold{v}.  $
+
+Note that $\bold{r}'$ is not necessarily a unit vector and should be normalized if your code requires that for ray directions.
+请注意，$\bold{r}'$ 不一定是单位向量，如果您的代码需要射线方向，则应对其进行归一化。
+
+### 13.4.5 Motion Blur 运动模糊
+
+We can add a blurred appearance to objects as shown in Figure 13.19. This is called motion blur and is the result of the image being formed over a nonzero span of time. In a real camera, the aperture is open for some time interval during which objects move. We can simulate the open aperture by setting a time variable ranging from $T_0$ to $T_1$. For each viewing ray we choose a random time,
+我们可以为对象添加模糊外观，如图 13.19 所示。 这称为运动模糊，是在非零时间跨度内形成图像的结果。 在真实相机中，光圈会打开一段时间间隔，在此期间物体会移动。 我们可以通过设置范围从 $T_0$ 到 $T_1$ 的时间变量来模拟开放孔径。 对于每条观察光线，我们选择一个随机时间，
+$T = T_0 + ξ(T_1 - T_0).  $
+
+We may also need to create some objects to move with time. For example, we might have a moving sphere whose center travels from $\bold{c}_0$ to $\bold{c}_1$ during the interval. Given $T$ , we could compute the actual center and do a ray–intersection with that sphere. Because each ray is sent at a different time, each will encounter the sphere at a different position, and the final appearance will be blurred. Note that the bounding box for the moving sphere should bound its entire path so an efficiency structure can be built for the whole time interval (Glassner, 1988).
+我们可能还需要创建一些随时间移动的对象。 例如，我们可能有一个移动球体，其中心在间隔期间从 $\bold{c}_0$ 移动到 $\bold{c}_1$。 给定 $T$ ，我们可以计算实际中心并与该球体进行射线相交。 由于每条光线在不同的时间发送，每条光线都会在不同的位置遇到球体，最终的外观会变得模糊。 请注意，移动球体的边界框应限制其整个路径，以便可以为整个时间间隔构建效率结构（Glassner，1988）。
+![Figure 13.19](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 13.19.png)
+Figure 13.19. The bottom right sphere is in motion, and a blurred appearance results. Image courtesy Chad Barb.
+图 13.19。 右下角的球体在运动，并产生模糊的外观。 图片由查德·巴布提供。
+
+## Notes 注释
+
+There are many, many other advanced methods that can be implemented in the ray-tracing framework. Some resources for further information are Glassner’s An Introduction to Ray Tracing and Principles of Digital Image Synthesis, Shirley’s Realistic Ray Tracing, and Pharr and Humphreys’s Physically Based Rendering: From Theory to Implementation.
+还有很多很多其他高级方法可以在光线追踪框架中实现。 有关更多信息的一些资源包括 Glassner 的《光线追踪和数字图像合成原理简介》、Shirley 的《真实光线追踪》以及 Pharr 和 Humphreys 的《基于物理的渲染：从理论到实现》。
+
+## Frequently Asked Questions 经常问的问题
+
+### What is the best ray-intersection efficiency structure? 最佳光线相交效率结构是什么？
+
+The most popular structures are binary space partitioning trees (BSP trees), uniform subdivision grids, and bounding volume hierarchies. Most people who use BSP trees make the splitting planes axis-aligned, and such trees are usually called k-d trees. There is no clear-cut answer for which is best, but all are much, much better than brute-force search in practice. If I were to implement only one, it would be the bounding volume hierarchy because of its simplicity and robustness.
+最流行的结构是二元空间划分树（BSP 树）、均匀细分网格和包围体层次结构。 大多数使用 BSP 树的人都使分裂平面轴对齐，这种树通常称为 k-d 树。 对于哪一个最好没有明确的答案，但在实践中，所有这些都比暴力搜索要好得多。 如果我只实现一个，那就是包围体层次结构，因为它简单且稳健。
+
+### Why do people use bounding boxes rather than spheres or ellipsoids? 为什么人们使用边界框而不是球体或椭球体？
+
+Sometimes spheres or ellipsoids are better. However, many models have polygonal elements that are tightly bounded by boxes, but they would be difficult to tightly bind with an ellipsoid.
+有时球体或椭球体更好。 然而，许多模型都具有由盒子紧密包围的多边形元素，但它们很难与椭球体紧密束缚。
+
+
+
+# 14  Sampling  采样
+
+Many applications in graphics require “fair” sampling of unusual spaces, such as the space of all possible lines. For example, we might need to generate random edges within a pixel, or random sample points on a pixel that vary in density according to some density function. This chapter provides the machinery for such probability operations. These techniques will also prove useful for numerically evaluating complicated integrals using Monte Carlo integration, also covered in this chapter.
+图形中的许多应用程序需要对异常空间进行“公平”采样，例如所有可能的线条的空间。 例如，我们可能需要在像素内生成随机边缘，或者在像素上生成密度根据某种密度函数变化的随机样本点。 本章提供了此类概率运算的机制。 这些技术对于使用蒙特卡罗积分对复杂积分进行数值计算也很有用，本章也将对此进行介绍。
+
+## 14.1 Integration 集成 
+
+Although the words “integral” and “measure” often seem intimidating, they relate to some of the most intuitive concepts found in mathematics, and they should not be feared. For our very non-rigorous purposes, a measure is just a function that maps subsets to $\R^+$ in a manner consistent with our intuitive notions of length, area, and volume. For example, on the 2D real plane $\R^2$, we have the area measure A which assigns a value to a set of points in the plane. Note that A is just a function that takes pieces of the plane and returns area. This means the domain of A is all possible subsets of $\R^2$, which we denote as the power set $ P(\R^2)$. Thus, we can characterize A in arrow notation:
+尽管“积分”和“度量”这两个词常常看起来令人生畏，但它们与数学中一些最直观的概念相关，因此不应该害怕。 对于我们非常不严格的目的来说，度量只是一个函数，它以与我们直观的长度、面积和体积概念一致的方式将子集映射到 $\R^+$。 例如，在 2D 真实平面 $\R^2$ 上，我们有面积度量 A，它为平面上的一组点分配一个值。 请注意，A 只是一个获取平面碎片并返回面积的函数。 这意味着 A 的域是 $\R^2$ 的所有可能子集，我们将其表示为幂集 $P(\R^2)$。 因此，我们可以用箭头表示法来表征 A：
+$A : P(\R^2) → \R^+.  $
+
+An example of applying the area measure shows that the area of the square with side length one is one:
+应用面积测量的示例显示边长为 1 的正方形的面积为 1：
+$A([a, a + 1] × [b, b + 1]) = 1,  $
+
+where $(a, b)$ is just the lower left-hand corner of the square. Note that a single point such as $(3, 7)$ is a valid subset of $\R^2$ and has zero area: $A((3, 7)) = 0$. The same is true of the set of points $S$ on the x-axis, $S = (x, y)$ such that $(x, y) ∈ \R^2$ and $y = 0$, i.e., $A(S) = 0$. Such sets are called zero measure sets.
+其中 $(a, b)$ 就是正方形的左下角。 请注意，单个点（例如 $(3, 7)$）是 $\R^2$ 的有效子集，并且面积为零：$A((3, 7)) = 0$。 x 轴上的点集 $S$ 也是如此，$S = (x, y)$ 使得 $(x, y) ∈ \R^2$ 且 $y = 0$，即 $A(S) = 0$。 这样的集合称为零测量集。
+
+To be considered a measure, a function has to obey certain area-like properties. For example, we have a function $μ : P( \mathbb{S}) → \R^+$. For $μ$ to be a measure, the following conditions must be true:
+要被视为一种度量，函数必须遵循某些类似区域的属性。 例如，我们有一个函数 $μ : P( \mathbb{S}) → \R^+$。 要使 $μ$ 成为度量，必须满足以下条件：
+
+1. The measure of the empty set is zero: $μ(∅) = 0$,
+   空集的测度为零：$μ(∅) = 0$，
+2. The measure of two distinct sets together is the sum of their measure alone. This rule with possible intersections is
+   两个不同集合的测度是它们单独测度的总和。 这条可能有交集的规则是
+   $μ(A ∪ B) = μ(A) + μ(B) - μ(A ∩ B),  $
+   where ∪ is the set union operator and ∩ is the set intersection operator. 
+   其中 ∪ 是集合并运算符，∩ 是集合交运算符。 
+
+When we actually compute measures, we usually use integration. We can think of integration as really just notation:
+当我们实际计算度量时，我们通常使用积分。 我们可以将积分视为真正的符号：
+$A(S) = \int_x∈S dA(\bold{x})$
+
+You can informally read the right-hand side as “take all points x in the region S, and sum their associated differential areas.” The integral is often written other ways including
+您可以将右侧非正式地理解为“获取区域 S 中的所有点 x，并对它们相关的微分面积求和”。 积分通常以其他方式编写，包括
+$\int_S dA, \ \ \ \int_{\bold{x}∈S}d\bold{x}, \ \ \ \int_{\bold{x}∈S}dA_\bold{x}, \ \ \ \int_{\bold{x}}d\bold{x}, \ \ \   \\ $
+
+All of the above formulas represent “the area of region S.” We will stick with the first one we used, because it is so verbose it avoids ambiguity. To evaluate such integrals analytically, we usually need to lay down some coordinate system and use our bag of calculus tricks to solve the equations. But have no fear if those skills have faded, as we usually have to numerically approximate integrals, and that requires only a few simple techniques which are covered later in this chapter.
+以上公式均表示“区域S的面积”。 我们将坚持使用我们使用的第一个，因为它非常冗长，可以避免歧义。 为了分析地评估此类积分，我们通常需要建立一些坐标系并使用我们的微积分技巧来求解方程。 但是，如果这些技能已经消失，请不要担心，因为我们通常必须对积分进行数值近似，而这只需要一些简单的技术，本章稍后将介绍这些技术。
+
+Given a measure on a set $ \mathbb{S}$, we can always create a new measure by weighting with a nonnegative function $w :  \mathbb{S} → \R^+$. This is best expressed in integral notation. For example, we can start with the example of the simple area measure on $[0, 1]^2$:
+给定集合$ \mathbb{S}$上的一个测度，我们总是可以用一个非负函数$w: \mathbb{S}→\R^+$加权来创建一个新的测度。这最好用积分符号表示。例如，我们可以从$[0,1]^2$上的简单面积度量的例子开始:
+$\int_{\bold{x}∈[0,1]^2} dA(x)\\$
+
+and we can use a “radially weighted” measure by inserting a weighting function of radius squared:
+我们可以通过插入半径平方的加权函数来使用“径向加权”度量： 
+$\int_{\bold{x}∈[0,1]^2} \|\bold{x}\|^2dA(x) \\$
+
+To evaluate this analytically, we can expand using a Cartesian coordinate system with $dA ≡ dx dy$:
+为了进行分析评估，我们可以使用笛卡尔坐标系 $dA ≡ dx dy$ 进行扩展： 
+$\int_{\bold{x}∈[0,1]^2} \|\bold{x}\|^2dA(x) = \int^1_{x=0}\int^1_{y=0}dxdy \\$
+
+The key thing here is that if you think of the $\|\bold{x}\|^2$ term as married to the $dA$ term, and that these together form a new measure, we can call that measure $ν$. This would allow us to write $ν(S)$ instead of the whole integral. If this strikes you as just a bunch of notation and bookkeeping, you are right. But it does allow us to write down equations that are either compact or expanded depending on our preference.
+这里的关键是，如果您认为 $\|\bold{x}\|^2$ 项与 $dA$ 项结合在一起，并且它们一起形成一个新的度量，我们可以将该度量称为 $ν $。 这将允许我们写 $ν(S)$ 而不是整个积分。 如果您觉得这只是一堆符号和簿记，那么您是对的。 但它确实允许我们根据我们的喜好写下紧凑或扩展的方程。
+
+### 14.1.1 Measures and Averages 测量值和平均值 
+
+Measures really start paying off when taking averages of a function. You can only take an average with respect to a particular measure, and you would like to select a measure that is “natural” for the application or domain. Once a measure is chosen, the average of a function f over a region S with respect to measure μ is
+当对函数取平均值时，措施才真正开始得到回报。 您只能针对特定度量取平均值，并且您希望选择对于应用程序或域来说“自然”的度量。 一旦选择了测量值，区域 S 上的函数 f 相对于测量值 μ 的平均值为
+$average(f) ≡  \frac{\int_{x∈S}f(\bold{x})dμ(\bold{x})}{\int_{x∈S}dμ(\bold{x})} \\$
+
+For example, the average of the function $f(x, y) = x^2$ over $[0, 2]^2$ with respect to the area measure is
+例如，函数 $f(x, y) = x^2$ 在 $[0, 2]^2$ 上相对于面积度量的平均值为
+$average(f) ≡  \frac{\int^2_{x=0}\int^2_{y=0}x^2dxdy}{\int^2_{x=0}\int^2_{y=0}dxdy} = \frac{4}{3}\\$
+
+This machinery helps solve seemingly hard problems where choosing the measure is the tricky part. Such problems often arise in integral geometry, a field that studies measures on geometric entities, such as lines and planes. For example, one might want to know the average length of a line through $[0, 1]^2$. That is, by definition,
+这种机制有助于解决看似困难的问题，而选择措施是棘手的部分。 此类问题经常出现在积分几何中，该领域研究几何实体（例如直线和平面）的测量。 例如，人们可能想知道通过 $[0, 1]^2$ 的线的平均长度。 也就是说，根据定义，
+$average(length) =  \frac{\int_{lines\ L\ through\ [0, 1]^2}length(L)dμ(L)}{\int_{lines\ L\ through\ [0, 1]^2}dμ(L)  } \\$
+
+All that is left, once we know that, is choosing the appropriate μ for the application. This is dealt with for lines in the next section.
+一旦我们知道了这一点，剩下的就是为应用选择合适的μ。 这将在下一节中针对行进行处理。
+
+### 14.1.2 Example: Measures on the Lines in the 2D Plane 示例：2D 平面上的直线测量
+
+What measure μ is “natural”?
+什么度量 μ 是“自然的”？
+
+If you parameterize the lines as $y = mx + b$, you might think of a given line as a point $(m, b)$ in “slope-intercept” space. An easy measure to use would be $dm\ db$, but this would not be a “good” measure in that not all equal size “bundles”  of lines would have the same measure. More precisely, the measure would not be invariant with respect to change of coordinate system. For example, if you took all lines through the square $[0, 1]^2$, the measure of lines through it would not be the same as the measure through a unit square rotated 45 degrees. What we would really like is a “fair” measure that does not change with rotation or translation of a set of lines. This idea is illustrated in Figures 14.1 and 14.2.
+如果将线参数化为 $y = mx + b$，您可能会将给定线视为“斜截距”空间中的点 $(m, b)$。 一个容易使用的度量是 $dm\ db$，但这不是一个“好的”度量，因为并非所有相同大小的线“束”都具有相同的度量。 更准确地说，该测量不会随着坐标系的变化而保持不变。 例如，如果您将所有直线穿过正方形 $[0, 1]^2$，则穿过该正方形的直线的测量值将与穿过旋转 45 度的单位正方形的测量值不同。 我们真正想要的是一种“公平”的度量，它不会随着一组线的旋转或平移而改变。 这个想法如图 14.1 和 14.2 所示。
+![Figure 14.1](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 14.1.png)
+Figure 14.1. These two bundles of lines should have the same measure. They have different intersection lengths with the y-axis so using $db$ would be a poor choice for a differential measure.
+图 14.1。 这两束线应该具有相同的尺寸。 它们与 y 轴的交叉长度不同，因此使用 $db$ 对于差分测量来说是一个糟糕的选择。
+![Figure 14.2](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 14.2.png)
+Figure 14.2. These two bundles of lines should have the same measure. Since they have different values for change in slope, using dm would be a poor choice for a differential measure.
+图 14.2。 这两束线应该具有相同的尺寸。 由于它们的斜率变化具有不同的值，因此使用 dm 作为差分测量并不是一个好的选择。
+
+To develop a natural measure on the lines, we should first start thinking of them as points in a dual space. This is a simple concept: the line $y = mx + b$ can be specified as the point $(m, b)$ in a slope-intercept space. This concept is illustrated in Figure 14.3. It is more straightforward to develop a measure in $(φ, b)$ space. In that space b is the y-intercept, while φ is the angle the line makes with the x-axis, as shown in Figure 14.4. Here, the differential measure $dφ\ db$ almost works, but it would not be fair due to the effect shown in Figure 14.1. To account for the larger span b that a constant width bundle of lines makes, we must add a cosine factor:
+为了发展直线上的自然测度，我们首先应该把直线看作对偶空间中的点。这是一个简单的概念:直线$y = mx + b$可以指定为斜率-截距空间中的点$(m, b)$。图14.3说明了这个概念。在$(φ， b)$空间中建立一个测度更为直接。其中，b为y轴截距，φ为直线与x轴夹角，如图14.4所示。这里，差分度量$dφ\ db$几乎可以工作，但由于图14.1所示的效果，它可能不公平。为了解释恒定宽度的线束形成的更大的跨度b，我们必须添加余弦因子:
+
+$dμ = cos φ dφ db.  $
+![Figure 14.3](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 14.3.png)
+Figure 14.3. The set of points on the line $y = m x + b$ in $(x, y)$ space can also be represented by a single point in $(m, b)$ space so the top line and the bottom point represent the same geometric entity: a 2D line.
+图14.3。$(x, y)$空间中$y = m x + b$上的点的集合也可以用$(m, b)$空间中的单个点来表示，因此顶部的线和底部的点表示相同的几何实体:一条2D线。
+![Figure 14.4](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 14.4.png)
+Figure 14.4. In angle-intercept space we parameterize the line by angle $φ ∈ [−π/2, π/2)$ rather than slope.
+图 14.4。 在角截距空间中，我们通过角度 $φ ∈ [−π/2, π/2)$ 而不是斜率来参数化直线。
+
+It can be shown that this measure, up to a constant, is the only one that is invariant with respect to rotation and translation.
+可以证明，这一度量在达到常数的情况下是唯一相对于旋转和平移不变的度量。
+
+This measure can be converted into an appropriate measure for other parameterizations of the line. For example, the appropriate measure for $(m, b)$ space is
+该测量可以转换为适合生产线其他参数化的测量。 例如，$(m, b)$ 空间的适当度量是
+$dμ =  \frac{dm db}{(1+m^2)^{\frac{3}{2}}} \\$
+
+For the space of lines parameterized in $(u, v)$ space,
+对于 $(u, v)$ 空间中参数化的线空间，
+$ux + vy + 1 = 0,  $
+
+the appropriate measure is
+适当的措施是
+$dμ =  \frac{du dv}{(u^2 + v^2)^{\frac{3}{2}}} \\ $
+
+For lines parameterized in terms of (a, b), the x-intercept and y-intercept, the measure is
+对于根据 (a, b)、x 截距和 y 截距参数化的线，测量为
+$dμ =  \frac{ab\ da\ db}{(a^2 + b^2)^{\frac{3}{2}}} \\$
+
+Note that any of those spaces are equally valid ways to specify lines, and which is best depends upon the circumstances. However, one might wonder whether there exists a coordinate system where the measure of a set of lines is just an area in the dual space. In fact, there is such a coordinate system, and it is delightfully simple; it is the normal coordinates which specify a line in terms of the normal distance from the origin to the line, and the angle the normal of the line makes with respect to the x-axis (Figure 14.5). The implicit equation for such lines is
+请注意，任何这些空格都是指定行的同等有效方式，具体哪种方式最好取决于具体情况。 然而，人们可能想知道是否存在一个坐标系，其中一组线的度量只是对偶空间中的一个区域。 事实上，确实有这样一个坐标系，而且简单得令人高兴； 它是法线坐标，根据从原点到线的法线距离以及线的法线相对于 x 轴的角度来指定线（图 14.5）。 此类直线的隐式方程为
+$x \cos θ + y \sin θ - p = 0.  $
+![Figure 14.5](E:\持久化数据\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 14.5.png)
+Figure 14.5. The normal coordinates of a line use the normal distance to the origin and an angle to specify a line.
+图 14.5。 直线的法线坐标使用到原点的法线距离和角度来指定直线。
+
+And, indeed, the measure in that space is
+事实上，该空间的度量是
+$dμ = dp\ dθ.$
+
+We shall use these measures to choose fair random lines in a later section. 
+我们将在后面的部分中使用这些措施来选择公平的随机线。 
+
+### 14.1.3 Example: Measure of Lines in 3D 示例：3D 线的测量
+
+In 3D there are many ways to parameterize lines. Perhaps, the simplest way is to use their intersection with a particular plane along with some specification of their orientation. For example, we could chart the intersection with the $xy$ plane along with the spherical coordinates of its orientation. Thus, each line would be specified as a $(x, y, θ, φ)$ quadruple. This shows that lines in 3D are 4D entities, i.e., they can be described as points in a 4D space.
+在 3D 中，有多种方法可以对线进行参数化。 也许，最简单的方法是使用它们与特定平面的交集以及它们的方向的某些规范。 例如，我们可以绘制与 $xy$ 平面的交点及其方向的球面坐标。 因此，每条线将被指定为 $(x, y, θ, φ)$ 四元组。 这表明 3D 中的线是 4D 实体，即它们可以描述为 4D 空间中的点。
+
+The differential measure of a line should not vary with (x, y), but bundles of lines with equal cross section should have equal measure. Thus, a fair differential measure is
+一条线的微分测量不应随 (x, y) 变化，但具有相同横截面的线束应具有相同的测量。 因此，公平的差别措施是
+$dμ = dx\ dy \sin θ dθ dφ.$
+
+Another way to parameterize lines is to chart the intersection with two parallel planes. For example, if the line intersects the plane $z = $0 at $(x = u, y = v)$ and the plane $z = 1$ at $(x = s, y = t)$, then the line can be described by the quadruple $(u, v, s, t)$. Note, that like the previous parameterization, this one is degenerate for lines parallel to the $xy$ plane. The differential measure is more complicated for this parameterization although it can be approximated as
+参数化线的另一种方法是绘制与两个平行平面的交线。 例如，如果直线在 $(x = u, y = v)$ 处与平面 $z = $0 相交，并在 $(x = s, y = t)$ 处与平面 $z = 1$ 相交，则直线可以 由四元组$(u, v, s, t)$描述。 请注意，与之前的参数化一样，对于平行于 $xy$ 平面的线，此参数化是退化的。 对于这种参数化，微分测量更加复杂，尽管它可以近似为
+$dμ ≈ du\ dv\ a\ ds\ dt,  $
+
+for bundles of lines nearly parallel to the z-axis. This is the measure often implicitly used in image-based rendering.
+对于几乎平行于 z 轴的线束。 这是基于图像的渲染中经常隐式使用的度量。 
+
+For sets of lines that intersect a sphere, we can use the parameterization of the two points where the line intersects the sphere. If these are in spherical coordinates, then the point can be described by the quadruple $(θ_1, φ_1, θ_2, φ_2)$ and the measure is just the differential area associated with each point:
+对于与球体相交的线组，我们可以使用线与球体相交的两个点的参数化。 如果这些是在球坐标中，则该点可以用四元组 $(θ_1, φ_1, θ_2, φ_2)$ 来描述，并且度量只是与每个点相关的微分面积：
+$dμ = \sin θ_1 dθ_1 dφ_1 \sin θ_2 dθ_2 dφ_2.  $
+
+This implies that picking two uniform random endpoints on the sphere results in a line with uniform density. This observation was used to compute form-factors by Mateu Sbert in his dissertation (Sbert, 1997).
+这意味着在球体上选取两个均匀的随机端点会产生密度均匀的线。 Mateu Sbert 在他的论文中使用这一观察结果来计算形状因子（Sbert，1997）。
+
+Note that sometimes we want to parameterize directed lines, and sometimes we want the order of the endpoints not to matter. This is a bookkeeping detail that is especially important for rendering applications where the amount of light flowing along a line is different in the two directions along the line.
+请注意，有时我们想要参数化有向线，有时我们希望端点的顺序无关紧要。 这是一个记录细节，对于渲染应用程序尤其重要，因为沿着一条线流动的光量在沿线的两个方向上是不同的。
+
+## 14.2 Continuous Probability 连续概率
+
+Many graphics algorithms use probability to construct random samples to solve integration and averaging problems. This is the domain of applied continuous probability which has basic connections to measure theory. 
+许多图形算法使用概率来构造随机样本来解决积分和平均问题。 这是应用连续概率的领域，与测度论有基本联系。
+
+### 14.2.1 One-Dimensional Continuous Probability Density Functions 一维连续概率密度函数 
+
+Loosely speaking, a continuous random variable $x$ is a scalar or vector quantity that “randomly” takes on some value from the real line $\R = (−∞, +∞)$. The behavior of x is entirely described by the distribution of values it takes. This distribution of values can be quantitatively described by the probability density function (pdf), p, associated with $x$ (the relationship is denoted $x ∼ p$). The probability that x assumes a particular value in some interval $[a, b]$ is given by the following integral:
+宽松地说，连续随机变量 $x$ 是一个标量或向量，它“随机”从实数线 $\R = (−∞, +∞)$ 中获取一些值。 x 的行为完全由它所取值的分布来描述。 这种值的分布可以通过与 $x$ 相关的概率密度函数 (pdf) p 来定量描述（该关系表示为 $x ∼ p$）。 x 在某个区间 $[a, b]$ 中取特定值的概率由以下积分给出：
+$$
+Probability(x ∈ [a, b]) = \int^a_bp(x)dx \ \ \ \ (14.1)
+$$
+Loosely speaking, the probability density function p describes the relative likelihood of a random variable taking a certain value; if $p(x_1) = 6.0$ and $p(x_2) = 3.0$, then a random variable with density p is twice as likely to have a value “near” $x_1$ than it is to have a value near $x_2$. The density p has two characteristics:
+广义地说，概率密度函数p描述了一个随机变量取某一值的相对似然;如果是$p(x_1) = 6.0$和$p(x_2) = 3.0$，那么密度p的随机变量在$x_1$附近的概率是在$x_2$附近的概率的两倍。密度p有两个特点:
+$$
+p(x) ≥ 0 (probability\ is\ nonnegative), \ \ \ \ \ (14.2) \\
+\int^{+∞}_{-∞}p(x)dx = 1 (Probability(x ∈ \R) = 1). \ \ \ \ \  (14.3)
+$$
+As an example, the canonical random variable ξ takes on values between zero (inclusive) and one (non-inclusive) with uniform probability (here uniform simply means each value for ξ is equally likely). This implies that the probability density function q for ξ is
+作为一个例子，规范随机变量ξ以均匀的概率取0(包括)和1(不包括)之间的值(这里均匀仅仅意味着ξ的每个值都是等可能的)。这意味着ξ的概率密度函数q是
+$$
+q(ξ) = \begin{cases}
+1\ \  \ \ \ \ if\ 0 ≤ ξ < 1, \\
+0\ \ \ \ \ \ otherwise
+\end{cases}
+$$
+The space over which ξ is defined is simply the interval $[0, 1)$. The probability that ξ takes on a value in a certain interval $[a, b] ∈ [0, 1)$ is
+定义ξ的空间就是区间$[0, 1)$。ξ在某一区间$[a, b] ∈ [0, 1)$取值的概率是
+$$
+Probability(a ≤ ξ ≤ b) = \int^b_a1dx = b-a.
+$$
+
+### 14.2.2 One-Dimensional Expected Value 一维期望值
+
+The average value that a real function f of a one-dimensional random variable with underlying pdf $p$ will take on is called its expected value, $E(f(x))$ (sometimes written $Ef(x))$:
+具有基础 pdf $p$ 的一维随机变量的实函数 f 所取的平均值称为其期望值 $E(f(x))$ （有时写作 $Ef(x))$：
+$E(f(x)) = \int f(x)p(x)dx \\$
+
+The expected value of a one-dimensional random variable can be calculated by setting $f(x) = x$. The expected value has a surprising and useful property: the expected value of the sum of two random variables is the sum of the expected values of those variables:
+一维随机变量的期望值可以通过设置 $f(x) = x$ 来计算。 期望值有一个令人惊讶且有用的属性：两个随机变量之和的期望值是这些变量的期望值之和：
+$E(x + y) = E(x) + E(y),$
+
+for random variables x and y. Because functions of random variables are themselves random variables, this linearity of expectation applies to them as well:
+对于随机变量 x 和 y。 因为随机变量的函数本身就是随机变量，所以这种期望的线性也适用于它们： 
+$E(f(x) + g(y)) = E(f(x)) + E(g(y)).  $
+
+An obvious question to ask is whether this property holds if the random variables being summed are correlated (variables that are not correlated are called independent). This linearity property in fact does hold whether or not the variables are independent! This summation property is vital for most Monte Carlo applications.
+一个明显的问题是，如果求和的随机变量是相关的（不相关的变量称为独立的），这个属性是否成立。 事实上，无论变量是否独立，这种线性属性都成立！ 此求和属性对于大多数蒙特卡罗应用至关重要。
+
+### 14.2.3 Multidimensional Random Variables 多维随机变量
+
+The discussion of random variables and their expected values extends naturally to multidimensional spaces. Most graphics problems will be in such higher-dimensional spaces. For example, many lighting problems are phrased on the surface of the hemisphere. Fortunately, if we define a measure $μ$ on the space the random variables occupy, everything is very similar to the one-dimensional case. Suppose the space S has associated measure $μ$; for example S is the surface of a sphere and $μ$ measures area. We can define a pdf $p : S \mapsto \R$, and if $x$ is a random variable with $x ∼ p$, then the probability that x will take on a value in some region $S_i ⊂ S$ is given by the integral
+对随机变量及其期望值的讨论自然延伸到多维空间。 大多数图形问题都出现在这样的高维空间中。 例如，许多照明问题都是在半球表面上表述的。 幸运的是，如果我们在随机变量占据的空间上定义一个度量$μ$，那么一切都与一维情况非常相似。 假设空间S有关联测度$μ$； 例如，S 是球体的表面，$μ$ 测量面积。 我们可以定义一个 pdf $p : S \mapsto \R$，如果 $x$ 是一个 $x ∼ p$ 的随机变量，那么 x 在某个区域 $S_i ⊂ S$ 取值的概率为 由积分给出
+$Probability(x ∈ Si) = \int_{S_i} p(x)dμ.\\$
+
+Here Probability (event ) is the probability that event is true, so the integral is the probability that x takes on a value in the region $S_i$. 
+这里的概率 (event ) 是事件为真的概率，因此积分是 x 在 $S_i$ 区域中取值的概率。
+
+In graphics, S is often an area $(dμ = dA = dxdy)$ or a set of directions (points on a unit sphere: $dμ = dω = sin θ dθ dφ$). As an example, a two-dimensional random variable $α$ is a uniformly distributed random variable on a disk of radius R. Here uniformly means uniform with respect to area, e.g., the way a bad dart player’s hits would be distributed on a dart board. Since it is uniform, we know that $p(α)$ is some constant. From the fact that the area of the disk is $πr^2$ and that the total probability is one, we can deduce that
+在图形中，S 通常是一个面积 $(dμ = dA = dxdy)$ 或一组方向（单位球面上的点：$dμ = dω = sin θ dθ dφ$）。 举个例子，二维随机变量 $α$ 是半径为 R 的圆盘上均匀分布的随机变量。这里均匀意味着面积均匀，例如，糟糕的飞镖玩家的命中在飞镖上的分布方式 木板。 由于它是一致的，我们知道 $p(α)$ 是某个常数。 根据圆盘面积为 $πr^2$ 且总概率为 1 的事实，我们可以推断出
+$p(α) =  \frac{1}{πR^2}\\$
+
+This means that the probability that α is in a certain subset $S_1$ of the disk is just
+这意味着 α 位于磁盘的某个子集 $S_1$ 中的概率为
+$Probability(α ∈ S_1) = \int_{S_1}\frac{1}{πR^2}dA \\$
+
+This is all very abstract. To actually use this information, we need the integral in a form we can evaluate. Suppose $S_i$ is the portion of the disk closer to the center than the perimeter. If we convert to polar coordinates, then $α$ is represented as a $(r, φ)$ pair, and $S_1$ is the region where $r < R/2$. Note, that just because $α$ is uniform, it does not imply that $φ$ or $r$ are necessarily uniform (in fact, $φ$ is uniform, and $r$ is not uniform). The differential area $dA$ is just $r\ dr\ dφ$. Thus,
+这一切都非常抽象。 为了实际使用这些信息，我们需要采用可以计算的形式进行积分。 假设 $S_i$ 是圆盘上比周边更靠近中心的部分。 如果我们转换为极坐标，则$α$表示为$(r, φ)$对，$S_1$是$r < R/2$的区域。 请注意，仅仅因为 $α$ 是一致的，并不意味着 $φ$ 或 $r$ 一定是一致的（事实上，$φ$ 是一致的，而 $r$ 不是一致的）。 微分面积$dA$就是$r\ dr\ dφ$。 因此，
+$Probability (r < R^2 ) = \int^{2\pi}_0\int^{(\frac{R}{2})}_0 \frac{1}{\pi R^2}r\ dr\ dφ = 0.25\\ $
+
+The formula for expected value of a real function applies to the multidimensional case:
+实函数期望值的公式适用于多维情况：
+$E(f(x)) = \int_S f(x)p(x)dμ, \\ $
+
+where $x ∈ S$ and $f : S \mapsto \R$, and $p : S \mapsto \R$. For example, on the unit square $S = [0, 1] × [0, 1]$ and $p(x, y) = 4xy$, the expected value of the $x$ coordinate for $(x, y) ∼ p$ is
+比如$x ∈ S$$f : S \mapsto \R$和$p : S \mapsto \R$。例如，在单位方格$S = [0, 1] × [0, 1]$和$p(x, y) = 4xy$上，$(x, y) ∼ p$的$x$坐标的期望值为
+$$
+E(x) = \int_S f(x, y)p(x, y)dA \\
+= \int^1_0\int^1_0 4x^2y dx dy \\
+= \frac{2}{3}
+$$
+Note that here $f(x, y) = x$.
+注意这里$f(x, y) = x$。 
+
+### 14.2.4 Variance 方差
+
+The variance, V (x), of a one-dimensional random variable is, by definition, the expected value of the square of the difference between x and E(x):
+根据定义，一维随机变量的方差 V (x) 是 x 和 E(x) 之差的平方的期望值：
+$V (x) ≡ E([x - E(x)]^2)  $
+
+Some algebraic manipulation gives the non-obvious expression:
+一些代数运算给出了不明显的表达式：
+$V (x) = E(x^2) - [E(x)]^2 .  $
+
+The expression $E([x − E(x)]^2)$ is more useful for thinking intuitively about variance, while the algebraically equivalent expression $E(x^2) − [E(x)]^2$ is usually convenient for calculations. The variance of a sum of random variables is the sum of the variances if the variables are independent. This summation property of variance is one of the reasons it is frequently used in analysis of probabilistic models. The square root of the variance is called the standard deviation, $σ$, which gives some indication of expected absolute deviation from the expected value.
+表达式 $E([x − E(x)]^2)$ 对于直观地思考方差更有用，而代数等效表达式 $E(x^2) − [E(x)]^2$ 通常更方便 计算。 如果变量是独立的，则随机变量之和的方差是方差之和。 方差的求和性质是它经常用于概率模型分析的原因之一。 方差的平方根称为标准差 $σ$，它给出了与预期值的预期绝对偏差的一些指示。
+
+### 14.2.5 Estimated Means 估计平均值
+
+Many problems involve sums of independent random variables $x_i$, where the variables share a common density p. Such variables are said to be independent identically distributed (iid) random variables. When the sum is divided by the number of variables, we get an estimate of $E(x)$:
+许多问题涉及独立随机变量 $x_i$ 的总和，其中变量共享公共密度 p。 这些变量被称为独立同分布（iid）随机变量。 当总和除以变量数量时，我们得到 $E(x)$ 的估计值：
+$E(x) ≈ \frac{1}{N}\sum^N_{i=1}x_i \\$
+
+As N increases, the variance of this estimate decreases. We want $N$ to be large enough so that we have confidence that the estimate is “close enough.” However, there are no sure things in Monte Carlo; we just gain statistical confidence that our estimate is good. To be sure, we would have to have $N = ∞$. This confidence is expressed by the Law of Large Numbers:
+随着 N 的增加，该估计的方差会减小。 我们希望 $N$ 足够大，以便我们有信心估计值“足够接近”。 然而，蒙特卡洛没有确定的事情； 我们只是获得了统计上的信心，相信我们的估计是好的。 可以肯定的是，我们必须有 $N = ∞$。 这种信心由大数定律表达：
+$Probability[E(x) = \lim_{N\rightarrow ∞} \frac{1}{N}\sum^N_{i=1}x_i] = 1 \\$ 
+
+## 14.3 Monte Carlo Integration 蒙特卡罗积分
+
+In this section, the basic Monte Carlo solution methods for definite integrals are outlined. These techniques are then straightforwardly applied to certain integral problems. All of the basic material of this section is also covered in several of the classic Monte Carlo texts. (See the Notes section at the end of this chapter.)
+本节概述定积分的基本蒙特卡罗求解方法。 然后，这些技术可以直接应用于某些积分问题。 本节的所有基本材料也包含在一些经典的蒙特卡罗文本中。 （参见本章末尾的注释部分。）
+
+As discussed earlier, given a function $f : S \mapsto \R$ and a random variable $x ∼ p$, we can approximate the expected value of f(x) by a sum:
+如前所述，给定函数 $f : S \mapsto \R$ 和随机变量 $x ∼ p$，我们可以通过总和来近似 f(x) 的期望值：
+$$
+E(f(x)) = \int_{x∈S} f(x)p(x)dμ ≈ \frac{1}{N}\sum^N_{i=1}f(x_i) \ \ \ (14.4)
+$$
+Because the expected value can be expressed as an integral, the integral is also approximated by the sum. The form of Equation (14.4) is a bit awkward; we would usually like to approximate an integral of a single function g rather than a product $fp$. We can accomplish this by substituting $g = fp$ as the integrand:
+由于期望值可以表示为积分，因此积分也可以通过总和来近似。 方程（14.4）的形式有点尴尬； 我们通常希望近似单个函数 g 的积分，而不是乘积 $fp$。 我们可以通过替换 $g = fp$ 作为被积函数来实现这一点：
+$$
+\int_{x∈S} = g(x)dμ ≈ \frac{1}{N}\sum^{N}_{i=1}\frac{g(x_i)}{p(x_i)} \ \ \ (14.5)
+$$
+For this formula to be valid, p must be positive when g is nonzero.
+为了使该公式有效，当 g 不为零时，p 必须为正。
+
+So to get a good estimate, we want as many samples as possible, and we want the $g/p$ to have a low variance ($g$ and $p$ should have a similar shape). Choosing $p$ intelligently is called importance sampling, because if $p$ is large where $g$ is large, there will be more samples in important regions. Equation (14.4) also shows the fundamental problem with Monte Carlo integration: diminishing return. Because the variance of the estimate is proportional to $1/N$, the standard deviation is proportional to $1/\sqrt{N}$. Since the error in the estimate behaves similarly to the standard deviation, we will need to quadruple $N$ to halve the error. 
+因此，为了获得良好的估计，我们需要尽可能多的样本，并且希望 $g/p$ 具有较低的方差（$g$ 和 $p$ 应该具有相似的形状）。 智能地选择$p$称为重要性采样，因为如果$p$很大而$g$很大，那么重要区域会有更多的样本。 方程（14.4）还显示了蒙特卡罗积分的基本问题：收益递减。 由于估计的方差与 $1/N$ 成正比，因此标准差与 $1/\sqrt{N}$ 成正比。 由于估计误差的表现与标准差类似，因此我们需要将 $N$ 翻四倍才能将误差减半。
+
+Another way to reduce variance is to partition $S$, the domain of the integral, into several smaller domains $S_i$, and evaluate the integral as a sum of integrals over the Si. This is called stratified sampling, the technique that jittering employs in pixel sampling (Chapter 4). Normally only one sample is taken in each $S_i$ (with density $p_i$), and in this case the variance of the estimate is:
+减少方差的另一种方法是将积分域 $S$ 划分为几个较小的域 $S_i$，并将积分评估为 Si 上的积分之和。 这称为分层采样，即抖动在像素采样中采用的技术（第 4 章）。 通常，每个 $S_i$ 中仅抽取一个样本（密度为 $p_i$），在这种情况下，估计的方差为：
+$$
+var(\sum^N_{i=1}\frac{g(x_i)}{p_i(x_i)}) = \sum^N_{i = 1}var(\frac{g(x_i)}{p_i(x_i)})  \ \ \ \ (14.6)
+$$
+It can be shown that the variance of stratified sampling is never higher than unstratified if all strata have equal measure: 
+可以证明，如果所有层具有相同的度量，则分层抽样的方差永远不会高于未分层抽样的方差：
+$\int_{S_i} p(x)dμ =  \frac{1}{N}\int_Sp(x)dμ\\$
+
+The most common example of stratified sampling in graphics is jittering for pixel sampling as discussed in Section 13.4.
+图形中分层采样最常见的例子是像素采样的抖动，如第 13.4 节所述。
+
+As an example of the Monte Carlo solution of an integral I, set $g(x)$ equal to $x$ over the interval $(0, 4)$:
+作为积分 I 的蒙特卡洛解的示例，设置 $g(x)$ 在区间 $(0, 4)$ 上等于 $x$：
+$$
+I = \int^4_0xdx = 8 \ \ \ \ \ (14.7)
+$$
+The impact of the shape of the function p on the variance of the $N$ sample estimates is shown in Table 14.1. Note that the variance is reduced when the shape of $p$ is similar to the shape of $g$. The variance drops to zero if $p = g/I$, but I is not usually known or we would not have to resort to Monte Carlo. One important principle illustrated in Table 14.1 is that stratified sampling is often far superior to importance sampling (Mitchell, 1996). Although the variance for this stratification on $I$ is inversely proportional to the cube of the number of samples, there is no general result for the behavior of variance under stratification. There are some functions for which stratification does no good. One example is a white noise function, where the variance is constant for all regions. On the other hand, most functions will benefit from stratified sampling, because the variance in each subcell will usually be smaller than the variance of the entire domain.
+函数 p 的形状对 $N$ 样本估计方差的影响如表 14.1 所示。 请注意，当 $p$ 的形状与 $g$ 的形状相似时，方差会减小。 如果 $p = g/I$，则方差降至零，但 I 通常不知道，否则我们不必求助于蒙特卡洛。 表 14.1 中说明的一个重要原则是分层抽样通常远远优于重要性抽样（Mitchell，1996）。 尽管 $I$ 上的这种分层的方差与样本数量的立方成反比，但分层下的方差行为没有一般结果。 对于某些功能，分层没有什么好处。 一个例子是白噪声函数，其中所有区域的方差都是恒定的。 另一方面，大多数函数将受益于分层采样，因为每个子单元中的方差通常小于整个域的方差。
+
+|   Method   | Sampling function |   Variance   | Samples needed for standard error of 0.008 |
+| :--------: | :---------------: | :----------: | :----------------------------------------: |
+| importance |   (6 - x)/(16)    | $56.8N^{-1}$ |                  887,500                   |
+| importance |        1/4        | $21.3N^{-1}$ |                  332,812                   |
+| importance |    (x + 2)/16     | $6.3N^{-1}$  |                   98,437                   |
+| importance |        x/8        |      0       |                     1                      |
+| stratified |        1/4        | $21.3N^{-3}$ |                     70                     |
+
+Table 14.1. Variance for Monte Carlo estimate of $\int^4_0xdx$.
+表 14.1。 $\int^4_0xdx$ 的蒙特卡罗估计方差。
+
+### 14.3.1 Quasi–Monte Carlo Integration 准蒙特卡罗积分
+
+A popular method for quadrature is to replace the random points in Monte Carlo integration with quasi-random points. Such points are deterministic, but are in some sense uniform. For example, on the unit square $[0, 1]^2$, a set of N quasi-random points should have the following property on a region of area A within the square:
+一种流行的求积方法是用准随机点代替蒙特卡罗积分中的随机点。 这些点是确定性的，但在某种意义上是一致的。 例如，在单位正方形 $[0, 1]^2$ 上，一组 N 个准随机点在该正方形内面积 A 的区域上应具有以下性质
+$number\ of\ points\ in\ the\ region ≈ AN  $
+
+For example, a set of regular samples in a lattice has this property.
+例如，晶格中的一组规则样本就具有此属性。
+
+Quasi-random points can improve performance in many integration applications. Sometimes care must be taken to make sure that they do not introduce aliasing. It is especially nice that, in any application where calls are made to random or stratified points in $[0, 1]^d$, one can substitute d-dimensional quasi-random points with no other changes. 
+准随机点可以提高许多集成应用程序的性能。 有时必须小心确保它们不会引入混叠。 特别好的一点是，在任何调用 $[0, 1]^d$ 中的随机或分层点的应用程序中，我们可以替换 d 维准随机点而无需其他更改。
+
+The key intuition motivating quasi–Monte Carlo integration is that when estimating the average value of an integrand, any set of sample points will do, provided they are “fair.”
+激发准蒙特卡罗积分的关键直觉是，在估计被积函数的平均值时，任何样本点集都可以，只要它们是“公平的”。
+
+## 14.4 Choosing Random Points 选择随机点
+
+We often want to generate sets of random or pseudorandom points on the unit square for applications such as distribution ray tracing. There are several methods for doing this, e.g., jittering (see Section 13.4). These methods give us a set of N reasonably equidistributed points on the unit square $[0, 1]^2$ : $(u_1, v_1)$ through $(u_N , v_N)$. 
+我们经常希望在单位正方形上生成随机或伪随机点集，以用于分布光线追踪等应用。 有几种方法可以做到这一点，例如抖动（参见第 13.4 节）。 这些方法为我们提供了单位正方形 $[0, 1]^2$ 上一组 N 个合理均匀分布的点：$(u_1, v_1)$ 到 $(u_N , v_N)$。
+
+Sometimes, our sampling space may not be square (e.g., a circular lens), or may not be uniform (e.g., a filter function centered on a pixel). It would be nice if we could write a mathematical transformation that would take our equidistributed points $(u_i, v_i)$ as input and output a set of points in our desired sampling space with our desired density. For example, to sample a camera lens, the transformation would take $(u_i, v_i)$ and output $(r_i, φ_i)$ such that the new points are approximately equidistributed on the disk of the lens. While we might be tempted to use the transform
+有时，我们的采样空间可能不是正方形的（例如，圆形透镜），或者可能不均匀（例如，以像素为中心的滤波器函数）。 如果我们可以编写一个数学变换，将均匀分布的点 $(u_i, v_i)$ 作为输入，并以所需的密度输出所需采样空间中的一组点，那就太好了。 例如，要对相机镜头进行采样，变换将采用 $(u_i, v_i)$ 并输出 $(r_i, φ_i)$ ，以便新点近似均匀分布在镜头圆盘上。 虽然我们可能会想使用转换
+$$
+φ_i = 2πu_i, \\
+r_i = v_iR,
+$$
+it has a serious problem. While the points do cover the lens, they do so nonuniformly (Figure 14.6). What we need in this case is a transformation that takes equal-area regions to equal-area regions—one that takes uniform sampling distributions on the square to uniform distributions on the new domain.
+它有一个严重的问题。 虽然这些点确实覆盖了镜头，但它们的覆盖并不均匀（图 14.6）。 在这种情况下，我们需要的是一种将等面积区域转换为等面积区域的转换，即将正方形上的均匀采样分布转换为新域上的均匀分布。 
+![Figure 14.6](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 14.6.png)
+Figure 14.6. The transform that takes the horizontal and vertical dimensions uniformly to $(r, φ)$ does not preserve relative area; not all of the resulting areas are the same.
+图 14.6。 将水平和垂直尺寸统一为 $(r, φ)$ 的变换不会保留相对面积； 并非所有生成的区域都是相同的。
+
+There are several ways to generate such nonuniform points or uniform points on non-rectangular domains, and the following sections review the three most often used: function inversion, rejection, and Metropolis.
+有多种方法可以在非矩形域上生成此类非均匀点或均匀点，以下部分回顾最常用的三种：函数求逆、拒绝和 Metropolis。
+
+### 14.4.1 Function Inversion 函数反转
+
+If the density $f(x)$ is one-dimensional and defined over the interval $x ∈ [x_{min}, x_{max}]$, then we can generate random numbers $α_i$ that have density $f$ from a set of uniform random numbers $ξ_i$, where $ξ_i ∈ [0, 1]$. To do this, we need the cumulative probability distribution function $P(x)$:
+如果密度 $f(x)$ 是一维的，并且定义在区间 $x ∈ [x_{min}, x_{max}]$ 上，那么我们可以生成密度为 $f$ 的随机数 $α_i$ 一组均匀随机数$ xi_i $，其中$ xi_i ∈ [0, 1] $。 为此，我们需要累积概率分布函数 $P(x)$：
+$Probability(α < x) = P (x) =  \int^x_{x_{min}}f(x')dμ.  \\ $
+
+To get $α_i$, we simply transform $ξ_i$:
+为了得到$α_i$，我们只需变换$ψ_i$： 
+$α_i = P^{-1}(ξ_i),  $
+
+where $P^{−1}$ is the inverse of $P$. If $P$ is not analytically invertible, then numerical methods will suffice, because an inverse exists for all valid probability distribution functions.
+其中 $P^{−1}$ 是 $P$ 的倒数。 如果 $P$ 在分析上不可逆，那么数值方法就足够了，因为所有有效的概率分布函数都存在逆函数。
+
+Note that analytically inverting a function is more confusing than it should be due to notation. For example, if we have the function
+请注意，由于符号的原因，分析求逆函数比应有的情况更令人困惑。 例如，如果我们有函数
+$y=x^2$
+
+for $x > 0$, then the inverse function is expressed in terms of $y$ as a function of $x$:
+对于 $x > 0$，则反函数用 $y$ 表示为 $x$ 的函数：
+$x = \sqrt{y}$  
+
+When the function is analytically invertible, it is almost always that simple. However, things are a little more opaque with the standard notation:
+当函数在解析上是可逆的时，它几乎总是那么简单。 然而，使用标准符号时事情有点不透明：
+$f(x) = x^2, \\
+f^{-1}(x) = \sqrt{x}.  $
+
+Here x is just a dummy variable. You may find it easier to use the less standard notation:
+这里x只是一个虚拟变量。 您可能会发现使用不太标准的符号更容易：
+$y = x^2,\\
+x = \sqrt{y},  $
+
+while keeping in mind that these are inverse functions of each other.
+同时请记住，它们是彼此的反函数。
+
+For example, to choose random points $x_i$ that have density
+例如，选择具有密度的随机点 $x_i$
+$p(x) = \frac{3x^2}{2}\\$
+
+on [-1, 1], we see that
+在 [-1, 1] 上，我们看到
+$P(x) = \frac{x^3+1}{2}\\$
+
+and
+和
+$P^{-1}(x) = \sqrt[3]{2x-1}  $
+
+so we can “warp” a set of canonical random numbers $(ξ_1, · · · , ξ_N)$ to the properly distributed numbers
+所以我们可以将一组规范随机数$(ξ_1, · · · , ξ_N)$”扭曲”为正确分布的数字
+$(x_1, · · · , x_N) = (\sqrt[3]{2ξ_1 - 1}, · · · , \sqrt[3]{2ξ_N - 1}).  $
+
+Of course, this same warping function can be used to transform “uniform” jittered samples into nicely distributed samples with the desired density. 
+当然，同样的扭曲函数可用于将“均匀”的抖动样本转换为具有所需密度的良好分布的样本。
+
+If we have a random variable $α = (α_x, α_y)$ with two-dimensional density $(x, y)$ defined on $[x_{min}, x_{max}] × [y_{min}, y_{max}]$, then we need the two-dimensional distribution function:
+如果我们有一个随机变量 $α = (α_x, α_y)$，其二维密度 $(x, y)$ 定义在 $[x_{min}, x_{max}] × [y_{min}, y_{ max}]$，那么我们需要二维分布函数：
+$Probability(α_x < x\ and\ α_y < y) = F(x, y) = \int^y_{y_{min}}\int^x_{x_{min}}f(x', y')dμ(x', y').   \\$
+
+We first choose an xi using the marginal distribution $F(x, y_{max})$ and then choose $y_i$ according to $F(x_i, y)/F(x_i, y_{max})$. If $f(x, y)$ is separable (expressible as $g(x)h(y)$), then the one-dimensional techniques can be used on each dimension.
+我们首先使用边际分布 $F(x, y_{max})$ 选择 xi，然后根据 $F(x_i, y)/F(x_i, y_{max})$ 选择 $y_i$。 如果 $f(x, y)$ 是可分离的（可表示为 $g(x)h(y)$），则可以在每个维度上使用一维技术。
+
+Returning to our earlier example, suppose we are sampling uniformly from the disk of radius $R$, so $p(r, φ) = 1/(πR^2)$. The two-dimensional distribution function is
+回到我们之前的例子，假设我们从半径为 $R$ 的圆盘上均匀采样，因此 $p(r, φ) = 1/(πR^2)$。 二维分布函数为
+$Probability(r < r_0\ and\ φ < φ_0) = F(r_0, φ_0) = \int^{φ_0}_0\int^{r_0}_{0} 
+\frac{rdrdφ}{πR^2} = \frac{φr^2}{2πR^2}\\ $
+
+This means that a canonical pair $(ξ_1, ξ_2)$ can be transformed to a uniform random point on the disk:
+这意味着规范对 $(xi_1, xi_2)$ 可以转换为磁盘上的均匀随机点： 
+$φ = 2πξ_1,\\
+r = R\sqrt{ξ_2}.  $
+
+This mapping is shown in Figure 14.7.
+该映射如图 14.7 所示。
+![Figure 14.7](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 14.7.png)
+Figure 14.7. A mapping that takes equal area regions in the unit square to equal area regions in the disk.
+图 14.7。 将单位正方形中的等面积区域映射到磁盘中的等面积区域。
+
+To choose reflected ray directions for some realistic rendering applications, we choose points on the unit hemisphere according to the density:
+为了为某些真实渲染应用选择反射光线方向，我们根据密度选择单位半球上的点：
+$p(θ, φ) =  \frac{n+1}{2\pi} \cos^n θ  \\$
+
+where n is a Phong-like exponent, $θ$ is the angle from the surface normal and $θ ∈ [0, π/2]$ (is on the upper hemisphere) and $φ$ is the azimuthal angle ($φ ∈ [0, 2π]$). The cumulative distribution function is
+其中 n 是 Phong 型指数，$θ$ 是与表面法线的角度，$θ ∈ [0, π/2]$（位于上半球），$φ$ 是方位角（$φ ε [0, 2π]$)。 累积分布函数为
+$$
+P(θ, φ) = \int^φ_0\int^θ_0 p(θ', φ') \sin θ'dθ'dφ'. (14.8)
+$$
+The $\sin θ'$ term arises because, on the sphere, $dω = \cos θdθdφ$. When the marginal densities are found, $p$ (as expected) is separable, and we find that a $(ξ_1, ξ_2)$ pair of canonical random numbers can be transformed to a direction by
+$\sin θ'$ 项的出现是因为在球面上，$dω = \cos θdθdφ$。 当找到边际密度时，$p$（如预期）是可分离的，并且我们发现$(Ψ_1，Ψ_2)$一对规范随机数可以转换为一个方向：
+$θ = \arccos ((1 - ξ_1)^{\frac{1}{n+1}}) , \\
+φ = 2πξ_2.  $
+
+Again, a nice thing about this is that a set of jittered points on the unit square can be easily transformed to a set of jittered points on the hemisphere with the desired distribution. Note that if n is set to 1, we have a diffuse distribution, as is often needed.
+同样，这样做的一个好处是，单位正方形上的一组抖动点可以轻松地转换为具有所需分布的半球上的一组抖动点。 请注意，如果 n 设置为 1，我们将得到扩散分布，这正是经常需要的。
+
+Often we must map the point on the sphere into an appropriate direction with respect to a $uvw$ basis. To do this, we can first convert the angles to a unit vector $\vec{a}$:
+通常我们必须将球体上的点映射到相对于 $uvw$ 基础的适当方向。 为此，我们首先可以将角度转换为单位向量 $\vec{a}$：
+$\bold{a} = (\cos φ \sin θ, \sin φ \sin θ, \cos θ)  $
+
+As an efficiency improvement, we can avoid taking trigonometric functions of inverse trigonometric functions (e.g., $\cos (\arccos θ)$). For example, when $n = 1$ (a diffuse distribution), the vector $\bold{a}$ simplifies to
+为了提高效率，我们可以避免采用反三角函数的三角函数（例如，$\cos (\arccos θ)$）。 例如，当 $n = 1$ （扩散分布）时，向量 $\bold{a}$ 简化为
+$\bold{a} = (\cos (2πξ_1)\sqrt{ξ_2}, \sin (2πξ_1)\sqrt{ξ_2}, \sqrt{1 - ξ_2})  $
+
+### 14.4.2 Rejection 拒绝
+
+A rejection method chooses points according to some simple distribution and rejects some of them that are in a more complex distribution. There are several scenarios where rejection is used, and we show some of these by example.
+拒绝方法根据一些简单分布选择点并拒绝其中一些更复杂分布的点。 有多种使用拒绝的场景，我们通过示例展示其中一些场景。
+
+Suppose we want uniform random points within the unit circle. We can first choose uniform random points $(x, y) ∈ [−1, 1]^2$ and reject those outside the circle. If the function r() returns a canonical random number, then the procedure is:
+假设我们想要单位圆内均匀的随机点。 我们可以首先选择均匀的随机点 $(x, y) ∈ [−1, 1]^2$ 并拒绝那些在圆之外的点。 如果函数 r() 返回规范随机数，则过程为：
+
+> done = false
+> while (not done) do
+> 	x = -1 + 2r()
+> 	y = -1 + 2r()
+> 	if $(x^2 + y^2 < 1)$ then
+> 		done = true  
+
+If we want a random number $x ∼ p$ and we know that $p : [a, b] \mapsto \R$, and that for all $x, p(x) < m$, then we can generate random points in the rectangle $[a, b] × [0, m]$ and take those where $y < p(x)$:
+如果我们想要一个随机数 $x ∼ p$ 并且我们知道 $p : [a, b] \mapsto \R$，并且对于所有 $x，p(x) < m$，那么我们可以生成随机点 在矩形 $[a, b] × [0, m]$ 中并取 $y < p(x)$ 处的值：
+
+> done = false
+> while (not done) do
+> 	x = a + r()(b - a)
+> 	y = r()m
+> 	if (y < p(x)) then
+> 		done = true  
+
+This same idea can be applied to take random points on the surface of a sphere. To pick a random unit vector with uniform directional distribution, we first pick a random point in the unit sphere and then treat that point as a direction vector by taking the unit vector in the same direction:
+同样的想法可以应用于在球体表面上随机取点。 为了选取具有均匀方向分布的随机单位向量，我们首先在单位球体中选取一个随机点，然后通过在同一方向上取单位向量将该点视为方向向量：
+
+> done = false
+> while (not done) do
+> 	x = -1 + 2r()
+> 	y = -1 + 2r()
+> 	z = -1 + 2r()
+> 	if $((l = \sqrt{x^2 + y^2 + z^2}) < 1)$ then
+> 		done = true
+> x = x/l
+> y = y/l
+> z = z/l
+
+Although the rejection method is usually simple to code, it is rarely compatible with stratification. For this reason, it tends to converge more slowly and should thus be used mainly for debugging, or in particularly difficult circumstances.
+尽管拒绝方法通常编写起来很简单，但它很少与分层兼容。 因此，它往往收敛得更慢，因此应主要用于调试或特别困难的情况下。
+
+### 14.4.3 Metropolis 大都会
+
+The Metropolis method uses random mutations to produce a set of samples with a desired density. This concept is used extensively in the Metropolis Light Transport algorithm referenced in the chapter notes. Suppose we have a random point $x_0$ in a domain $S$. Further, suppose for any point $x$, we have a way to generate random $y ∼ p_x$. We use the marginal notation $p_x(y) ≡ p(x → y)$ to denote this density function. Now, suppose we let $x_1$ be a random point in $S$ selected with underlying density $p(x_0 → x_1)$. We generate $x_2$ with density $p(x_1 → x_0)$ and so on. In the limit, where we generate an infinite number of samples, it can be proved that the samples will have some underlying density determined by p regardless of the initial point $x_0$. 
+Metropolis 方法使用随机突变来生成一组具有所需密度的样本。 这个概念在章节注释中引用的 Metropolis Light Transport 算法中被广泛使用。 假设我们在域 $S$ 中有一个随机点 $x_0$。 此外，假设对于任何点 $x$，我们有办法生成随机 $y ∼ p_x$。 我们使用边际符号 $p_x(y) ≡ p(x → y)$ 来表示该密度函数。 现在，假设我们让 $x_1$ 为 $S$ 中的一个随机点，选择的基础密度为 $p(x_0 → x_1)$。 我们生成密度为 $p(x_1 → x_0)$ 的 $x_2$ 等等。 在极限情况下，我们生成无限数量的样本，可以证明样本将具有由 p 确定的潜在密度，无论初始点 $x_0$ 如何。
+
+Now, suppose we want to choose $p$ such that the underlying density of samples to which we converge is proportional to a function $f(x)$ where f is a nonnegative function with domain $S$. Further, suppose we can evaluate $f$, but we have little or no additional knowledge about its properties (such functions are common in graphics). Also, suppose we have the ability to make “transitions” from $x_i$ to $x_{i+1}$ with underlying density function $t(x_{i} → x_{i+1})$. To add flexibility, further suppose we add the potentially nonzero probability that $x_i$ transitions to itself, i.e., $x_{i+1} = x_i$. We phrase this as generating a potential candidate $y ∼ t(x_i → y)$ and “accepting” this candidate (i.e., $x_{i+1} = y$) with probability $a(x_i → y)$ and rejecting it (i.e., $x_{i+1} = x_i$) with probability $1−a(x_i → y)$. Note that the sequence $x_0, x_1, x_2, . . .$ will be a random set, but there will be some correlation among samples. They will still be suitable for Monte Carlo integration or density estimation, but analyzing the variance of those estimates is much more challenging. 
+现在，假设我们要选择 $p$，使得我们收敛到的样本的基础密度与函数 $f(x)$ 成正比，其中 f 是域为 $S$ 的非负函数。 此外，假设我们可以评估 $f$，但我们对其属性知之甚少或根本不了解（此类函数在图形中很常见）。 另外，假设我们有能力使用底层密度函数 $t(x_{i} → x_{i+1})$ 进行从 $x_i$ 到 $x_{i+1}$ 的“转换”。 为了增加灵活性，进一步假设我们添加 $x_i$ 转换到自身的潜在非零概率，即 $x_{i+1} = x_i$。 我们将其表述为生成一个潜在候选 $y ∼ t(x_i → y)$ 并以 $a(x_i → y)$ 概率“接受”该候选（即 $x_{i+1} = y$）并拒绝 它（即 $x_{i+1} = x_i$）的概率为 $1−a(x_i → y)$。 请注意，序列 $x_0, x_1, x_2, . . .$ 将是一个随机集，但样本之间会有一些相关性。 它们仍然适用于蒙特卡罗积分或密度估计，但分析这些估计的方差更具挑战性。
+
+Now, suppose we are given a transition function $t(x → y)$ and a function $f(x)$ of which we want to mimic the distribution, can we use $a(y → x)$ such that the points are distributed in the shape of $f$ ? Or more precisely,
+现在，假设我们有一个转换函数 $t(x → y)$ 和一个我们想要模拟分布的函数 $f(x)$，我们可以使用 $a(y → x)$ 使得点 以 $f$ 的形式分布？ 或者更准确地说，
+${x0, x1, x2, . . .} ∼ \frac{f}{\int_sf}\\$
+
+It turns out this can be forced by making sure the xi are stationary in some strong sense. If you visualize a huge collection of sample points $x$, you want the “flow” between two points to be the same in each direction. If we assume the density of points near $x$ and $y$ are proportional to $f(x)$ and $f(y)$, respectively, then the flow in the two directions should be the same:
+事实证明，这可以通过确保 xi 在某种强意义上是静止的来强制实现。 如果您可视化大量样本点 $x$，您希望两点之间的“流量”在每个方向上都相同。 如果我们假设$x$和$y$附近的点的密度分别与$f(x)$和$f(y)$成正比，那么两个方向上的流量应该是相同的：
+$flow(x → y) = kf(x)t(x → y)a(x → y), \\
+flow(y → x) = kf(y)t(y → x)a(y → x),  $
+
+where $k$ is some positive constant. Setting these two flows constant gives a constraint on $a$: 
+其中 $k$ 是某个正常数。 将这两个流设置为常数会给 $a$ 带来约束：
+$\frac{a(y → x)}{a(x → y)} = \frac{f(x)t(x → y)}{f(y)t(y → x)}\\$
+
+Thus, if either $a(y → x)$ or $a(x → y)$ is known, so is the other. Making them larger improves the chance of acceptance, so the usual technique is to set the larger of the two to 1. 
+因此，如果 $a(y → x)$ 或 $a(x → y)$ 已知，则另一个也已知。 使它们更大可以提高接受的机会，因此通常的技术是将两者中较大的设置为 1。
+
+A difficulty in using the Metropolis sample generation technique is that it is hard to estimate how many points are needed before the set of points is “good.” Things are accelerated if the first n points are discarded, although choosing $n$ wisely is nontrivial.
+使用 Metropolis 样本生成技术的一个困难在于，很难估计在点集“良好”之前需要多少个点。 如果前 n 个点被丢弃，事情就会加速，尽管明智地选择 $n$ 是很重要的。
+
+### 14.4.4 Example: Choosing Random Lines in the Square 示例：在正方形中选择随机线
+
+As an example of the full process of designing a sampling strategy, consider the problem of finding random lines that intersect the unit square $[0, 1]^2$. We want this process to be fair; that is, we would like the lines to be uniformly distributed within the square. Intuitively, we can see that there is some subtlety to this problem; there are “more” lines at an oblique angle than in horizontal or vertical directions. This is because the cross section of the square is not uniform.
+作为设计采样策略的完整过程的示例，请考虑查找与单位正方形 $[0, 1]^2$ 相交的随机线的问题。 我们希望这个过程是公平的； 也就是说，我们希望线条均匀分布在正方形内。 直观上，我们可以看出这个问题有一些微妙之处； 倾斜方向的线比水平或垂直方向的线“更多”。 这是因为正方形的横截面不均匀。
+
+Our first goal is to find a function-inversion method, if one exists, and then to fall back on rejection or Metropolis if that fails. This is because we would like to have stratified samples in line space. We try using normal coordinates first, because the problem of choosing random lines in the square is just the problem of finding uniform random points in whatever part of $(r, θ)$ space corresponds to lines in the square.
+我们的第一个目标是找到一种函数反转方法（如果存在），然后在失败时求助于拒绝或 Metropolis。 这是因为我们希望在行空间中有分层样本。 我们首先尝试使用法线坐标，因为在正方形中选择随机线的问题就是在 $(r, θ)$ 空间的任意部分中找到与正方形中的线相对应的均匀随机点的问题。
+
+Consider the region where $−π/2 < θ < 0$. What values of r correspond to lines that hit the square? For those angles, $r < cos θ$ are all the lines that hit the square as shown in Figure 14.8. Similar reasoning in the other four quadrants finds the region in $(r, θ)$ space that must be sampled, as shown in Figure 14.9. The equation of the boundary of that region $r_{max}(θ)$ is
+考虑 $−π/2 < θ < 0$ 的区域。 r 的什么值对应于击中正方形的线？ 对于这些角度，$r < cos θ$ 是击中正方形的所有线，如图 14.8 所示。 其他四个象限中的类似推理找到了$(r,θ)$空间中必须采样的区域，如图14.9所示。 该区域的边界方程 $r_{max}(θ)$ 为
+![Figure 14.8](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 14.8.png)
+Figure 14.8. The largest distance $r$ corresponds to a line hitting the square for $θ ∈ [ − π/2, 0 ]$. Because the square has sidelength one, $r = cos θ$.
+图 14.8。 最大距离 $r$ 对应于 $θ ∈ [ − π/2, 0 ]$ 的正方形的一条线。 因为正方形的边长为 1，所以 $r = cos θ$。
+
+![Figure 14.9](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 14.9.png)
+Figure 14.9. The maximum radius for lines hitting the unit square $[0,1]^2$ as a function of $θ$.  
+图 14.9。 到达单位正方形 $[0,1]^2$ 的线的最大半径作为 $θ$ 的函数。
+$$
+r_{max}(θ) = \begin{cases}
+0\ \ \ \ \ \  \ \ \ \ \ \ \  \ if\ θ ∈ [−π, −π/2 ], \\
+\cos θ\ \ \ \ \ \ \ \  if\ θ ∈ [−π/2 , 0], \\
+\sqrt{2}\cos(θ − π/4) \ \ \ \  \ \ if\ θ ∈ [0, π/2 ], \\
+\sin θ\ \ \ \  \ \ \ \ \  if\ θ ∈ [ π/2 , π].
+\end{cases}
+$$
+Because the region under $r_{max}(θ)$ is a simple function bounded below by $r = 0$, we can sample it by first choosing $θ$ according to the density function:
+因为 $r_{max}(θ)$ 下的区域是一个简单函数，其边界为 $r = 0$，所以我们可以通过首先根据密度函数选择 $θ$ 来对其进行采样：
+$p(θ) = \frac{r_{max}(θ)}{\int^π_{-π}r_{max}(θ)dθ}\\$
+
+The denominator here is 4. Now, we can compute the cumulative probability distribution function: 
+这里的分母是 4。现在，我们可以计算累积概率分布函数：
+$P (θ) =  \begin{cases}
+0\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \  \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ θ ∈ [-π, - π/2 ], \\
+(1 + sin θ)/4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ θ ∈ [-π/2 , 0], \\
+(1 + \frac{\sqrt{2}}{2} sin(θ - π/4 ))/2\ \ \ if\ θ ∈ [0, π/2 ], \\
+(3 - cos θ)/4\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ θ ∈ [ π/2 , π].  
+\end{cases}$
+
+We can invert this by manipulating $ξ_1 = P(θ)$ into the form $θ = g(ξ_1)$. This yields
+我们可以通过将 $Σ_1 = P(θ)$ 转换为 $θ = g(Σ_1)$ 的形式来反转它。 这产生
+$θ = \begin{cases}
+\arcsin(4ξ_1 - 1)\ \ \ \ \ \ if\ ξ_1 < \frac{1}{4}, \\
+\arcsin(\frac{\sqrt{2}}{2}(2ξ_1 - 1)) + \frac{\pi}{4}\ \ \ \ \ if\ ξ_1 ∈ [\frac{1}{4}, \frac{3}{4}], \\
+\arccos(3 - 4ξ_1)\ \ \ \ \ \ \ \ \ \  if ξ_1 > \frac{3}{4}.  
+\end{cases}$
+
+Once we have $θ$, then $r$ is simply: 
+一旦我们有了 $θ$，那么 $r$ 就很简单：
+$r = ξ_2r_{max}(θ)  $
+
+As discussed earlier, there are many parameterizations of the line, and each has an associated “fair” measure. We can generate random lines in any of these spaces as well. For example, in slope-intercept space, the region that hits the square is shown in Figure 14.10. By similar reasoning to the normal space, the density function for the slope is
+如前所述，生产线有许多参数化，每个参数化都有一个关联的“公平”度量。 我们也可以在任何这些空间中生成随机线。 例如，在斜截空间中，碰到正方形的区域如图 14.10 所示。 通过与正常空间类似的推理，斜率的密度函数为
+$p(m) =  \frac{1+|m|}{4}\\$
+
+![Figure 14.10](E:/持久化数据/笔记/Markdown/图形学/Fundamentals of Computer Graphics/Images/Figure 14.10.png)
+Figure 14.10. The region of $(m,b)$ space that contains lines that intersect the unit square $[0,1]^2$.
+图 14.10。 $(m,b)$ 空间的区域，包含与单位正方形 $[0,1]^2$ 相交的线。 
+
+with respect to the differential measure
+关于差分测量
+$dμ = \frac{dm}{(1 + m^2)^{\frac{3}{2}}}\\$
+
+This gives rise to the cumulative distribution function:
+这就产生了累积分布函数：
+$P(m) = \begin{cases} 
+\frac{1}{4} + \frac{m+1}{4\sqrt{1+m^2}} \ \ \ \ if\ m < 0 \\ 
+\frac{3}{4} + \frac{m-1}{4\sqrt{1+m^2}} \ \ \ \ if\ m ≥ 0 \\ 
+\end{cases}$
+
+These can be inverted by solving two quadratic equations. Given an m generated using $ξ_1$, we then have
+这些可以通过求解两个二次方程来反转。 给定使用$ xi_1 $生成的m，我们有
+$b =  \begin{cases} 
+(1 + m)ξ_2 \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ if\ ξ < \frac{1}{2} \\
+-m + (1 + m) ξ_2 \ \ \ \ \ \ \ \ otherwise
+\end{cases}$
+
+This is not a better way than using normal coordinates; it is just an alternative way.
+这并不是比使用普通坐标更好的方法； 这只是一种替代方式。 
+
+## Frequently Asked Questions 经常问的问题
+
+### This chapter discussed probability but not statistics. What is the distinction? 本章讨论概率但不讨论统计。 有什么区别？
+
+Probability is the study of how likely an event is. Statistics infers characteristics of large, but finite, populations of random variables. In that sense, statistics could be viewed as a specific type of applied probability. 
+概率是对事件发生可能性的研究。 统计推断出大量但有限的随机变量群体的特征。 从这个意义上说，统计学可以被视为一种特定类型的应用概率。
+
+### Is Metropolis sampling the same as the Metropolis Light Transport Algorithm? Metropolis 采样与 Metropolis 轻传输算法相同吗？
+
+No. The Metropolis Light Transport (Veach & Guibas, 1997) algorithm uses Metropolis sampling as part of its procedure, but it is specifically for rendering, and it has other steps as well. 
+不会。Metropolis Light Transport（Veach & Guibas，1997）算法使用 Metropolis 采样作为其过程的一部分，但它专门用于渲染，并且还有其他步骤。
+
+## Notes 注释
+
+The classic reference for geometric probability is Geometric Probability (Solomon, 1978). Another method for picking random edges in a square is given in Random–Edge Discrepancy of Supersampling Patterns (Dobkin & Mitchell, 1993). More information on quasi-Monte Carlo methods for graphics can be found in Efficient Multidimensional Sampling (Kollig & Keller, 2002). Three classic and very readable books on Monte Carlo methods are Monte Carlo Methods (Hammersley & Handscomb, 1964), Monte Carlo Methods, Basics (Kalos & Whitlock, 1986), and The Monte Carlo Method (Sobel, Stone, & Messer, 1975).
+几何概率的经典参考文献是《几何概率》（Solomon，1978）。 超级采样模式的随机边缘差异（Dobkin & Mitchell，1993）中给出了另一种在正方形中选取随机边缘的方法。 有关图形的准蒙特卡罗方法的更多信息可以在高效多维采样（Kollig & Keller，2002）中找到。 关于蒙特卡罗方法的三本经典且非常可读的书籍是《蒙特卡罗方法》（Hammersley & Handscomb，1964 年）、《蒙特卡罗方法基础》（Kalos & Whitlock，1986 年）和《蒙特卡罗方法》（Sobel、Stone 和 Messer，1975 年） 。
+
+## Exercises 练习
+
+1. What is the average value of the function $xyz$ in the unit cube $(x, y, z) ∈ [0, 1]^3$? 
+   单位立方体$(x, y, z) ∈ [0, 1]^3$中函数$xyz$的平均值是多少？
+
+2. What is the average value of $r$ on the unit-radius disk: $(r, φ) ∈ [0, 1] × [0, 2π)$?
+   单位半径圆盘上 $r$ 的平均值是多少：$(r, φ) ∈ [0, 1] × [0, 2π)$？
+3. Show that the uniform mapping of canonical random points $(ξ_1, ξ_2)$ to the barycentric coordinates of any triangle is: $β = 1 - \sqrt{1 - ξ_1}$, and $γ = (1 - u)ξ_2$.
+   证明正则随机点 $(ξ_1, ξ_2)$ 到任意三角形重心坐标的均匀映射为：$β = 1 - \sqrt{1 - ξ_1}$，且 $γ = (1 - u)ξ_2$。
+4. What is the average length of a line inside the unit square? Verify your answer by generating ten million random lines in the unit square and averaging their lengths.
+   单位正方形内的线的平均长度是多少？ 通过在单位正方形中生成一千万条随机线并平均它们的长度来验证您的答案。
+5. What is the average length of a line inside the unit cube? Verify your answer by generating ten million random lines in the unit cube and averaging their lengths.
+   单位立方体内的一条线的平均长度是多少？ 通过在单位立方体中生成一千万条随机线并平均它们的长度来验证您的答案。
+6. Show from the definition of variance that $V(x) = E(x^2) - [E(x)]^2$ . 
+   根据方差的定义证明 $V(x) = E(x^2) - [E(x)]^2$ 。
