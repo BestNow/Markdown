@@ -1,1 +1,14 @@
-Frequently Asked Questions • This chapter discussed probability but not statistics. What is the distinction? Probability is the study of how likely an event is. Statistics infers characteristics of large, but finite, populations of random variables. In that sense, statistics could be viewed as a specific type of applied probability. • Is Metropolis sampling the same as the Metropolis Light Transport Algorithm? No. The Metropolis Light Transport (Veach & Guibas, 1997) algorithm uses Metropolis sampling as part of its procedure, but it is specifically for rendering, and it has other steps as well. Notes The classic reference for geometric probability is Geometric Probability (Solomon, 1978). Another method for picking random edges in a square is given in Random–Edge Discrepancy of Supersampling Patterns (Dobkin & Mitchell, 1993). More information on quasi-Monte Carlo methods for graphics can be found in Efficient Multidimensional Sampling (Kollig & Keller, 2002). Three classic and very readable books on Monte Carlo methods are Monte Carlo Methods (Hammersley & Handscomb, 1964), Monte Carlo Methods, Basics (Kalos & Whitlock, 1986), and The Monte Carlo Method (Sobel, Stone, & Messer, 1975).
+Because the “pen” of the curve is thin (infinitesimally), it is difficult to create
+filled regions. While space-filling curves are possible (by having them fold over
+themselves infinitely many times), we do not consider such mathematical oddities
+here. Generally, we think of curves as the outlines of things, not the “insides.”
+The problem that we need to address is how to specify a curve—to give a
+name or representation to a curve so that we can represent it on a computer. For
+some curves, the problem of naming them is easy since they have known shapes:
+line segments, circles, elliptical arcs, etc. A general curve that does not have a
+“named” shape is sometimes called a free-form curve. Because a free-form curve
+can take on just about any shape, they are much harder to specify.
+There are three main ways to specify curves mathematically:
+1. Implicit curve representations define the set of points on a curve by giving a
+procedure that can test to see if a point in on the curve. Usually, an implicit
+curve representation is defined by an implicit function of the form
