@@ -160,3 +160,93 @@ The most widely used representations of curves in computer graphics is done by p
 ### 15.3.1 Polynomial Notation
 
 Polynomials are functions of the form 
+$$
+f(t) = a_0 + a_1t + a_2t^2 + . . . + a_nt^n.\ \ \ \  (15.3)
+$$
+The $a_i$ are called the coefficients, and $n$ is called the degree of the polynomial if $a_n ≠ 0$. We also write Equation (15.3) in the form  
+$$
+\bold{f}(t) = \sum^n_{i=0}\bold{a}_it^i. \ \ \ \ (15.4)
+$$
+We call this the canonical form of the polynomial.
+
+We can generalize the canonical form to  
+$$
+\bold{f}(t) = \sum^n_{i = 0}\bold{c}_ib_i(t) \ \ \ \ \ \ (15.5)
+$$
+where $b_i(t)$ is a polynomial. We can choose these polynomials in a convenient form for different applications, and we call them basis functions or blending functions (see Section 15.3.5). In Equation (15.4), the $t^i$ are the $b_i(t)$ of Equation (15.5). If the set of basis functions is chosen correctly, any polynomial of degree $n + 1$ can be represented by an appropriate choice of $\bold{c}$.
+
+The canonical form does not always have convenient coefficients. For practical purposes, throughout this chapter, we will find sets of basis functions such that the coefficients are convenient ways to control the curves represented by the polynomial functions. 
+
+To specify a curve embedded in two dimensions, one can either specify two polynomials in t: one for how x varies with t and one for how y varies with t; or specify a single polynomial where each of the ai is a 2D point. An analogous situation exists for any curve in an n-dimensional space.
+
+### 15.3.2 A Line Segment 
+
+To introduce the concepts of piecewise polynomial curve representations, we will discuss line segments. In practice, line segments are so simple that the mathematical derivations will seem excessive. However, by understanding this simple case, things will be easier when we move on to more complicated polynomials. 
+
+Consider a line segment that connects point $\bold{p}_0$ to $\bold{p}_1$. We could write the parametric function over the unit domain for this line segment as
+$$
+\bold{f}(u) = (1 − u)\bold{p}_0 + u\bold{p}_1.\ \ \ \ \ (15.6)
+$$
+By writing this in vector form, we have hidden the dimensionality of the points and the fact that we are dealing with each dimension separately. For example, were we working in 2D, we could have created separate equations:
+$$
+f_x(u) = (1 − u)x_0 + ux_1, \\
+f_y(u) = (1 − u)y_0 + uy_1.
+$$
+The line that we specify is determined by the two endpoints, but from now on we will stick to vector notation since it is cleaner. We will call the vector of control parameters, $\bold{p}$, the control points, and each element of $\bold{p}$, a control point. 
+
+While describing a line segment by the positions of its endpoints is obvious and usually convenient, there are other ways to describe a line segment. For example,
+
+1. the position of the center of the line segment, the orientation, and the length;
+2. the position of one endpoint and the position of the second point relative to the first;
+3. the position of the middle of the line segment and one endpoint.  
+
+It is obvious that given one kind of a description of a line segment, we can switch to another one. 
+
+A different way to describe a line segment is using the canonical form of the polynomial (as discussed in Section 15.3.1),
+$$
+\bold{f}(u) = \bold{a}_0 + u\bold{a}_1. (15.7)
+$$
+Any line segment can be represented either by specifying $\bold{a}_0$ and $\bold{a}_1$ or the endpoints ($\bold{p}_0$ and $\bold{p}_1$). It is usually more convenient to specify the endpoints, because we can compute the other parameters from the endpoints. 
+
+To write the canonical form as a vector expression, we define a vector u that is a vector of the powers of $u$:
+$\bold{u} = [1\ u\ u^2\ u^3\ ...\ u^n],$
+so that Equation (15.4) can be written as
+$$
+\bold{f}(u) = \bold{u} · \bold{a}.\ \ \ \ \ \  (15.8)
+$$
+This vector notation will make transforming between different forms of the curve easier. 
+
+Equation (15.8) describes a curve segment by the set of polynomial coefficients for the simple form of the polynomial. We call such a representation the canonical form. We will denote the parameters of the canonical form by $\bold{a}$. 
+
+While it is mathematically simple, the canonical form is not always the most convenient way to specify curves. For example, we might prefer to specify a line segment by the positions of its endpoints. If we want to define $\bold{p}_0$ to be the beginning of the segment (where the segment is when $u = 0$) and $\bold{p}_1$ to be the end of the line segment (where the line segment is at $u = 1$), we can write
+$$
+\bold{p}_0 = \bold{f}(0) = [1\ 0] · [\bold{a}_0\ \bold{a}_1], \\
+\bold{p}_1 = \bold{f}(1) = [1\ 1] · [\bold{a}_0\ \bold{a}_1], \\
+(15.9)
+$$
+We can solve these equations for $\bold{a}_0$ and $\bold{a}_1$: 
+$$
+\bold{a}_0 = \bold{p}_0, \\
+\bold{a}_1 = \bold{p}_1 − \bold{p}_0.
+$$
+
+#### Matrix Form for Polynomials
+
+While this first example was easy enough to solve, for more complicated examples it will be easier to write Equation (15.9) in the form
+$$
+\begin{bmatrix}
+\bold{p}_0 \\
+\bold{p}_1
+\end{bmatrix} = \begin{bmatrix}
+1 & 0 \\
+1 & 1
+\end{bmatrix} 
+\begin{bmatrix}
+\bold{a}_0 \\
+\bold{a}_1
+\end{bmatrix}
+$$
+Alternatively, we can write 
+$$
+\bold{p} = \bold{C}\bold{a},\ \ \  (15.10)
+$$
