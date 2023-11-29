@@ -250,3 +250,160 @@ Alternatively, we can write
 $$
 \bold{p} = \bold{C}\bold{a},\ \ \  (15.10)
 $$
+
+where we call $\bold{C}$, the constraint matrix(We assume the form of a vector (row or column) is obvious from the context, and we will skip all of the transpose symbols for vectors. ). If having vectors of points bothers you, you can consider each dimension independently (so that $\bold{p}$ is $[x_0\ x_1]$ or $[y_0\ y_1]$ and a is handled correspondingly). 
+
+We can solve Equation (15.10) for a by finding the inverse of $\bold{C}$. This inverse matrix which we will denote by $\bold{B}$ is called the basis matrix. The basis matrix is very handy since it tells us how to convert between the convenient parameters $\bold{p}$ and the canonical form $\bold{a}$, and, therefore, gives us an easy way to evaluate the curve
+$\bold{f}(u) = \bold{u} \bold{B} \bold{p}. $
+
+We can find a basis matrix for whatever form of the curve that we want, providing that there are no nonlinearities in the definition of the parameters. Examples of nonlinearly defined parameters include the length and angle of the line segment. 
+
+Now, suppose we want to parameterize the line segment so that $\bold{p}_0$ is the halfway point $(u = 0.5)$, and $\bold{p}_1$ is the ending point $(u = 1)$. To derive the basis matrix for this parameterization, we set
+$$
+\bold{p}_0 = \bold{f}(0.5) = 1 \bold{a}_0 + 0.5 \bold{a}_1, \\
+\bold{p}_1 = \bold{f}(1) = 1 \bold{a}_0 + 1 \bold{a}_1.
+$$
+So 
+$$
+\bold{C} = \begin{bmatrix}
+1 & 5 \\
+1 & 1
+\end{bmatrix}
+$$
+and therefore
+$$
+\bold{B} = \bold{C}^{-1} = \begin{bmatrix}
+2 & -1 \\
+-2 & 2
+\end{bmatrix}
+$$
+
+### 15.3.3 Beyond Line Segments 
+
+Line segments are so simple that finding a basis matrix is trivial. However, it was good practice for curves of higher degree. First, let’s consider quadratics (curves of degree two). The advantage of the canonical form (Equation (15.4)) is that it works for these more complicated curves, just by letting n be a larger number.
+
+A quadratic (a degree-two polynomial) has three coefficients, $\bold{a}_0$, $\bold{a}_1$, and $\bold{a}_2$. These coefficients are not convenient for describing the shape of the curve. However, we can use the same basis matrix method to devise more convenient parameters. If we know the value of $u$, Equation (15.4) becomes a linear equation in the parameters, and the linear algebra from the last section still works. 
+
+Suppose that we wanted to describe our curves by the position of the beginning $(u = 0)$, middle(Notice that this is the middle of the parameter space, which might not be the middle of the curve itself. ) $(u = 0.5)$, and end $(u = 1)$. Entering the appropriate values into Equation (15.4):
+$$
+\bold{p}0 = \bold{f}(0) = \bold{a}_0 + 0^1 \bold{a}_1 + 0^2 \bold{a}_2, \\
+p1 = f(0.5) = \bold{a}_0 + 0.5^1 \bold{a}_1 + 0.5^2 \bold{a}_2, \\
+p2 = f(1) = \bold{a}_0 + 1^1 \bold{a}_1 + 1^2 \bold{a}_2.
+$$
+So the constraint matrix is 
+$$
+\bold{C} = \begin{bmatrix}
+1 & 0 & 0 \\
+1 & 0.5 & 0.25 \\
+1 & 1 & 1
+\end{bmatrix}
+$$
+and the basis matrix is 
+$$
+\bold{B} = \bold{C}^{-1} = \begin{bmatrix}
+1 & 0 & 0 \\
+-3 & 4 & -1 \\
+2 & -4 & 2
+\end{bmatrix}
+$$
+There is an additional type of constraint (or parameter) that is sometimes convenient to specify: the derivative of the curve (with respect to its free parameter) at a particular value. Intuitively, the derivatives tell us how the curve is changing, so that the first derivative tells us what direction the curve is going, the second derivative tells us how quickly the curve is changing direction, etc. We will see examples of why it is useful to specify derivatives later. 
+
+For the quadratic
+$\bold{f}(u) = \bold{a}_0 + \bold{a}_1u + \bold{a}_2u^2, $
+
+the derivatives are simple: 
+$\bold{f}'(u) = \frac{d\bold{f}}{du} = \bold{a}_1 + 2\bold{a}_2u, $
+
+and
+$$
+\bold{f}''(u) = \frac{d^2\bold{f}}{du^2}= \frac{d\bold{f}'}{du} = 2\bold{a}_2 \\
+\bold{f}'(u) = \sum^n_{i = 1} iu^{i - 1} \bold{a}_i \\
+\bold{f}''(u) = \sum^n_{i = 2}i(i-1)u^{i-2}\bold{a}_i
+$$
+For example, consider a case where we want to specify a quadratic curve segment by the position, first, and second derivative at its middle $(u = 0.5)$. 
+$$
+\bold{p}_0 = \bold{f}(0.5) = \bold{a}_0+ 0.5^1 \bold{a}_1+ 0.5^2 \bold{a}_2, \\
+\bold{p}_1 = \bold{f}'(0.5) = \bold{a}_1+ 2 0.5 \bold{a}_2, \\
+\bold{p}_2 = \bold{f}''(0.5) = 2 \bold{a}_2.
+$$
+The constraint matrix is 
+$$
+\bold{C} = \begin{bmatrix}
+1 & 0.5 & 0.25 \\
+0 & 1 & 1 \\
+0 & 0 & 2 
+\end{bmatrix}
+$$
+and the basis matrix is
+$$
+\bold{B} = \bold{C}^{-1} = \begin{bmatrix}
+1 & -0.5 & 0.125 \\
+0 & 1 & -0.5 \\
+0 & 0 & 0.5
+\end{bmatrix}
+$$
+
+### 15.3.4 Basis Matrices for Cubics 
+
+Cubic polynomials are popular in graphics (See Section 15.5). The derivations for the various forms of cubics are just like the derivations we’ve seen already in this section. We will work through one more example for practice. 
+
+A very useful form of a cubic polynomial is the Hermite form, where we specify the position and first derivative at the beginning and end, that is,
+$$
+\bold{p}_0 = \bold{f}(0) = \bold{a}_0 + 0^1 \bold{a}_1 + 0^2 \bold{a}_2+ 0^3 \bold{a}_3, \\
+\bold{p}_1 = \bold{f}'(0) = \bold{a}_1 +2\ 0^1 \bold{a}_2+ 3\ 0^2 \bold{a}_3, \\
+\bold{p}_2 = \bold{f}(1) = \bold{a}_0 + 1^1 \bold{a}_1 + 1^2 \bold{a}_2+ 1^3 \bold{a}_3, \\
+\bold{p}_3 = \bold{f}'(1) = \bold{a}_1 +2\ 1^1 \bold{a}_2+ 3\ 1^2 \bold{a}_3. \\
+$$
+Thus, the constraint matrix is 
+$$
+\bold{C} = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+1 & 1 & 1 & 1 \\
+0 & 1 & 2 & 3
+\end{bmatrix}
+$$
+and the basis matrix is 
+$$
+\bold{B} = \bold{C}^{-1} = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+-3 & -2 & 3 & -1 \\
+2 & 1 & -2 & 1
+\end{bmatrix}
+$$
+We will discuss Hermite cubic splines in Section 15.5.2. 
+
+### 15.3.5 Blending Functions
+
+If we know the basis matrix, $\bold{B}$, we can multiply it by the parameter vector, $\bold{u}$, to get a vector of functions 
+$\bold{b}(u) = \bold{u} \bold{B}. $
+
+Notice that we denote this vector by $\bold{b}(u)$ to emphasize the fact that its value depends on the free parameter u. We call the elements of $\bold{b}(u)$ the blending functions, because they specify how to blend the values of the control point vector together:
+$$
+\bold{f}(u) = \sum^n_{i=0}\bold{b}_i(u)\bold{p}_i \ \ \ \ \ (15.11)
+$$
+It is important to note that for a chosen value of $u$, Equation (15.11) is a linear equation specifying a linear blend (or weighted average) of the control points. This is true no matter what degree polynomials are “hidden” inside of the $\bold{b}_i$ functions. 
+
+Blending functions provide a nice abstraction for describing curves. Any type of curve can be represented as a linear combination of its control points, where those weights are computed as some arbitrary functions of the free parameter.
+
+### 15.3.6 Interpolating Polynomials 
+
+In general, a polynomial of degree n can interpolate a set of $n + 1$ values. If we are given a vector $\bold{p} = (p_0, . . . , p_n)$ of points to interpolate and a vector $\bold{t} = (t_0, . . . , t_n)$ of increasing parameter values, $t_i ≠ t_j$, we can use the methods described in the previous sections to determine an $n + 1 × n + 1$ basis matrix that gives us a function $f(t)$ such that $f(t_i) = p_i$. For any given vector $\bold{t}$, we need to set up and solve an $n = 1 × n + 1$ linear system. This provides us with a set of $n + 1$ basis functions that perform interpolation:
+$$
+\bold{f}(t) = \sum^n_{i = 0}\bold{p}_ib_i(t)
+$$
+These interpolating basis functions can be derived in other ways. One particularly elegant way to define them is the Lagrange form: 
+$$
+b_i = \prod^n_{j=0,j≠i}\frac{x-t_j}{t_i-t_j} \ \ \ \ \ (15.12)
+$$
+There are more computationally efficient ways to express the interpolating basis functions than the Lagrange form (see De Boor (1978) for details). 
+
+Interpolating polynomials provide a mechanism for defining curves that interpolate a set of points. Figure 15.3 shows some examples. While it is possible to create a single polynomial to interpolate any number of points, we rarely use high-order polynomials to represent curves in computer graphics. Instead, interpolating splines (piecewise polynomial functions) are preferred. Some reasons for this are considered in Section 15.5.3.
+![](Images/Figure 15.3.png)
+Figure 15.3. Interpolating polynomials through multiple points. Notice the extra wiggles and over-shooting between points. In (c), when the sixth point is added, it completely changes the shape of the curve due to the non-local nature of interpolating polynomials.
+
+## 15.4 Putting Pieces Together 
+
+Now that we’ve seen how to make individual pieces of polynomial curves, we can consider how to put these pieces together. 
+
