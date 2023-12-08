@@ -11897,3 +11897,2278 @@ For Exercises 1–4, find the constraint matrix, the basis matrix, and the basis
    使用 de Casteljau 算法评估三次贝塞尔曲线的位置，其控制点位于 (0,0)、(0,1)、(1,1) 和 (1,0)，参数值 u = 0.5 且 u = 0.75。 画草图可以帮助你做到这一点。
 9. Use the Cox–de Boor recurrence to derive Equation (15.16).
    使用 Cox–de Boor 递推推导出方程 (15.16)。
+
+
+
+# 16  Computer Animation  电脑动画
+
+Animation is derived from the Latin anima and means the act, process, or result of imparting life, interest, spirit, motion, or activity. Motion is a defining property of life and much of the true art of animation is about how to tell a story, show emotion, or even express subtle details of human character through motion. A computer is a secondary tool for achieving these goals—it is a tool which a skillful animator can use to help get the result he wants faster and without concentrating on technicalities in which he is not interested. Animation without computers, which is now often called “traditional” animation, has a long and rich history of its own which is continuously being written by hundreds of people still active in this art. As in any established field, some time-tested rules have been crystallized which give general high-level guidance to how certain things should be done and what should be avoided. These principles of traditional animation apply equally to computer animation, and we will discuss some of them in this chapter. 
+动画源自拉丁语anima，意为赋予生命、兴趣、精神、运动或活动的行为、过程或结果。 运动是生命的一个决定性属性，动画的大部分真正艺术是关于如何通过运动讲述故事、表达情感，甚至表达人类性格的微妙细节。 计算机是实现这些目标的辅助工具——熟练的动画师可以使用它来帮助更快地获得他想要的结果，而无需专注于他不感兴趣的技术细节。 没有计算机的动画现在通常被称为“传统”动画，它有自己悠久而丰富的历史，数百名仍然活跃在这一艺术领域的人不断地创作它。 与任何已建立的领域一样，一些经过时间考验的规则已经具体化，这些规则为应该如何做某些事情以及应该避免什么事情提供了一般性的高级指导。 传统动画的这些原则同样适用于计算机动画，我们将在本章中讨论其中的一些原则。
+
+The computer, however, is more than just a tool. In addition to making the animator’s main task less tedious, computers also add some truly unique abilities that were simply not available or were extremely difficult to obtain before. Modern modeling tools allow the relatively easy creation of detailed three-dimensional models, rendering algorithms can produce an impressive range of appearances, from fully photorealistic to highly stylized, powerful numerical simulation algorithms can help to produce desired physics-based motion for particularly hard to animate objects, and motion capture systems give the ability to record and use real-life motion. These developments led to an exploding use of computer animation techniques in motion pictures and commercials, automotive design and architecture, medicine and scientific research, among many other areas. Completely new domains and applications have also appeared including fully computer-animated feature films, virtual/augmented reality systems, and, of course, computer games. 
+然而，计算机不仅仅是一个工具。 除了使动画师的主要任务变得不那么乏味之外，计算机还添加了一些真正独特的能力，这些能力以前根本不可用或极难获得。 现代建模工具可以相对轻松地创建详细的三维模型，渲染算法可以产生令人印象深刻的外观范围，从完全真实的到高度风格化的，强大的数值模拟算法可以帮助产生所需的基于物理的运动，特别是难以制作动画的运动 对象和动作捕捉系统提供了记录和使用现实生活中的动作的能力。 这些发展导致计算机动画技术在电影和广告、汽车设计和建筑、医学和科学研究以及许多其他领域中得到爆炸性的应用。 全新的领域和应用也出现了，包括完全计算机动画的故事片、虚拟/增强现实系统，当然还有计算机游戏。
+
+Other chapters of this book cover many of the developments mentioned above (for example, geometric modeling and rendering) more directly. Here, we will provide an overview only of techniques and algorithms directly used to create and manipulate motion. In particular, we will loosely distinguish and briefly describe four main computer animation approaches:
+本书的其他章节更直接地涵盖了上面提到的许多发展（例如，几何建模和渲染）。 在这里，我们将仅概述直接用于创建和操纵运动的技术和算法。 特别是，我们将松散地区分并简要描述四种主要的计算机动画方法：
+
+- **Keyframing** gives the most direct control to the animator who provides necessary data at some moments in time and the computer fills in the rest. 
+  **关键帧**为动画师提供了最直接的控制，动画师在某些时刻提供必要的数据，然后由计算机填充其余部分。
+- **Procedural** animation involves specially designed, often empirical, mathematical functions and procedures whose output resembles some particular motion. 
+  **程序**动画涉及专门设计的、通常是经验性的数学函数和程序，其输出类似于某些特定的运动。
+- **Physics-based** techniques solve differential equation of motion. 
+  **基于物理的**技术求解运动微分方程。
+- **Motion capture** uses special equipment or techniques to record real-world motion and then transfers this motion into that of computer models.
+  **动作捕捉**使用特殊设备或技术来记录现实世界的运动，然后将该运动转换为计算机模型的运动。
+
+We do not touch upon the artistic side of the field at all here. In general, we cannot possibly do more here than just scratch the surface of the fascinating subject of creating motion with a computer. We hope that readers truly interested in the subject will continue their journey well beyond the material of this chapter.
+我们在这里根本不涉及该领域的艺术方面。 总的来说，我们在这里只能做一些简单的事情，即用计算机创造运动这一令人着迷的主题。 我们希望真正对该主题感兴趣的读者能够在本章内容之外继续他们的旅程。
+
+## 16.1 Principles of Animation 动画原理
+
+In his seminal 1987 SIGGRAPH paper (Lasseter, 1987), John Lasseter brought key principles developed as early as the 1930’s by traditional animators of Walt Disney studios to the attention of the then-fledgling computer animation community. Twelve principles were mentioned: squash and stretch, timing, anticipation, follow through and overlapping action, slow-in and slow-out, staging, arcs, secondary action, straight-ahead and pose-to-pose action, exaggeration, solid drawing skill, and appeal. Almost two decades later, these time-tested rules, which can make a difference between a natural and entertaining animation and a mechanistic-looking and boring one, are as important as ever. For computer animation, in addition, it is very important to balance control and flexibility given to the animator with the full advantage of the computer’s abilities. Although these principles are widely known, many factors affect how much attention is being paid to these rules in practice. While a character animator working on a feature film might spend many hours trying to follow some of these suggestions (for example, tweaking his timing to be just right), many game designers tend to believe that their time is better spent elsewhere. 
+约翰·拉塞特 (John Lasseter) 在 1987 年发表的开创性 SIGGRAPH 论文（Lasseter，1987）中，将华特迪士尼工作室的传统动画师早在 1930 年代就制定的关键原则引起了当时刚刚起步的计算机动画界的注意。 提到了十二个原则：挤压和伸展、时机、预期、跟随和重叠动作、慢进和慢出、分段、弧线、辅助动作、直行和姿势动作、夸张、扎实的绘画技巧 ，并上诉。 近二十年后，这些经过时间考验的规则一如既往地重要，它们可以区分自然且有趣的动画和看起来机械而无聊的动画。 此外，对于计算机动画来说，充分利用计算机的能力来平衡赋予动画师的控制力和灵活性非常重要。 尽管这些原则广为人知，但许多因素影响着实践中对这些规则的关注程度。 虽然制作故事片的角色动画师可能会花费大量时间尝试遵循其中一些建议（例如，将时间调整到恰到好处），但许多游戏设计师倾向于认为他们的时间最好花在其他地方。
+
+### 16.1.1 Timing 计时
+
+Timing, or the speed of action, is at the heart of any animation. How fast things happen affects the meaning of action, emotional state, and even perceived weight of objects involved. Depending on its speed, the same action, a turn of a character’s head from left to right, can mean anything from a reaction to being hit by a heavy object to slowly seeking a book on a bookshelf or stretching a neck muscle. It is very important to set timing appropriate for the specific action at hand. Action should occupy enough time to be noticed while avoiding too slow and potentially boring motions. For computer animation projects involving recorded sound, the sound provides a natural timing anchor to be followed. In fact, in most productions, the actor’s voice is recorded first and the complete animation is then synchronized to this recording. Since large and heavy objects tend to move slower than small and light ones (with less acceleration, to be more precise), timing can be used to provide significant information about the weight of an object. 
+时间或动作速度是任何动画的核心。 事情发生的速度会影响行动的意义、情绪状态，甚至所感知到的物体的重量。 根据其速度，相同的动作（角色从左向右转动头部）可能意味着任何事情，从被重物击中的反应到慢慢地在书架上寻找一本书或伸展颈部肌肉。 为当前的具体行动设置适当的时间非常重要。 动作应该占据足够的时间来引起注意，同时避免太慢和可能无聊的动作。 对于涉及录制声音的计算机动画项目，声音提供了要遵循的自然定时锚点。 事实上，在大多数制作中，首先录制演员的声音，然后将完整的动画同步到该录音。 由于大而重的物体往往比小而轻的物体移动得慢（更精确地说，加速度较小），因此可以使用计时来提供有关物体重量的重要信息。
+
+### 16.1.2 Action Layout 动作布局
+
+At any moment during an animation, it should be clear to the viewer what idea (action, mood, expression) is being presented. Good staging, or high-level planning of the action, should lead a viewer’s eye to where the important action is currently concentrated, effectively telling him “look at this, and now, look at this” without using any words. Some familiarity with human perception can help us with this difficult task. Since human visual systems react mostly to relative changes rather than absolute values of stimuli, a sudden motion in a still environment or lack of motion in some part of a busy scene naturally draws attention. The same action presented so that the silhouette of the object is changing can often be much more noticeable compared with a frontal arrangement (see Figure 16.1 (bottom left)). 
+在动画制作过程中的任何时刻，观看者都应该清楚所呈现的想法（动作、情绪、表情）。 好的舞台表演，或者对动作的高层次规划，应该引导观众的注意力集中在重要动作当前集中的地方，有效地告诉他“看这个，现在，看这个”，而无需使用任何语言。 对人类感知的一些熟悉可以帮助我们完成这项艰巨的任务。 由于人类视觉系统主要对相对变化而不是刺激的绝对值做出反应，因此静止环境中的突然运动或繁忙场景中某些部分缺乏运动自然会引起注意。 与正面排列相比，相同的动作使物体轮廓发生变化通常会更加明显（见图 16.1（左下））。
+![Figure 16.1](Images/Figure 16.1.png)
+Figure 16.1. Action layout. Left: Staging action properly is crucial for bringing attention to currently important motion. The act of raising a hand would be prominent on the top but harder to notice on the bottom. A change in nose length, on the contrary, might be completely invisible in the first case. Note that this might be intentionally hidden, for example, to be suddenly revealed later. Neither arrangement is particularly good if both motions should be attended to. Middle: The amount of anticipation can tell much about the following action. The action which is about to follow (throwing a ball) is very short, but it is clear what is about to happen. The more wound up the character is, the faster the following action is perceived to be. Right: The follow-through phase is especially important for secondary appendages (hair) whose motion follows the leading part (head). The motion of the head is very simple, but leads to nontrivial follow-through behavior of the hair itself. It is impossible to create a natural animation without a follow-through phase and overlapping action in this case. Figure courtesy Peter Shirley and Christina Villarruel.
+图 16.1。 动作布局。 左：正确地安排行动对于引起人们对当前重要行动的关注至关重要。 举手的动作在顶部会很明显，但在底部很难注意到。 相反，在第一种情况下，鼻子长度的变化可能是完全看不见的。 请注意，这可能是故意隐藏的，例如稍后突然透露。 如果两项动议都应得到关注，那么这两种安排都不是特别好。 中：预期的程度可以很大程度上说明接下来的行动。 接下来的动作（扔球）很短，但很清楚将要发生什么。 角色越紧张，接下来的动作就越快。 右：跟随阶段对于次要附属物（头发）尤其重要，因为次要附属物（头发）的运动跟随主导部分（头部)。 头部的运动非常简单，但会导致头发本身的不平凡的跟随行为。 在这种情况下，如果没有后续阶段和重叠动作，就不可能创建自然的动画。 图片由 Peter Shirley 和 Christina Villarruel 提供。
+
+On a slightly lower level, each action can be split into three parts: anticipation (preparation for the action), the action itself, and follow-through (termination of the action). In many cases, the action itself is the shortest part and, in some sense, the least interesting. For example, kicking a football might involve extensive preparation on the part of the kicker and long “visual tracking” of the departing ball with ample opportunities to show the stress of the moment, emotional state of the kicker, and even the reaction to the expected result of the action. The action itself (motion of the leg to kick the ball) is rather plain and takes just a fraction of a second in this case. 
+在稍低的层面上，每个动作可以分为三个部分：预期（动作的准备）、动作本身和后续（动作的终止）。 在许多情况下，动作本身是最短的部分，从某种意义上说，也是最无趣的。 例如，踢足球可能需要踢球者进行大量准备，并对离去的球进行长时间的“视觉跟踪”，有足够的机会显示踢球者当时的压力、情绪状态，甚至对预期的反应 行动的结果。 动作本身（腿踢球的动作）相当简单，在这种情况下只需要几分之一秒。
+
+The goal of anticipation is to prepare the viewer for what is about to happen. This becomes especially important if the action itself is very fast, greatly important, or extremely difficult. Creating a more extensive anticipation for such actions serves to underscore these properties and, in case of fast events, makes sure the action will not be missed (see Figure 16.1 (bottom center)). In real life, the main action often causes one or more other overlapping actions. Different appendages or loose parts of the object typically drag behind the main leading section and keep moving for a while in the follow-through part of the main action as shown in Figure 16.1 (bottom right). 
+预期的目的是让观众为即将发生的事情做好准备。 如果动作本身非常快、非常重要或极其困难，这一点就变得尤为重要。 为此类操作创建更广泛的预期可以强调这些属性，并且在快速事件的情况下，确保不会错过操作（参见图 16.1（底部中心））。 在现实生活中，主要动作常常会导致一个或多个其他重叠动作。 物体的不同附属物或松散部分通常会拖到主要引导部分后面，并在主要动作的后续部分中保持移动一段时间，如图 16.1（右下）所示。
+
+Moreover, the next action often starts before the previous one is completely over. A player might start running while he is still tracking the ball he just kicked. Ignoring such natural flow is generally perceived as if there are pauses between actions and can result in robot-like mechanical motion. While overlapping is necessary to keep the motion natural, secondary action is often added by the animator to make motion more interesting and achieve realistic complexity of the animation. It is important not to allow secondary action to dominate the main action.
+而且，下一个动作往往在前一个动作完全结束之前就开始了。 球员可能会在追踪刚刚踢出的球时开始奔跑。 忽略这种自然流动通常会被认为好像动作之间存在暂停，并可能导致类似机器人的机械运动。 虽然重叠对于保持运动自然是必要的，但动画师通常会添加辅助动作，以使运动更有趣并实现动画的真实复杂性。 重要的是不要让次要行动主导主要行动。
+
+### 16.1.3 Animation Techniques 动画技术
+
+Several specific techniques can be used to make motion look more natural. The most important one is probably squash and stretch which suggests to change the shape of a moving object in a particular way as it moves. One would generally stretch an object in the direction of motion and squash it when a force is applied to it, as demonstrated in Figure 16.2 for a classic animation of a bouncing ball. It is important to preserve the total volume as this happens to avoid the illusion of growing or shrinking of the object. The greater the speed of motion (or the force), the more stretching (or squashing) is applied. Such deformations are used for several reasons. For very fast motion, an object can move between two16.1.3 Animation Techniques Several specific techniques can be used to make motion look more natural. The most important one is probably squash and stretch which suggests to change the shape of a moving object in a particular way as it moves. One would generally stretch an object in the direction of motion and squash it when a force is applied to it, as demonstrated in Figure 16.2 for a classic animation of a bouncing ball. It is important to preserve the total volume as this happens to avoid the illusion of growing or shrinking of the object. The greater the speed of motion (or the force), the more stretching (or squashing) is applied. Such deformations are used for several reasons. For very fast motion, an object can move between two sequential frames so quickly that there is no overlap between the object at the time of the current frame and at the time of the previous frame which can lead to strobing (a variant of aliasing). Having the object elongated in the direction of motion can ensure better overlap and helps the eye to fight this unpleasant effect. Stretching/squashing can also be used to show flexibility of the object with more deformation applied for more pliable materials. If the object is intended to appear as rigid, its shape is purposefully left the same when it moves. 
+可以使用多种特定技术使运动看起来更自然。 最重要的可能是挤压和拉伸，这意味着在移动物体移动时以特定方式改变其形状。 人们通常会沿运动方向拉伸物体，并在对其施加力时挤压它，如图 16.2 中弹跳球的经典动画所示。 保留总体积很重要，因为这可以避免物体变大或缩小的错觉。 运动速度（或力）越大，施加的拉伸（或挤压）就越大。 使用这种变形有几个原因。 对于非常快的运动，一个对象可以在两个之间移动16.1.3 动画技术 可以使用几种特定的技术使运动看起来更自然。 最重要的可能是挤压和拉伸，这意味着在移动物体移动时以特定方式改变其形状。 人们通常会沿运动方向拉伸物体，并在对其施加力时挤压它，如图 16.2 中弹跳球的经典动画所示。 保留总体积很重要，因为这可以避免物体变大或缩小的错觉。 运动速度（或力）越大，施加的拉伸（或挤压）就越大。 使用这种变形有几个原因。 对于非常快的运动，对象可以在两个连续帧之间移动得如此之快，以至于当前帧的时间和前一帧的时间之间没有重叠，这可能导致选通（锯齿的一种变体）。 让物体在运动方向上拉长可以确保更好的重叠，并帮助眼睛对抗这种不愉快的效果。 拉伸/挤压也可用于显示对象的灵活性，对更柔韧的材料应用更多变形。 如果物体想要看起来是刚性的，那么当它移动时，它的形状会故意保持不变。
+![Figure 16.2](Images/Figure 16.2.png)
+Figure 16.2. Classic example of applying the squash and stretch principle. Note that the volume of the bouncing ball should remain roughly the same throughout the animation.
+图 16.2。 应用挤压和拉伸原理的经典示例。 请注意，弹跳球的体积在整个动画中应保持大致相同。
+
+Natural motion rarely happens along straight lines, so this should generally be avoided in animation and arcs should be used instead. Similarly, no real-world motion can instantly change its speed—this would require an infinite amount of force to be applied to an object. It is desirable to avoid such situations in animation as well. In particular, the motion should start and end gradually (slow in and out). While hand-drawn animation is sometimes done via straight-ahead action with an animator starting at the first frame and drawing one frame after another in sequence until the end, pose-to-pose action, also known as keyframing, is much more suitable for computer animation. In this technique, animation is carefully planned through a series of relatively sparsely spaced key frames with the rest of the animation (in-between frames) filled in only after the keys are set (Figure 16.3). This allows more precise timing and allows the computer to take over the most tedious part of the process—the creation of the in-between frames— using algorithms presented in the next section.
+自然运动很少沿着直线发生，因此在动画中通常应避免这种情况，而应使用弧线。 同样，现实世界中的任何运动都不能立即改变其速度——这需要对物体施加无限大的力。 在动画中也希望避免这种情况。 特别是，运动应该逐渐开始和结束（慢进和慢出）。 虽然手绘动画有时是通过直接动作完成的，动画师从第一帧开始，依次绘制一帧又一帧直到最后，但姿势到姿势动作（也称为关键帧）更适合 电脑动画。 在这种技术中，动画是通过一系列相对稀疏的关键帧精心规划的，只有在设置关键帧后才填充动画的其余部分（中间帧）（图 16.3）。 这允许更精确的计时，并允许计算机使用下一节中介绍的算法接管该过程中最繁琐的部分 - 创建中间帧。
+![Figure 16.3](Images/Figure 16.3.png)
+Figure 16.3. Keyframing (top) encourages detailed action planning while straight-ahead action (bottom) leads to a more spontaneous result.
+图 16.3。 关键帧（上）鼓励详细的行动计划，而直接行动（下)则产生更自发的结果。
+
+Almost any of the techniques outlined above can be used with some reasonable amount of exaggeration to achieve greater artistic effect or underscore some specific property of an action or a character. The ultimate goal is to achieve something the audience will want to see, something which is appealing. Extreme complexity or too much symmetry in a character or action tends to be less appealing. To create good results, a traditional animator needs solid drawing skills. Analogously, a computer animator should certainly understand computer graphics and have a solid knowledge of the tools he uses.
+几乎上述任何技术都可以通过一定程度的夸张来使用，以实现更大的艺术效果或强调动作或角色的某些特定属性。 最终目标是实现观众想要看到的、有吸引力的东西。 角色或动作过于复杂或过于对称往往会不太有吸引力。 为了创造出好的效果，传统动画师需要扎实的绘画功底。 类似地，计算机动画师当然应该了解计算机图形学并对他使用的工具有扎实的了解。
+
+### 16.1.4 Animator Control vs. Automatic Methods 动画器控制与自动方法
+
+In traditional animation, the animator has complete control over all aspects of the production process and nothing prevents the final product to be as it was planned in every detail. The price paid for this flexibility is that every frame is created by hand, leading to an extremely time- and labor-consuming enterprise. In computer animation, there is a clear tradeoff between, on the one hand, giving an animator more direct control over the result, but asking him to contribute more work and, on the other hand, relying on more automatic techniques which might require setting just a few input parameters but offer little or no control over some of the properties of the result. A good algorithm should provide sufficient flexibility while asking an animator only the information which is intuitive, easy to provide, and which he himself feels is necessary for achieving the desired effect. While perfect compliance with this requirement is unlikely in practice since it would probably take something close to a mind-reading machine, we do encourage the reader to evaluate any computer-animation technique from the point of view of providing such balance. 
+在传统动画中，动画师可以完全控制制作过程的各个方面，没有什么可以阻止最终产品的每一个细节都符合计划。 这种灵活性所付出的代价是每个框架都是手工创建的，导致企业极其耗时和劳力。 在计算机动画中，存在明显的权衡，一方面，给予动画师对结果更直接的控制，但要求他贡献更多的工作，另一方面，依赖更自动化的技术，这可能需要设置 一些输入参数，但对结果的某些属性提供很少或没有控制。 一个好的算法应该提供足够的灵活性，同时只向动画师询问直观、易于提供的信息，并且他自己认为这些信息对于实现所需的效果是必要的。 虽然在实践中完全符合这一要求不太可能，因为它可能需要类似于读心机的东西，但我们确实鼓励读者从提供这种平衡的角度评估任何计算机动画技术。
+
+## 16.2 Keyframing 关键帧
+
+The term keyframing can be misleading when applied to 3D computer animation since no actual completed frames (i.e., images) are typically involved. At any given moment, a 3D scene being animated is specified by a set of numbers: the positions of centers of all objects, their RGB colors, the amount of scaling applied to each object in each axis, modeling transformations between different parts of a complex object, camera position and orientation, light sources intensity, etc. To animate a scene, some subset of these values have to change with time. One can, of course, directly set these values at every frame, but this will not be particularly efficient. Short of that, some number of important moments in time (key frames $t_k$) can be chosen along the timeline of animation for each of the parameters and values of this parameter (key values $f_k$) are set only for these selected frames. We will call a combination $(t_k, f_k)$ of key frame and key value simply a key. Key frames do not have to be the same for different parameters, but it is often logical to set keys at least for some of them simultaneously. For example, key frames chosen for x-, y- and z-coordinates of a specific object might be set at exactly the same frames forming a single position vector key $(t_k, \bold{p}_k)$. These key frames, however, might be completely different from those chosen for the object’s orientation or color. The closer key frames are to each other, the more control the animator has over the result; however the cost of doing more work of setting the keys has to be assessed. It is, therefore, typical to have large spacing between keys in parts of the animation which are relatively simple, concentrating them in intervals where complex action occurs, as shown in Figure 16.4. 
+当应用于 3D 计算机动画时，关键帧一词可能会产生误导，因为通常不涉及实际完成的帧（即图像）。 在任何给定时刻，动画的 3D 场景都由一组数字指定：所有对象的中心位置、它们的 RGB 颜色、应用于每个轴中每个对象的缩放量、复杂对象不同部分之间的建模变换 对象、摄像机位置和方向、光源强度等。要为场景制作动画，这些值的某些子集必须随时间变化。 当然，我们可以直接在每一帧设置这些值，但这不会特别有效。 除此之外，可以沿着动画时间轴为每个参数选择一些重要的时刻（关键帧 $t_k$），并且仅为这些选定的帧设置此参数的值（关键值 $f_k$） 。 我们将关键帧和关键值的组合 $(t_k, f_k)$ 简称为关键。 对于不同的参数，关键帧不必相同，但至少同时为其中一些参数设置关键帧通常是合乎逻辑的。 例如，为特定对象的 x、y 和 z 坐标选择的关键帧可能设置在形成单个位置矢量关键 $(t_k, \bold{p}_k)$ 的完全相同的帧处。 然而，这些关键帧可能与为对象的方向或颜色选择的关键帧完全不同。 关键帧彼此越接近，动画师对结果的控制力就越大； 然而，必须评估进行更多设置密钥工作的成本。 因此，在动画中相对简单的部分中，键之间的间距通常较大，将它们集中在发生复杂动作的间隔中，如图 16.4 所示。
+![Figure 16.4](Images/Figure 16.4.png)
+Figure 16.4. Different patterns of setting keys (black circles above) can be used simultaneously for the same scene. It is assumed that there are more frames before, as well as after, this portion. 
+图 16.4。 同一场景可以同时使用不同模式的设置键（上图黑圈)。 假设该部分之前和之后有更多帧。
+
+Once the animator sets the key $(t_k, f_k)$, the system has to compute values of f for all other frames. Although we are ultimately interested only in a discrete set of values, it is convenient to treat this as a classical interpolation problem which fits a continuous animation curve f(t) through a provided set of data points (Figure 16.5). Extensive discussion of curve-fitting algorithms can be found in Chapter 15, and we will not repeat it here. Since the animator initially provides only the keys and not the derivative (tangent), methods which compute all necessary information directly from keys are preferable for animation. The speed of parameter change along the curve is given by the derivative of the curve with respect to time $df/dt$. Therefore, to avoid sudden jumps in velocity, $C^1$ continuity is typically necessary. A higher degree of continuity is typically not required from animation curves, since the second derivative, which corresponds to acceleration or applied force, can experience very sudden changes in real-world situations (ball hitting a solid wall), and higher derivatives do not directly correspond to any parameters of physical motion. These consideration make Catmull-Rom splines one of the best choices for initial animation curve creation. 
+一旦动画师设置了关键 $(t_k, f_k)$，系统就必须计算所有其他帧的 f 值。 尽管我们最终只对一组离散值感兴趣，但将其视为经典插值问题很方便，该问题通过提供的一组数据点拟合连续动画曲线 f(t)（图 16.5）。 关于曲线拟合算法的广泛讨论可以在第15章中找到，我们在这里不再重复。 由于动画师最初只提供关键帧而不提供导数（正切），因此直接从关键帧计算所有必要信息的方法对于动画来说是更可取的。 参数沿曲线变化的速度由曲线相对于时间 $df/dt$ 的导数给出。 因此，为了避免速度突然跳跃，$C^1$ 连续性通常是必要的。 动画曲线通常不需要更高程度的连续性，因为二阶导数（对应于加速度或施加的力）可能会在现实世界的情况下经历非常突然的变化（球撞到实心墙），而更高阶的导数并不直接 对应于物理运动的任何参数。 这些考虑因素使 Catmull-Rom 样条线成为初始动画曲线创建的最佳选择之一。
+![Figure 16.5](Images/Figure 16.5.png)
+Figure 16.5. A continuous curve $f(t)$ is fit through the keys provided by the animator even though only values at frame positions are of interest. The derivative of this function gives the speed of parameter change and is at first determined automatically by the fitting procedure.
+图 16.5。 连续曲线 $f(t)$ 通过动画师提供的关键点进行拟合，即使仅帧位置处的值感兴趣。 该函数的导数给出了参数变化的速度，并且首先由拟合程序自动确定。
+
+Most animation systems give the animator the ability to perform interactive fine editing of this initial curve, including inserting more keys, adjusting existing keys, or modifying automatically computed tangents. Another useful technique which can help to tweak the shape of the curve is called TCB control (TCB stands for tension, continuity, and bias). The idea is to introduce three new parameters which can be used to modify the shape of the curve near a key through coordinated adjustment of incoming and outgoing tangents at this point. For keys uniformly spaced in time with distance $Δt$ between them, the standard Catmull-Rom expression for incoming $T_i^{in}$ and outgoing $T_i^{out}$ tangents at an internal key $(t_k, f_k)$ can be rewritten as
+大多数动画系统使动画师能够对此初始曲线执行交互式精细编辑，包括插入更多关键点、调整现有关键点或修改自动计算的切线。 另一种有助于调整曲线形状的有用技术称为 TCB 控制（TCB 代表张力、连续性和偏差）。 这个想法是引入三个新参数，这些参数可用于通过协调调整此时的传入和传出切线来修改关键点附近的曲线形状。 对于在时间上均匀间隔且距离 $Δt$ 的键，传入 $T_i^{in}$ 和传出 $T_i^{out}$ 的标准 Catmull-Rom 表达式在内部键 $(t_k, f_k)$ 处切线 可以重写为
+$T_k^{in} = T_k^{out} = \frac{1}{2Δt}(f_{k+1}-f_k)+\frac{1}{2Δt}(f_k-f_{k-1}) \\$
+
+Modified tangents of a TCB spline are
+TCB 样条的修正切线为
+$T^{in}_k = \frac{(1-t)(1-c)(1+b)}{2Δt}(f_{k+1}-f_k)+\frac{(1-t)(1+c)(1-b)}{2Δt}(f_k-f_{k-1})\\$
+
+$T^{out}_k = \frac{(1-t)(1+c)(1+b)}{2Δt}(f_{k+1}-f_k)+ \frac{(1-t)(1-c)(1-b)}{2Δt}(f_k-f_{k-1})\\$
+
+The tension parameter t controls the sharpness of the curve near the key by scaling both incoming and outgoing tangents. Larger tangents (lower tension) lead to a flatter curve shape near the key. Bias b allows the animator to selectively increase the weight of a key’s neighbors locally pulling the curve closer to a straight line connecting the key with its left (b near 1, “overshooting” the action) or right (b near −1, “undershooting” the action) neighbors. A nonzero value of continuity c makes incoming and outgoing tangents different allowing the animator to create kinks in the curve at the key value. Practically useful values of TCB parameters are typically confined to the interval [−1; 1] with defaults $t = c = b = 0$ corresponding to the original Catmull-Rom spline. Examples of possible curve shape adjustments are shown in Figure 16.6.
+张力参数 t 通过缩放传入和传出切线来控制关键帧附近曲线的锐度。 较大的切线（较低的张力）会导致键附近的曲线形状更平坦。 偏差 b 允许动画师有选择地增加某个关键点的邻居的权重，局部拉动曲线更接近连接关键点与其左侧（b 接近 1，“超出”动作）或右侧（b 接近 -1，“低于目标”）的直线 ”的行动）邻居。 连续性 c 的非零值使传入和传出切线不同，从而允许动画师在关键值处的曲线中创建扭结。 TCB 参数的实际有用值通常限制在区间 [−1; 1] 默认值 $t = c = b = 0$ 对应于原始 Catmull-Rom 样条线。 可能的曲线形状调整示例如图 16.6 所示。
+![Figure 16.6](Images/Figure 16.6.png)
+Figure 16.6. Editing the default interpolating spline (middle column) using TCB controls. Note that all keys remain at the same positions. 
+图 16.6。 使用 TCB 控件编辑默认插值样条线（中间列)。 请注意，所有键均保持在相同位置。
+
+### 16.2.1 Motion Controls  运动控制
+
+So far, we have described how to control the shape of the animation curve through key positioning and fine tweaking of tangent values at the keys. This, however, is generally not sufficient when one would like to have control both over where the object is moving, i.e., its path, and how fast it moves along this path. Given a set of positions in space as keys, automatic curve-fitting techniques can fit a curve through them, but resulting motion is only constrained by forcing the object to arrive at a specified key position pk at the corresponding key frame tk, and nothing is directly said about the speed of motion between the keys. This can create problems. For example, if an object moves along the x-axis with velocity 11 meters per second for 1 second and then with 1 meter per second for 9 seconds, it will arrive at position $x = 20$ after 10 seconds thus satisfying animator’s keys (0,0) and (10, 20). It is rather unlikely that this jerky motion was actually desired, and uniform motion with speed 2 meters/second is probably closer to what the animator wanted when setting these keys. Although typically not displaying such extreme behavior, polynomial curves resulting from standard fitting procedures do exhibit nonuniform speed of motion between keys as demonstrated in Figure 16.7. While this can be tolerable (within limits) for some parameters for which the human visual system is not very good at determining nonuniformities in the rate of change (such as color or even rate of rotation), we have to do better for position $\bold{p}$ of the object where velocity directly corresponds to everyday experience.
+到目前为止，我们已经描述了如何通过关键点定位和关键点切线值的微调来控制动画曲线的形状。 然而，当人们想要控制物体移动的位置（即其路径）以及物体沿该路径移动的速度时，这通常是不够的。 给定空间中的一组位置作为关键点，自动曲线拟合技术可以通过它们拟合一条曲线，但最终的运动仅通过强制对象到达相应关键帧 tk 处的指定关键位置 pk 来约束，并且什么也没有 直接说一下按键之间的运动速度。 这可能会产生问题。 例如，如果一个对象沿 x 轴以每秒 11 米的速度移动 1 秒，然后以每秒 1 米的速度移动 9 秒，则它将在 10 秒后到达位置 $x = 20$，从而满足动画师的关键点（ 0,0) 和 (10, 20)。 这种急促的运动不太可能是真正想要的，速度为 2 米/秒的匀速运动可能更接近动画师在设置这些关键点时想要的效果。 尽管通常不会表现出这种极端行为，但标准拟合程序产生的多项式曲线确实表现出按键之间运动速度的不均匀，如图 16.7 所示。 虽然对于人类视觉系统不太擅长确定变化率（例如颜色甚至旋转率）的不均匀性的某些参数来说，这可以容忍（在限制范围内），但我们必须对位置 $\ 做得更好 对象的粗体{p}$，其中速度直接对应于日常经验。
+![Figure 16.7](Images/Figure 16.7.png)
+Figure 16.7. All three motions are along the same 2D path and satisfy the set of keys at the tips of the black triangles. The tips of the white triangles show object position at $Δt = 1$ intervals. Uniform speed of motion between the keys (top) might be closer to what the animator wanted, but automatic fitting procedures could result in either of the other two motions.
+图 16.7。 所有三个运动都沿着相同的 2D 路径，并满足黑色三角形尖端的关键点集。 白色三角形的尖端以 $Δt = 1$ 间隔显示对象位置。 键之间的均匀运动速度（顶部)可能更接近动画师想要的效果，但自动拟合过程可能会导致其他两个运动中的任何一个。
+
+We will first distinguish curve parameterization used during the fitting procedure from that used for animation. When a curve is fit through position keys, we will write the result as a function $\bold{p}(u)$ of some parameter $u$. This will describe the geometry of the curve in space. The arc length s is the physical length of  the curve. A natural way for the animator to control the motion along the now-existing curve is to specify an extra function $s(t)$ which corresponds to how far along the curve the object should be at any given time. To get an actual position in space, we need one more auxiliary function $u(s)$ which computes a parameter value $u$ for given arc length $s$. The complete process of computing an object position for a given time $t$ is then given by composing these functions (see Figure 16.8):
+我们首先将拟合过程中使用的曲线参数化与动画中使用的曲线参数化区分开来。 当通过位置键拟合曲线时，我们将把结果写为某个参数 $u$ 的函数 $\bold{p}(u)$。 这将描述空间曲线的几何形状。 弧长s是曲线的物理长度。 动画师控制沿现有曲线运动的自然方法是指定一个额外函数 $s(t)$，该函数对应于对象在任何给定时间沿曲线应移动的距离。 为了获得空间中的实际位置，我们还需要一个辅助函数 $u(s)$，它计算给定弧长 $s$ 的参数值 $u$。 然后，通过组合这些函数给出计算给定时间 $t$ 内物体位置的完整过程（见图 16.8）：
+$\bold{p}(t) = \bold{p}(u(s(t)))$
+![Figure 16.8](Images/Figure 16.8.png)
+Figure 16.8. To get position in space at a given time t, one first utilizes user-specified motion control to obtain the distance along the curve s(t) and then computes the corresponding curve parameter value $u(s(t))$. Previously fitted curve $\bold{P}(u)$ can now be used to find the position $\bold{P}(u(s(t)))$.
+图 16.8。 为了获得给定时间 t 的空间位置，首先利用用户指定的运动控制来获取沿曲线 s(t) 的距离，然后计算相应的曲线参数值 $u(s(t))$。 之前拟合的曲线 $\bold{P}(u)$ 现在可用于查找位置 $\bold{P}(u(s(t)))$。
+
+Several standard functions can be used as the distance-time function s(t). One of the simplest is the linear function corresponding to constant velocity: $s(t) = vt$ with v = const. Another common example is the motion with constant acceleration a (and initial speed v0) which is described by the parabolic $s(t) = v_0t + at^2/2$. Since velocity is changing gradually here, this function can help to model desirable ease-in and ease-out behavior. More generally, the slope of $s(t)$ gives the velocity of motion with negative slope corresponding to the motion backwards along the curve. To achieve most flexibility, the ability to interactively edit s(t) is typically provided to the animator by the animation system. The distance-time function is not the only way to control motion. In some cases it might be more convenient for the user to specify a velocity-time function v(t) or even an acceleration-time function a(t). Since these are correspondingly first and second derivatives of s(t), to use these type of controls, the system first recovers the distance-time function by integrating the user input (twice in the case of a(t)).
+可以使用几个标准函数作为距离-时间函数s(t)。 最简单的函数之一是对应于恒定速度的线性函数：$s(t) = vt$，其中 v = const。 另一个常见的例子是恒定加速度 a（和初始速度 v0）的运动，由抛物线 $s(t) = v_0t + at^2/2$ 描述。 由于速度在这里逐渐变化，因此该函数可以帮助模拟所需的缓入和缓出行为。 更一般地，$s(t)$ 的斜率给出了具有负斜率的运动速度，对应于沿着曲线向后的运动。 为了实现最大的灵活性，动画系统通常向动画师提供交互式编辑 s(t) 的能力。 距离-时间函数并不是控制运动的唯一方法。 在某些情况下，用户指定速度时间函数 v(t) 甚至加速时间函数 a(t) 可能更方便。 由于它们相应地是 s(t) 的一阶和二阶导数，为了使用这些类型的控制，系统首先通过对用户输入进行积分（在 a(t) 的情况下两次）来恢复距离-时间函数。
+
+The relationship between the curve parameter u and arc length s is established automatically by the system. In practice, the system first determines arc length dependance on parameter u (i.e., the inverse function s(u)). Using this function, for any given S it is possible to solve the equation s(u) − S = 0 with unknown u obtaining u(S). For most curves, the function s(u) cannot be expressed in closed analytic form and numerical integration is necessary (see Chapter 14). Standard numerical root-finding procedures (such as the Newton-Raphson method, for example) can then be directly used to solve the equation $s(u) − S = 0$ for u.
+曲线参数u与弧长s之间的关系由系统自动建立。 实际上，系统首先确定与参数 u（即反函数 s(u)）相关的弧长。 使用此函数，对于任何给定的 S，可以求解方程 s(u) − S = 0，其中 u 未知，从而获得 u(S)。 对于大多数曲线，函数 s(u) 不能用封闭解析形式表示，需要进行数值积分（参见第 14 章）。 然后可以直接使用标准数值求根程序（例如 Newton-Raphson 方法）来求解 u 的方程 $s(u) − S = 0$。
+
+An alternative technique is to approximate the curve itself as a set of linear segments between points $\bold{p}_i$ computed at some set of sufficiently densely spaced parameter values $u_i$. One then creates a table of approximate arc lengths
+另一种技术是将曲线本身近似为点 $\bold{p}_i$ 之间的一组线性段，这些线性段是在一组足够密集的参数值 $u_i$ 上计算的。 然后创建一个近似弧长表
+$s(u_i) ≈ \sum^i_{j=1}\|\bold{p}_j - \bold{p}_{j-1}\| = s(u_{i-1}) + \|\bold{p}_i - \bold{p}_{i-1}\|  \\$
+
+Since s(u) is a non-decreasing function of u, one can then find the interval containing the value S by simple searching through the table (see Figure 16.9). Linear interpolation of the interval’s u end values is then performed to finally find u(S). If greater precision is necessary, a few steps of the Newton-Raphson algorithm with this value as the starting point can be applied.
+由于 s(u) 是 u 的非减函数，因此可以通过简单地搜索表格来找到包含值 S 的区间（见图 16.9）。 然后对区间的 u 最终值进行线性插值，最终找到 u(S)。 如果需要更高的精度，可以应用以该值作为起点的牛顿-拉夫森算法的几个步骤。
+![Figure 16.9](Images/Figure 16.9.png)
+Figure 16.9. To create a tabular version of s(u), the curve can be approximated by a number of line segments connecting points on the curve positioned at equal parameter increments. The table is searched to find the u-interval for a given S. For the curve above, for example, the value of u corresponding to the position of $S = 6.5$ lies between $u = 0.6$ and $u = 0.8$.
+图 16.9。 要创建 s(u) 的表格版本，可以通过连接曲线上以相等参数增量定位的点的许多线段来近似曲线。 搜索该表以找到给定 S 的 u 区间。例如，对于上面的曲线，$S = 6.5$ 位置对应的 u 值位于 $u = 0.6$ 和 $u = 0.8$ 之间 。
+
+### 16.2.2 Interpolating Rotation  插值旋转
+
+The techniques presented above can be used to interpolate the keys set for most of the parameters describing the scene. Three-dimensional rotation is one important motion for which more specialized interpolation methods and representations are common. The reason for this is that applying standard techniques to 3D rotations often leads to serious practical problems. Rotation (a change in orientation of an object) is the only motion other than translation which leaves the shape of the object intact. It therefore plays a special role in animating rigid objects. 
+上述技术可用于对描述场景的大多数参数的关键帧进行插值。 三维旋转是一种重要的运动，更专业的插值方法和表示很常见。 其原因是，将标准技术应用于 3D 旋转通常会导致严重的实际问题。 旋转（物体方向的改变）是除平移之外唯一能保持物体形状完好无损的运动。 因此，它在刚性对象动画方面发挥着特殊作用。
+
+There are several ways to specify the orientation of an object. First, transformation matrices as described in Chapter 6 can be used. Unfortunately, naive (element-by-element)interpolation of rotation matrices does not produce a correct result. For example, the matrix “halfway” between 2D clock- and counterclockwise 90 degree rotation is the null matrix:
+有多种方法可以指定对象的方向。 首先，可以使用第 6 章中描述的变换矩阵。 不幸的是，旋转矩阵的简单（逐个元素）插值不会产生正确的结果。 例如，二维顺时针和逆时针 90 度旋转之间的矩阵“中间”是零矩阵：
+$$
+\frac{1}{2}\begin{bmatrix}
+0 & 1\\
+-1 & 0
+\end{bmatrix}
++\frac{1}{2}\begin{bmatrix}
+0 & -1\\
+1 & 0
+\end{bmatrix}
+= \begin{bmatrix}
+0 & 0\\
+0 & 0
+\end{bmatrix}
+$$
+The correct result is, of course, the unit matrix corresponding to no rotation. Second, one can specify arbitrary orientation as a sequence of exactly three rotations around coordinate axes chosen in some specific order. These axes can be fixed in space (fixed-angle representation) or embedded into the object therefore changing after each rotation (Euler-angle representation as shown in Figure 16.10). These three angles of rotation can be animated directly through standard keyframing, but a subtle problem known as gimbal lock arises. Gimbal lock occurs if during rotation one of the three rotation axes is by accident aligned with another, thereby reducing by one the number of available degrees of freedom as shown in Figure 16.11 for a physical device. This effect is more common than one might think—a single 90 degree turn to the right (or left) can potentially put an object into a gimbal lock. Finally, any orientation can be specified by choosing an appropriate axis in space and angle of rotation around this axis. While animating in this representation is relatively straightforward, combining two rotations, i.e., finding the axis and angle corresponding to a sequence of two rotations both represented by axis and angle, is nontrivial. A special mathematical apparatus, quaternions has been developed to make this representation suitable both for combining several rotations into a single one and for animation. 
+正确的结果当然是没有旋转对应的单位矩阵。 其次，可以将任意方向指定为围绕以某种特定顺序选择的坐标轴的恰好三个旋转的序列。 这些轴可以固定在空间中（固定角度表示）或嵌入到对象中，因此每次旋转后都会发生变化（欧拉角度表示，如图 16.10 所示）。 这三个旋转角度可以直接通过标准关键帧进行动画处理，但会出现一个称为万向节锁定的微妙问题。 如果在旋转过程中三个旋转轴之一意外地与另一个旋转轴对齐，则会发生万向节锁定，从而使可用自由度的数量减少一个，如图 16.11 所示的物理设备。 这种效应比人们想象的更常见——向右（或向左）旋转 90 度就可能使物体陷入万向节锁定状态。 最后，可以通过选择适当的空间轴和绕该轴的旋转角度来指定任何方向。 虽然在此表示中设置动画相对简单，但组合两个旋转（即找到与均由轴和角度表示的两个旋转序列相对应的轴和角度）却很重要。 四元数是一种特殊的数学工具，它的开发使得这种表示既适用于将多个旋转组合成一个旋转，也适用于动画。
+![Figure 16.10](Images/Figure 16.10.png)
+Figure 16.10. Three Euler angles can be used to specify arbitrary object orientation through a sequence of three rotations around coordinate axes embedded into the object (axis Y always points to the tip of the cone). Note that each rotation is given in a new coordinate system. Fixed angle representation is very similar, but the coordinate axes it uses are fixed in space and do not rotate with the object.
+图 16.10。 三个欧拉角可用于通过围绕嵌入到对象中的坐标轴（Y 轴始终指向圆锥体尖端)的一系列三个旋转来指定任意对象方向。 请注意，每次旋转都是在新的坐标系中给出的。 固定角度表示法非常相似，但它使用的坐标轴在空间中是固定的，不随对象旋转。
+
+![Figure 16.11](Images/Figure 16.11.png)
+Figure 16.11. In this example, gimbal lock occurs when a 90 degree turn around axis Z is made. Both X and Y rotations are now performed around the same axis leading to the loss of one degree of freedom.
+图 16.11。 在此示例中，当绕 Z 轴旋转 90 度时，会发生万向节锁定。 X 和 Y 旋转现在均绕同一轴执行，导致失去一个自由度。
+
+Given a 3D vector $\bold{v} = (x, y, z)$ and a scalar s, a quaternion q is formed by combining the two into a four-component object: $q = [s x y z] = [s; \bold{v}]$. Several new operations are then defined for quaternions. Quaternion addition simply sums scalar and vector parts separately:
+给定一个 3D 向量 $\bold{v} = (x, y, z)$ 和一个标量 s，通过将两者组合成一个四分量对象来形成四元数 q： $q = [s x y z] = [s; \bold{v}]$。 然后为四元数定义了几个新的运算。 四元数加法简单地分别对标量和向量部分求和：
+$q_1+q_2 ≡  [s_1 + s_2; \bold{v}_1 + \bold{v}_2  ]$
+
+Multiplication by a scalar a gives a new quaternion
+乘以标量 a 得到一个新的四元数 
+$aq ≡ [as; a\bold{v}].  $
+
+More complex quaternion multiplication is defined as
+更复杂的四元数乘法定义为
+$q_1 · q_2 ≡ [s_1s_2 - \bold{v}_1\bold{v}_2; s_1\bold{v}_2 + s_2\bold{v}_1 + \bold{v}_1 × \bold{v}_2],  $
+
+where × denotes a vector cross product. It is easy to see that, similar to matrices, quaternion multiplication is associative, but not commutative. We will be interested mostly in normalized quaternions—those for which the quaternion norm $|q| = \sqrt{s^2 + \bold{v}^2}$ is equal to one. One final definition we need is that of an inverse quaternion:
+其中 × 表示向量叉积。 很容易看出，与矩阵类似，四元数乘法是结合律，但不是交换律。 我们主要对归一化四元数感兴趣——四元数范数 $|q| 的四元数 = \sqrt{s^2 + \bold{v}^2}$ 等于 1。 我们需要的最后一个定义是逆四元数的定义：
+$q^{-1} = (1/|q|)[s; -\bold{v}].  $
+
+To represent a rotation by angle $φ$ around an axis passing through the origin whose direction is given by the normalized vector $\bold{n}$, a normalized quaternion
+表示围绕穿过原点的轴旋转 $φ$ 角度，其方向由归一化向量 $\bold{n}$（归一化四元数）给出
+$q = [cos(φ/2); sin(φ/2)\bold{n}]  $
+
+is formed. To rotate point $\bold{p}$, one turns it into the quaternion $q_p = [0; \bold{p}]$ and  computes the quaternion product
+形成了。 要旋转点 $\bold{p}$，请将其转换为四元数 $q_p = [0; \bold{p}]$ 并计算四元数乘积
+$q_p' = q · qp · q^{-1}  $
+
+which is guaranteed to have a zero scalar part and the rotated point as its vector part. Composite rotation is given simply by the product of quaternions representing each of the separate rotation steps. To animate with quaternions, one can treat them as points in a four-dimensional space and set keys directly in this space. To keep quaternions normalized, one should, strictly speaking, restrict interpolation procedures to a unit sphere (a 3D object) in this 4D space. However, a spherical version of even linear interpolation (often called slerp) already results in rather unpleasant math. Simple 4D linear interpolation followed by projection onto the unit sphere shown in Figure 16.12 is much simpler and often sufficient in practice. Smoother results can be obtained via repeated application of a linear interpolation procedure using the de Casteljau algorithm.
+保证标量部分为零，旋转点作为其矢量部分。 复合旋转简单地由代表每个单独旋转步骤的四元数的乘积给出。 要使用四元数制作动画，可以将它们视为四维空间中的点并直接在该空间中设置关键点。 为了保持四元数标准化，严格来说，应该将插值过程限制到这个 4D 空间中的单位球体（3D 对象）。 然而，即使是线性插值（通常称为 slerp）的球形版本也已经产生了相当令人不快的数学结果。 简单的 4D 线性插值然后投影到图 16.12 所示的单位球体上要简单得多，并且在实践中通常就足够了。 使用 de Casteljau 算法重复应用线性插值过程可以获得更平滑的结果。
+![Figure 16.12](Images/Figure 16.12.png)
+Figure 16.12. Interpolating quaternions should be done on the surface of a 3D unit sphere embedded in 4D space. However, much simpler interpolation along a 4D straight line (open circles) followed by reprojection of the results onto the sphere (black circles) is often sufficient.
+图 16.12。 四元数插值应在嵌入 4D 空间的 3D 单位球体的表面上完成。 然而，沿着 4D 直线（空心圆圈）进行更简单的插值，然后将结果重新投影到球体（黑色圆圈)上通常就足够了。
+
+## 16.3 Deformations 变形
+
+Although techniques for object deformation might be more properly treated as modeling tools, they are traditionally discussed together with animation methods. Probably the simplest example of an operation which changes object shape is a nonuniform scaling. More generally, some function can be applied to local coordinates of all points specifying the object (i.e., vertices of a triangular mesh or control polygon of a spline surface), repositioning these points and creating a new shape: $\bold{p}' = f(\bold{p}, γ)$ where $γ$ is a vector of parameters used by the deformation function. Choosing different $f$ (and combining them by applying one after another) can help to create very interesting deformations. Examples of useful simple functions include bend, twist, and taper which are shown in Figure 16.13. Animating shape change is very easy in this case by keyframing the parameters of the deformation function. Disadvantages of this technique include difficulty of choosing the mathematical function for some nonstandard deformations and the fact that the resulting deformation is global in the sense that the complete object, and not just some part of it, is reshaped.
+尽管对象变形技术可能更适合视为建模工具，但它们传统上与动画方法一起讨论。 改变对象形状的操作的最简单示例可能是非均匀缩放。 更一般地，某些函数可以应用于指定对象的所有点的局部坐标（即，三角形网格的顶点或样条曲面的控制多边形），重新定位这些点并创建新形状：$\bold{p}' = f(\bold{p}, γ)$ 其中 $γ$ 是变形函数使用的参数向量。 选择不同的 $f$（并通过依次应用将它们组合起来）可以帮助创建非常有趣的变形。 有用的简单函数的示例包括弯曲、扭曲和锥度，如图 16.13 所示。 在这种情况下，通过对变形函数的参数设置关键帧，可以非常轻松地对形状变化进行动画处理。 该技术的缺点包括难以为某些非标准变形选择数学函数，以及所产生的变形是全局的，即整个对象（而不仅仅是其某些部分）被重塑。
+![Figure 16.13](Images/Figure 16.13.png)
+Figure 16.13. Popular examples of global deformations. Bending and twist angles, as well as the degree of taper, can all be animated to achieve dynamic shape change.
+图 16.13。 全局变形的流行例子。 弯曲和扭转角度以及锥度都可以进行动画处理，以实现动态形状变化。
+
+To deform an object locally while providing more direct control over the result, one can choose a single vertex, move it to a new location and adjust vertices within some neighborhood to follow the seed vertex. The area affected by the deformation and the specific amount of displacement in different parts of the object are controlled by an attenuation function which decreases with distance (typically computed over the object’s surface) to the seed vertex. Seed vertex motion can be keyframed to produce animated shape change. 
+要使对象局部变形，同时提供对结果的更直接控制，可以选择单个顶点，将其移动到新位置并调整某个邻域内的顶点以遵循种子顶点。 受变形影响的区域以及对象不同部分的具体位移量由衰减函数控制，该函数随着到种子顶点的距离（通常在对象表面上计算）而减小。 可以对种子顶点运动设置关键帧以产生动画形状变化。
+
+A more general deformation technique is called free-form deformation (FFD) (Sederberg & Parry, 1986). A local (in most cases rectilinear) coordinate grid is first established to encapsulate the part of the object to be deformed, and coordinates $(s, t, u)$ of all relevant points are computed with respect to this grid. The user then freely reshapes the grid of lattice points $\bold{P}_{ijk}$ into a new distorted lattice $\bold{P}'_{ijk}$ (Figure 16.14). The object is reconstructed using coordinates computed in the original undistorted grid in the trivariate analog of Bezier interpolants (see Chapter 15) with distorted lattice points $\bold{P}'_{ijk}$ serving as control points in this expression:
+更通用的变形技术称为自由变形（FFD）（Sederberg & Parry，1986）。 首先建立一个局部（大多数情况下是直线）坐标网格来封装要变形的对象部分，并相对于该网格计算所有相关点的坐标$(s, t, u)$。 然后，用户可以自由地将晶格点网格$\bold{P}_{ijk}$重塑为新的扭曲晶格$\bold{P}'_{ijk}$（图16.14）。 使用贝塞尔插值的三变量模拟中原始未扭曲网格中计算的坐标（参见第 15 章）来重建对象，其中扭曲晶格点 $\bold{P}'_{ijk}$ 作为此表达式中的控制点：
+$P(s, u, t) =  \sum^L_{i=0}\begin{pmatrix}i \\L\end{pmatrix}(1-s)^{L-i}s^i\sum^M_{j=0}\begin{pmatrix}j \\M\end{pmatrix}(1-t)^{M-j}t^j\sum^N_{k=0}\begin{pmatrix}k \\N\end{pmatrix}(1-u)^{N-k}u^k\bold{P}'_{ijk}$
+
+where L, M, N are maximum indices of lattice points in each dimension. In effect, the lattice serves as a low-resolution version of the object for the purpose of deformation, allowing for a smooth shape change of an arbitrarily complex object through a relatively small number of intuitive adjustments. FFD lattices can themselves be treated as regular objects by the system and can be transformed, animated, and even further deformed if necessary, leading to corresponding changes in the object to which the lattice is attached. For example, moving a deformation tool consisting of the original lattice and distorted lattice representing a bulge across an object results in a bulge moving across the object.
+其中L、M、N是每个维度中格点的最大索引。 实际上，晶格充当了用于变形目的的对象的低分辨率版本，允许通过相对少量的直观调整来平滑地改变任意复杂的对象的形状。 FFD 晶格本身可以被系统视为常规对象，并且可以进行变换、动画，甚至在必要时进一步变形，从而导致晶格所附着的对象发生相应的变化。 例如，移动由原始晶格和代表凸起的变形晶格组成的变形工具穿过对象会导致凸起移动穿过对象。
+![Figure 16.14](Images/Figure 16.14.png)
+Figure 16.14. Adjusting the FFD lattice results in the deformation of the object. 
+图 16.14。 调整FFD晶格会导致物体变形。
+
+## 16.4 Character Animation 角色动画
+
+Animation of articulated figures is most often performed through a combination of keyframing and specialized deformation techniques. The character model intended for animation typically consists of at least two main layers as shown in Figure 16.15. The motion of a highly detailed surface representing the outer shell or skin of the character is what the viewer will eventually see in the final product. The skeleton underneath it is a hierarchical structure (a tree) of joints which provides a kinematic model of the figure and is used exclusively for animation. In some cases, additional intermediate layer(s) roughly corresponding to muscles are inserted between the skeleton and the skin.
+铰接人物的动画通常是通过关键帧和专门的变形技术的组合来执行的。 用于动画的角色模型通常由至少两个主要层组成，如图 16.15 所示。 代表角色外壳或皮肤的高度详细的表面的运动是观众最终在最终产品中看到的。 它下面的骨架是一个关节的层次结构（树），它提供了图形的运动学模型，并且专门用于动画。 在一些情况下，在骨骼和皮肤之间插入大致对应于肌肉的附加中间层。
+![Figure 16.15](Images/Figure 16.15.png)
+Figure 16.15. (Left) A hierarchy of joints, a skeleton, serves as a kinematic abstraction of the character; (middle) repositioning the skeleton deforms a separate skin object attached to it; (right) a tree data structure is used to represent the skeleton. For compactness, the internal structure of several nodes is hidden (they are identical to a corresponding sibling).
+图 16.15。 （左）关节层次结构（骨骼）充当角色的运动学抽象； （中）重新定位骨架会使附着在其上的单独蒙皮对象变形； （右）使用树数据结构来表示骨架。 为了紧凑性，隐藏了多个节点的内部结构（它们与相应的兄弟节点相同)。
+
+Each of the skeleton’s joints acts as a parent for the hierarchy below it. The root represents the whole character and is positioned directly in the world coordinate system. If a local transformation matrix which relates a joint to its parent in the hierarchy is available, one can obtain a transformation which relates local space of any joint to the world system (i.e., the system of the root) by simply concatenating transformations along the path from the root to the joint. To evaluate the whole skeleton (i.e., find position and orientation of all joints), a depth-first traversal of the complete tree of joints is performed. A transformation stack is a natural data structure to help with this task. While traversing down the tree, the current composite matrix is pushed on the stack and a new one is created by multiplying the current matrix with the one stored at the joint. When backtracking to the parent, this extra transformation should be undone before another branch is visited; this is easily done by simply popping the stack. Although this general and simple technique for evaluating hierarchies is used throughout computer graphics, in animation (and robotics) it is given a special name—forward kinematics (FK). While general representations for all transformations can be used, it is common to use specialized sets of parameters, such as link lengths or joint angles, to specify skeletons. To animate with forward kinematics, rotational parameters of all joints are manipulated directly. The technique also allows the animator to change the distance between joints (link lengths), but one should be aware that this corresponds to limb stretching and can often look rather unnatural. 
+骨骼的每个关节都充当其下方层次结构的父级。 根代表整个角色并直接位于世界坐标系中。 如果将关节与其层次结构中的父级相关联的局部变换矩阵可用，则可以通过简单地沿路径串联变换来获得将任何关节的局部空间与世界系统（即根系统）相关联的变换 从根部到关节。 为了评估整个骨架（即找到所有关节的位置和方向），需要对完整的关节树进行深度优先遍历。 转换堆栈是帮助完成此任务的自然数据结构。 向下遍历树时，当前复合矩阵被压入堆栈，并通过将当前矩阵与存储在节点处的矩阵相乘来创建一个新矩阵。 当回溯到父分支时，应该在访问另一个分支之前撤消这个额外的转换； 只需弹出堆栈即可轻松完成此操作。 尽管这种用于评估层次结构的通用而简单的技术在整个计算机图形学中都有使用，但在动画（和机器人学）中，它被赋予了一个特殊的名称——正向运动学（FK）。 虽然可以使用所有变换的通用表示，但通常使用专门的参数集（例如链接长度或关节角度）来指定骨架。 为了使用正向运动学制作动画，可以直接操纵所有关节的旋转参数。 该技术还允许动画师改变关节之间的距离（链接长度），但人们应该意识到这对应于肢体拉伸，并且通常看起来相当不自然。
+
+Forward kinematics requires the user to set parameters for all joints involved in the motion (Figure 16.16 (top)). Most of these joints, however, belong to in ternal nodes of the hierarchy, and their motion is typically not something the animator wants to worry about. In most situations, the animator just wants them to move naturally “on their own,” and one is much more interested in specifying the behavior of the endpoint of a joint chain, which typically corresponds to something performing a specific action, such as an ankle or a tip of a finger. The animator would rather have parameters of all internal joints be determined from the motion of the end effector automatically by the system. Inverse kinematics (IK) allows us to do just that (see Figure 16.16 (bottom)). 
+正向运动学要求用户为运动中涉及的所有关节设置参数（图 16.16（顶部））。 然而，大多数这些关节属于层次结构的内部节点，并且它们的运动通常不是动画师想要担心的事情。 在大多数情况下，动画师只是希望它们“自行”自然移动，而人们更感兴趣的是指定关节链端点的行为，这通常对应于执行特定动作的物体，例如脚踝 或指尖。 动画师宁愿让系统根据末端执行器的运动自动确定所有内部关节的参数。 逆运动学 (IK) 使我们能够做到这一点（见图 16.16（底部））。
+![Figure 16.16](Images/Figure 16.16.png)
+Figure 16.16. Forward kinematics (top) requires the animator to put all joints into correct position. In inverse kinematic (bottom), parameters of some internal joints are computed based on desired end effector motion.
+图 16.16。 正向运动学（上）要求动画师将所有关节置于正确的位置。 在逆运动学（底部)中，一些内部关节的参数是根据所需的末端执行器运动来计算的。
+
+Let x be the position of the end effector and α be the vector of parameters needed to specify all internal joints along the chain from the root to the final joint. Sometimes the orientation of the final joint is also directly set by the animator, in which case we assume that the corresponding variables are included in the vector $\bold{x}$. For simplicity, however, we will write all specific expressions for the vector:
+令 x 为末端执行器的位置，α 为指定沿链从根到最终关节的所有内部关节所需的参数向量。 有时最终关节的方向也由动画师直接设置，在这种情况下我们假设相应的变量包含在向量$\bold{x}$中。 然而，为了简单起见，我们将为向量编写所有特定表达式：
+$\bold{x} = (x_1, x_2, x_3)^T$
+
+Since each of the variables in x is a function of α, it can be written as a vector equation $\bold{x} = \bold{F}(α)$. If we change the internal joint parameters by a small amount $δα$, a resulting change $δx$ in the position of the end effector can be approximately written as
+由于 x 中的每个变量都是 α 的函数，因此可以将其写为向量方程 $\bold{x} = \bold{F}(α)$。 如果我们将内部关节参数改变少量 $δα$，则末端执行器位置的变化 $δx$ 可以近似写为
+$$
+δ\bold{x} = \frac{∂\bold{F}}{∂α} δα \ \ \ \ \ (16.1)
+$$
+where $\frac{∂\bold{F}}{∂α}$ is the matrix of partial derivatives called the Jacobian:
+其中 $\frac{∂\bold{F}}{∂α}$ 是称为雅可比行列式的偏导数矩阵：
+$$
+\frac{∂\bold{F}}{∂α} = \begin{bmatrix}
+\frac{∂f_1}{∂α_1} & \frac{∂f_1}{∂α_2} & ... & \frac{∂f_1}{∂α_n} \\
+\frac{∂f_2}{∂α_1} & \frac{∂f_2}{∂α_2} & ... & \frac{∂f_2}{∂α_n} \\
+\frac{∂f_3}{∂α_1} & \frac{∂f_3}{∂α_2} & ... & \frac{∂f_3}{∂α_n}
+\end{bmatrix}
+$$
+At each moment in time, we know the desired position of the end effector (set by the animator) and, of course, the effector’s current position. Subtracting the two, we will get the desired adjustment $δ\bold{x}$. Elements of the Jacobian matrix are related to changes in a coordinate of the end effector when a particular internal parameter is changed while others remain fixed (see Figure 16.17). These elements can be computed for any given skeleton configuration using geometric relationships. The only remaining unknowns in the system of equations (16.1) are the changes in internal parameters $α$. Once we solve for them, we update $α = α+δα$ which gives all the necessary information for the FK procedure to reposition the skeleton. 
+在每个时刻，我们都知道末端执行器的所需位置（由动画师设置），当然还有执行器的当前位置。 将两者相减，我们将得到所需的调整$δ\bold{x}$。 当特定内部参数发生变化而其他参数保持固定时，雅可比矩阵的元素与末端执行器坐标的变化相关（见图 16.17）。 可以使用几何关系针对任何给定的骨架配置计算这些元素。 方程组 (16.1) 中唯一剩下的未知数是内部参数 $α$ 的变化。 一旦我们解决了它们，我们就会更新 $α = α+δα$，它为 FK 过程重新定位骨架提供了所有必要的信息。
+![Figure 16.17](Images/Figure 16.17.png)
+Figure 16.17. Partial derivative $∂x/∂α_{knee}$ is given by the limit of $Δx/Δα_{knee}$. Effector displacement is computed while all joints, except the knee, are kept fixed.
+图 16.17。 偏导数 $∂x/∂α_{knee}$ 由 $Δx/Δα_{knee}$ 的极限给出。 在计算效应器位移时，除膝关节外的所有关节均保持固定。
+
+Unfortunately, the system (16.1) cannot usually be solved analytically and, moreover, it is in most cases underconstrained, i.e., the number of unknown internal joint parameters $α$ exceeds the number of variables in vector $\bold{x}$. This means that different motions of the skeleton can result in the same motion of the end effector. Some examples are shown on Figure 16.18. Many ways of obtaining specific solution for such systems are available, including those taking into account natural constraints needed for some real-life joints (bending a knee only in one direction, for example). One should also remember that the computed Jacobian matrix is valid only for one specific configuration, and it has to be updated as the skeleton moves. The complete IK framework is presented in Figure 16.19. Of course, the root joint for IK does not have to be the root of the whole hierarchy, and multiple IK solvers can be applied to independent parts of the skeleton. For example, one can use separate solvers for right and left feet and yet another one to help animate grasping with the right hand, each with its own root.
+不幸的是，系统（16.1）通常无法解析求解，而且在大多数情况下都受到约束，即未知内部关节参数 $α$ 的数量超过向量 $\bold{x}$ 中变量的数量。 这意味着骨架的不同运动可以导致末端执行器的相同运动。 图 16.18 显示了一些示例。 获得此类系统的特定解决方案的方法有很多，包括考虑一些现实生活中关节所需的自然约束的方法（例如，仅向一个方向弯曲膝盖）。 人们还应该记住，计算出的雅可比矩阵仅对一种特定配置有效，并且必须随着骨架的移动而更新。 完整的 IK 框架如图 16.19 所示。 当然，IK 的根关节不必是整个层次结构的根，多个 IK 解算器可以应用于骨架的独立部分。 例如，可以对右脚和左脚使用单独的解算器，然后使用另一个解算器来帮助制作右手抓握的动画，每个解算器都有自己的根。
+![Figure 16.18](Images/Figure 16.18.png)
+Figure 16.18. Multiple configurations of internal joints can result in the same effector position. (Top) disjoint “flipped” solutions; (bottom) a continuum of solutions.
+图 16.18。 内部关节的多种配置可以导致相同的效应器位置。 （上）不相交的“翻转”解决方案； （底部)连续的解决方案。
+
+![Figure 16.19](Images/Figure 16.19.png)
+Figure 16.19. A diagram of the inverse kinematic algorithm. 
+图 16.19。 逆运动学算法图。
+
+A combination of FK and IK approaches is typically used to animate the skeleton. Many common motions (walking or running cycles, grasping, reaching, etc.) exhibit well-known patterns of mutual joint motion making it possible to quickly create naturally looking motion or even use a library of such “clips.” The animator then adjusts this generic result according to the physical parameters of the character and also to give it more individuality. 
+FK 和 IK 方法的组合通常用于为骨架设置动画。 许多常见的动作（步行或跑步循环、抓握、伸手等）都表现出众所周知的相互关节运动模式，从而可以快速创建看起来自然的动作，甚至可以使用此类“剪辑”库。 然后动画师根据角色的物理参数调整这个通用结果，并赋予它更多的个性。
+
+When a skeleton changes its position, it acts as a special type of deformer applied to the skin of the character. The motion is transferred to this surface by assigning each skin vertex one (rigid skinning) or more (smooth skinning) joints as drivers (see Figure 16.20). In the first case, a skin vertex is simply frozen into the local space of the corresponding joint, which can be the one nearest in space or one chosen directly by the user. The vertex then repeats whatever motion this joint experiences, and its position in world coordinates is determined by standard FK procedure. Although it is simple, rigid skinning makes it difficult to obtain sufficiently smooth skin deformation in areas near the joints or also for more subtle effects resembling breathing or muscle action. Additional specialized deformers called flexors can be used for this purpose. In smooth skinning, several joints can influence a skin vertex according to some weight assigned by the animator, providing more detailed control over the results. Displacement vectors, $\bold{d}_i$, suggested by different joints affecting a given skin vertex (each again computed with standard FK) are averaged according to their weights $w_i$ to compute the final displacement of the vertex $\bold{d} = \sum w_i\bold{d}_i$. Normalized weights ($\sum w_i = 1$) are the most common but not fundamentally necessary. Setting smooth skinning weights to achieve the desired effect is not easy and requires significant skill from the animator.
+当骨架改变其位置时，它充当应用于角色皮肤的特殊类型的变形器。 通过将每个蒙皮顶点分配一个（刚性蒙皮）或多个（平滑蒙皮）关节作为驱动器，将运动传递到该表面（参见图 16.20）。 在第一种情况下，皮肤顶点只是被冻结到相应关节的局部空间中，该关节可以是空间中最近的关节，也可以是用户直接选择的关节。 然后，顶点会重复该关节经历的任何运动，并且其在世界坐标中的位置由标准 FK 程序确定。 虽然它很简单，但刚性蒙皮使得很难在关节附近的区域获得足够平滑的皮肤变形，或者也难以获得类似于呼吸或肌肉动作的更微妙的效果。 称为屈肌的附加专用变形器可用于此目的。 在平滑蒙皮中，多个关节可以根据动画师分配的一些权重影响蒙皮顶点，从而对结果提供更详细的控制。 由影响给定皮肤顶点的不同关节建议的位移向量 $\bold{d}_i$ （每个关节再次使用标准 FK 计算）根据其权重 $w_i$ 进行平均，以计算顶点的最终位移 $\bold{ d} = \sum w_i\bold{d}_i$。 归一化权重 ($\sum w_i = 1$) 是最常见的，但不是根本必要的。 设置平滑蒙皮权重以达到所需的效果并不容易，并且需要动画师的高超技巧。
+![Figure 16.20](Images/Figure 16.20.png)
+Figure 16.20. Top: Rigid skinning assigns skin vertices to a specific joint. Those belonging to the elbow joint are shown in black; Bottom: Soft skinning can blend the influence of several joints. Weights for the elbow joint are shown (lighter = greater weight). Note smoother skin deformation of the inner part of the skin near the joint.
+图 16.20。 顶部：刚性蒙皮将蒙皮顶点分配给特定关节。 属于肘关节的以黑色显示； 底部：软蒙皮可以混合多个关节的影响。 显示了肘关节的重量（更轻=更大的重量)。 注意关节附近皮肤内部的平滑皮肤变形。
+
+### 16.4.1 Facial Animation 面部动画
+
+Skeletons are well suited for creating most motions of a character’s body, but they are not very convenient for realistic facial animation. The reason is that the skin of a human face is moved by muscles directly attached to it, contrary to other parts of the body where the primary objective of the muscles is to move the bones of the skeleton and any skin deformation is a secondary outcome. The result of this facial anatomical arrangement is a very rich set of dynamic facial expressions humans use as one of the main instruments of communication. We are all very well trained to recognize such facial variations and can easily notice any unnatural appearance. This not only puts special demands on the animator but also requires a high-resolution geometric model of the face and, if photorealism is desired, accurate skin reflection properties and textures. 
+骨骼非常适合创建角色身体的大多数动作，但对于逼真的面部动画来说不太方便。 原因是，人脸的皮肤是由直接附着在其上的肌肉移动的，这与身体的其他部位相反，在身体的其他部位，肌肉的主要目标是移动骨骼，任何皮肤变形都是次要结果。 这种面部解剖结构的结果是形成了一组非常丰富的动态面部表情，人类将其用作主要的交流工具之一。 我们都受过良好的训练来识别这种面部变化，并且可以很容易地注意到任何不自然的外观。 这不仅对动画师提出了特殊要求，而且还需要高分辨率的面部几何模型，如果需要真实感，还需要精确的皮肤反射特性和纹理。
+
+While it is possible to set key poses of the face vertex-by-vertex and interpolate between them or directly simulate the behavior of the underlying muscle structure using physics-based techniques (see Section 16.5), more specialized high-level approaches also exist. The static shape of a specific face can be characterized by a relatively small set of so-called conformational parameters (overall scale, distance from the eye to the forehead, length of the nose, width of the jaws, etc.) which are used to morph a generic face model into one with individual features. An additional set of expressive parameters can be used to describe the dynamic shape of the face for animation. Examples include rigid rotation of the head, how wide the eyes are open, movement of some feature point from its static position, etc. These are chosen so that most of the interesting expressions can be obtained through some combination of parameter adjustments, therefore, allowing a face to be animated via standard keyframing. To achieve a higher level of control, one can use expressive parameters to create a set of expressions corresponding to common emotions (neutral, sadness, happiness, anger, surprise, etc.) and then blend these key poses to obtain a “slightly sad” or “angrily surprised” face. Similar techniques can be used to perform lip-synch animation, but key poses in this case correspond to different phonemes. Instead of using a sequence of static expressions to describe a dynamic one, the Facial Action Coding System (FACS) (Eckman & Friesen, 1978) decomposes dynamic facial expressions directly into a sum of elementary motions called action units (AUs). The set of AUs is based on extensive psychological research and includes such movements as raising the inner brow, wrinkling the nose, stretching lips, etc. Combining AUs can be used to synthesize a necessary expression. 
+虽然可以逐个顶点设置面部的关键姿势并在它们之间进行插值，或者使用基于物理的技术直接模拟底层肌肉结构的行为（参见第 16.5 节），但也存在更专业的高级方法。 特定脸部的静态形状可以通过一组相对较小的所谓构象参数（整体尺度、眼睛到前额的距离、鼻子长度、下巴宽度等）来表征，这些参数用于 将通用面部模型转变为具有个人特征的模型。 可以使用一组附加的表达参数来描述动画中面部的动态形状。 示例包括头部的刚性旋转、眼睛张开的程度、某些特征点从其静态位置的移动等。选择这些是为了通过参数调整的某些组合可以获得大多数有趣的表情，因此，允许 通过标准关键帧进行动画处理的脸部。 为了达到更高的控制水平，可以利用表情参数创建一组对应常见情绪（中性、悲伤、快乐、愤怒、惊讶等）的表情，然后将这些关键姿势混合起来，得到一个“微悲伤”的表情。 或“愤怒惊讶”的脸。 类似的技术可用于执行口型同步动画，但这种情况下的关键姿势对应于不同的音素。 面部动作编码系统 (FACS)（Eckman & Friesen，1978）不是使用一系列静态表情来描述动态表情，而是将动态面部表情直接分解为称为动作单元 (AU) 的基本动作总和。 该组AU基于广泛的心理学研究，包括内抬眉毛、皱鼻子、伸展嘴唇等动作。组合AU可用于合成必要的表情。
+
+### 16.4.2 Motion Capture 动作捕捉
+
+Even with the help of the techniques described above, creating realistic-looking character animation from scratch remains a daunting task. It is therefore only natural that much attention is directed toward techniques which record an actor’s motion in the real world and then apply it to computer-generated characters. Two main classes of such motion capture (MC) techniques exist: electromagnetic and optical. 
+即使借助上述技术，从头开始创建逼真的角色动画仍然是一项艰巨的任务。 因此，自然而然地，很多注意力都集中在记录演员在现实世界中的动作，然后将其应用于计算机生成的角色的技术上。 此类动作捕捉 (MC) 技术主要有两类：电磁技术和光学技术。
+
+In electromagnetic motion capture, an electromagnetic sensor directly measures its position (and possibly orientation) in 3D, often providing the captured results in real time. Disadvantages of this technique include significant equipment cost, possible interference from nearby metal objects, and noticeable size of sensors and batteries which can be an obstacle in performing high-amplitude motions. In optical MC, small colored markers are used instead of active sensors making it a much less intrusive procedure. Figure 16.21 shows the operation of such a system. In the most basic arrangement, the motion is recorded by two calibrated video cameras, and simple triangulation is used to extract the marker’s 3D position. More advanced computer vision algorithms used for accurate tracking of multiple markers from video are computationally expensive, so, in most cases, such processing is done offline. Optical tracking is generally less robust than electromagnetic. Occlusion of a given marker in some frames, possible misidentification of markers, and noise in images are just a few of the common problem which have to be addressed. Introducing more cameras observing the motion from different directions improves both accuracy and robustness, but this approach is more expensive and it takes longer to process such data. Optical MC becomes more attractive as available computational power increases and better computer vision algorithms are developed. Because of low impact nature of markers, optical methods are suitable for delicate facial motion capture and can also be used with objects other than humans—for example, animals or even tree branches in the wind. 
+在电磁运动捕捉中，电磁传感器直接测量 3D 位置（以及可能的方向），通常实时提供捕捉的结果。 该技术的缺点包括设备成本高昂、可能受到附近金属物体的干扰以及传感器和电池的尺寸过大，这可能会成为执行高振幅运动的障碍。 在光学 MC 中，使用小型彩色标记代替有源传感器，使其成为一个侵入性较小的过程。 图 16.21 显示了这样一个系统的操作。 在最基本的布置中，运动由两个校准摄像机记录，并使用简单的三角测量来提取标记的 3D 位置。 用于准确跟踪视频中的多个标记的更先进的计算机视觉算法的计算成本很高，因此在大多数情况下，此类处理是离线完成的。 光学跟踪通常不如电磁跟踪稳健。 某些帧中给定标记的遮挡、标记可能的误识别以及图像中的噪声只是必须解决的一些常见问题。 引入更多摄像头从不同方向观察运动可以提高准确性和鲁棒性，但这种方法成本更高，并且处理此类数据需要更长的时间。 随着可用计算能力的增加和更好的计算机视觉算法的开发，光学MC变得更具吸引力。 由于标记的影响力较小，光学方法适用于精细的面部动作捕捉，也可用于人类以外的物体，例如动物甚至风中的树枝。
+![Figure 16.21](Images/Figure 16.21.png)
+Figure 16.21. Optical motion capture: markers attached to a performer’s body allow skeletal motion to be extracted. Image courtesy of Motion Analysis Corp.
+图 16.21。 光学动作捕捉：附着在表演者身体上的标记可以提取骨骼运动。 图片由 Motion Analysis Corp. 提供
+
+With several sensors or markers attached to a performer’s body, a set of time-dependant 3D positions of some collection of points can be recorded. These tracking locations are commonly chosen near joints, but, of course, they still lie on skin surface and not at points where actual bones meet. Therefore, some additional care and a bit of extra processing is necessary to convert recorded positions into those of the physical skeleton joints. For example, putting two markers on opposite sides of the elbow or ankle allows the system to obtain better joint position by averaging locations of the two markers. Without such extra care, very noticeable artifacts can appear due to offset joint positions as well as inherent noise and insufficient measurement accuracy. Because of physical inaccuracy during motion, for example, character limbs can lose contact with objects they are supposed to touch during walking or grasping, problems like foot-sliding (skating) of the skeleton can occur. Most of these problems can be corrected by using inverse kinematics techniques which can explicitly force the required behavior of the limb’s end. 
+通过将多个传感器或标记附着在表演者的身体上，可以记录一些点集合的一组与时间相关的 3D 位置。 这些跟踪位置通常选择在关节附近，但当然，它们仍然位于皮肤表面，而不是实际骨骼相交的点。 因此，需要一些额外的注意和一些额外的处理来将记录的位置转换为物理骨骼关节的位置。 例如，将两个标记放在肘部或脚踝的相对侧，允许系统通过平均两个标记的位置来获得更好的关节位置。 如果不加倍小心，由于关节位置偏移以及固有噪声和测量精度不足，可能会出现非常明显的伪影。 例如，由于运动过程中的物理不准确，角色的四肢在行走或抓握时可能会失去与它们应该接触的物体的接触，因此可能会出现骨骼脚滑动（滑冰）等问题。 大多数这些问题可以通过使用逆运动学技术来纠正，该技术可以明确地强制肢体末端所需的行为。
+
+Recovered joint positions can now be directly applied to the skeleton of a computer-generated character. This procedure assumes that the physical dimensions of the character are identical to those of the performer. Retargeting recorded motion to a different character and, more generally, editing MC data, requires significant care to satisfy necessary constraints (such as maintaining feet on the ground or not allowing an elbow to bend backwards) and preserve an overall natural appearance of the modified motion. Generally, the greater the desired change from the original, the less likely it will be possible to maintain the quality of the result. An interesting approach to the problem is to record a large collection of motions and stitch together short clips from this library to obtain desired movement. Although this topic is currently a very active research area, limited ability to adjust the recorded motion to the animator’s needs remains one of the main disadvantages of motion capture technique.
+恢复的关节位置现在可以直接应用于计算机生成的角色的骨架。 此过程假设角色的物理尺寸与表演者的物理尺寸相同。 将记录的动作重新定位到不同的角色，更一般地说，编辑 MC 数据，需要非常小心地满足必要的约束（例如将脚保持在地面上或不允许肘部向后弯曲）并保留修改后的动作的整体自然外观 。 一般来说，与原始内容相比所需的变化越大，维持结果质量的可能性就越小。 解决该问题的一个有趣方法是记录大量运动并将该库中的短剪辑拼接在一起以获得所需的运动。 尽管该主题目前是一个非常活跃的研究领域，但根据动画师的需求调整记录的动作的能力有限仍然是动作捕捉技术的主要缺点之一。
+
+## 16.5 Physics-Based Animation 基于物理的动画
+
+The world around us is governed by physical laws, many of which can be formalized as sets of partial or, in some simpler cases, ordinary differential equations. One of the original applications of computers was (and remains) solving such equations. It is therefore only natural to attempt to use numerical techniques developed over the several past decades to obtain realistic motion for computer animation. 
+我们周围的世界受物理定律支配，其中许多物理定律可以形式化为偏微分方程组，或者在某些更简单的情况下，可以形式化为常微分方程组。 计算机最初的应用之一是（并且仍然是）求解此类方程。 因此，尝试使用过去几十年发展起来的数值技术来获得计算机动画的真实运动是很自然的。
+
+Because of its relative complexity and significant cost, physics-based animation is most commonly used in situations when other techniques are either unavailable or do not produce sufficiently realistic results. Prime examples include animation of fluids (which includes many gaseous phase phenomena described by the same equations—smoke, clouds, fire, etc.), cloth simulation (an exam ple is shown in Figure 16.22), rigid body motion, and accurate deformation of elastic objects. Governing equations and details of commonly used numerical approaches are different in each of these cases, but many fundamental ideas and difficulties remain applicable across applications. Many methods for numerically solving ODEs and PDEs exist, but discussing them in details is far beyond the scope of this book. To give the reader a flavor of physics-based techniques and some of the issues involved, we will briefly mention here only the finite difference approach—one of the conceptually simplest and most popular families of algorithms which has been applied to most, if not all, differential equations encountered in animation. 
+由于其相对复杂性和巨大的成本，基于物理的动画最常用于其他技术不可用或不能产生足够逼真的结果的情况。 主要的例子包括流体动画（其中包括由相同方程描述的许多气相现象——烟、云、火等）、布料模拟（示例如图 16.22 所示）、刚体运动以及物体的精确变形。 弹性物体。 在每种情况下，常用数值方法的控制方程和细节都不同，但许多基本思想和困难仍然适用于各种应用。 存在许多数值求解 ODE 和 PDE 的方法，但详细讨论它们远远超出了本书的范围。 为了让读者了解基于物理的技术和所涉及的一些问题，我们在这里将仅简要提及有限差分方法 - 概念上最简单和最流行的算法系列之一，已应用于大多数（如果不是全部） ，动画中遇到的微分方程。
+![Figure 16.22](Images/Figure 16.22.png)
+Figure 16.22. Realistic cloth simulation is often performed with physics-based methods. In this example, forces are due to collisions and gravity.
+图 16.22。 真实的布料模拟通常使用基于物理的方法进行。 在此示例中，力是由碰撞和重力产生的。
+
+The key idea of this approach is to replace a differential equation with its discrete analog—a difference equation. To do this, the continuous domain of interest is represented by a finite set of points at which the solution will be computed. In the simplest case, these are defined on a uniform rectangular grid as shown in Figure 16.23. Every derivative present in the original ODE or PDE is then replaced by its approximation through function values at grid points. One way of doing this is to subtract the function value at a given point from the function value for its neighboring point on the grid:
+这种方法的关键思想是用离散方程（差分方程）代替微分方程。 为此，感兴趣的连续域由一组有限的点表示，在这些点上计算解。 在最简单的情况下，它们被定义在统一的矩形网格上，如图 16.23 所示。 然后，原始 ODE 或 PDE 中存在的每个导数都通过网格点处的函数值替换为其近似值。 一种方法是从网格上相邻点的函数值中减去给定点的函数值：
+$\frac{df(t)}{dt} ≈ \frac{Δf}{Δt} = \frac{f(t + Δt) - f(t)}{Δt}$
+or
+$\frac{∂f(x, t)}{∂x}≈\frac{Δf}{Δx} = \frac{f(x + Δx, t) - f(x, t)}{Δx} \ \ \ \  \ \ \ (16.2)$
+![Figure 16.23](Images/Figure 16.23.png)
+Figure 16.23. Two possible difference schemes for an equation involving derivatives $∂f/∂x$ and $∂f/∂t$. (Left) An explicit scheme expresses unknown values (open circles) only through known values at the current (orange circles) and possibly past (blue circles) time; (Right) Implicit schemes mix known and unknown values in a single equation making it necessary to solve all such equations as a system. For both schemes, information about values on the right boundary is needed to close the process.
+图 16.23。 涉及导数 $∂f/∂x$ 和 $∂f/∂t$ 的方程的两种可能的差分格式。 （左）显式方案仅通过当前（橙色圆圈）和可能过去（蓝色圆圈）时间的已知值来表达未知值（空心圆圈）； （右)隐式方案将已知值和未知值混合在一个方程中，因此有必要将所有此类方程作为一个系统来求解。 对于这两种方案，需要有关右边界上的值的信息来关闭该过程。
+
+These expressions are, of course, not the only way. One can, for example, use $f(t − Δt)$ instead of f(t) above and divide by $2Δt$ . For an equation containing a time derivative, it is now possible to propagate values of an unknown function forward in time in a sequence of Δt-size steps by solving the system of difference equations (one at each spatial location) for unknown $f(t + Δt)$. Some initial conditions, i.e., values of the unknown function at $t = 0$, are necessary to start the process. Other information, such as values on the boundary of the domain, might also be required depending on the specific problem. 
+当然，这些表达并不是唯一的方法。例如，可以使用$f(t - Δt)$代替上面的f(t)并除以$2Δt$。对于包含时间导数的方程，现在可以通过求解未知$f(t + Δt)$的差分方程系统(每个空间位置一个)，以Δt-size步骤的序列在时间上向前传播未知函数的值。一些初始条件，即未知函数在t = 0处的值，是启动该过程所必需的。根据具体问题，可能还需要其他信息，例如域边界上的值。
+
+The computation of $f(t+Δt)$ can be done easily for so-called explicit schemes when all other values present are taken at the current time and the only unknown in the corresponding difference equation $f(t + Δt)$ is expressed through these known values. Implicit schemes mix values at current and future times and might use, for example,
+当所有其他存在值均取当前时间且相应差分方程 $f(t + Δt)$ 中唯一的未知数为时，对于所谓的显式方案，$f(t+Δt)$ 的计算可以轻松完成 通过这些已知值来表达。 隐式方案混合当前和未来的值，并可能使用，例如，
+$\frac{f(x + Δx, t + Δt) - f(x, t + Δt)}{Δx} \\$
+
+as an approximation of $\frac{∂f}{∂x}$. In this case one has to solve a system of algebraic equations at each step. 
+作为 $\frac{∂f}{∂x}$ 的近似值。 在这种情况下，每一步都必须求解代数方程组。
+
+The choice of difference scheme can dramatically affect all aspects of the algorithm. The most obvious among them is accuracy. In the limit $Δt → 0$ or $Δx → 0$, expressions of the type in Equation (16.2) are exact, but for finite step size some schemes allow better approximation of the derivative than others. Stability of a difference scheme is related to how fast numerical errors, which are always present in practice, can grow with time. For stable schemes this growth is bounded, while for unstable ones it is exponential and can quickly overwhelm the solution one seeks (see Figure 16.24). It is important to realize that while some inaccuracy in the solution is tolerable (and, in fact, accuracy demanded in physics and engineering is rarely needed for animation), an unstable result is completely meaningless, and one should avoid using unstable schemes. Generally, explicit schemes are either unstable or can become unstable at larger step sizes while implicit ones are unconditionally stable. Implicit schemes allows greater step size (and, therefore, fewer steps) which is why they are popular despite the need to solve a system of algebraic equations at each step. Explicit schemes are attractive because of their simplicity if their stability conditions can be satisfied. Developing a good difference scheme and corresponding algorithm for a specific problem is not easy, and for most standard situations it is well advised to use an existing method. Ample literature discussing details of these techniques is available. 
+差分方案的选择可以极大地影响算法的各个方面。 其中最明显的是准确性。 在极限 $Δt → 0$ 或 $Δx → 0$ 下，方程 (16.2) 中类型的表达式是精确的，但对于有限步长，某些方案比其他方案允许更好地逼近导数。 差分格式的稳定性与实际中始终存在的数值误差随时间增长的速度有关。 对于稳定的方案，这种增长是有界的，而对于不稳定的方案，它是指数级的，并且很快就会压倒人们所寻求的解决方案（见图 16.24）。 重要的是要认识到，虽然解决方案中的一些不准确性是可以容忍的（事实上，动画很少需要物理和工程中要求的准确性），但不稳定的结果是完全没有意义的，应该避免使用不稳定的方案。 一般来说，显式方案要么不稳定，要么在较大步长下变得不稳定，而隐式方案则无条件稳定。 隐式方案允许更大的步长（因此步数更少），这就是为什么它们很受欢迎，尽管每一步都需要求解代数方程组。 如果能够满足稳定性条件，显式方案由于其简单性而具有吸引力。 针对特定问题开发良好的差分方案和相应的算法并不容易，对于大多数标准情况，建议使用现有方法。 有大量讨论这些技术细节的文献。
+![Figure 16.24](Images/Figure 16.24.png)
+Figure 16.24. An unstable solution might follow the exact one initially, but can deviate arbitrarily far from it with time. Accuracy of a stable solution might still be insufficient for a specific application.
+图 16.24。 不稳定的解决方案一开始可能遵循精确的解决方案，但随着时间的推移可能会偏离它任意远的距离。 对于特定应用来说，稳定解决方案的准确性可能仍然不够。
+
+One should remember that, in many cases, just computing all necessary terms in the equation is a difficult and time-consuming task on its own. In rigid body or cloth simulation, for example, most of the forces acting on the system are due to collisions among objects. At each step during animation, one therefore has to solve a purely geometric, but very nontrivial, problem of collision detection. In such conditions, schemes which require fewer evaluations of such forces might provide significant computational savings. 
+人们应该记住，在许多情况下，仅仅计算方程中的所有必要项本身就是一项困难且耗时的任务。 例如，在刚体或布料模拟中，作用在系统上的大部分力都是由于物体之间的碰撞而产生的。 因此，在动画过程中的每一步，都必须解决一个纯几何但非常重要的碰撞检测问题。 在这种情况下，需要对此类力进行较少评估的方案可能会节省大量计算量。
+
+Although the result of solving appropriate time-dependant equations gives very realistic motion, this approach has its limitations. First of all, it is very hard to control the result of physics-based animation. Fundamental mathematical properties of these equations state that once the initial conditions are set, the solution is uniquely defined. This does not leave much room for animator input and, if the result is not satisfactory for some reason, one has only a few options. They are mostly limited to adjusting initial condition used, changing physical properties of the system, or even modifying the equations themselves by introducing artificial terms intended to “drive” the solution in the direction the animator wants. Making such changes requires significant skill as well as understanding of the underlying physics and, ideally, numerical methods. Without this knowledge, the realism provided by physics-based animation can be destroyed or severe numerical problems might appear. 
+尽管求解适当的瞬态方程的结果给出了非常真实的运动，但这种方法有其局限性。 首先，基于物理的动画的结果很难控制。 这些方程的基本数学属性表明，一旦设置了初始条件，解就被唯一定义。 这并没有给动画师留下太多的输入空间，如果由于某种原因结果不令人满意，人们就只有几个选择。 它们大多仅限于调整所使用的初始条件，改变系统的物理属性，甚至通过引入旨在“驱动”解决方案朝动画师想要的方向“驱动”的人工术语来修改方程本身。 做出这样的改变需要大量的技能以及对基础物理的理解，最好是对数值方法的理解。 如果没有这些知识，基于物理的动画所提供的真实感可能会被破坏，或者可能会出现严重的数值问题。
+
+## 16.6 Procedural Techniques 程序技术
+
+Imagine that one could write (and implement on a computer) a mathematical function which outputs precisely the desired motion given some animator guidance. Physics-based techniques outlined above can be treated as a special case of such an approach when the “function” involved is the procedure to solve a particular differential equation and “guidance” is the set of initial and boundary conditions, extra equation terms, etc.
+想象一下，人们可以编写（并在计算机上实现）一个数学函数，该函数在动画师的指导下精确输出所需的运动。 当涉及的“函数”是求解特定微分方程的过程，而“指导”是初始条件和边界条件、额外方程项等的集合时，上述基于物理的技术可以被视为这种方法的特例。
+
+However, if we are only concerned with the final result, we do not have to follow a physics-based approach. For example, a simple constant amplitude wave on the surface of a lake can be directly created by applying the function $f(\bold{x}, t) = A cos(ωt − \bold{kx} + φ)$ with constant frequency $ω$, wave vector $\bold{k}$ and phase $φ$ to get displacement at the 2D point $\bold{x}$ at time $t$. A collection of such waves with random phases and appropriately chosen amplitudes, frequencies, and wave vectors can result in a very realistic animation of the surface of water without explicitly solving any fluid dynamics equations. It turns out that other rather simple mathematical functions can also create very interesting patterns or objects. Several such functions, most based on lattice noises, have been described in Section 11.5. Adding time dependance to these functions allows us to animate certain complex phenomena much easier and cheaper than with physics-based techniques while maintaining very high visual quality of the results. If $noise(\bold{x})$ is the underlying pattern-generating function, one can create a time-dependant variant of it by moving the argument position through the lattice. The simplest case is motion with constant speed: $timenoise(\bold{x}, t) = noise(\bold{x} + \bold{v}t)$, but more complex motion through the lattice is, of course, also possible and, in fact, more common. One such path, a spiral, is shown in Figure 16.25. Another approach is to animate parameters used to generate the noise function. This is especially appropriate if the appearance changes significantly with time—a cloud becoming more turbulent, for example. In this way one can animate the dynamic process of formation of clouds using the function which generates static ones.
+但是，如果我们只关心最终结果，则不必遵循基于物理的方法。 例如，可以通过应用函数 $f(\bold{x}, t) = A cos(ωt − \bold{kx} + φ)$ 以及常数来直接创建湖面上的简单等幅波 频率 $ω$、波矢 $\bold{k}$ 和相位 $φ$ 以获得 2D 点 $\bold{x}$ 在时间 $t$ 处的位移。 具有随机相位和适当选择的振幅、频率和波矢量的此类波的集合可以产生非常逼真的水面动画，而无需明确求解任何流体动力学方程。 事实证明，其他相当简单的数学函数也可以创建非常有趣的图案或物体。 几个这样的函数，大多数基于晶格噪声，已在第 11.5 节中描述。 与基于物理的技术相比，向这些函数添加时间依赖性使我们能够更轻松、更便宜地制作某些复杂现象的动画，同时保持结果的非常高的视觉质量。 如果 $noise(\bold{x})$ 是底层模式生成函数，则可以通过在晶格中移动参数位置来创建它的时间相关变体。 最简单的情况是匀速运动：$timenoise(\bold{x}, t) = Noise(\bold{x} + \bold{v}t)$，但是通过晶格的更复杂的运动当然是， 也是可能的，而且事实上更常见。 图 16.25 显示了这样一种路径，即螺旋路径。 另一种方法是对用于生成噪声函数的参数进行动画处理。 如果外观随时间发生显着变化（例如，云变得更加混乱），这尤其合适。 通过这种方式，人们可以使用生成静态云的函数来动画化云形成的动态过程。
+![Figure 16.25](Images/Figure 16.25.png)
+Figure 16.25. A path through the cube defining procedural noise is traversed to animate the resulting pattern.
+图 16.25。 穿过定义程序噪声的立方体的路径来动画生成的图案。
+
+For some procedural techniques, time dependance is a more integral component. The simplest cellular automata operate on a 2D rectangular grid where a binary value is stored at each location (cell). To create a time varying pattern, some user-provided rules for modifying these values are repeatedly applied. Rules typically involve some set of conditions on the current value and that of the cell’s neighbors. For example, the rules of the popular 2D Game of Life cellular automaton invented in 1970 by British mathematician John Conway are the following: 
+对于某些程序技术来说，时间依赖性是一个更不可或缺的组成部分。 最简单的元胞自动机在二维矩形网格上运行，其中每个位置（单元）都存储一个二进制值。 为了创建随时间变化的模式，需要重复应用一些用户提供的用于修改这些值的规则。 规则通常涉及当前值和单元格邻居的某些条件集。 例如，英国数学家约翰·康威于 1970 年发明的流行的 2D 生命游戏元胞自动机的规则如下：
+
+1. A dead cell (i.e., binary value at a given location is 0) with exactly three live neighbors becomes a live cell (i.e., its value set to 1). 
+   恰好有三个活邻居的死细胞（即给定位置的二进制值为 0）成为活细胞（即其值设置为 1）。
+2. A live cell with two or three live neighbors stays alive. 
+   一个活细胞如果有两个或三个活邻居，那么它就会保持存活状态。
+3. In all other cases, a cell dies or remains dead. 
+   在所有其他情况下，细胞死亡或保持死亡状态。
+
+Once the rules are applied to all grid locations, a new pattern is created and a new evolution cycle can be started. Three sample snapshots of the live cell distribution at different times are shown in Figure 16.26. More sophisticated automata simultaneously operate on several 3D grids of possibly floating point values and can be used for modeling dynamics of clouds and other gaseous phenomena or biological systems for which this apparatus was originally invented (note the terminology). Surprising pattern complexity can arise from just a few well-chosen rules, but how to write such rules to create the desired behavior is often not obvious. This is a common problem with procedural techniques: there is only limited, if any, guidance on how to create new procedures or even adjust parameters of existing ones. Therefore, a lot of tweaking and learning by trial-and-error (“by experience”) is usually needed to unlock the full potential of procedural methods. 
+一旦规则应用于所有网格位置，就会创建新的模式并开始新的演化周期。 图 16.26 显示了不同时间活细胞分布的三个样本快照。 更复杂的自动机同时在多个可能浮点值的 3D 网格上运行，可用于对云和其他气体现象或生物系统的动力学建模，该设备最初是为这些系统发明的（注意术语）。 只需几个精心选择的规则就可以产生令人惊讶的模式复杂性，但如何编写这些规则来创建所需的行为通常并不明显。 这是程序技术的一个常见问题：关于如何创建新程序甚至调整现有程序的参数的指导（如果有的话）也是有限的。 因此，通常需要通过反复试验（“通过经验”）进行大量调整和学习，以释放程序方法的全部潜力。
+![Figure 16.26](Images/Figure 16.26.png)
+Figure 16.26. Several (non-consecutive) stages in the evolution of a Game of Life automaton. Live cells are shown in black. Stable objects, oscillators, traveling patterns, and many other interesting constructions can result from the application of very simple rules. Figure created using a program by Alan Hensel.
+图 16.26。 生命游戏自动机演化的几个（非连续)阶段。 活细胞显示为黑色。 稳定的物体、振荡器、移动模式和许多其他有趣的结构都可以通过应用非常简单的规则来产生。 使用 Alan Hensel 的程序创建的图形。
+
+Another interesting approach which was also originally developed to describe biological objects is the technique called L-systems (after the name of their original inventor, Astrid Lindenmayer). This approach is based on grammars or sets of recursive rules for rewriting strings of symbols. There are two types of symbols: terminal symbols stand for elements of something we want to represent with a grammar. Depending on their meaning, grammars can describe structure of trees and bushes, buildings and whole cities, or programming and natural languages. In animation, L-systems are most popular for representing plants and corresponding terminals are instructions to the geometric modeling system: put a leaf (or a branch) at a current position—we will use the symbol @ and just draw a circle, move current position forward by some number of units (symbol f), turn current direction 60 degrees around world Z-axis (symbol +), pop (symbol [) or push (symbol ]) current position/orientation, etc. Auxiliary nonterminal symbols (denoted by capital letters) have only semantic rather than any direct meaning. They are intended to be eventually rewritten through terminals. We start from the special nonterminal start symbol S and keep applying grammar rules to the current string in parallel, i.e., replace all nonterminals currently present to get the new string, until we end up with a string containing only terminals and no more substitution is therefore possible. This string of modeling instructions is then used to output the actual geometry. For example, a set of rules (productions)
+另一种有趣的方法最初也是为了描述生物对象而开发的，它是称为 L 系统的技术（以其原始发明者 Astrid Lindenmayer 的名字命名）。 这种方法基于用于重写符号字符串的语法或递归规则集。 有两种类型的符号：终结符号代表我们想要用语法表示的事物的元素。 根据其含义，语法可以描述树木和灌木、建筑物和整个城市的结构，或者编程和自然语言。 在动画中，L系统最流行用于表示植物，相应的终端是对几何建模系统的指令：将一片叶子（或树枝）放在当前位置 - 我们将使用符号@并只画一个圆，移动当前位置 向前移动一些单位（符号 f），将当前方向绕世界 Z 轴旋转 60 度（符号 +），弹出（符号 [）或推送（符号 ]）当前位置/方向等。辅助非终结符号（表示为 由大写字母组成）仅具有语义而不具有任何直接含义。 它们最终将通过终端重写。 我们从特殊的非终结符开始符号 S 开始，并继续并行地将语法规则应用于当前字符串，即替换当前存在的所有非终结符以获得新字符串，直到我们最终得到一个仅包含终结符的字符串，因此不再需要替换 可能的。 然后使用这串建模指令来输出实际的几何形状。 例如，一组规则（产生式）
+$$
+S → A \\
+A → [+B]fA \\
+A → B \\
+B → fB \\
+B → f@ \\
+$$
+might result in the following sequence of rewriting steps demonstrated in Figure 16.27: 
+可能会导致如图 16.27 所示的以下重写步骤序列：
+$$
+S \mapsto A \mapsto [+B]fA \mapsto [+fB]f[+B]fA \mapsto \\
+[+ff@]f[+fB]fB \mapsto [+ff@]f[+ff@]ff@ . 
+$$
+As shown above, there are typically many different productions for the same nonterminal allowing the generation of many different objects with the same grammar. The choice of which rule to apply can depend on which symbols are located next to the one being replaced (context-sensitivity) or can be performed at random with some assigned probability for each rule (stochastic L-systems). More complex rules can model interaction with the environment, such as pruning to a particular shape, and parameters can be associated with symbols to control geometric commands issued. 
+如上所示，相同的非终结符通常有许多不同的产生式，从而允许使用相同的语法生成许多不同的对象。 应用哪个规则的选择可以取决于哪些符号位于被替换的符号旁边（上下文敏感），或者可以以每个规则的某个指定概率随机执行（随机 L 系统）。 更复杂的规则可以对与环境的交互进行建模，例如修剪为特定形状，并且参数可以与符号关联以控制发出的几何命令。
+
+L-systems already capture plant topology changes with time: each intermediate string obtained in the rewriting process can be interpreted as a “younger” version of the plant (see Figure 16.27). For more significant changes, different productions can be in effect at different times allowing the structure of the plant to change significantly as it grows. A young tree, for example, produces a lot of new branches, while an older one branches only moderately. 
+L-系统已经捕获了工厂拓扑随时间的变化：重写过程中获得的每个中间字符串都可以解释为工厂的“年轻”版本（见图 16.27）。 对于更显着的变化，不同的生产可以在不同的时间生效，从而使植物的结构随着其生长而发生显着的变化。 例如，一棵年轻的树会产生大量新枝，而老树则只能产生适度的枝条。
+![Figure 16.27](Images/Figure 16.27.png)
+Figure 16.27. Consecutive derivation steps using a simple L-system. Capital letters denote nonterminals and illustrate positions at which corresponding nonterminal will be expanded. They are not part of the actual output.
+图 16.27。 使用简单的 L 系统的连续推导步骤。 大写字母表示非终结符，并说明相应非终结符将被扩展的位置。 它们不是实际输出的一部分。
+
+Very realistic plant models have been created with L-systems. However, as with most procedural techniques, one needs some experience to meaningfully apply existing L-systems, and writing new grammars to capture some desired effect is certainly not easy. 
+使用 L 系统创建了非常逼真的植物模型。 然而，与大多数程序技术一样，需要一些经验才能有意义地应用现有的 L 系统，并且编写新语法来捕获某些所需的效果当然并不容易。
+
+## 16.7 Groups of Objects 对象组
+
+To animate multiple objects one can, of course, simply apply standard techniques described in the chapter so far to each of them. This works reasonably well for a moderate number of independent objects whose desired motion is known in advance. However, in many cases, some kind of coordinated action in a dynamic environment is necessary. If only a few objects are involved, the animator can use an artificial intelligence (AI)-based system to automatically determine immediate tasks for each object based on some high-level goal, plan necessary motion, and execute the plan. Many modern games use such autonomous objects to create smart monsters or player’s collaborators. 
+当然，要为多个对象设置动画，只需将本章到目前为止描述的标准技术应用于每个对象即可。 对于预先知道所需运动的中等数量的独立物体来说，这种方法相当有效。 然而，在许多情况下，动态环境中某种协调行动是必要的。 如果只涉及几个对象，动画师可以使用基于人工智能 (AI) 的系统，根据一些高级目标自动确定每个对象的即时任务，规划必要的动作并执行计划。 许多现代游戏都使用这种自主对象来创建智能怪物或玩家的合作者。
+
+Interestingly, as the number of objects in a group grows from just a few to several dozens, hundreds, and thousands, individual members of a group must have only very limited “intelligence” in order for the group as a whole to exhibit what looks like coordinated goal-driven motion. It turns out that this flocking is emergent behavior which can arise as a result of limited interaction of group members with just a few of their closest neighbors (Reynolds, 1987). Flocking should be familiar to anyone who has observed the fascinatingly synchronized motion of a flock of birds or a school of fish. The technique can also be used to control groups of animals moving over terrain or even a human crowd. 
+有趣的是，当一个群体中的物体数量从几个增长到几十个、几百个、几千个时，群体中的个体成员必须只有非常有限的“智力”才能使整个群体表现出看起来像的样子。 协调目标驱动的运动。 事实证明，这种聚集是一种突发行为，可能是由于群体成员与他们最近的几个邻居的有限互动而产生的（Reynolds，1987）。 任何观察过鸟群或鱼群令人着迷的同步运动的人都应该熟悉集群现象。 该技术还可用于控制在地形上移动的动物群甚至人群。
+
+At any given moment, the motion of a member of a group, often called boid when applied to flocks, is the result of balancing several often contradictory tendencies, each of which suggests its own velocity vector (see Figure 16.28). First, there are external physical forces $F$ acting on the boid, such as gravity or wind. New velocity due to those forces can be computed directly through Newton’s law as
+在任何给定时刻，群体成员的运动（应用于群体时通常称为 boid）是平衡几个通常相互矛盾的趋势的结果，每个趋势都有自己的速度矢量（见图 16.28）。 首先，有外部物理力$F$作用在物体上，例如重力或风。 这些力产生的新速度可以直接通过牛顿定律计算：
+$v^{physics}_{new} = \bold{v}_{old} + \bold{F}Δt/m.    $
+
+![Figure 16.28](Images/Figure 16.28.png)
+Figure 16.28. (Left) Individual flock member (boid) can experience several urges of different importance (shown by line thickness) which have to be negotiated into a single velocity vector. A boid is aware of only its limited neighborhood (circle). (Right) Boid control is commonly implemented as three separate modules.
+图 16.28。 （左）单个群体成员（boid）可能会经历几种不同重要性的冲动（由线条粗细显示），这些冲动必须协商成单个速度矢量。 群体只知道其有限的邻域（圆圈）。 （右)Boid 控制通常作为三个独立的模块来实现。
+
+Second, a boid should react to global environment and to the behavior of other group members. Collision avoidance is one of the main results of such interaction. It is crucial for flocking that each group member has only limited field of view, and therefore is aware only of things happening within some neighborhood of its current position. To avoid objects in the environment, the simplest, if imperfect, strategy is to set up a limited extent repulsive force field around each such object. This will create a second desired velocity vector $\bold{v}^{col\_avoid}_{new}$, also given by Newton’s law. Interaction with other group members can be modeled by simultaneously applying different steering behaviors resulting in several additional desired velocity vectors $\bold{v}^{steer}_{new}$. Moving away from neighbors to avoid crowding, steering toward flock mates to ensure flock cohesion, and adjusting a boid’s speed to align with average heading of neighbors are most common. Finally, some additional desired velocity vectors $\bold{v}^{goal}_{new}$ are usually applied to achieve needed global goals. These can be vectors along some path in space, following some specific designated leader of the flock, or simply representing migratory urge of a flock member. 
+其次，群体应对全球环境和其他群体成员的行为做出反应。 避免碰撞是这种交互的主要结果之一。 对于群体聚集来说至关重要的是，每个群体成员的视野都有限，因此只能意识到其当前位置的某个邻域内发生的事情。 为了避开环境中的物体，最简单（如果不完美）的策略是在每个此类物体周围建立有限范围的排斥力场。 这将创建第二个所需的速度矢量 $\bold{v}^{col\_avoid}_{new}$，也由牛顿定律给出。 与其他组成员的交互可以通过同时应用不同的转向行为来建模，从而产生几个额外的所需速度向量 $\bold{v}^{steer}_{new}$。 远离邻居以避免拥挤，转向群体伙伴以确保群体凝聚力，以及调整群体的速度以与邻居的平均航向保持一致是最常见的。 最后，通常应用一些额外的所需速度向量 $\bold{v}^{goal}_{new}$ 来实现所需的全局目标。 这些可以是沿着空间中某些路径的向量，跟随某个特定的指定的羊群领导者，或者简单地代表羊群成员的迁徙冲动。
+
+Once all $\bold{v}_{new}$ are determined, the final desired vector is negotiated based on priorities among them. Collision avoidance and velocity matching typically have higher priority. Instead of simple averaging of desired velocity vectors which can lead to cancellation of urges and unnatural “moving nowhere” behavior, an acceleration allocation strategy is used. Some fixed total amount of acceleration is made available for a boid and fractions of it are being given to each urge in order of priority. If the total available acceleration runs out, some lower priority urges will have less effect on the motion or be completely ignored. The hope is that once the currently most important task (collision avoidance in most situations) is accomplished, other tasks can be taken care of in near future. It is also important to respect some physical limitations of real objects, for example, clamping too high accelerations or speeds to some realistic values. Depending on the internal complexity of the flock member, the final stage of animation might be to turn the negotiated velocity vector into a specific set of parameters (bird’s wing positions, orientation of plane model in space, leg skeleton bone configuration) used to control a boid’s motion. A diagram of a system implementing flocking is shown on Figure 16.28 (right). 
+一旦确定了所有$\bold{v}_{new}$，就根据它们之间的优先级协商最终的期望向量。 避免碰撞和速度匹配通常具有更高的优先级。 使用加速度分配策略，而不是对期望速度向量进行简单平均，这可能导致取消冲动和不自然的“无处可去”行为。 为主体提供了一些固定的总加速度，并将其中的一小部分按优先级顺序分配给每个冲动。 如果总可用加速度耗尽，一些较低优先级的冲动对运动的影响较小或完全被忽略。 希望一旦当前最重要的任务（大多数情况下避免碰撞）完成，其他任务就可以在不久的将来得到处理。 尊重真实物体的一些物理限制也很重要，例如，将过高的加速度或速度限制在某些实际值。 根据鸟群成员的内部复杂性，动画的最后阶段可能是将协商的速度矢量转换为一组特定的参数（鸟的翅膀位置、平面模型在空间中的方向、腿部骨骼的骨骼配置），用于控制 博德的动作。 图 16.28（右）显示了实现集群的系统图。
+
+A much simpler, but still very useful, version of group control is implemented by particle systems (Reeves, 1983). The number of particles in a system is typically much larger than number of boids in a flock and can be in the tens or hundreds of thousands, or even more. Moreover, the exact number of particles can fluctuate during animation with new particles being born and some of the old ones destroyed at each step. Particles are typically completely independent from each other, ignoring one’s neighbors and interacting with the environment only by experiencing external forces and collisions with objects, not through collision avoidance as was the case for flocks. At each step during animation, the system first creates new particles with some initial parameters, terminates old ones, and then computes necessary forces and updates velocities and positions of the remaining particles according to Newton’s law. 
+一个更简单但仍然非常有用的组控制版本是由粒子系统实现的（Reeves，1983）。 系统中的粒子数量通常远大于群体中的粒子数量，并且可以是数万或数十万，甚至更多。 此外，粒子的确切数量在动画过程中可能会发生波动，每一步都会产生新粒子，并销毁一些旧粒子。 粒子通常彼此完全独立，忽略邻近的粒子，仅通过经历外力和与物体的碰撞来与环境相互作用，而不是像群体那样通过避免碰撞。 在动画过程中的每个步骤中，系统首先创建具有一些初始参数的新粒子，终止旧粒子，然后计算必要的力并根据牛顿定律更新剩余粒子的速度和位置。
+![Figure 16.29](Images/Figure 16.29.png)
+Figure 16.29. After being emitted by a directional source, particles collide with an object and then are blown down by a local wind field once they clear the obstacle. 
+图 16.29。 粒子由定向源发射后，与物体碰撞，一旦越过障碍物，就会被局部风场吹落。
+
+All parameters of a particle system (number of particles, particle life span, initial velocity, and location of a particle, etc.) are usually under the direct control of the animator. Prime applications of particle systems include modeling fireworks, explosions, spraying liquids, smoke and fire, or other fuzzy objects and phenomena with no sharp boundaries. To achieve a realistic appearance, it is important to introduce some randomness to all parameters, for example, having a random number of particles born (and destroyed) at each step with their velocities generated according to some distribution. In addition to setting appropriate initial parameters, controlling the motion of a particle system is commonly done by creating a specific force pattern in space—blowing a particle in a new direction once it reaches some specific location or adding a center of attraction, for example. One should remember that with all their advantages, simplicity of implementation and ease of control being the prime ones, particle systems typically do not provide the level of realism characteristic of true physics-based simulation of the same phenomena.
+粒子系统的所有参数（粒子数量、粒子寿命、初始速度和粒子位置等）通常都在动画师的直接控制下。 粒子系统的主要应用包括对烟花、爆炸、喷射液体、烟雾和火焰或其他没有明确边界的模糊物体和现象进行建模。 为了实现逼真的外观，重要的是向所有参数引入一些随机性，例如，在每一步产生（和破坏）随机数量的粒子，并根据某种分布生成它们的速度。 除了设置适当的初始参数之外，控制粒子系统的运动通常是通过在空间中创建特定的力模式来完成的，例如，一旦粒子到达某个特定位置，就将其吹向新的方向或添加吸引力中心。 人们应该记住，尽管粒子系统具有所有优点，但实现简单和易于控制是主要优点，但它们通常无法提供对相同现象进行真正基于物理的模拟的真实感特征。
+
+## Notes 注释
+
+In this chapter we have concentrated on techniques used in 3D animation. There also exist a rich set of algorithms to help with 2D animation production and post-processing of images created by computer graphics rendering systems. These include techniques for cleaning up scanned-in artist drawings, feature extraction, automatic 2D in-betweening, colorization, image warping, enhancement and compositing, and many others. 
+在本章中，我们集中讨论 3D 动画中使用的技术。 还有一组丰富的算法可以帮助进行 2D 动画制作以及对计算机图形渲染系统创建的图像进行后处理。 其中包括清理扫描输入的艺术家绘图、特征提取、自动 2D 中间处理、着色、图像扭曲、增强和合成等技术。
+
+One of the most significant developments in the area of computer animation has been the increasing power and availability of sophisticated animation systems. While different in their specific set of features, internal structure, details of user interface, and price, most such systems include extensive support not only for animation, but also for modeling and rendering, turning them into complete production platforms. It is also common to use these systems to create still images. For example, many images for figures in this section were produced using Maya software generously donated by Alias. 
+计算机动画领域最重要的发展之一是复杂动画系统的功能和可用性不断增强。 虽然其特定功能集、内部结构、用户界面细节和价格有所不同，但大多数此类系统不仅包括对动画的广泛支持，而且还包括对建模和渲染的广泛支持，将它们转变为完整的制作平台。 使用这些系统创建静态图像也很常见。 例如，本节中的许多人物图像都是使用 Alias 慷慨捐赠的 Maya 软件制作的。
+
+Large-scale animation production is an extremely complex process which typically involves a combined effort by dozens of people with different backgrounds spread across many departments or even companies. To better coordinate this activity, a certain production pipeline is established which starts with a story and character sketches, proceeds to record necessary sound, build models, and rig characters for animation. Once actual animation commences, it is common to go back and revise the original designs, models, and rigs to fix any discovered motion and appearance problems. Setting up lighting and material properties is then necessary, after which it is possible to start rendering. In most sufficiently complex projects, extensive postprocessing and compositing stages bring together images from different sources and finalize the product. 
+大型动画制作是一个极其复杂的过程，通常需要分布在多个部门甚至公司的数十名不同背景的人员共同努力。 为了更好地协调这项活动，建立了一定的制作流程，从故事和角色草图开始，然后录制必要的声音、构建模型和为动画装配角色。 一旦实际的动画开始，通常会返回并修改原始设计、模型和装备，以修复任何发现的运动和外观问题。 然后需要设置照明和材质属性，然后才能开始渲染。 在大多数足够复杂的项目中，大量的后处理和合成阶段将不同来源的图像汇集在一起并最终确定产品。
+
+We conclude this chapter by reminding the reader that in the field of computer animation, any technical sophistication is secondary to a good story, expressive characters, and other artistic factors, most of which are hard or simply impossible to quantify. It is safe to say that Snow White and her seven dwarfs will always share the screen with green ogres and donkeys, and most of the audience will be much more interested in the characters and the story rather than in which, if any, computers (and in what exact way) helped to create them.
+在本章结束时，我们提醒读者，在计算机动画领域，任何技术的复杂性都是次要的，而不是一个好的故事、富有表现力的角色和其他艺术因素，其中大多数很难或根本不可能量化。 可以肯定地说，白雪公主和她的七个小矮人将始终与绿色食人魔和驴子共享屏幕，大多数观众将对角色和故事更感兴趣，而不是对计算机（如果有的话）感兴趣。 以什么确切的方式）帮助创造了它们。
+
+
+
+# 17  Using Graphics Hardware  使用图形硬件
+
+## 17.1 Hardware Overview   硬件概述
+
+Throughout most of this book, the focus is on the fundamentals that underly computer graphics rather than on any specifics relating to the APIs or hardware on which the algorithms may be implemented. This chapter takes a slightly different route and blends the details of using graphics hardware with some of the practical issues associated with programming that hardware. The chapter is designed to be an introductory guide to graphics hardware and could be used as the basis for a set of weekly labs that investigate graphics hardware. 
+在本书的大部分内容中，重点是计算机图形学的基础知识，而不是与可实现算法的 API 或硬件相关的任何细节。 本章采取了略有不同的路线，并将使用图形硬件的细节与与该硬件编程相关的一些实际问题结合起来。 本章旨在作为图形硬件的介绍性指南，并且可以用作研究图形硬件的每周实验的基础。
+
+## 17.2 What Is Graphics Hardware 什么是图形硬件
+
+Graphics hardware describes the hardware components necessary to quickly render 3D objects as pixels on your computer’s screen using specialized rasterization-based (and in some cases, ray-tracer–based) hardware architectures. The use of the term graphics hardware is meant to elicit a sense of the physical components necessary for performing a range of graphics computations. In other words, the hardware is the set of chipsets, transistors, buses, processors, and computing cores found on current video cards. As you will learn in this chapter, and eventually experience yourself, current graphics hardware is very good at processing descriptions of 3D objects and transforming those representations into the colored pixels that fill your monitor.
+图形硬件描述了使用专门的基于光栅化（在某些情况下基于光线追踪器）的硬件架构将 3D 对象快速渲染为计算机屏幕上的像素所需的硬件组件。 使用术语图形硬件是为了引出对执行一系列图形计算所需的物理组件的了解。 换句话说，硬件是当前显卡上的芯片组、晶体管、总线、处理器和计算核心的集合。 正如您将在本章中了解到并最终亲自体验到的那样，当前的图形硬件非常擅长处理 3D 对象的描述并将这些表示转换为填充显示器的彩色像素。
+
+Graphics hardware has certainly changed very rapidly over the last decade. Newer graphics hardware provides more parallel processing capabilities, as well as better support for specialized rendering. One explanation for the fast pace is the video game industry and its economic momentum. Essentially what this means is that each new graphics card provides better performance and processing capabilities. As a result, video games appear more visually realistic. The processors on graphics hardware, often called GPUs, or Graphics Processing Units, are highly parallel and afford thousands of concurrent threads of execution. The hardware is designed for throughput which allows larger numbers of pixels and vertices to be processed in shorter amounts of time. All of this parallelism is good for graphics algorithms, but other work has benefited from the parallel hardware. In addition to video games, GPUs are used to accelerate physics computations, develop real-time ray tracing codes, solve Navier-Stokes related equations for fluid flow simulations, and develop faster codes for understanding the climate (Purcell, Buck, Mark, & Hanrahan, 2002; S. G. Parker et al., 2010; Harris, 2004). Several APIs and SDKs have been developed that afford more direct general purpose computation, such as OpenCL and NVIDIA’s CUDA. Hardware accelerated ray tracing APIs also exist to accelerate ray-object intersection (S. G. Parker et al., 2010). Similarly, the standard APIs that are used to program the graphics components of video games, such as OpenGL and DirectX, also allow mechanisms to leverage the graphics hardware’s parallel capabilities. Many of these APIs change as new hardware is developed to support more sophisticated computations.
+在过去的十年里，图形硬件确实发生了非常迅速的变化。 更新的图形硬件提供了更多的并行处理能力，以及对专业渲染的更好支持。 快速发展的一种解释是视频游戏行业及其经济动力。 从本质上讲，这意味着每个新显卡都提供更好的性能和处理能力。 因此，视频游戏在视觉上显得更加真实。 图形硬件上的处理器（通常称为 GPU 或图形处理单元）是高度并行的，可提供数千个并发执行线程。 硬件专为吞吐量而设计，允许在更短的时间内处理大量像素和顶点。 所有这些并行性都有利于图形算法，但其他工作也受益于并行硬件。 除了视频游戏之外，GPU 还用于加速物理计算、开发实时光线追踪代码、求解流体流动模拟的纳维-斯托克斯相关方程，以及开发更快的代码来了解气候（Purcell、Buck、Mark 和 Hanrahan） ，2002 年；S.G. Parker 等人，2010 年；哈里斯，2004 年）。 一些 API 和 SDK 已经开发出来，可以提供更直接的通用计算，例如 OpenCL 和 NVIDIA 的 CUDA。 还存在硬件加速光线追踪 API 来加速光线与对象的相交（S. G. Parker 等人，2010）。 同样，用于对视频游戏的图形组件进行编程的标准 API（例如 OpenGL 和 DirectX）也允许利用图形硬件的并行功能的机制。 随着新硬件的开发以支持更复杂的计算，其中许多 API 都会发生变化。
+
+> Real-Time Graphics: By real-time graphics, we generally mean that the graphics-related computations are being carried out fast enough that the results can be viewed immediately. Being able to conduct operations at 60Hz or higher is considered real time. Once the time to refresh the display (frame rate) drops below 15Hz, the speed is considered more interactive than it is real-time, but this distinction is not critical. Because the computations need to be fast, the equations used to render the graphics are often approximations to what could be done if more time were available.
+> 实时图形：所谓实时图形，通常是指与图形相关的计算执行得足够快，可以立即查看结果。 能够以 60Hz 或更高频率进行操作被认为是实时的。 一旦刷新显示的时间（帧速率）降至 15Hz 以下，则该速度被认为更具交互性，而不是实时速度，但这种区别并不重要。 由于计算需要快速，因此用于渲染图形的方程通常是在有更多时间可用的情况下可以完成的近似值。
+
+Graphics hardware is programmable. As a developer, you have control over much of the computations associated with processing geometry, vertices, and the fragments that eventually become pixels. Recent hardware changes as well as ongoing updates to the APIs, such as OpenGL or DirectX, support a completely programmable pipeline. These changes afford developers creative license to exploit the computation available on GPUs. Prior to this, fixed-function rasterization pipelines forced the computation to a specific style of vertex transformations, lighting, and fragment processing. The fixed functionality of the pipeline ensured that basic coloring, lighting, and texturing could occur very quickly. Whether it is a programmable interface, or fixed-function computation, the basic computations of the rasterization pipeline are similar, and follow the illustration in Figure 17.1. In the rasterization pipeline, vertices are transformed from local space to global space, and eventually into screen coordinates, after being transformed by the viewing and projection transformation matrices. The set of screen coordinates associated with a geometry’s vertices are rasterized into fragments. The final stages of the pipeline process the fragments into pixels and can apply per-fragment texture lookups, lighting, and any necessary blending. In general, the pipeline lends itself to parallel execution and the GPU cores can be used to process both vertices and fragments concurrently. Additional details about the rasterization pipeline can be found in Chapter 8.
+图形硬件是可编程的。 作为开发人员，您可以控制与处理几何图形、顶点以及最终变成像素的片段相关的大部分计算。 最近的硬件变化以及 API（例如 OpenGL 或 DirectX）的持续更新支持完全可编程的管道。 这些变化为开发人员提供了利用 GPU 上可用计算的创造性许可。 在此之前，固定功能光栅化管道迫使计算采用特定类型的顶点变换、光照和片段处理。 管道的固定功能确保了基本的着色、照明和纹理可以非常快速地发生。 无论是可编程接口，还是固定功能计算，光栅化流水线的基本计算都是类似的，如图17.1所示。 在光栅化管道中，顶点在经过观察和投影变换矩阵变换后，从局部空间变换到全局空间，并最终变换到屏幕坐标。 与几何体顶点关联的屏幕坐标集被光栅化为片段。 管道的最后阶段将片段处理为像素，并可以应用每个片段的纹理查找、照明和任何必要的混合。 一般来说，管道适合并行执行，GPU 核心可用于同时处理顶点和片段。 有关光栅化管道的更多详细信息，请参阅第 8 章。
+
+> Fragment: Fragment is a term that describes the information associated with a pixel prior to being processed in the final stages of the graphics pipeline. This definition includes much of the data that might be used to calculate the color of the pixel, such as the pixel’s scene depth, texture coordinates, or stencil information.
+> 片段：片段是一个术语，描述在图形管道的最后阶段进行处理之前与像素相关的信息。 此定义包括许多可用于计算像素颜色的数据，例如像素的场景深度、纹理坐标或模板信息。
+
+![Figure 17.1](./Images/Figure 17.1.png)
+Figure 17.1. The basic graphics hardware pipeline consists of stages that transform 3D data into 2D screen objects ready for rasterizing and coloring by the pixel processing stages. 
+图 17.1。 基本图形硬件管道由多个阶段组成，这些阶段将 3D 数据转换为 2D 屏幕对象，准备好由像素处理阶段进行光栅化和着色。
+
+## 17.3 Heterogeneous Multiprocessing 异构多重处理
+
+When using graphics hardware, it is convenient to distinguish between the CPU and the GPU as separate computational entities. In this context, the term host is used to refer to the CPU including the threads and memory available to it. The  term device is used to refer to the GPU, or the graphics processing units, and the threads and memory associated with it. This makes some sense because most graphics hardware is comprised of external hardware that is connected to the machine via the PCI bus. The hardware may also be soldered to the machine as a separate chipset. In this sense, the graphics hardware represents a specialized co-processor since both the CPU (and its cores) can be programmed, as can the GPU and its cores. All programs that utilize graphics hardware must first establish a mapping between the CPU and the GPU memory. This is a rather low-level detail that is necessary so that the graphics hardware driver residing within the operating system can interface between the hardware and the operating system and windowing system software. Recall that because the host (CPU) and the device (GPU) are separate, data must be communicated between the two systems. More formally, this mapping between the operating system, the hardware driver, the hardware, and the windowing system is known as the graphics context. The context is usually established through API calls to the windowing system. Details about establishing a context is outside the scope of this chapter, but many windowing system development libraries have ways to query the graphics hardware for various capabilities and establish the graphics context based on those requirements. Because setting up the context is windowing system dependent, it also means that such code is not likely to be cross-platform code. However, in practice, or at least when starting out, it is very unlikely that such low-level context setup code will be required since many higher level APIs exist to help people develop portable interactive applications. 
+使用图形硬件时，可以方便地将 CPU 和 GPU 区分为单独的计算实体。 在这种情况下，术语主机用于指代 CPU，包括可用的线程和内存。 术语“设备”用于指代 GPU 或图形处理单元以及与其关联的线程和内存。 这是有道理的，因为大多数图形硬件都是由通过 PCI 总线连接到机器的外部硬件组成的。 硬件也可以作为单独的芯片组焊接到机器上。 从这个意义上说，图形硬件代表了一个专门的协处理器，因为 CPU（及其核心）都可以编程，GPU 及其核心也可以编程。 所有使用图形硬件的程序都必须首先在CPU和GPU内存之间建立映射。 这是一个相当低级的细节，它是必要的，以便驻留在操作系统内的图形硬件驱动程序可以在硬件与操作系统和窗口系统软件之间进行接口。 回想一下，由于主机（CPU）和设备（GPU）是分开的，因此数据必须在两个系统之间进行通信。 更正式地说，操作系统、硬件驱动程序、硬件和窗口系统之间的映射称为图形上下文。 上下文通常是通过对窗口系统的 API 调用来建立的。 有关建立上下文的详细信息超出了本章的范围，但许多窗口系统开发库都有方法查询图形硬件的各种功能，并根据这些要求建立图形上下文。 由于设置上下文依赖于窗口系统，因此这也意味着此类代码不太可能是跨平台代码。 然而，在实践中，或者至少在开始时，不太可能需要这种低级上下文设置代码，因为存在许多更高级别的 API 来帮助人们开发便携式交互式应用程序。
+
+> Host: In a graphics hardware program, the host refers to the CPU components of the application.
+> 主机：在图形硬件程序中，主机指的是应用程序的CPU组件。
+>
+> Device: The GPU side of the graphics application, including the data and computation that are stored and executed on the GPU.
+> 设备：图形应用程序的GPU端，包括在GPU上存储和执行的数据和计算。
+
+Many of the frameworks for developing interactive applications support querying input devices such as the keyboard or mouse. Some frameworks provide access to the network, audio system, and other higher level system resources. In this regard, many of these APIs are the preferred way to develop graphics, and even game applications. 
+许多用于开发交互式应用程序的框架都支持查询输入设备，例如键盘或鼠标。 一些框架提供对网络、音频系统和其他更高级别系统资源的访问。 在这方面，许多 API 是开发图形甚至游戏应用程序的首选方式。
+
+Cross-platform hardware acceleration is often achieved with the OpenGL API. OpenGL is an open industry standard graphics API that supports hardware acceleration on many types of graphics hardware. OpenGL represents one of the most common APIs for programming graphics hardware along with APIs such as DirectX. While OpenGL is available on many operating systems and hardware architectures, DirectX is specific to Microsoft-based systems. For the purposes of this chapter, hardware programming concepts and examples will be presented with OpenGL.
+跨平台硬件加速通常通过 OpenGL API 来实现。 OpenGL 是一种开放式行业标准图形 API，支持多种图形硬件上的硬件加速。 OpenGL 与 DirectX 等 API 一样，是图形硬件编程最常见的 API 之一。 虽然 OpenGL 可在许多操作系统和硬件架构上使用，但 DirectX 特定于基于 Microsoft 的系统。 为了本章的目的，将使用 OpenGL 来介绍硬件编程概念和示例。
+
+### 17.3.1 Programming with OpenGL  使用 OpenGL 编程
+
+When you program with the OpenGL API, you are writing code for at least two processors: the CPU(s) and the GPU(s). OpenGL is implemented in a C-style API and all functions are prefixed with “gl” to indicate their inclusion with OpenGL. OpenGL function calls change the state of the graphics hardware and can be used to declare and define geometry, load vertex and fragment shaders, and determine how computation will occur as data passes through the hardware. 
+当您使用 OpenGL API 进行编程时，您正在为至少两个处理器编写代码：CPU 和 GPU。 OpenGL 以 C 风格的 API 实现，所有函数都以“gl”为前缀，以表明它们包含在 OpenGL 中。 OpenGL 函数调用会更改图形硬件的状态，可用于声明和定义几何图形、加载顶点和片段着色器，以及确定数据通过硬件时如何进行计算。
+
+The variant of OpenGL that this chapter presents is the OpenGL 3.3 Core Profile version. While not the most recent version of OpenGL, the 3.3 version of OpenGL is in line with the future direction of OpenGL programming. These versions are focused on improving efficiency while also fully placing the programming of the pipeline within the hands of the developer. Many of the function calls present in earlier versions of OpenGL are not present in these newer APIs. For instance, immediate mode rendering is deprecated. Immediate mode rendering was used to send data from the CPU memory to the graphics card memory as needed each frame and was often very inefficient, especially for larger models and complex scenes. The current API focuses on storing data on the graphics card before it is needed and instancing it at render time. As another example, OpenGL’s matrix stacks have been deprecated as well, leaving the developer to use third-party matrix libraries (such as GLM) or their own classes to create the necessary matrices for viewing, projection, and transformation, as presented in Chapter 7. As a result, OpenGL’s shader language (GLSL) has taken on larger roles as well, performing the necessary matrix transformations along with lighting and shading within the shaders. Because the fixed-function pipeline which performed per-vertex transformation and lighting is no longer present, programmers must develop all shaders themselves. The shading examples presented in this chapter will utilize the GLSL 3.3 Core Profile version shader specification. Future readers of this chapter will want to explore the current OpenGL and OpenGL Shading Language specifications for additional details on what these APIs and languages can support.
+本章介绍的 OpenGL 变体是 OpenGL 3.3 Core Profile 版本。 虽然不是最新版本的 OpenGL，但 OpenGL 3.3 版本符合 OpenGL 编程的未来方向。 这些版本专注于提高效率，同时将管道的编程完全交给开发人员。 早期版本的 OpenGL 中存在的许多函数调用在这些较新的 API 中并不存在。 例如，立即模式渲染已被弃用。 立即模式渲染用于根据需要每帧将数据从 CPU 内存发送到显卡内存，效率通常非常低，特别是对于较大的模型和复杂的场景。 当前的 API 侧重于在需要数据之前将数据存储在显卡上，并在渲染时实例化它。 另一个例子，OpenGL 的矩阵堆栈也已被弃用，开发人员只能使用第三方矩阵库（例如 GLM）或他们自己的类来创建查看、投影和转换所需的矩阵，如第 7 章中所述 因此，OpenGL 的着色器语言 (GLSL) 也发挥了更大的作用，在着色器内执行必要的矩阵转换以及照明和着色。 由于执行逐顶点变换和光照的固定功能管道不再存在，因此程序员必须自己开发所有着色器。 本章中介绍的着色示例将利用 GLSL 3.3 Core Profile 版本着色器规范。 本章的未来读者将希望探索当前的 OpenGL 和 OpenGL 着色语言规范，以获取有关这些 API 和语言可以支持的更多详细信息。
+
+## 17.4 Graphics Hardware Programming: Buffers, State, and Shaders 图形硬件编程：缓冲区、状态和着色器
+
+Three concepts will help to understand contemporary graphics hardware programming. The first is the notion of a data buffer, which is quite simply, a linear allocation of memory on the device that can store various data on which the GPUs will operate. The second is the idea that the graphics card maintains a computational state that determines how computations associated with scene data and shaders will occur on the graphics hardware. Moreover, state can be communicated from the host to the device and even within the device between shaders. Shaders represent the mechanism by which computation occurs on the GPU related to per-vertex or per-fragment processing. This chapter will focus on vertex and fragment shaders, but specialized geometry and compute shaders also exist in the current versions of OpenGL. Shaders play a very important role in how modern graphics hardware functions. 
+三个概念将有助于理解当代图形硬件编程。 第一个是数据缓冲区的概念，它非常简单，是设备上内存的线性分配，可以存储 GPU 将操作的各种数据。 第二个想法是，显卡维护一种计算状态，该状态确定与场景数据和着色器相关的计算如何在图形硬件上发生。 此外，状态可以从主机传送到设备，甚至可以在设备内部的着色器之间传送。 着色器代表在 GPU 上进行与每顶点或每片段处理相关的计算的机制。 本章将重点介绍顶点和片段着色器，但当前版本的 OpenGL 中也存在专门的几何和计算着色器。 着色器在现代图形硬件的功能中发挥着非常重要的作用。
+
+### 17.4.1 Buffers  缓冲区
+
+Buffers are the primary structure to store data on graphics hardware. They represent the graphics hardware’s internal memory associated with everything from geometry, textures, and image plane data. With regard to the rasterization pipeline described in Chapter 8, the computations associated with hardware-accelerated rasterization read and write the various buffers on the GPU. From a programming standpoint, an application must initialize the buffers on the GPU that are needed for the application. This amounts to a host to device copy operation. At the end of various stages of execution, device to host copies can be performed as well to pull data from the GPU to the CPU memory. Additionally, mechanisms do exist in OpenGL’s API that allow device memory to be mapped into host memory so that an application program can write directly to the buffers on the graphics card. 
+缓冲区是图形硬件上存储数据的主要结构。 它们代表与几何、纹理和图像平面数据等所有内容相关的图形硬件的内部存储器。 关于第 8 章中描述的光栅化管道，与硬件加速光栅化相关的计算读取和写入 GPU 上的各种缓冲区。 从编程的角度来看，应用程序必须初始化 GPU 上应用程序所需的缓冲区。 这相当于主机到设备的复制操作。 在各个执行阶段结束时，还可以执行设备到主机的复制，以将数据从 GPU 提取到 CPU 内存。 此外，OpenGL 的 API 中确实存在允许将设备内存映射到主机内存的机制，以便应用程序可以直接写入显卡上的缓冲区。
+
+### 17.4.2 Display Buffer 显示缓冲区
+
+In the graphics pipeline, the final set of pixel colors can be linked to the display, or they may be written to disk as a PNG image. The data associated with these pixels is generally a 2D array of color values. The data is inherently 2D, but it is efficiently represented on the GPU as a 1D linear array of memory. This array implements the display buffer, which eventually gets mapped to the window. Rendering images involves communicating the changes to the display buffer on the graphics hardware through the graphics API. At the end of the rasterization pipeline, the fragment processing and blending stages write data to the output display buffer memory. Meanwhile, the windowing system reads the contents of the display buffer to produce the raster images on the monitor’s window. 
+在图形管道中，最终的像素颜色集可以链接到显示器，也可以作为 PNG 图像写入磁盘。 与这些像素相关的数据通常是颜色值的二维数组。 数据本质上是 2D 的，但它在 GPU 上有效地表示为 1D 线性内存阵列。 该数组实现了显示缓冲区，最终映射到窗口。 渲染图像涉及通过图形 API 将更改传达到图形硬件上的显示缓冲区。 在光栅化管道的末尾，片段处理和混合阶段将数据写入输出显示缓冲存储器。 同时，窗口系统读取显示缓冲区的内容，以在监视器窗口上生成光栅图像。
+
+### 17.4.3 Cycle of Refresh  刷新周期
+
+Most applications prefer a double-buffered display state. What this means is that there are two buffers associated with a graphics window: the front buffer and the back buffer. The purpose of the double-buffered system is that the application can communicate changes to the back buffer (and thus, write changes to that buffer) while the front-buffer memory is used to drive the pixel colors on the window. 
+大多数应用程序更喜欢双缓冲显示状态。 这意味着有两个缓冲区与图形窗口关联：前缓冲区和后缓冲区。 双缓冲系统的目的是应用程序可以将更改传达到后台缓冲区（从而将更改写入该缓冲区），同时前端缓冲区内存用于驱动窗口上的像素颜色。
+
+At the end of the rendering loop, the buffers are swapped through a pointer exchange. The front-buffer pointer points to the back buffer and the back-buffer pointer is then assigned to the previous front buffer. In this way, the windowing system will refresh the content of the window with the most up-to-date buffer. If the buffer pointer swap is synchronized with the windowing system’s refresh of the entire display, the rendering will appear seamless. Otherwise, users may observe a tearing of the geometry on the actual display as changes to the scene’s geometry and fragments are processed (and thus written to the display buffer) faster than the screen is refreshed.
+在渲染循环结束时，通过指针交换来交换缓冲区。 前缓冲区指针指向后缓冲区，然后将后缓冲区指针分配给前一个前缓冲区。 这样，窗口系统就会用最新的缓冲区刷新窗口的内容。 如果缓冲区指针交换与窗口系统对整个显示的刷新同步，则渲染将显得无缝。 否则，用户可能会在实际显示器上观察到几何图形的撕裂，因为场景几何图形和片段的更改处理（并因此写入显示缓冲区）的速度比刷新屏幕的速度更快。
+
+When the display is considered a memory buffer, one of the simplest operations on the display is essentially a memory setting (or copying) operation that zeros-out, or clears the memory to a default state. For a graphics program, this likely means clearing the background of the window to a specific color. To clear the background color (to black) in an OpenGL application, the following code can be used:
+当显示器被视为内存缓冲区时，显示器上最简单的操作之一本质上是内存设置（或复制）操作，该操作将内存清零或清除为默认状态。 对于图形程序，这可能意味着将窗口背景清除为特定颜色。 要在 OpenGL 应用程序中清除背景颜色（变为黑色），可以使用以下代码：
+
+```glsl
+glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+glClear( GL_COLOR_BUFFER_BIT );
+```
+
+The first three arguments for the glClearColor function represent the red, green, and blue color components, specified within the range [0, 1]. The fourth argument represents opacity, or alpha value, ranging from 0.0 being completely transparent to 1.0 being completely opaque. The alpha value is used to determine transparency through various fragment blending operations in the final stages of the pipeline. 
+glClearColor 函数的前三个参数表示红色、绿色和蓝色分量，在 [0, 1] 范围内指定。 第四个参数表示不透明度或 alpha 值，范围从 0.0（完全透明）到 1.0（完全不透明）。 alpha 值用于通过管道最后阶段的各种片段混合操作来确定透明度。
+
+This operation only clears the color buffer. In addition to the color buffer, specified by GL_COLOR_BUFFER_BIT, being cleared to black in this case, graphics hardware also uses a depth buffer to represent the distance that fragments are relative to the camera (you may recall the discussion of the z-buffer algorithm in Chapter 8). Clearing the depth buffer is necessary to ensure operation of the z-buffer algorithm and allow correct hidden surface removal to occur. Clearing the depth buffer can be achieved by or’ing two bit field values together, as follows:
+此操作仅清除颜色缓冲区。 除了由 GL_COLOR_BUFFER_BIT 指定的颜色缓冲区（在这种情况下被清除为黑色）之外，图形硬件还使用深度缓冲区来表示片段相对于相机的距离（您可能还记得在 第 8 章）。 清除深度缓冲区对于确保 z 缓冲区算法的运行并允许正确删除隐藏表面是必要的。 清除深度缓冲区可以通过将两个位字段值进行“或”运算来实现，如下所示：
+
+```glsl
+glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+```
+
+Within a basic interactive graphics application, this step of clearing is normally the first operation performed before any geometry or fragments are processed. 
+在基本的交互式图形应用程序中，此清除步骤通常是处理任何几何图形或片段之前执行的第一个操作。
+
+## 17.5 State Machine  状态机
+
+By illustrating the buffer-clearing operation for the display’s color and depth buffers, the idea of graphics hardware state is also introduced. The glClearColor function sets the default color values that are written to all the pixels within the color buffer when glClear is called. The clear call initializes the color component of the display buffer and can also reset the values of the depth buffer. If the clear color does not change within an application, the clear color need only be set once, and often this is done in the initialization of an OpenGL program. Each time that glClear is called it uses the previously set state of the clear color.
+通过说明显示器颜色和深度缓冲区的缓冲区清除操作，还介绍了图形硬件状态的概念。 glClearColor 函数设置在调用 glClear 时写入颜色缓冲区内所有像素的默认颜色值。 清除调用会初始化显示缓冲区的颜色分量，还可以重置深度缓冲区的值。 如果透明颜色在应用程序内不改变，则仅需要设置一次透明颜色，并且通常这在OpenGL程序的初始化中完成。 每次调用 glClear 时，它都会使用先前设置的透明颜色状态。
+
+Note also that the z-buffer algorithm state can be enabled and disabled as needed. The z-buffer algorithm is also known in OpenGL as the depth test. By enabling it, a fragment’s depth value will be compared to the depth value currently stored in the depth buffer prior to writing any fragment colors to the color buffer. Sometimes, the depth test is not necessary and could potentially slow down an application. Disabling the depth test will prevent the z-buffer computation and change the behavior of the executable. Enabling the z-buffer test with OpenGL is done as follows:
+另请注意，可以根据需要启用和禁用 z 缓冲区算法状态。 z 缓冲区算法在 OpenGL 中也称为深度测试。 通过启用它，在将任何片段颜色写入颜色缓冲区之前，片段的深度值将与当前存储在深度缓冲区中的深度值进行比较。 有时，深度测试是不必要的，并且可能会减慢应用程序的速度。 禁用深度测试将阻止 z 缓冲区计算并更改可执行文件的行为。 使用 OpenGL 启用 z 缓冲区测试的方法如下：
+
+```glsl
+glEnable(GL_DEPTH_TEST);
+glDepthFunc(GL_LESS);
+```
+
+The glEnable call turns on the depth test while the glDepthFunc call sets the mechanism for how the depth comparison is performed. In this case, the depth function is set to its default value of GL LESS to show that other state variables exist and can be modified. The converse of the glEnable calls are glDisable calls. 
+glEnable 调用打开深度测试，而 glDepthFunc 调用设置如何执行深度比较的机制。 在这种情况下，深度函数设置为其默认值 GL LESS，以表明其他状态变量存在并且可以修改。 glEnable 调用的逆过程是 glDisable 调用。
+
+The idea of state in OpenGL mimics the use of static variables in object-oriented classes. As needed, programmers enable, disable, and/or set the state of OpenGL variables that reside on the graphics card. These state then affect any succeeding computations on the hardware. In general, efficient OpenGL programs attempt to minimize state changes, enabling states that are needed, while disabling states that are not required for rendering. 
+OpenGL 中的状态概念模仿了面向对象类中静态变量的使用。 根据需要，程序员启用、禁用和/或设置驻留在图形卡上的 OpenGL 变量的状态。 这些状态随后会影响硬件上的任何后续计算。 一般来说，高效的 OpenGL 程序会尝试最小化状态更改，启用所需的状态，同时禁用渲染不需要的状态。
+
+## 17.6 Basic OpenGL Application Layout 基本 OpenGL 应用程序布局
+
+A simple and basic OpenGL application has, at its heart, a display loop that is called either as fast as possible, or at a rate that coincides with the refresh rate of the monitor or display device. The example loop below uses the GLFW library, which supports OpenGL coding across multiple platforms.
+一个简单且基本的 OpenGL 应用程序的核心是一个显示循环，该循环要么尽可能快地调用，要么以与监视器或显示设备的刷新率一致的速率调用。 下面的示例循环使用 GLFW 库，该库支持跨多个平台的 OpenGL 编码。
+
+```glsl
+while (!glfwWindowShouldClose(window)) {
+{
+    // OpenGL code is called here,
+    // each time this loop is executed.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // Swap front and back buffers
+    glfwSwapBuffers(window);
+    // Poll for events
+    glfwPollEvents();
+    if (glfwGetKey( window, GLFW_KEY_ESCAPE ) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, 1);
+}
+```
+
+The glEnable call turns on the depth test while the glDepthFunc call sets the mechanism for how the depth comparison is performed. In this case, the depth function is set to its default value of GL LESS to show that other state variables exist and can be modified. The converse of the glEnable calls are glDisable calls. The idea of state in OpenGL mimics the use of static variables in objectoriented classes. As needed, programmers enable, disable, and/or set the state of OpenGL variables that reside on the graphics card. These state then affect any succeeding computations on the hardware. In general, efficient OpenGL programs attempt to minimize state changes, enabling states that are needed, while disabling states that are not required for rendering. 17.6 Basic OpenGL Application Layout A simple and basic OpenGL application has, at its heart, a display loop that is called either as fast as possible, or at a rate that coincides with the refresh rate of the monitor or display device. The example loop below uses the GLFW library, which supports OpenGL coding across multiple platforms.The loop is tightly constrained to operate only while the window is open. This example loop resets the color buffer values and also resets the z-buffer depth values in the graphics hardware memory based on previously set (or default) values. Input devices, such as keyboards, mouse, network, or some other interaction mechanism are processed at the end of the loop to change the state of data structures associated with the program. The call to glfwSwapBuffers synchronizes the graphics context with the display refresh, performing the pointer swap between the front and back buffers so that the updated graphics state is displayed on the user’s screen. The call to swap the buffers occurs after all graphics calls have been issued. 
+glEnable 调用打开深度测试，而 glDepthFunc 调用设置如何执行深度比较的机制。 在这种情况下，深度函数设置为其默认值 GL LESS，以表明其他状态变量存在并且可以修改。 glEnable 调用的逆过程是 glDisable 调用。 OpenGL 中的状态概念模仿了面向对象类中静态变量的使用。 根据需要，程序员启用、禁用和/或设置驻留在图形卡上的 OpenGL 变量的状态。 这些状态随后会影响硬件上的任何后续计算。 一般来说，高效的 OpenGL 程序会尝试最小化状态更改，启用所需的状态，同时禁用渲染不需要的状态。 17.6 基本 OpenGL 应用程序布局 一个简单且基本的 OpenGL 应用程序的核心是一个显示循环，该循环要么尽可能快地调用，要么以与监视器或显示设备的刷新率一致的速率调用。 下面的示例循环使用 GLFW 库，该库支持跨多个平台的 OpenGL 编码。该循环严格限制为仅在窗口打开时运行。 此示例循环重置颜色缓冲区值，并根据先前设置（或默认）值重置图形硬件内存中的 z 缓冲区深度值。 输入设备（例如键盘、鼠标、网络或某些其他交互机制）在循环结束时进行处理，以更改与程序关联的数据结构的状态。 对 glfwSwapBuffers 的调用将图形上下文与显示刷新同步，在前后缓冲区之间执行指针交换，以便更新的图形状态显示在用户的屏幕上。 交换缓冲区的调用在所有图形调用发出后发生。
+
+While conceptually separate, the depth and color buffers are often collectively called the framebuffer. By clearing the contents of the framebuffer, the application can proceed with additional OpenGL calls to push geometry and fragments through the graphics pipeline. The framebuffer is directly related to the size of the window that has been opened to contain the graphics context. The window, or viewport, dimensions are needed by OpenGL to construct the $M_{vp}$ matrix (from Chapter 7) within the hardware. This is accomplished through the following code, demonstrated again with the GLFW toolkit, which provides functions for querying the requested window (or framebuffer) dimensions:
+虽然在概念上是分开的，但深度缓冲区和颜色缓冲区通常统称为帧缓冲区。 通过清除帧缓冲区的内容，应用程序可以继续执行其他 OpenGL 调用，以通过图形管道推送几何图形和片段。 帧缓冲区与已打开以包含图形上下文的窗口的大小直接相关。 OpenGL 需要窗口或视口尺寸来在硬件内构造 $M_{vp}$ 矩阵（来自第 7 章）。 这是通过以下代码完成的，再次使用 GLFW 工具包进行演示，该工具包提供了用于查询请求的窗口（或帧缓冲区）尺寸的函数：
+
+```glsl
+int nx, ny;
+glfwGetFramebufferSize(window, &nx, &ny);
+glViewport(0, 0, nx, ny);
+```
+
+In this example, glViewport sets the OpenGL state for the window dimension using nx and ny for the width and height of the window and the viewport being specified to start at the origin. 
+在此示例中，glViewport 使用 nx 和 ny 作为窗口的宽度和高度以及指定从原点开始的视口来设置窗口尺寸的 OpenGL 状态。
+
+Technically, OpenGL writes to the framebuffer memory as a result of operations that rasterize geometry, and process fragments. These writes happen before the pixels are displayed on the user’s monitor. 
+从技术上讲，OpenGL 会通过光栅化几何和处理片段的操作来写入帧缓冲区内存。 这些写入发生在像素显示在用户显示器上之前。
+
+## 17.7 Geometry  几何
+
+Similar to the idea of a display buffer, geometry is also specified using arrays to store vertex data and other vertex attributes, such as vertex colors, normals, or texture coordinates needed for shading. The concept of buffers will be used to allocate storage on the graphics hardware, transferring data from the host to the device.
+与显示缓冲区的想法类似，几何体也使用数组来指定，以存储顶点数据和其他顶点属性，例如着色所需的顶点颜色、法线或纹理坐标。 缓冲区的概念将用于在图形硬件上分配存储，将数据从主机传输到设备。
+
+### 17.7.1 Describing Geometry for the Hardware 描述硬件的几何形状
+
+One of the challenges with graphics hardware programming is the management of the 3D data and its transfer to and from the memory of the graphics hardware.  Most graphics hardware work with specific sets of geometric primitives. The different primitive types leverage primitive complexity for processing speed on the graphics hardware. Simpler primitives can sometimes be processed very fast. The caveat is that the primitive types need to be general purpose so as to model a wide range of geometry from very simple to very complex. On typical graphics hardware, the primitive types are limited to one or more of the following:
+图形硬件编程的挑战之一是 3D 数据的管理及其与图形硬件内存之间的传输。 大多数图形硬件都使用特定的几何基元集。 不同的基元类型利用基元复杂性来提高图形硬件上的处理速度。 有时可以非常快地处理更简单的基元。 需要注意的是，原始类型必须是通用的，以便对从非常简单到非常复杂的各种几何形状进行建模。 在典型的图形硬件上，基元类型仅限于以下一种或多种：
+
+> **Primitives**: The three primitives (points, lines, triangles, and quads) are really the only primitives available! Even when creating spline-based surfaces, such as NURBS, the surfaces are tessellated into triangle primitives by the graphics hardware.
+> **图元**：三个图元（点、线、三角形和四边形）实际上是唯一可用的图元！ 即使在创建基于样条曲线的曲面（例如 NURBS）时，图形硬件也会将曲面细分为三角形图元。
+>
+> **Point Rendering**: Point and line primitives may initially appear to be limited in use, but researchers have used points to render very complex geometry (Rusinkiewicz & Levoy, 2000; Dachsbacher, Vogelgsang, & Stamminger, 2003).
+> **点渲染**：点和线基元最初似乎在使用中受到限制，但研究人员已经使用点来渲染非常复杂的几何图形（Rusinkiewicz & Levoy，2000；Dachsbacher、Vogelgsang 和 Stamminger，2003）。
+
+- points—single vertices used to represent points or particle systems;
+  点——用于表示点或粒子系统的单个顶点；
+- lines—pairs of vertices used to represent lines, silhouettes, or edge-highlighting; 
+  线——用于表示线、轮廓或边缘突出显示的顶点对；
+- triangles—triangles, triangle strips, indexed triangles, indexed triangle strips, quadrilaterals, or triangle meshes approximating geometric surfaces. 
+  三角形——三角形、三角形带、索引三角形、索引三角形带、四边形或近似几何表面的三角形网格。
+
+These three primitive types form the basic building blocks for most geometry that can be defined. An example of a triangle mesh rendered with OpenGL is shown in Figure 17.2.
+这三种基本类型构成了大多数可定义几何图形的基本构建块。 使用 OpenGL 渲染的三角形网格的示例如图 17.2 所示。
+![Figure 17.2](./Images/Figure 17.2.png)
+Figure 17.2. How your geometry is organized will affect the performance of your application. This wireframe depiction of the Little Cottonwood Canyon terrain dataset shows tens of thousands of triangles organized as a triangle mesh running at real-time rates. The image is rendered using the VTerrain Project terrain system courtesy of Ben Discoe.
+图 17.2。 几何图形的组织方式将影响应用程序的性能。 小三叶杨峡谷地形数据集的线框描述显示了数以万计的三角形，这些三角形组织为以实时速率运行的三角形网格。 该图像是使用 Ben Discoe 提供的 VTerrain Project 地形系统渲染的。
+
+## 17.8 A First Look at Shaders  初看着色器
+
+Modern versions of OpenGL require that shaders be used to process vertices and fragments. As such, no primitives can be rendered without at least one vertex shader to process the incoming primitive vertices and another shader to process the rasterized fragments. Advanced shader types exist within OpenGL and the OpenGL Shading Language: geometry shaders and compute shaders. Geometry shaders are designed to process primitives, potentially creating additional primitives, and can support geometric instancing operations. Compute shaders are designed for performing general computation on the GPU, and can be linked into the set of shaders necessary for a specific application. For more information on geometry and compute shaders, the reader is referred the OpenGL specification documents and other resources. 
+现代版本的 OpenGL 要求使用着色器来处理顶点和片段。 因此，如果没有至少一个顶点着色器来处理传入的图元顶点和另一着色器来处理光栅化片段，则无法渲染图元。 OpenGL 和 OpenGL 着色语言中存在高级着色器类型：几何着色器和计算着色器。 几何着色器设计用于处理图元，可能创建额外的图元，并且可以支持几何实例化操作。 计算着色器设计用于在 GPU 上执行一般计算，并且可以链接到特定应用程序所需的着色器集。 有关几何和计算着色器的更多信息，读者可以参考 OpenGL 规范文档和其他资源。
+
+### 17.8.1 Vertex Shader Example  顶点着色器示例
+
+Vertex shaders provide control over how vertices are transformed and often help prepare data for use in fragment shaders. In addition to standard transformations and potential per-vertex lighting operations, vertex shaders could be used to perform general computation on the GPU. For instance, if the vertices represent particles and the particle motion can be (simply) modeled within the vertex shader computations, the CPU can mostly be removed from performing those computations. The ability to perform computations on the vertices already stored in the graphics hardware memory is a potential performance gain. While this approach is useful in some situations, advanced general computation may be more appropriately coded with compute shaders. 
+顶点着色器提供对顶点变换方式的控制，并且通常有助于准备在片段着色器中使用的数据。 除了标准转换和潜在的每顶点光照操作之外，顶点着色器还可用于在 GPU 上执行一般计算。 例如，如果顶点代表粒子，并且可以在顶点着色器计算中（简单地）对粒子运动进行建模，则 CPU 基本上可以免于执行这些计算。 对已存储在图形硬件内存中的顶点执行计算的能力是潜在的性能增益。 虽然这种方法在某些情况下很有用，但高级通用计算可能更适合使用计算着色器进行编码。
+
+In Chapter 7, the viewport matrix $M_{vp}$ was introduced. It transforms the canonical view volume coordinates to screen coordinates. Within the canonical view volume, coordinates exist in the range of [−1, 1]. Anything outside of this range is clipped. If we make an initial assumption that the geometry exists within this range and the z-value is ignored, we can create a very simple vertex shader. This vertex shader passes the vertex positions through to the rasterization stage, where the final viewport transformation will occur. Note that because of this simplification, there are no projection, viewing, or model transforms that will be applied to the incoming vertices. This is initially cumbersome for creating anything except very simple scenes, but will help introduce the concepts of shaders and allow you to render an initial triangle to the screen. The passthrough vertex shader follows:
+第7章介绍了视口矩阵$M_{vp}$。 它将规范视图体积坐标转换为屏幕坐标。 在规范视图体积内，坐标存在于[−1, 1]范围内。 任何超出此范围的内容都会被剪掉。 如果我们初步假设几何体存在于该范围内并且忽略 z 值，则我们可以创建一个非常简单的顶点着色器。 该顶点着色器将顶点位置传递到光栅化阶段，最终的视口转换将在该阶段发生。 请注意，由于这种简化，不会对传入顶点应用投影、查看或模型变换。 除了非常简单的场景之外，这对于创建任何东西来说最初都很麻烦，但将有助于介绍着色器的概念并允许您在屏幕上渲染初始三角形。 直通顶点着色器如下：
+
+```glsl
+#version 330 core
+layout(location=0) in vec3 in_Position;
+void main(void)
+{
+	gl_Position = vec4(in_Position, 1.0);
+}
+```
+
+This vertex shader does only one thing. It passes the incoming vertex position out as the gl Position that OpenGL uses to rasterize fragments. Note that gl Position is a built-in, reserved variable that signifies one of the key outputs required from a vertex shader. Also note the version string in the first line. In this case, the string instructs the GLSL compiler that version 3.3 of the GLSL Core profile is to be used to compile the shading language. 
+这个顶点着色器只做一件事。 它将传入的顶点位置作为 OpenGL 用于光栅化片段的 gl 位置传递出去。 请注意，gl Position 是一个内置的保留变量，表示顶点着色器所需的关键输出之一。 另请注意第一行中的版本字符串。 在本例中，该字符串指示 GLSL 编译器使用 3.3 版 GLSL Core 配置文件来编译着色语言。
+
+Vertex and fragment shaders are SIMD operations that respectively operate on all the vertices or fragments being processed in the pipeline. Additional data can be communicated from the host to the shaders executing on the device by using input, output, or uniform variables. Data that is passed into a shader is prefixed with the keyword in. The location of that data as it relates to specific vertex attributes or fragment output indices is also specified directly in the shader. Thus,
+顶点和片段着色器是 SIMD 操作，分别对管道中正在处理的所有顶点或片段进行操作。 通过使用输入、输出或统一变量，可以将附加数据从主机传送到在设备上执行的着色器。 传递到着色器的数据以关键字 in 为前缀。与特定顶点属性或片段输出索引相关的数据的位置也直接在着色器中指定。 因此，
+
+```glsl
+layout(location=0) in vec3 in_Position;
+```
+
+specifies that in Position is an input variable that is of type vec3. The source of that data is the attribute index 0 that is associated with the geometry. The name of this variable is determined by the programmer, and the link between the incoming geometry and the shader occurs while setting up the vertex data on the device. The GLSL contains a nice variety of types useful to graphics programs, including vec2, vec3, vec4, mat2, mat3, and mat4 to name a few. Standard types such as int or float also exist. In shader programming, vectors, such as vec4 hold 4-components corresponding to the x, y, z, and w components of a homogeneous coordinate, or the r, g, b, and a components of a RGBA tuple. The labels for the types can be interchanged as needed (and even repeated) in what is called swizzling (e.g., in Position.zyxa). Moreover, the component-wise labels are overloaded and can be used appropriately to provide context. 
+指定 Position 是 vec3 类型的输入变量。 该数据的来源是与几何关联的属性索引 0。 该变量的名称由程序员确定，传入几何体和着色器之间的链接在设备上设置顶点数据时发生。 GLSL 包含多种对图形程序有用的类型，包括 vec2、vec3、vec4、mat2、mat3 和 mat4 等。 也存在标准类型，例如 int 或 float。 在着色器编程中，向量（例如 vec4）保存 4 个分量，对应于齐次坐标的 x、y、z 和 w 分量，或 RGBA 元组的 r、g、b 和 a 分量。 类型的标签可以根据需要在所谓的 swizzling 中互换（甚至重复）（例如，在 Position.zyxa 中）。 此外，组件级标签超载，可以适当地使用来提供上下文。
+
+All shaders must have a main function that performs the primary computation across all inputs. In this example, the main function simply copies the input vertex position (in Position), which is of type vec3 into the built-in vertex shader output variable, which is of type vec4. Note that many of the built-in types have constructors that are useful for conversions such as the one presented here to convert the incoming vertex position’s vec3 type into gl Position’s vec4 type. Homogeneous coordinates are used with OpenGL, so 1.0 is specified as the fourth coordinate to indicate that the vector is a position.
+所有着色器都必须有一个主函数，用于对所有输入执行主要计算。 在此示例中，主函数只是将 vec3 类型的输入顶点位置（在 Position 中）复制到 vec4 类型的内置顶点着色器输出变量中。 请注意，许多内置类型都具有可用于转换的构造函数，例如此处提供的构造函数，用于将传入顶点位置的 vec3 类型转换为 gl Position 的 vec4 类型。 OpenGL 使用齐次坐标，因此将 1.0 指定为第四个坐标以指示该向量是一个位置。
+
+### 17.8.2 Fragment Shader Example  片段着色器示例
+
+If the simplest vertex shader simply passes clip coordinates through, the simplest fragment shader sets the color of the fragment to a constant value.  
+如果最简单的顶点着色器只是传递剪辑坐标，那么最简单的片段着色器将片段的颜色设置为常量值。
+
+```glsl
+#version 330 core
+layout(location=0) out vec4 out_FragmentColor;
+void main(void)
+{
+	out_FragmentColor = vec4(0.49, 0.87, 0.59, 1.0);
+}
+```
+
+In this example, all fragments will be set to a light shade of green. One key difference is the use of the out keyword. In general, the keywords in and out in shader programs indicate the flow of data into, and out of, shaders. While the vertex shader received incoming vertices and output them to a built-in variable, the fragment shader declares its outgoing value which is written out to the color buffer:
+在此示例中，所有片段都将设置为浅绿色阴影。 一个关键的区别是 out 关键字的使用。 一般来说，着色器程序中的关键字 in 和 out 表示数据流入和流出着色器的流程。 当顶点着色器接收传入顶点并将它们输出到内置变量时，片段着色器声明其输出值，该值被写出到颜色缓冲区：
+
+```glsl
+layout(location=0) out vec4 out_FragmentColor;
+```
+
+The output variable out FragmentColor is again user defined. The location of the output is color buffer index 0. Fragment shaders can output to multiple buffers, but this is an advanced topic left to the reader that will be needed if OpenGL’s framebuffer objects are investigated. The use of the layout and location keywords makes an explicit connection between the application’s geometric data in the vertex shader and the output color buffers in the fragment shader. 
+输出变量 FragmentColor 再次由用户定义。 输出的位置是颜色缓冲区索引 0。片段着色器可以输出到多个缓冲区，但这是一个留给读者的高级主题，如果研究 OpenGL 的帧缓冲区对象，则将需要该主题。 使用布局和位置关键字在顶点着色器中应用程序的几何数据与片段着色器中的输出颜色缓冲区之间建立了显式连接。
+
+### 17.8.3 Loading, Compiling, and Using Shaders  加载、编译和使用着色器
+
+Shader programs are transferred onto the graphics hardware in the form of character strings. They must then be compiled and linked. Furthermore, shaders are coupled together into shader programs so that vertex and fragment processing occur in a consistent manner. A developer can activate a shader that has been successfully compiled and linked into a shader program as needed, while also deactivating shaders when not required. While the detailed process of creating, loading, compiling, and linking shader programs is not provided in this chapter, the following OpenGL functions will be helpful in creating shaders: 
+着色器程序以字符串的形式传输到图形硬件上。 然后必须对它们进行编译和链接。 此外，着色器被耦合到着色器程序中，以便顶点和片段处理以一致的方式进行。 开发人员可以根据需要激活已成功编译并链接到着色器程序中的着色器，同时也可以在不需要时停用着色器。 虽然本章没有提供创建、加载、编译和链接着色器程序的详细过程，但以下 OpenGL 函数将有助于创建着色器：
+
+- glCreateShader creates a handle to a shader on the hardware. 
+  glCreateShader 在硬件上创建着色器的句柄。
+- glShaderSourceloads the character strings into the graphics hardware memory. 
+  glShaderSource 将字符串加载到图形硬件内存中。
+- glCompileShader performs the actual compilation of the shader within the hardware. 
+  glCompileShader 在硬件内执行着色器的实际编译。
+
+The functions above need to be called for each shader. So, for the simple passthrough shaders, each of those functions would be called for both the vertex shader code and the fragment shader code provided. At the end of the compilation phase, compilation status and any errors can be queried using additional OpenGL commands. 
+每个着色器都需要调用上述函数。 因此，对于简单的直通着色器，将为所提供的顶点着色器代码和片段着色器代码调用每个函数。 在编译阶段结束时，可以使用其他 OpenGL 命令查询编译状态和任何错误。
+
+After both shader codes are loaded and compiled, they can be linked into a shader program. The shader program is what is used to affect rendering of geometry. 
+加载并编译两个着色器代码后，可以将它们链接到着色器程序中。 着色器程序用于影响几何体的渲染。
+
+- glCreateProgram creates a program object that will contain the previously compiled shaders. 
+  glCreateProgram 创建一个程序对象，其中将包含先前编译的着色器。
+- glAttachShader attaches a shader to the shader program object. In the simple example, this function will be called for both the compiled vertex shader and the compiled fragment shader objects. 
+  glAttachShader 将着色器附加到着色器程序对象。 在简单的示例中，将为编译的顶点着色器和编译的片段着色器对象调用此函数。
+- glLinkProgram links the shaders internally after all shaders have been attached to the program object. 
+  glLinkProgram 在所有着色器附加到程序对象后在内部链接着色器。
+- glUseProgram binds the shader program for use on the graphics hardware. As shaders are needed, the program handles are bound using this function. When no shaders are needed, they can be unbound by using the shader program handle 0 as an argument to this function.
+  glUseProgram 绑定着色器程序以在图形硬件上使用。 由于需要着色器，因此使用此函数绑定程序句柄。 当不需要着色器时，可以通过使用着色器程序句柄 0 作为此函数的参数来取消绑定它们。
+
+## 17.9 Vertex Buffer Objects 顶点缓冲区对象
+
+Vertices are stored on the graphics hardware using buffers, known as vertex buffer objects. In addition to vertices, any additional vertex attributes, such as colors, normal vectors, or texture coordinates, will also be specified using vertex buffer objects.
+顶点使用缓冲区（称为顶点缓冲区对象）存储在图形硬件上。 除了顶点之外，任何其他顶点属性（例如颜色、法向量或纹理坐标）也将使用顶点缓冲区对象来指定。
+
+First, let’s focus on specifying the geometric primitive themselves. This starts by allocating the vertices associated with the primitive within the host memory of the application. The most general way to do this is to define an array on the host to contain the vertices needed for the primitive. For instance, a single triangle, fully contained within the canonical volume, could be defined statically on the host as follows:
+首先，让我们重点关注指定几何图元本身。 首先在应用程序的主机内存中分配与图元关联的顶点。 最通用的方法是在主机上定义一个数组来包含图元所需的顶点。 例如，完全包含在规范体积内的单个三角形可以在主机上静态定义，如下所示：
+
+```glsl
+GLfloat vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f};
+```
+
+If the simple passthrough shaders are used for this triangle, then all vertices will be rendered. Although the triangle is placed on the z = 0 plane, the z coordinates for this example do not really matter since they are essentially dropped in the final transformation into screen coordinates. Another thing to note is the use of the type GLfloat in these examples. Just as the GLSL language has specialized types, OpenGL has related type which generally can intermix well with the standard types (like float). For preciseness, the OpenGL types will be used when necessary. 
+如果对这个三角形使用简单的直通着色器，则将渲染所有顶点。 尽管三角形放置在 z = 0 平面上，但此示例中的 z 坐标并不重要，因为它们在最终转换为屏幕坐标时实质上已被丢弃。 另一件需要注意的事情是这些示例中使用了 GLfloat 类型。 正如 GLSL 语言有专门的类型一样，OpenGL 也有相关的类型，通常可以与标准类型（如浮点数）很好地混合。 为了精确起见，必要时将使用 OpenGL 类型。
+
+> OpenGL Coordinate System: The coordinate system used by OpenGL is identical to that presented in this book. It is a right-handed coordinate system with +x to the right, +y up, and +z away from the screen (or window). Thus, –z points into the monitor.
+> OpenGL 坐标系：OpenGL 使用的坐标系与本书中介绍的坐标系相同。 它是一个右手坐标系，+x 向右，+y 向上，+z 远离屏幕（或窗口）。 因此，-z 指向监视器。
+
+Before the vertices can be processed, a vertex buffer is first created on the device to store the vertices. The vertices on the host are then transferred to the device. After this, the vertex buffer can be referenced as needed to draw the array of vertices stored in the buffer. Moreover, after the initial transfer of vertex data, no additional copying of data across the host to device bus need occur, especially if the geometry remains static across rendering loop updates. Any host memory can also be deleted if it was dynamically allocated. 
+在处理顶点之前，首先在设备上创建顶点缓冲区来存储顶点。 然后主机上的顶点被传输到设备上。 此后，可以根据需要引用顶点缓冲区来绘制缓冲区中存储的顶点数组。 此外，在初始传输顶点数据之后，不需要从主机到设备总线进行额外的数据复制，特别是如果几何图形在渲染循环更新期间保持静态。 如果是动态分配的任何主机内存也可以被删除。
+
+Vertex buffer objects, often called VBOs, represent the primary mechanism with modern OpenGL to store vertex and vertex attributes in the graphics memory. For efficiency purposes, the initial setup of a VBO and the transfer of vertex-related data mostly happens prior to entering the display loop. As an example, to create a VBO for this triangle, the following code could be used:
+顶点缓冲区对象（通常称为 VBO）代表现代 OpenGL 在图形内存中存储顶点和顶点属性的主要机制。 出于效率目的，VBO 的初始设置和顶点相关数据的传输大多发生在进入显示循环之前。 例如，要为该三角形创建 VBO，可以使用以下代码：
+
+```glsl
+GLuint triangleVBO[1];
+glGenBuffers(1, triangleVBO);
+glBindBuffer(GL_ARRAY_BUFFER, triangleVBO[0]);
+glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+```
+
+Three OpenGL calls are required to create and allocate the vertex buffer object. The first, glGenBuffers creates a handle that can be used to refer to the VBO once it is stored on the device. Multiple handles to VBOs (stored in arrays) can be created in a single glGenBuffers call, as illustrated but not utilized here. Note that when a buffer object is generated, the actual allocation of space on the device is not yet performed. 
+创建和分配顶点缓冲区对象需要三个 OpenGL 调用。 第一个，glGenBuffers 创建一个句柄，一旦 VBO 存储在设备上，就可以使用该句柄来引用它。 可以在单个 glGenBuffers 调用中创建 VBO 的多个句柄（存储在数组中），如图所示，但此处未使用。 请注意，当生成缓冲区对象时，设备上的实际空间分配尚未执行。
+
+With OpenGL, objects, such as vertex buffer objects, are primary targets for computation and processing. Objects must be bound to a known OpenGL state when used and unbound when not in use. Examples of OpenGL’s use of objects include the vertex buffer objects, framebuffer objects, texture objects, and shader programs, to name a few. In the current example, the GL ARRAY BUFFER state of OpenGL is bound to the triangle VBO handle that was generated previously. This essentially makes the triangle VBO the active vertex buffer object. Any operations that affect vertex buffers that follow the glBindBuffer(GL ARRAY BUFFER, triangleVBO[0]) command will use the triangle data in the VBO either by reading the data or writing to it. 
+对于 OpenGL，对象（例如顶点缓冲区对象）是计算和处理的主要目标。 对象在使用时必须绑定到已知的 OpenGL 状态，在不使用时必须解除绑定。 OpenGL 使用对象的示例包括顶点缓冲区对象、帧缓冲区对象、纹理对象和着色器程序等。 在当前示例中，OpenGL的GL ARRAY BUFFER状态绑定到之前生成的三角形VBO句柄。 这实质上使三角形 VBO 成为活动顶点缓冲区对象。 任何影响 glBindBuffer(GL ARRAY BUFFER,triangleVBO[0]) 命令之后的顶点缓冲区的操作都将通过读取数据或写入数据来使用 VBO 中的三角形数据。
+
+Vertex data is copied from the host (the vertices array) to the device (currently bound GL ARRAY BUFFER) using the
+使用以下命令将顶点数据从主机（顶点数组）复制到设备（当前绑定的 GL ARRAY BUFFER）
+
+```glsl
+glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(GLfloat), vertices, GL_STATIC_DRAW);
+```
+
+call. The arguments represent the type of target, the size in bytes of the buffer to be copied, the pointer to the host buffer, and an enumerated type that indicates how the buffer will be used. In the current example, the target is GL_ARRAY_BUFFER, the size of the data is 9∗ sizeof(GLfloat), and the last argument is GL STATIC DRAW indicating to OpenGL that the vertices will not change over the course of the rendering. Finally, when the VBO no longer needs to be an active target for reading or writing, it is unbound with the glBindBuffer(GL_ARRAY_BUFFER, 0) call. In general, binding any of OpenGL’s objects or buffers to handle 0, unbinds, or disables that buffer from affecting subsequent functionality. 17.10 Vertex Array Objects While vertex buffer objects are the storage containers for vertices (and vertex attributes), vertex array objects represent OpenGL’s mechanism to bundle vertex buffers together into a consistent vertex state that can be communicated and linked with shaders in the graphics hardware. Recall that the fixed function pipeline of the past no longer exists and therefore, per-vertex state, such as normals or even vertex colors, must be stored in hardware buffers and then referenced in shaders, using input variables (e.g., in). As with vertex buffer objects, vertex array objects, or VAOs, must be created and allocated with any necessary state being set while the vertex array object is bound. For instance, the following code shows how to create a VAO to contain the triangle VBO previously defined:
+调用。 参数表示目标的类型、要复制的缓冲区的大小（以字节为单位）、指向主机缓冲区的指针以及指示如何使用缓冲区的枚举类型。 在当前示例中，目标是 GL_ARRAY_BUFFER，数据大小是 9* sizeof(GLfloat)，最后一个参数是 GL STATIC DRAW，向 OpenGL 指示顶点在渲染过程中不会改变。 最后，当 VBO 不再需要成为读取或写入的活动目标时，它会通过 glBindBuffer(GL_ARRAY_BUFFER, 0) 调用解除绑定。 一般来说，将任何 OpenGL 对象或缓冲区绑定到句柄 0、解除绑定或禁用该缓冲区影响后续功能。 17.10 顶点数组对象 虽然顶点缓冲区对象是顶点（和顶点属性）的存储容器，但顶点数组对象代表 OpenGL 将顶点缓冲区捆绑在一起形成一致的顶点状态的机制，该状态可以与图形硬件中的着色器进行通信和链接。 回想一下，过去的固定功能管道不再存在，因此，每个顶点状态（例如法线甚至顶点颜色）必须存储在硬件缓冲区中，然后使用输入变量（例如 in）在着色器中引用。 与顶点缓冲区对象一样，顶点数组对象或 VAO 必须在绑定顶点数组对象时创建和分配，并设置任何必要的状态。 例如，以下代码显示如何创建一个 VAO 来包含先前定义的三角形 VBO：
+
+```glsl
+GLuint VAO;
+glGenVertexArrays(1, &VAO);
+glBindVertexArray(VAO);
+glEnableVertexAttribArray(0);
+glBindBuffer(GL_ARRAY_BUFFER, triangleVBO[0]);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
+glBindVertexArray(0);
+```
+
+When defining a vertex array object, specific vertex buffer objects can be bound to specific vertex attributes (or inputs) in shader code. Recall the use of
+定义顶点数组对象时，可以将特定顶点缓冲区对象绑定到着色器代码中的特定顶点属性（或输入）。 回想一下使用
+
+```glsl
+layout(location=0) in vec3 in_Position 
+```
+
+in the passthrough vertex shader. This syntax indicate that the shader variable will receive its data from attribute index 0 in the bound vertex array object. In host code, the mapping is created using the 
+在直通顶点着色器中。 此语法指示着色器变量将从绑定顶点数组对象中的属性索引 0 接收其数据。 在主机代码中，映射是使用以下命令创建的
+
+```glsl
+glEnableVertexAttribArray(0); 
+glBindBuffer(GL_ARRAY_BUFFER, triangleVBO[0]); 
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0); 
+```
+
+calls. The first call enables the vertex attribute index (in this case, 0). The next two calls connect the previously defined vertex buffer object that holds the vertices to the vertex attribute itself. Because glVertexAttribPointer utilizes the currently bound VBO, it is important that the glBindBuffer is issued before assigning the vertex attribute pointer. These function calls create a mapping that binds the vertices in our vertex buffer to the in Position variable within the vertex shader. The glVertexAttribPointer calls seems complicated but it basically sets attribute index 0 to hold three components (e.g., x, y, z) of GLfloats (the 2nd and 3rd arguments) that are not normalized (the fourth argument). The fifth argument instructs OpenGL that three float values separate the starts of each vertex set. In other words, the vertices are tightly packed in the memory, one after the other. The final argument is a pointer to the data, but because a vertex buffer has been bound prior to this call, the data will be associated with the vertex buffer. 
+调用。 第一个调用启用顶点属性索引（在本例中为 0）。 接下来的两个调用将先前定义的保存顶点的顶点缓冲区对象连接到顶点属性本身。 由于 glVertexAttribPointer 使用当前绑定的 VBO，因此在分配顶点属性指针之前发出 glBindBuffer 非常重要。 这些函数调用创建一个映射，将顶点缓冲区中的顶点绑定到顶点着色器中的 in Position 变量。 glVertexAttribPointer 调用看起来很复杂，但它基本上设置属性索引 0 来保存未标准化（第四个参数）的 GLfloats（第二个和第三个参数）的三个组件（例如，x、y、z）。 第五个参数指示 OpenGL 用三个浮点值分隔每个顶点集的起点。 换句话说，顶点一个接一个地紧密地排列在内存中。 最后一个参数是指向数据的指针，但由于在此调用之前已绑定顶点缓冲区，因此数据将与顶点缓冲区关联。
+
+The previous steps that initialize and construct the vertex array object, the vertex buffer objects, and the shaders should all be executed prior to entering the display loop. All memory from the vertex buffer will have been transferred to the GPU and the vertex array objects will make the connection between the data and shader input variable indexes. In the display loop, the following calls will trigger the processing of the vertex array object: 
+前面初始化和构造顶点数组对象、顶点缓冲区对象和着色器的步骤都应该在进入显示循环之前执行。 顶点缓冲区中的所有内存都将被传输到 GPU，并且顶点数组对象将在数据和着色器输入变量索引之间建立连接。 在显示循环中，以下调用将触发顶点数组对象的处理：
+
+```glsl
+glBindVertexArray(VAO); 
+glDrawArrays(GL_TRIANGLES, 0, 3); 
+glBindVertexArray(0);
+```
+
+Note again, that a bind call makes the vertex array object active. The call to glDrawArrays initiates the pipeline for this geometry, describing that the geometry should be interpreted as a series of triangle primitives starting at offset 0 and only rendering three of the indices. In this example, there are only three elements in the array and the primitive is a triangle, so a single triangle will be rendered. Figure 17.3. The canonical triangle rendered using the simple vertex and fragment shaders. 
+再次注意，绑定调用会使顶点数组对象处于活动状态。 对 glDrawArrays 的调用启动了该几何图形的管道，描述了该几何图形应被解释为一系列从偏移量 0 开始并且仅渲染三个索引的三角形图元。 在此示例中，数组中只有三个元素，并且基元是三角形，因此将渲染单个三角形。 图 17.3。 使用简单的顶点和片段着色器渲染的规范三角形。
+
+Combining all of these steps, the assembled code for the triangle would resemble the following, assuming that shader and vertex data loading are contained in external functions:
+结合所有这些步骤，三角形的汇编代码将类似于以下内容，假设着色器和顶点数据加载包含在外部函数中：
+
+```glsl
+// Set the viewport once
+int nx, ny;
+glfwGetFramebufferSize(window, &nx, &ny);
+glViewport(0, 0, nx, ny);
+// Set clear color state
+glClearColor( 0.0f, 0.0f, 0.0f, 1.0f );
+// Create the Shader programs, VBO, and VAO
+GLuint shaderID = loadPassthroughShader();
+GLuint VAO = loadVertexData();
+while (!glfwWindowShouldClose(window)) {
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glUseProgram( shaderID );
+    glBindVertexArray(VAO);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(0);
+    glUseProgram( 0 );
+    // Swap front and back buffers
+    glfwSwapBuffers(window);
+    // Poll for events
+    glfwPollEvents();
+    if (glfwGetKey( window, GLFW_KEY_ESCAPE ) == GLFW_PRESS)
+    glfwSetWindowShouldClose(window, 1);
+}
+```
+
+Figure 17.3 shows the result of using the shaders and vertex state to render the canonical view volume triangle. 
+图 17.3 显示了使用着色器和顶点状态渲染规范视图体积三角形的结果。
+![Figure 17.3](./Images/Figure 17.3.png)
+Figure 17.3. The canonical triangle rendered using the simple vertex and fragment shaders.
+图 17.3。 使用简单的顶点和片段着色器渲染的规范三角形。
+
+## 17.11 Transformation Matrices 变换矩阵
+
+Current versions of OpenGL have removed the matrix stacks that were once used to reference the projection and modelview matrices from the hardware. Because these matrix stacks no longer exist, the programmer must write matrix code that can be transferred to vertex shaders where the transformations will occur. That initially may seem challenging. However, several libraries and toolkits have been developed to assist with cross-platform development of OpenGL code. One of these libraries, GLM, or OpenGL Mathematics, has been developed to track the OpenGL and GLSL specifications closely so that interoperation between GLM and the hardware will work seamlessly. 
+当前版本的 OpenGL 已经删除了曾经用于从硬件引用投影和模型视图矩阵的矩阵堆栈。 由于这些矩阵堆栈不再存在，因此程序员必须编写可以传输到将发生转换的顶点着色器的矩阵代码。 乍一看这似乎具有挑战性。 然而，已经开发了一些库和工具包来协助 OpenGL 代码的跨平台开发。 这些库之一，GLM（或 OpenGL Mathematics），是为了密切跟踪 OpenGL 和 GLSL 规范而开发的，以便 GLM 和硬件之间的互操作能够无缝工作
+
+### 17.11.1 GLM
+
+GLM provides several basic math types useful to computer graphics. For our purposes, we will focus on just a few types and a handful of functions that make use of matrix transforms within the shaders easy. A few types that will be used include the following: 
+GLM 提供了几种对计算机图形学有用的基本数学类型。 出于我们的目的，我们将只关注几种类型和一些函数，它们可以轻松地在着色器中使用矩阵变换。 将使用的一些类型包括：
+
+- glm::vec3—a compact array of 3 floats that can be accessed using the same component-wise access found in the shaders; 
+  glm::vec3 - 3 个浮点数的紧凑数组，可以使用着色器中相同的组件方式访问进行访问；
+- glm::vec4—a compact array of 4 floats that can be accessed using the same component-wise access found in the shaders; 
+  glm::vec4——4个浮点数的紧凑数组，可以使用着色器中相同的组件方式访问来访问；
+- glm::mat4—a 4 × 4 matrix storage represented as 16 floats. The matrix is stored in column-major format. 
+  glm::mat4——表示为 16 个浮点数的 4 × 4 矩阵存储。 矩阵以列优先格式存储。
+
+Similarly, GLM provides functions for creating the projection matrices, $\bold{M}_orth$ and $\bold{M}_p$, as well as functions for generating the view matrix, $\bold{M}_{cam}$: 
+类似地，GLM 提供了用于创建投影矩阵 $\bold{M}_orth$ 和 $\bold{M}_p$ 的函数，以及用于生成视图矩阵 $\bold{M}_{cam}$ 的函数 :
+
+- glm::ortho creates a 4 × 4 orthographic projection matrix. 
+  glm::ortho 创建 4 × 4 正交投影矩阵。
+- glm::perspective creates the 4 × 4 perspective matrix. 
+  glm::perspective 创建 4 × 4 透视矩阵。
+- glm::lookAt creates the 4 × 4 homogeneous transform that translates and orients the camera.
+  glm::lookAt 创建 4 × 4 齐次变换来平移和定向相机。
+
+### 17.11.2 Using an Orthographic Projection 使用正交投影
+
+A simple extension to the previous example would be to place the triangle vertices into a more flexible coordinate system and render the scene using an orthographic projection. The vertices in the previous example could become:
+对上一个示例的简单扩展是将三角形顶点放入更灵活的坐标系中，并使用正交投影渲染场景。 上一个示例中的顶点可能会变为： 
+
+```glsl
+GLfloat vertices[] = {-3.0f, -3.0f, 0.0f, 3.0f, -3.0f, 0.0f, 0.0f, 3.0f, 0.0f}; 
+```
+
+Using GLM, an orthographic projection can be created easily on the host. For instance, 
+使用 GLM，可以在主机上轻松创建正交投影。 例如，
+
+```glsl
+glm::mat4 projMatrix = glm::ortho(-5.0f, 5.0f, -5.0, 5.0, -10.0f, 10.0f); 
+```
+
+The projection matrix can then be applied to each vertex transforming it into clip coordinates. The vertex shader will be modified to perform this operation:
+然后可以将投影矩阵应用于每个顶点，将其转换为剪辑坐标。 将修改顶点着色器来执行此操作：
+$\bold{v}_{canon} = \bold{M}_{orth}\bold{v}. $
+
+This computation will occur in a modified vertex shader that uses uniform variables to communicate data from the host to the device. Uniform variables represent static data that is invariant across the execution of a shader program. The data is the same for all elements and remains static. However, uniform variables can be modified by an application between executions of a shader. This is the primary mechanism that data within the host application can communicate changes to shader computations. Uniform data often represent the graphics state associated with an application. For instance, the projection, view, or model matrices can be set and accessed through uniform variables. 
+此计算将在修改后的顶点着色器中进行，该顶点着色器使用统一变量将数据从主机传送到设备。 统一变量表示在着色器程序执行过程中不变的静态数据。 所有元素的数据都相同并且保持静态。 然而，应用程序可以在着色器的执行之间修改统一变量。 这是主机应用程序中的数据可以将更改传达给着色器计算的主要机制。 统一数据通常表示与应用程序相关的图形状态。 例如，可以通过统一变量设置和访问投影、视图或模型矩阵。
+
+Information about light sources within a scene may also be obtained through uniform variables. Modifying the vertex shader requires adding a uniform variable to hold the projection matrix. We can use GLSL’s mat4 type to store this data. The projection matrix can then be used naturally to transform the incoming vertices into the canonical coordinate system:
+有关场景内光源的信息也可以通过统一变量获得。 修改顶点着色器需要添加一个uniform变量来保存投影矩阵。 我们可以使用 GLSL 的 mat4 类型来存储这些数据。 然后可以自然地使用投影矩阵将传入的顶点转换为规范坐标系：
+
+```glsl
+#version 330 core
+layout(location=0) in vec3 in_Position;
+uniform mat4 projMatrix;
+void main(void)
+{
+	gl_Position = projMatrix * vec4(in_Position, 1.0);
+}  
+```
+
+The application code need only transfer the uniform variable from the host memory (a GLM mat4) into the device’s shader program (a GLSL mat4). This is easy enough, but requires that the host side of the application acquire a handle to the uniform variable after the shader program has been linked. For instance, to obtain a handle to the projMatrix variable, the following call would be issued once, after shader program linking is complete: 
+应用程序代码只需将统一变量从主机内存（GLM mat4）传输到设备的着色器程序（GLSL mat4）中。 这很容易，但要求应用程序的主机端在链接着色器程序后获取统一变量的句柄。 例如，要获取 projMatrix 变量的句柄，在着色器程序链接完成后将发出以下调用一次：
+
+```glsl
+GLint pMatID = glGetUniformLocation(shaderProgram, "projMatrix"); 
+```
+
+The first argument is the shader program object handle and the second argument is the character string of the variable name in the shader. The id can then be used with a variety of OpenGL glUniform function call to transfer the memory on the host into the device. However, shader programs must first be bound prior to setting the value related to a uniform variable. Also, because GLM is used to store the projection matrix on the host, a GLM helper function will be used to obtain a pointer to the underlying matrix, and allow the copy to proceed. 
+第一个参数是着色器程序对象句柄，第二个参数是着色器中变量名称的字符串。 然后可以将该 id 与各种 OpenGL glUniform 函数调用一起使用，将主机上的内存传输到设备中。 但是，在设置与统一变量相关的值之前，必须首先绑定着色器程序。 此外，由于 GLM 用于在主机上存储投影矩阵，因此将使用 GLM 辅助函数来获取指向底层矩阵的指针，并允许继续进行复制。
+
+```glsl
+glUseProgram(shaderID); 
+glUniformMatrix4fv(pMatID, 1, GL_FALSE, glm::value_ptr(projMatrix)); 
+glBindVertexArray(VAO); 
+glDrawArrays(GL_TRIANGLES, 0, 3); 
+glBindVertexArray(0); 
+glUseProgram(0); 
+```
+
+Notice the form that glUniform takes. The function name ends with characters that help define how it is used. In this case, a single 4 × 4 matrix of floats is being tranferred into the uniform variable. The v indicates that an array contains the data, rather than passing by value. The third argument lets OpenGL know whether the matrix should be transposed (a potentially handy feature), and the last argument is a pointer to the memory where the matrix resides. 
+注意 glUniform 采用的形式。 函数名称以有助于定义其使用方式的字符结尾。 在本例中，单个 4 × 4 浮点数矩阵被转换为统一变量。 v 表示数组包含数据，而不是按值传递。 第三个参数让 OpenGL 知道矩阵是否应该转置（一个可能方便的功能），最后一个参数是指向矩阵所在内存的指针。
+
+By this section of the chapter, you should have a sense for the role that shaders and vertex data play in rendering objects with OpenGL. Shaders, in particular, form a very important role in modern OpenGL. The remaining sections will further explore the role of shaders in rendering scenes, attempting to build upon the role that shaders play in other rendering styles presented in this book. 
+通过本章的这一部分，您应该了解着色器和顶点数据在使用 OpenGL 渲染对象中所扮演的角色。 尤其是着色器，在现代 OpenGL 中发挥着非常重要的作用。 其余部分将进一步探讨着色器在渲染场景中的作用，尝试以着色器在本书中介绍的其他渲染风格中所扮演的角色为基础。
+
+## 17.12 Shading with Per-Vertex Attributes 使用每顶点属性进行着色
+
+The previous examples specified a single triangle with no additional data. Vertex attributes, such as normal vectors, texture coordinates, or even colors, can be interleaved with the vertex data in a vertex buffer. The memory layout is straightforward. Below, the color of each vertex is set after each vertex in the array. Three components are used to represent the red, green, and blue channels. Allocating the vertex buffer is identical with the exception being that the size of the array is now 18 GLfloats instead of 9. 
+前面的示例指定了一个没有附加数据的三角形。 顶点属性（例如法线向量、纹理坐标甚至颜色）可以与顶点缓冲区中的顶点数据交织。 内存布局很简单。 下面，每个顶点的颜色设置在数组中每个顶点之后。 使用三个分量来表示红色、绿色和蓝色通道。 分配顶点缓冲区是相同的，但数组的大小现在是 18 个 GLfloats 而不是 9。
+
+```glsl
+GLfloat vertexData[] = {0.0f, 3.0f, 0.0f, 1.0f, 1.0f, 0.0f, -3.0f, -3.0f, 0.0f, 0.0f, 1.0f, 1.0f, 3.0f, -3.0f, 0.0f, 1.0f, 0.0f, 1.0f}; 
+```
+
+The vertex array object specification is different. Because the color data is interleaved between vertices, the vertex attribute pointers must stride across the data appropriately. The second vertex attribute index must also be enabled. Building off the previous examples, we construct the new VAO as follows: 
+顶点数组对象规范不同。 由于颜色数据在顶点之间交错，因此顶点属性指针必须适当地跨过数据。 还必须启用第二个顶点属性索引。 基于前面的示例，我们构建新的 VAO 如下：
+
+```glsl
+glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]); 
+glEnableVertexAttribArray(0); 
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), 0); glEnableVertexAttribArray(1); 
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (const GLvoid *)12); 
+```
+
+A single VBO is used and bound prior to setting the attributes since both vertex and color data are contained within the VBO. The first vertex attribute is enabled at index 0, which will represent the vertices in the shader. Note that the stride (the 5th argument) is different as the vertices are separated by six floats (e.g., the x, y, z of the vertex followed by the r, g, b of the color). The second vertex attribute index is enabled and will represent the vertex color attributes in the shader at location 1. It has the same stride, but the last argument now represents the pointer offset for the start of the first color value. While 12 is used in the above example, this is identical to stating 3 * sizeof(GLfloat). In other words, we need to jump across the three floats representing the vertex x, y, z values to locate the first color attribute in the array. 
+在设置属性之前使用并绑定单个 VBO，因为顶点和颜色数据都包含在 VBO 中。 第一个顶点属性在索引 0 处启用，它将表示着色器中的顶点。 请注意，步幅（第 5 个参数）是不同的，因为顶点被六个浮点数分隔开（例如，顶点的 x、y、z 后跟颜色的 r、g、b）。 第二个顶点属性索引已启用，并将表示着色器中位置 1 处的顶点颜色属性。它具有相同的步幅，但最后一个参数现在表示第一个颜色值开始处的指针偏移量。 虽然上面的示例中使用了 12，但这与声明 3 * sizeof(GLfloat) 相同。 换句话说，我们需要跳过代表顶点 x、y、z 值的三个浮点数来定位数组中的第一个颜色属性。
+
+The shaders for this example are only slightly modified. The primary differences in the vertex shader (shown below) are (1) the second attribute, color, is at location 1 and (2) vColor is an output variable that is set in the main body of the vertex shader.
+此示例的着色器仅略有修改。 顶点着色器（如下所示）的主要区别是 (1) 第二个属性颜色位于位置 1 处，以及 (2) vColor 是在顶点着色器主体中设置的输出变量。
+
+```glsl
+#version 330 core
+layout(location=0) in vec3 in_Position;
+layout(location=1) in vec3 in_Color; 
+out vec3 vColor;
+uniform mat4 projMatrix;
+void main(void)
+{
+	vColor = in_Color;
+	gl_Position = projMatrix * vec4(in_Position, 1.0);
+}  
+```
+
+Recall that the keywords in and out refer to the flow of data between shaders. Data that flows out of the vertex shader becomes input data in the connected fragment shader, provided that the variable names match up. Moreover, out variables that are passed to fragment shaders are interpolated across the fragments using barycentric interpolation. Some modification of the interpolation can be achieved with additional keywords, but this detail will be left to the reader. In this example, three vertices are specified, each with a specific color value. Within the fragment shader, the colors will be interpolated across the face of the triangle. 
+回想一下，关键字 in 和 out 指的是着色器之间的数据流。 如果变量名称匹配，流出顶点着色器的数据将成为连接的片段着色器中的输入数据。 此外，传递给片段着色器的输出变量使用重心插值在片段之间进行插值。 可以使用附加关键字来实现对插值的一些修改，但这个细节将留给读者。 在此示例中，指定了三个顶点，每个顶点都有一个特定的颜色值。 在片段着色器中，颜色将在三角形的面上进行插值。
+
+The fragment shader changes are simple. The vColor variable that was set and passed out of the vertex shader now becomes an in variable. As fragments are processed, the vColor vec3 will contain the correctly interpolated values based on the location of the fragment within the triangle.
+片段着色器的更改很简单。 从顶点着色器设置并传递出的 vColor 变量现在成为 in 变量。 处理片段时，vColor vec3 将包含基于片段在三角形内的位置的正确插值。
+
+```glsl
+#version 330 core
+layout(location=0) out vec4 fragmentColor;
+in vec3 vColor;
+void main(void)
+{
+	fragmentColor = vec4(vColor, 1.0);
+}  
+```
+
+The image that results from running this shader with the triangle data is shown in Figure 17.4. 
+使用三角形数据运行该着色器所产生的图像如图 17.4 所示。
+![Figure 17.4](./Images/Figure 17.4.png)
+Figure 17.4. Setting the colors of each vertex in the vertex shader and passing the data to the fragment shader results in barycentric interpolation of the colors.  
+图 17.4。 在顶点着色器中设置每个顶点的颜色并将数据传递到片段着色器会导致颜色的重心插值。
+
+### 17.12.1 Structs of Vertex Data  顶点数据的结构
+
+The previous example illustrates the interleaving of data in an array. Vertex buffers can be used in a variety of ways, including separate vertex buffers for different model attributes. Interleaving data has advantages as the attributes associated with a vertex are near the vertex in memory and can likely take advantage of memory locality when operating in the shaders. While the use of these interleaved arrays is straightforward, it can become cumbersome to manage large models in this way, especially as data structures are used for building robust (and sustainable) software infrastructure for graphics (see Chapter 12). It is rather simple to store vertex data as vectors of structs that contain the vertex and any related attributes. When done this way, the structure need only be mapped into the vertex buffer. For instance, the following structure contains the vertex position and vertex color, using GLM’s vec3 type:
+前面的示例说明了数组中数据的交错。 顶点缓冲区可以以多种方式使用，包括针对不同模型属性的单独顶点缓冲区。 交错数据具有优势，因为与顶点关联的属性靠近内存中的顶点，并且在着色器中操作时可以利用内存局部性。 虽然这些交错数组的使用很简单，但以这种方式管理大型模型可能会变得很麻烦，特别是当数据结构用于构建强大（且可持续）的图形软件基础设施时（请参阅第 12 章）。 将顶点数据存储为包含顶点和任何相关属性的结构向量非常简单。 当这样做时，结构只需要映射到顶点缓冲区中。 例如，以下结构包含顶点位置和顶点颜色，使用 GLM 的 vec3 类型：
+
+```glsl
+struct vertexData
+{
+	glm::vec3 pos;
+	glm::vec3 color;
+};
+std::vector< vertexData > modelData;  
+```
+
+The STL vector will hold all vertices related to all the triangles in the model. We will continue to use the same layout for triangles as in previous examples, which is a basic triangle strip. Every three vertices represents a triangle in the list. There are other data organizations that can be used with OpenGL, and Chapter 12 presents other options for organizing data more efficiently. 
+STL 向量将保存与模型中所有三角形相关的所有顶点。 我们将继续使用与前面示例中相同的三角形布局，这是一个基本的三角形带。 每三个顶点代表列表中的一个三角形。 还有其他可以与 OpenGL 一起使用的数据组织，第 12 章介绍了更有效地组织数据的其他选项。
+
+Once the data is loaded into the vector, the same calls used before load the data into the vertex buffer object:
+将数据加载到向量中后，将在将数据加载到顶点缓冲区对象之前使用相同的调用：
+
+```glsl
+int numBytes = modelData.size() * sizeof(vertexData);  
+glBufferData(GL_ARRAY_BUFFER, numBytes, modelData.data(), GL_STATIC_DRAW);
+glBindBuffer(GL_ARRAY_BUFFER, 0);
+```
+
+STL vectors store data contiguously. The vertexData struct used above is represented by a flat memory layout (it does not contain pointers to other data elements) and is contiguous. However, the STL vector is an abstraction and the pointer that references the underlying memory must be queried using the data() member. That pointer is provided to the call to glBufferData. Attribute assignment in the vertex array object is identical as the locality of the vertex attributes remains the same.
+STL 向量连续存储数据。 上面使用的 vertexData 结构由平面内存布局表示（它不包含指向其他数据元素的指针）并且是连续的。 然而，STL向量是一个抽象，引用底层内存的指针必须使用data()成员来查询。 该指针被提供给对 glBufferData 的调用。 顶点数组对象中的属性分配是相同的，因为顶点属性的局部性保持不变。
+
+## 17.13 Shading in the Fragment Processor  片段处理器中的着色
+
+The graphics pipeline chapter (Chapter 8) and the surface shading chapter (Chapter 10) do a nice job of describing and illustrating the effects of per-vertex and per-fragment shading as they relate to rasterization and shading in general. With modern graphics hardware, applying shading algorithms in the fragment processor produces better visual results and more accurately approximates lighting. Shading that is computed on a per-vertex basis is often subject to visual artifacts related to the underlying geometry tessellation. In particular, per-vertex based shading often fails to approximate the appropriate intensities across the face of the triangle since the lighting is only being calculated at each vertex. For example, when the distance to the light source is small, as compared with the size of the face being shaded, the illumination on the face will be incorrect. Figure 17.5 illustrates this situation. The center of the triangle will not be illuminated brightly, despite being very close to the light source, since the lighting on the vertices, which are far from the light source, are used to interpolate the shading across the face. Of course, increasing the tessellation of the geometry can improve the visuals. However, this solution is of limited use in real-time graphics as the added geometry required for more accurate illumination can result in slower rendering. 
+图形管道章节（第 8 章）和表面着色章节（第 10 章）很好地描述和说明了逐顶点和逐片段着色的效果，因为它们通常与光栅化和着色有关。 借助现代图形硬件，在片段处理器中应用着色算法可以产生更好的视觉效果并更准确地近似照明。 基于每个顶点计算的着色通常会受到与底层几何镶嵌相关的视觉伪影的影响。 特别是，基于每个顶点的着色通常无法近似三角形面上的适当强度，因为仅在每个顶点计算照明。 例如，当与光源的距离较小时，与被遮挡的脸部的大小相比，脸部的照明将不正确。 图 17.5 说明了这种情况。 尽管三角形的中心非常靠近光源，但它不会被明亮地照亮，因为远离光源的顶点上的照明用于插入整个面上的阴影。 当然，增加几何形状的镶嵌可以改善视觉效果。 然而，该解决方案在实时图形中的用途有限，因为更准确的照明所需的添加几何体可能会导致渲染速度变慢。
+![Figure 17.5](./Images/Figure 17.5.png)
+Figure 17.5. The distance to the light source is small relative to the size of the triangle.
+图 17.5。 相对于三角形的大小，到光源的距离很小。
+
+Fragment shaders operate on the fragments that emerge from rasterization after vertices have been transformed and clipped. Generally speaking, fragment shaders must output a value that is written to a framebuffer. Often times, this is the color of the pixel. If the depth test is enabled, the fragment’s depth value will be used to control whether the color and its depth are written to the framebuffer memory. The data that fragment shaders use for computation comes from various sources: 
+片段着色器对顶点变换和裁剪后光栅化产生的片段进行操作。 一般来说，片段着色器必须输出写入帧缓冲区的值。 很多时候，这就是像素的颜色。 如果启用深度测试，则片段的深度值将用于控制是否将颜色及其深度写入帧缓冲区内存。 片段着色器用于计算的数据来自各种来源：
+
+- Built-in OpenGL variables. These variables are provided by the system. Examples of fragment shader variables include gl_FragCoord or gl FrontFacing. These variables can change based on revisions to OpenGL and GLSL, so it is advised that you check the specification for the version of OpenGL and GLSL that you are targeting. 
+  内置 OpenGL 变量。 这些变量是由系统提供的。 片段着色器变量的示例包括 gl_FragCoord 或 gl FrontFacing。 这些变量可能会根据 OpenGL 和 GLSL 的修订而变化，因此建议您检查目标 OpenGL 和 GLSL 版本的规范。
+- Uniform variables. Uniform variables are transferred from the host to the device and can change as needed based on user input or changing simulation state in the application. These variables are declared and defined by the programmer for use within both vertex and fragment shaders. The projection matrix in the previous vertex shader examples was communicated to the shader via a uniform variable. If needed, the same uniform variable names can be used within both vertex and fragment shaders. 
+  统一变量。 统一变量从主机传输到设备，并且可以根据用户输入或应用程序中更改的模拟状态根据需要进行更改。 这些变量由程序员声明和定义，以便在顶点着色器和片段着色器中使用。 前面的顶点着色器示例中的投影矩阵通过统一变量传递给着色器。 如果需要，可以在顶点着色器和片段着色器中使用相同的统一变量名称。
+- Input variables. Input variables are specified in the fragment shader with the prefixed keyword in. Recall that data can flow into and out of shaders. Vertex shaders can output data to the next shader stage using the out keyword (e.g., out vec3 vColor, in a previous example). The outputs are linked to inputs when the next stage uses an in keyword followed by the same type and name qualifiers (e.g., in vec3 vColor in the previous example’s corresponding fragment shader). 
+  输入变量。 输入变量在片段着色器中使用前缀关键字 in 指定。回想一下，数据可以流入和流出着色器。 顶点着色器可以使用 out 关键字（例如，前面示例中的 out vec3 vColor）将数据输出到下一个着色器阶段。 当下一阶段使用 in 关键字后跟相同的类型和名称限定符时，输出将链接到输入（例如，在上一个示例的相应片段着色器中的 vec3 vColor 中）。
+
+Any data that is passed to a fragment shader through the in-out linking mechanism will vary on a per-fragment basis using barycentric interpolation. The interpolation is computed outside of the shader by the graphics hardware. Within this infrastructure, fragment shaders can be used to perform per-fragment shading algorithms that evaluate specific equations across the face of the triangle. Vertex shaders provide support computations, transforming vertices and staging intermediate per-vertex values that will be interpolated for the fragment code. 
+通过输入输出链接机制传递到片段着色器的任何数据都将使用重心插值根据每个片段而变化。 插值是由图形硬件在着色器外部计算的。 在此基础设施中，片段着色器可用于执行每个片段着色算法，该算法评估三角形面上的特定方程。 顶点着色器提供支持计算、转换顶点和暂存将为片段代码插值的中间每个顶点值。
+
+The following shader program code implements per-fragment, Blinn-Phong shading. It brings together much of what has been presented in this chapter thus far and binds it to the shader descriptions from Chapter 4. An interleaved vertex buffer is used to contain the vertex position and normal vectors. These values manifest in the vertex shader as vertex array attributes for index 0 and index 1. The shading computations that occur in the fragment shader code are performed in camera coordinates (sometimes referred to as eye-space). 
+以下着色器程序代码实现了逐片段 Blinn-Phong 着色。 它汇集了本章迄今为止介绍的大部分内容，并将其与第 4 章中的着色器描述绑定在一起。交错的顶点缓冲区用于包含顶点位置和法线向量。 这些值在顶点着色器中表现为索引 0 和索引 1 的顶点数组属性。片段着色器代码中发生的着色计算在相机坐标（有时称为眼睛空间）中执行。
+
+### 17.13.1 Blinn-Phong Shader Program: Vertex Shader  Blinn-Phong 着色器程序：顶点着色器
+
+The vertex shader stage of our program is used to transform the incoming vertices using the $\bold{M}_{model}$ and $\bold{M}_{cam}$ matrices into camera coordinates. It also uses the normal matrix, $(\bold{M}^{-1})^T$ , to appropriately transform the incoming normal vector attribute. The vertex shader outputs three variables to the fragment stage: 
+我们程序的顶点着色器阶段用于使用 $\bold{M}_{model}$ 和 $\bold{M}_{cam}$ 矩阵将传入的顶点转换为相机坐标。 它还使用法线矩阵 $(\bold{M}^{-1})^T$ 来适当地转换传入的法线向量属性。 顶点着色器向片段阶段输出三个变量：
+
+- normal. The vertex’s normal vector as transformed into the camera coordinate system. 
+  普通的。 顶点的法线向量转换到相机坐标系中。
+- h. The half-vector needed for Blinn-Phong shading. 
+  H。 Blinn-Phong 着色所需的半向量。
+- l. The light direction transformed into the camera coordinate system. 
+  l. 光线方向转换到相机坐标系中。
+
+Each of these variables will then be available for fragment computation, after applying barycentric interpolation across the three vertices in the triangle. 
+在对三角形的三个顶点应用重心插值后，每个变量都可用于片段计算。
+
+A single point light is used with this shader program. The light position and intensity is communicated to both the vertex and fragment shaders using a uniform variable. The light data is declared using GLSL’s struct qualifer, which allows variables to be grouped together in meaningful ways. Although not presented here, GLSL supports arrays and for-loop control structures, so additional lights could easily be added to this example. 
+该着色器程序使用单点光源。 使用统一变量将灯光位置和强度传递给顶点着色器和片段着色器。 光数据是使用 GLSL 的结构限定符声明的，它允许变量以有意义的方式分组在一起。 尽管此处未介绍，但 GLSL 支持数组和 for 循环控制结构，因此可以轻松地将其他灯光添加到此示例中。
+
+All matrices are also provided to the vertex shader using uniform variables. For now, we will imagine that the model (or local transform) matrix will be set to the indentity matrix. In the following section, more detail will be provided to expand on how the model matrix can be specified on the host using GLM.
+所有矩阵也使用统一变量提供给顶点着色器。 现在，我们假设模型（或局部变换）矩阵将设置为恒等矩阵。 在下一节中，将提供更多详细信息来扩展如何使用 GLM 在主机上指定模型矩阵。
+
+```glsl
+#version 330 core
+//
+// Blinn-Phong Vertex Shader
+//
+layout(location=0) in vec3 in_Position;
+layout(location=1) in vec3 in_Normal;
+out vec4 normal;
+out vec3 half;
+out vec3 lightdir;
+struct LightData {
+	vec3 position;
+	vec3 intensity;
+};
+uniform LightData light;
+uniform mat4 projMatrix;
+uniform mat4 viewMatrix;
+uniform mat4 modelMatrix;
+uniform mat4 normalMatrix;  
+void main(void)
+{
+	// Calculate lighting in eye space: transform the local
+	// position to world and then camera coordinates.
+	vec4 pos = viewMatrix * modelMatrix * vec4(in_Position, 1.0);
+	vec4 lightPos = viewMatrix * vec4(light.position, 1.0);
+	normal = normalMatrix * vec4(in_Normal, 0.0);
+	vec3 v = normalize( -pos.xyz );
+	lightdir = normalize( lightPos.xyz - pos.xyz );
+	half = normalize( v + lightdir );
+	gl_Position = projMatrix * pos;
+}
+```
+
+The vertex shader’s main function first transforms the position and light position into camera coordinates using vec4 types to correspond with the 4 × 4 matrices of GLSL’s mat4. We then transform the normal vector and store it in the out vec4 normal variable. The view (or eye) vector and light direction vector are then calculated, which leads to the computation of the half vector needed for Blinn-Phong shading. The final computation completes the calculation of
+顶点着色器的主函数首先使用vec4类型将位置和光照位置转换为相机坐标，以对应GLSL的mat4的4×4矩阵。 然后我们变换法线向量并将其存储在 out vec4 法线变量中。 然后计算视图（或眼睛）矢量和光方向矢量，从而计算 Blinn-Phong 着色所需的半矢量。 最终计算完成计算
+$\bold{v}_{canon} = \bold{M}_{proj}\bold{M}_{cam}\bold{M}_{model}\bold{v}  $
+
+by applying the projection matrix. It then sets the canonical coordinates of the vertex to the built-in GLSL vertex shader output variable gl_Position. After this, the vertex is in clip-coordinates and is ready for rasterization. 
+通过应用投影矩阵。 然后，它将顶点的规范坐标设置为内置 GLSL 顶点着色器输出变量 gl_Position。 此后，顶点处于剪辑坐标中并准备好进行光栅化。
+
+### 17.13.2 Blinn-Phong Shader Program: Fragment Shader Blinn-Phong 着色器程序：片段着色器
+
+The fragment shader computes the Blinn-Phong shading model. It receives barycentric interpolated values for the vertex normal, half vector, and light direction. Note that these variables are specified using the in keyword as they come in from the vertex processing stage. The light data is also shared with the fragment shader using the same uniform specification that was used in the vertex shader. The matrices are not required so no uniform matrix variables are declared. The material properties for the geometric model are communicated through uniform variables to specify $k_a$, $k_d$, $k_s$, $I_a$, and $p$. Together, the data allow the fragment shader to compute Equation 4.3:
+片段着色器计算 Blinn-Phong 着色模型。 它接收顶点法线、半矢量和光线方向的重心插值。 请注意，这些变量是使用 in 关键字指定的，因为它们来自顶点处理阶段。 光照数据还使用与顶点着色器中使用的相同的统一规范与片段着色器共享。 矩阵不是必需的，因此没有声明统一的矩阵变量。 几何模型的材料属性通过统一变量来指定 $k_a$、$k_d$、$k_s$、$I_a$ 和 $p$。 这些数据共同允许片段着色器计算公式 4.3：
+$L = k_a I_a + k_d Imax(0, \bold{n} · \bold{l}) + k_s Imax(0, \bold{n} · \bold{h})^p  $
+at each fragment. 
+在每个片段。
+
+```glsl
+#version 330 core
+//
+// Blinn-Phong Fragment Shader
+//
+in vec4 normal;
+in vec3 half;
+in vec3 lightdir;
+layout(location=0) out vec4 fragmentColor;
+struct LightData {
+	vec3 position;
+	vec3 intensity;
+};
+uniform LightData light;
+uniform vec3 Ia;
+uniform vec3 ka, kd, ks;
+uniform float phongExp;
+void main(void)
+{
+    vec3 n = normalize(normal.xyz);
+    vec3 h = normalize(half);
+    vec3 l = normalize(lightdir);
+    vec3 intensity = ka * Ia
+        + kd * light.intensity * max( 0.0, dot(n, l) )
+        + ks * light.intensity
+        * pow( max( 0.0, dot(n, h) ), phongExp );
+    fragmentColor = vec4( intensity, 1.0 );
+}  
+```
+
+The fragment shader writes the computed intensity to the fragment color output buffer. Figure 17.6 illustrates several examples that show the effect of perfragment shading across varying degrees of tessellation on a geometric model. This fragment shader introduces the use of structures for holding uniform variables. It should be noted that they are user-defined structures, and in this example, the LightData type holds only the light position and its intensity. In host code, the uniform variables in structures are referenced using the fully qualified variable name when requesting the handle to the uniform variable, as in: 
+片段着色器将计算出的强度写入片段颜色输出缓冲区。 图 17.6 说明了几个示例，显示了几何模型上不同程度的细分程度的片段着色效果。 该片段着色器引入了使用结构来保存统一变量。 应该注意的是，它们是用户定义的结构，在本例中，LightData 类型仅保存灯光位置及其强度。 在主机代码中，当请求统一变量的句柄时，使用完全限定的变量名称来引用结构中的统一变量，如下所示：
+
+```glsl
+lightPosID = shader.createUniform( "light.position" ); 
+lightIntensityID = shader.createUniform( "light.intensity" );
+```
+
+![Figure 17.6](./Images/Figure 17.6.png)
+Figure 17.6. Per-fragment shading applied across increasing tessellation of a subdivision sphere. The specular highlight is apparent with lower tessellations. 
+图 17.6。 每片段着色应用于细分球体的不断增加的镶嵌。 较低的镶嵌图案的镜面高光很明显。
+
+### 17.13.3 A Normal Shader  普通着色器
+
+Once you have a working shader program, such as the Blinn-Phong one presented here, it is easy to expand your ideas and develop new shaders. It may also be helpful to develop a set of very specific shaders for debugging. One such shader is the normal shader program. Normal shading is often helpful to understand whether the incoming geometry is organized correctly or whether the computations are correct. In this example, the vertex shader remains the same. Only the fragment shader changes:
+一旦您有了一个可用的着色器程序（例如此处介绍的 Blinn-Phong 程序），就可以轻松扩展您的想法并开发新的着色器。 开发一组非常具体的着色器以进行调试也可能会有所帮助。 普通着色器程序就是这样的着色器之一。 正常着色通常有助于了解传入的几何体是否组织正确或计算是否正确。 在此示例中，顶点着色器保持不变。 仅片段着色器发生变化：
+
+```glsl
+#version 330 core
+in vec4 normal;
+layout(location=0) out vec4 fragmentColor;
+void main(void)
+{
+	// Notice the use of swizzling here to access
+	// only the xyz values to convert the normal vec4
+	// into a vec3 type!
+	vec3 intensity = normalize(normal.xyz) * 0.5 + 0.5;
+	fragmentColor = vec4( intensity, 1.0 );
+}  
+```
+
+Whichever shaders you start building, be sure to comment them! The GLSL specification allows comments to be included in shader code, so leave yourself some details that can guide you later.
+无论您开始构建哪个着色器，请务必对它们进行评论！ GLSL 规范允许在着色器代码中包含注释，因此请为自己留下一些可以在以后指导您的详细信息。
+
+## 17.14 Meshes and Instancing  网格和实例化
+
+Once basic shaders are working, it’s interesting to start creating more complex scenes. Some 3D model files are simple to load and others require more effort. One simple 3D object file representation is the OBJ format. OBJ is a widely used format and several codes are available to load these types of files. The array of structs mechanism presented earlier works well for containing the OBJ data on the host. It can then easily be transferred into a VBO and vertex array objects. 
+一旦基本着色器开始工作，开始创建更复杂的场景就会很有趣。 有些 3D 模型文件加载起来很简单，而另一些则需要更多的努力。 一种简单的 3D 对象文件表示形式是 OBJ 格式。 OBJ 是一种广泛使用的格式，有多种代码可用于加载这些类型的文件。 前面介绍的结构数组机制非常适合包含主机上的 OBJ 数据。 然后可以轻松地将其转换为 VBO 和顶点数组对象。
+
+Many 3D models are defined in their own local coordinate systems and need various transformations to align them with the OpenGL coordinate system. For instance, when the Stanford Dragon’s OBJ file is loaded into the OpenGL coordinate system, it appears lying on its side at the origin. Using GLM, we can create the model transformations to place objects within our scenes. For the dragon model, this means rotating −90 degrees about $\stackrel{\rightarrow}{X}$ , and then translating up in $\stackrel{\rightarrow}{Y}$ . The effective model transform becomes
+许多 3D 模型都是在自己的局部坐标系中定义的，需要进行各种变换才能将其与 OpenGL 坐标系对齐。 例如，当斯坦福龙的 OBJ 文件加载到 OpenGL 坐标系中时，它看起来位于原点一侧。 使用 GLM，我们可以创建模型转换以将对象放置在场景中。 对于龙模型，这意味着围绕 $\stackrel{\rightarrow}{X}$ 旋转 −90 度，然后在 $\stackrel{\rightarrow}{Y}$ 中向上平移。 有效的模型变换为
+$\bold{M}_{model} = \bold{M}_{translate} \bold{M}_{rotX},  $
+and the dragon is presented upright and above the ground plane, as shown in Figure 17.7. To do this we utilize several functions from GLM for generating local model transforms: 
+龙是直立的，位于地平面之上，如图17.7所示。 为此，我们利用 GLM 中的多个函数来生成局部模型变换：
+
+- **glm::translate** creates a translation matrix. 
+  **glm::translate** 创建翻译矩阵。
+- **glm::rotate** creates a rotation matrix, specified in either degrees or radians about a specific axis. 
+  **glm::rotate** 创建一个旋转矩阵，以围绕特定轴的度数或弧度指定。
+- **glm::scale** creates a scale matrix.
+  **glm::scale** 创建一个比例矩阵。
+
+![Figure 17.7](./Images/Figure 17.7.png)
+Figure 17.7. Images are described from left to right. The default local orientation of the dragon, lying on its side. After a –90 degree rotation about $\stackrel{\rightarrow}{X}$  , the dragon is upright but still centered about the origin. Finally, after applying a translation of 1.0 in $\stackrel{\rightarrow}{Y}$ , the dragon is ready for instancing.
+图 17.7。 图像是从左到右描述的。 龙的默认局部方向，侧卧。 绕 $\stackrel{\rightarrow}{X}$ 旋转 –90 度后，龙是直立的，但仍以原点为中心。 最后，在 $\stackrel{\rightarrow}{Y}$ 中应用 1.0 的翻译后，龙就准备好实例化了。
+
+We can apply these functions to create the model transforms and pass the model matrix to the shader using uniform variables. The Blinn-Phong vertex shader contains instructions that apply the local transform to the incoming vertex. The following code shows how the dragon model is rendered:
+我们可以应用这些函数来创建模型变换，并使用统一变量将模型矩阵传递给着色器。 Blinn-Phong 顶点着色器包含将局部变换应用于传入顶点的指令。 以下代码展示了龙模型的渲染方式：
+
+```glsl
+glUseProgram( BlinnPhongShaderID );
+// Describe the Local Transform Matrix
+glm::mat4 modelMatrix = glm::mat4(1.0); // Identity Matrix
+modelMatrix = glm::translate(modelMatrix, glm::vec3(0.0f, 1.0f, 0.0f));
+float rot = (-90.0f / 180.0f) * M_PI;
+modelMatrix = glm::rotate(modelMatrix, rot, glm::vec3(1, 0, 0));
+// Set the Normal Matrix
+glm::mat4 normalMatrix = glm::transpose( glm::inverse( viewMatrix * modelMatrix ) );
+// Pass the matrices to the GPU memory
+glUniformMatrix4fv(nMatID, 1, GL_FALSE, glm::value_ptr(normalMatrix));
+glUniformMatrix4fv(pMatID, 1, GL_FALSE, glm::value_ptr(projMatrix));
+glUniformMatrix4fv(vMatID, 1, GL_FALSE, glm::value_ptr(viewMatrix←));
+glUniformMatrix4fv(mMatID, 1, GL_FALSE, glm::value_ptr(modelMatrix));
+// Set material for this object
+glm::vec3 kd( 0.2, 0.2, 1.0 );
+glm::vec3 ka = kd * 0.15f;
+glm::vec3 ks( 1.0, 1.0, 1.0 );
+float phongExp = 32.0;
+glUniform3fv(kaID, 1, glm::value_ptr(ka));
+glUniform3fv(kdID, 1, glm::value_ptr(kd));
+glUniform3fv(ksID, 1, glm::value_ptr(ks));
+glUniform1f(phongExpID, phongExp);
+// Process the object and note that modelData.size() holds
+// the number of vertices, not the number of triangles!
+glBindVertexArray(VAO);
+glDrawArrays(GL_TRIANGLES, 0, modelData.size());
+glBindVertexArray(0);
+glUseProgram( 0 );  
+```
+
+### 17.14.1 Instancing Models  实例化模型
+
+Instancing with OpenGL is implemented differently than instancing with the ray tracer. With the ray tracer, rays are inversely transformed into the local space of the object using the model transform matrix. With OpenGL, instancing is performed by loading a single copy of the object as a vertex array object (with associated vertex buffer objects), and then reusing the geometry as needed. Like the ray tracer, only a single object is loaded into memory, but many may be rendered.
+使用 OpenGL 实例化的实现方式与使用光线追踪器实例化的方式不同。 使用光线追踪器，使用模型变换矩阵将光线逆变换到对象的局部空间。 对于 OpenGL，实例化是通过将对象的单个副本加载为顶点数组对象（带有关联的顶点缓冲区对象）来执行的，然后根据需要重用几何体。 与光线追踪器一样，只有一个对象被加载到内存中，但可以渲染许多对象。
+
+Modern OpenGL nicely supports this style of instancing because vertex shaders can (and must) compute the necessary transformations to transform vertices into clip coordinates. By writing generalized shaders that embed these transformations, such as presented with the Blinn-Phong vertex shader, models can be rerendered with the same underlying local geometry. Different material types and transforms can be queried from higher-level class structures to populate the uniform variables passed from host to device each frame. Animations and interactive control are also easily created as the model transforms can change over time across the the display loop iteration. Figures 17.8 and 17.9 use the memory footprint of one dragon, yet render three different dragon models to the screen.
+现代 OpenGL 很好地支持这种实例化风格，因为顶点着色器可以（并且必须）计算必要的转换以将顶点转换为剪辑坐标。 通过编写嵌入这些变换的通用着色器（例如 Blinn-Phong 顶点着色器），可以使用相同的底层局部几何体重新渲染模型。 可以从更高级别的类结构查询不同的材质类型和变换，以填充每帧从主机传递到设备的统一变量。 由于模型变换可以在显示循环迭代中随时间变化，因此也可以轻松创建动画和交互式控制。 图 17.8 和 17.9 使用一条龙的内存占用，但在屏幕上渲染了三种不同的龙模型。
+![Figure 17.8](./Images/Figure 17.8.png)
+Figure 17.8. The results of running the Blinn-Phong shader program on the three dragons using uniform variables to specify material properties and transformations.
+图 17.8。 使用统一变量指定材质属性和变换对三条龙运行 Blinn-Phong 着色器程序的结果。
+![Figure 17.9](./Images/Figure 17.9.png)
+Figure 17.9. Setting the uniform variable $k_s = (0, 0, 0)$ in the Blinn-Phong shader program produces Lambertian shading.
+图 17.9。 在 Blinn-Phong 着色器程序中设置统一变量 $k_s = (0, 0, 0)$ 会产生朗伯着色。
+
+## 17.15 Texture Objects 纹理对象
+
+Textures are an effective means to manipulate visual effects with OpenGL shaders. They are used extensively with many hardware-based graphics algorithms and OpenGL supports them natively with Texture objects. Like the previous OpenGL concepts, texture objects must be allocated and initialized by copying data on the host to the GPU memory and setting OpenGL state. Texture coordinates are often integrated into the vertex buffer objects and passed as vertex attributes to shader programs. Fragment shaders typically perform the texture lookup function using interpolated texture coordinate passed from the vertex shaders. 
+纹理是使用 OpenGL 着色器操纵视觉效果的有效方法。 它们广泛用于许多基于硬件的图形算法，并且 OpenGL 通过纹理对象原生支持它们。 与之前的 OpenGL 概念一样，必须通过将主机上的数据复制到 GPU 内存并设置 OpenGL 状态来分配和初始化纹理对象。 纹理坐标通常集成到顶点缓冲区对象中，并作为顶点属性传递给着色器程序。 片段着色器通常使用从顶点着色器传递的插值纹理坐标来执行纹理查找功能。
+
+Textures are rather simple to add to your code if you already have working shader and vertex array objects. The standard OpenGL techniques for creating objects on the hardware are used with textures. However, the source of the texture data must first be determined. Data can either be loaded from a file (e.g., PNG, JPG, EXR, or HDR image file formats) or generated procedurally on the host (and even on the GPU). After the data is loaded into host memory, the data is copied to GPU memory, and optionally, OpenGL state associated with textures can be set. OpenGL texture data is loaded as a linear buffer of memory containing the data used for textures. Texture lookups on the hardware can be 1D, 2D, or 3D queries. Regardless of the texture dimension query, the data is loaded onto the memory in the same way, using linearly allocated memory on the host. In the following example, the process of loading data from an image file (or generating it procedurally) is left to the reader, but variable names are provided that match what might be present if an image is loaded (e.g., imgData, imgWidth, imgHeight).
+如果您已经有可用的着色器和顶点数组对象，则将纹理添加到代码中相当简单。 用于在硬件上创建对象的标准 OpenGL 技术与纹理一起使用。 然而，必须首先确定纹理数据的来源。 数据可以从文件（例如 PNG、JPG、EXR 或 HDR 图像文件格式）加载，也可以在主机（甚至 GPU）上按程序生成。 将数据加载到主机内存后，将数据复制到 GPU 内存，并且可以选择设置与纹理关联的 OpenGL 状态。 OpenGL 纹理数据作为内存的线性缓冲区加载，其中包含用于纹理的数据。 硬件上的纹理查找可以是 1D、2D 或 3D 查询。 无论纹理维度查询如何，数据都会以相同的方式加载到内存中，即使用主机上线性分配的内存。 在以下示例中，从图像文件加载数据（或按程序生成数据）的过程留给读者，但提供了与加载图像时可能出现的内容相匹配的变量名称（例如，imgData、imgWidth、imgHeight） ）。
+
+```glsl
+float *imgData = new float[ imgHeight * imgWidth * 3 ];
+...
+GLuint texID;
+glGenTextures(1, &texID);
+glBindTexture(GL_TEXTURE_2D, texID);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0,
+GL_RGB, GL_FLOAT, imgData);
+glBindTexture(GL_TEXTURE_2D, 0);
+delete [] imgData;
+```
+
+The example presented here highlights how to set up and use basic 2D OpenGL textures with shader programs. The process for creating OpenGL objects should be familiar by now. A handle (or ID) must be generated on the device to refer to the texture object (e.g., in this case, texID). The id is then bound to allow any subsequent texture state operations to affect the state of the texture. A fairly extensive set of OpenGL texture state and parameters exist that affect texture coordinate interpretation and texture lookup filtering. Various texture targets exist with graphics hardware. In this case, the texture target is specified as GL TEXTURE 2D and will appear as the first argument in the texture-related functions. For OpenGL this particular texture target implies that texture coordinates will be specified in a device normalized manner (i.e., in the range of [0, 1]). Moreover, texture data must be allocated so that the width and height dimensions are powers of two (e.g., 512 × 512, 1024 × 512, etc.). Texture parameters are set for the currently bound texture by calling glTexParameter. This signature for this function takes on a variety of forms depending on the types of data being set. In this case, texture coordinates will be clamped by the hardware to the explicit range [0, 1]. The minifying and magnifying filters of OpenGL texture objects are set to use linear filtering (rather than nearest neighbor - GL NEAREST) automatically when performing texture lookups. Chapter 11 provides substantial details on texturing, including details about the filtering that can occur with texture lookups. Graphics hardware can perform many of these operations automatically by setting the associated texture state. 
+此处提供的示例重点介绍了如何通过着色器程序设置和使用基本 2D OpenGL 纹理。 创建 OpenGL 对象的过程现在应该很熟悉了。 必须在设备上生成一个句柄（或 ID）来引用纹理对象（例如，在本例中为 texID）。 然后绑定 id 以允许任何后续纹理状态操作影响纹理的状态。 存在一组相当广泛的 OpenGL 纹理状态和参数，它们会影响纹理坐标解释和纹理查找过滤。 图形硬件存在各种纹理目标。 在这种情况下，纹理目标被指定为 GL TEXTURE 2D，并将作为纹理相关函数中的第一个参数出现。 对于 OpenGL，这个特定的纹理目标意味着纹理坐标将以设备标准化方式指定（即在 [0, 1] 范围内）。 此外，必须分配纹理数据，使得宽度和高度尺寸为2的幂（例如，512×512、1024×512等）。 通过调用 glTexParameter 为当前绑定的纹理设置纹理参数。 该函数的签名根据所设置的数据类型而采用多种形式。 在这种情况下，纹理坐标将被硬件限制在显式范围 [0, 1] 内。 OpenGL 纹理对象的缩小和放大过滤器设置为在执行纹理查找时自动使用线性过滤（而不是最近邻 - GL NEAREST）。 第 11 章提供了有关纹理的大量详细信息，包括有关纹理查找时可能发生的过滤的详细信息。 图形硬件可以通过设置关联的纹理状态来自动执行许多这样的操作。
+
+Finally, the call to glTexImage2D performs the host to device copy for the texture. There are several arguments to this function, but the overall operation is to allocate space on the graphics card (e.g., imageWidth X imgHeight) of three floats (7th and 8th arguments: GL RGB and GL FLOAT) and copy the linear texture data to the hardware (e.g., imgData pointer). The remaining arguments deal with setting the mipmap level of detail (2nd argument), specifying the internal format (e.g., 3rd argument’s GL RGB) and whether the texture has a border or not (6th argument). When learning OpenGL textures it is safe to keep these as the defaults listed here. However, the reader is advised to learn more about mipmaps and the potential internal formats of textures as more advanced graphics processing is required. 
+最后，对 glTexImage2D 的调用执行纹理的主机到设备复制。 该函数有多个参数，但总体操作是在显卡上分配三个浮点数（第7个和第8个参数：GL RGB和GL FLOAT）的空间（例如，imageWidth X imgHeight），并将线性纹理数据复制到 硬件（例如，imgData 指针）。 其余参数处理设置 mipmap 细节级别（第二个参数）、指定内部格式（例如，第三个参数的 GL RGB）以及纹理是否有边框（第六个参数）。 学习 OpenGL 纹理时，将这些纹理保留为此处列出的默认值是安全的。 然而，建议读者更多地了解 mipmap 和纹理的潜在内部格式，因为需要更高级的图形处理。
+
+Texture object allocation and initialization happens with the code above. Additional modifications must be made to vertex buffers and vertex array objects to link in the correct texture coordinates with the geometric description. Following the previous examples, the storage for texture coordinates is a straightforward modification to the vertex data structure:
+纹理对象分配和初始化通过上面的代码进行。 必须对顶点缓冲区和顶点数组对象进行其他修改，以将正确的纹理坐标与几何描述链接起来。 按照前面的示例，纹理坐标的存储是对顶点数据结构的直接修改：
+
+```glsl
+struct vertexData
+{
+	glm::vec3 pos;
+	glm::vec3 normal;
+	glm::vec2 texCoord;
+};  
+```
+
+As a result, the vertex buffer object will increase in size and the interleaving of texture coordinates will require a change to the stride in the vertex attribute specification for the vertex array objects. Figure 17.10 illustrates the basic interleaving of data within the vertex buffer.
+因此，顶点缓冲区对象的大小将增加，并且纹理坐标的交错将需要更改顶点数组对象的顶点属性规范中的步幅。 图 17.10 说明了顶点缓冲区内数据的基本交错。
+![Figure 17.10](Images/Figure 17.10.png)
+Figure 17.10. Data layout after adding the texture coordinate to the vertex buffer. Each block represents a GLfloat, which is 4 bytes. The position is encoded as a white block, the normals as purple, and the texture coordinates as orange.
+图 17.10。 将纹理坐标添加到顶点缓冲区后的数据布局。 每个块代表一个GLfloat，即4个字节。 位置被编码为白色块，法线被编码为紫色，纹理坐标被编码为橙色。
+
+```glsl
+glBindBuffer(GL_ARRAY_BUFFER, m_triangleVBO[0]);
+glEnableVertexAttribArray(0);
+glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 0);
+glEnableVertexAttribArray(1);
+glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (const GLvoid *)12);
+glEnableVertexAttribArray(2);
+glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (const GLvoid *)24);
+glBindVertexArray(0);  
+```
+
+With the code snippet above, the texture coordinates are placed at vertex attribute location 2. Note the change in size of the texture coordinate’s size (e.g., 2nd argument of glVertexAttribPointer is 2 for texture coordinates to coincide with the vec2 type in the structure). At this point, all initialization will have been completed for the texture object. 
+在上面的代码片段中，纹理坐标放置在顶点属性位置 2 处。请注意纹理坐标大小的变化（例如，glVertexAttribPointer 的第二个参数是 2，以便纹理坐标与结构中的 vec2 类型一致）。 至此，纹理对象的所有初始化就已经完成。
+
+The texture object must be enabled (or bound) prior to rendering the vertex array object with your shaders. In general, graphics hardware allows the use of multiple texture objects when executing a shader program. In this way, shader programs can apply sophisticated texturing and visual effects. Thus, to bind a texture for use with a shader, it must be associated to one of potentially many texture units. Texture units represent the mechanism by which shaders can use multiple textures. In the sample below, only one texture is used so texture unit 0 will be made active and bound to our texture. 
+在使用着色器渲染顶点数组对象之前，必须启用（或绑定）纹理对象。 一般来说，图形硬件允许在执行着色器程序时使用多个纹理对象。 通过这种方式，着色器程序可以应用复杂的纹理和视觉效果。 因此，要绑定纹理以与着色器一起使用，它必须与潜在的许多纹理单元之一相关联。 纹理单元表示着色器可以使用多个纹理的机制。 在下面的示例中，仅使用了一个纹理，因此纹理单元 0 将被激活并绑定到我们的纹理。
+
+The function that activates a texture unit is glActiveTexture. Its only argument is the texture unit to make active. It is set to GL TEXTURE0 below, but it could be GL TEXTURE1 or GL TEXTURE2, for instance, if multiple textures were needed in the shader. Once a texture unit is made active, a texture object can be bound to it using the glBindTexture call.
+激活纹理单元的函数是glActiveTexture。 它唯一的参数是要激活的纹理单元。 下面将其设置为 GL TEXTURE0，但例如，如果着色器中需要多个纹理，则它可以是 GL TEXTURE1 或 GL TEXTURE2。 一旦纹理单元被激活，就可以使用 glBindTexture 调用将纹理对象绑定到它。
+
+```glsl
+glUseProgram(shaderID);
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(GL_TEXTURE_2D, texID);
+glUniform1i(texUnitID, 0);
+glBindVertexArray(VAO);
+glDrawArrays(GL_TRIANGLES, 0, 3);
+glBindVertexArray(0);
+glBindTexture(GL_TEXTURE_2D, 0);
+glUseProgram(0);  
+```
+
+Most of the code above should be logical extensions to what you’ve developed thus far. Note the call to glUniform prior to rendering the vertex array object. In modern graphics hardware programming, shaders perform the work of texture lookups and blending, and therefore, must have data about which texture units hold the textures used in the shader. The active texture units are supplied to shaders using uniform variables. In this case, 0 is set to indicate that the texture lookups will come from texture unit 0. This will be expanded upon in the following section.
+上面的大部分代码应该是您迄今为止开发的代码的逻辑扩展。 请注意在渲染顶点数组对象之前对 glUniform 的调用。 在现代图形硬件编程中，着色器执行纹理查找和混合的工作，因此必须具有有关哪些纹理单元保存着色器中使用的纹理的数据。 使用统一变量将活动纹理单元提供给着色器。 在本例中，设置 0 表示纹理查找将来自纹理单元 0。这将在下一节中进行扩展。
+
+### 17.15.1 Texture Lookup in Shaders  着色器中的纹理查找
+
+Shader programs perform the lookup and any blending that may be required. The bulk of that computation typically goes into the fragment shader, but the vertex shader often stages the fragment computation by passing the texture coordinate out to the fragment shader. In this way, the texture coordinates will be interpolated and afford per-fragment lookup of texture data. 
+着色器程序执行查找和可能需要的任何混合。 该计算的大部分通常进入片段着色器，但顶点着色器通常通过将纹理坐标传递给片段着色器来分阶段进行片段计算。 通过这种方式，纹理坐标将被插值并提供纹理数据的每个片段查找。
+
+Simple changes are required to use texture data in shader programs. Using the Blinn-Phong vertex shader provided previously, only three changes are needed: 
+在着色器程序中使用纹理数据需要进行简单的更改。 使用之前提供的Blinn-Phong顶点着色器，只需要进行三处更改：
+
+1. The texture coordinates are a per-vertex attribute stored within the vertex array object. They are associated with vertex attribute index 2 (or location 2). 
+   纹理坐标是存储在顶点数组对象中的每顶点属性。 它们与顶点属性索引 2（或位置 2）相关联。
+
+   ```glsl
+   layout(location=2) in vec2 in_TexCoord; 
+   ```
+
+2. The fragment shader will perform the texture lookup and will need an interpolated texture coordinate. This variable will be added as an output variable that gets passed to the fragment shader. 
+   片段着色器将执行纹理查找，并且需要插值纹理坐标。 该变量将作为输出变量添加到片段着色器。
+
+   ```glsl
+   out vec2 tCoord; 
+   ```
+
+3. Copy the the incoming vertex attribute to the output variable in the main function. 
+   将传入的顶点属性复制到主函数中的输出变量中。
+
+   ```glsl
+   // Pass the texture coordinate to the fragment shader 
+   tCoord = in_TexCoord; 
+   ```
+
+The fragment shader also requires simple changes. First, the incoming interpolated texture coordinates passed from the vertex shader must be declared. Also recall that a uniform variable should store the texture unit to which the texture is bound. This must be communicated to the shader as a sampler type. Samplers are a shading language type that allows the lookup of data from a single texture object. In this example, only one sampler is required, but in shaders in which multiple texture lookups are used, multiple sampler variables will be used. There are also multiple sampler types depending upon the type of texture object. In the example presented here, a GL TEXTURE 2D type was used to create the texture state. The associated sampler within the fragment shader is of type sampler2D. The following two variable declarations must be added to the fragment shader: 
+片段着色器也需要简单的更改。 首先，必须声明从顶点着色器传递的传入插值纹理坐标。 另请记住，统一变量应存储纹理所绑定到的纹理单元。 这必须作为采样器类型传递给着色器。 采样器是一种着色语言类型，允许从单个纹理对象查找数据。 在此示例中，仅需要一个采样器，但在使用多个纹理查找的着色器中，将使用多个采样器变量。 根据纹理对象的类型，还有多种采样器类型。 在此提供的示例中，使用 GL TEXTURE 2D 类型来创建纹理状态。 片段着色器中关联的采样器的类型为sampler2D。 必须将以下两个变量声明添加到片段着色器中：
+
+```glsl
+in vec2 tCoord; 
+uniform sampler2D textureUnit;
+```
+
+The final modification goes into the main function of the fragment shader code. The texture is sampled using the GLSL texture lookup function and (in this case), replaces the diffuse coefficient of the geometry. The first argument to texture takes the sampler type which holds the texture unit to which the texture is bound. The second argument is the texture coordinate. The function returns a vec4 type. In the code snippet below, no alpha values are utilized in the final computation so the resulting texture lookup value is component-wise selected to only the RGB components. The diffuse coefficient from the texture lookup is set to a vec3 type that is used in the illumination equation.
+最后的修改进入片段着色器代码的主函数。 使用 GLSL 纹理查找函数对纹理进行采样，并（在本例中）替换几何体的漫反射系数。 纹理的第一个参数采用采样器类型，该类型保存纹理所绑定到的纹理单元。 第二个参数是纹理坐标。 该函数返回 vec4 类型。 在下面的代码片段中，最终计算中没有使用 alpha 值，因此生成的纹理查找值仅按组件选择 RGB 组件。 纹理查找中的漫反射系数设置为照明方程中使用的 vec3 类型。
+
+```glsl
+vec3 kdTexel = texture(textureUnit, tCoord).rgb;
+vec3 intensity = ka * Ia + kdTexel * light.intensity
+	* max( 0.0, dot(n, l) ) + ks * light.intensity
+	* pow( max( 0.0, dot(n, h) ), phongExp );  
+```
+
+Figure 17.11 illustrates the results of using these shader modifications. The right-most image in the figure extends the example code by enabling texture tiling with the OpenGL state. Note that these changes are only done in host code and the shaders do not change. To enable this tiling, which allows for texture coordinates outside of the device normalized ranges, the texture parameters for GL TEXTURE WRAP S and GL TEXTURE WRAP T are changed from GL CLAMP to GL REPEAT. Additionally, the host code that sets the texture coordinates now ranges from [0, 5]. 
+图 17.11 说明了使用这些着色器修改的结果。 图中最右边的图像通过启用 OpenGL 状态的纹理平铺来扩展示例代码。 请注意，这些更改仅在主机代码中完成，着色器不会更改。 为了启用此平铺（允许纹理坐标超出设备标准化范围），GL TEXTURE WRAP S 和 GL TEXTURE WRAP T 的纹理参数从 GL CLAMP 更改为 GL REPEAT。 此外，设置纹理坐标的主机代码现在的范围是 [0, 5]。
+![Figure 17.11](Images/Figure 17.11.png)
+Figure 17.11. The left-most image shows the texture, a 1024 × 1024 pixel image. The middle image shows the scene with the texture applied using texture coordinates in the range of [0, 1] so that only one image is tiled onto the ground plane. The right-most image modifies the texture parameters so that GL REPEAT is used for GL TEXTURE WRAP S and GL TEXTURE WRAP T and the texture coordinate range from [0, 5]. The result is a tiled texture repeat five times in both texture dimensions.
+图 17.11。 最左边的图像显示纹理，这是一张 1024 × 1024 像素的图像。 中间的图像显示了使用 [0, 1] 范围内的纹理坐标应用纹理的场景，以便只有一张图像平铺到地平面上。 最右边的图像修改纹理参数，以便 GL REPEAT 用于 GL TEXTURE WRAP S 和 GL TEXTURE WRAP T 以及纹理坐标范围从 [0, 5]。 结果是平铺纹理在两个纹理维度上重复五次。
+
+As a side note, another texture target that may be useful for various applications is the GL TEXTURE RECTANGLE. Texture rectangle are unique texture objects that are not constrained with the power-of-two width and height image requirements and use non-normalized texture coordinates. Furthermore, they do not allow repeated tiling. If texture rectangles are used, shaders must reference them using the special sampler type: sampler2DRect. 
+顺便说一句，另一个可能对各种应用有用的纹理目标是 GL 纹理矩形。 纹理矩形是独特的纹理对象，不受二次方宽度和高度图像要求的约束，并使用非标准化纹理坐标。 此外，它们不允许重复平铺。 如果使用纹理矩形，着色器必须使用特殊的采样器类型来引用它们：sampler2DRect。
+
+## 17.16 Object-Oriented Design for Graphics Hardware Programming 图形硬件编程的面向对象设计
+
+As your familiarity with OpenGL increases, it becomes wise to encapsulate most of what is described in this chapter into class structures that can contain the model specific data and afford rendering of a variety of objects within the scene. For instance, in Figure 17.12, a single sphere is instanced six times to create the three ellipsoids and three spheres. Each model uses the same underlying geometry yet has different material properties and model transforms. If you’ve followed through the book and implemented the ray tracer, as detailed in Chapter 4, then it is likely that your implementation is based on a solid object-oriented design. That design can be leveraged to make developing a graphics hardware program with OpenGL easier. A typical ray tracer software architecture will include several classes that map directly into graphics hardware as well as software rasterization applications. The abstract base classes in the ray tracer that represent surfaces, materials, lights, shaders, and cameras can be adapted to initialize the graphics hardware state, update that state, and if necessary render the class data to the framebuffer. The interfaces to these virtual functions will likely need to be adapted to your specific implementation, but a first pass that extends the surface class design might resemble the following: 
+随着您对 OpenGL 的熟悉程度的增加，将本章中描述的大部分内容封装到类结构中就变得明智了，这些结构可以包含模型特定的数据并提供场景中各种对象的渲染。 例如，在图 17.12 中，单个球体被实例化六次以创建三个椭球体和三个球体。 每个模型都使用相同的基础几何体，但具有不同的材料属性和模型变换。 如果您已经阅读了本书并实现了光线追踪器（如第 4 章中详细介绍的那样），那么您的实现很可能基于可靠的面向对象设计。 利用该设计可以更轻松地使用 OpenGL 开发图形硬件程序。 典型的光线追踪器软件架构将包括几个直接映射到图形硬件以及软件光栅化应用程序的类。 光线追踪器中表示表面、材质、灯光、着色器和相机的抽象基类可用于初始化图形硬件状态、更新该状态，并在必要时将类数据渲染到帧缓冲区。 这些虚拟函数的接口可能需要适应您的特定实现，但扩展表面类设计的第一遍可能类似于以下内容：
+
+```glsl
+class surface
+virtual bool initializeOpenGL( )
+virtual bool renderOpenGL( glm::mat4& Mp, glm::mat4& Mcam) 
+```
+
+![Figure 17.12](Images/Figure 17.12.png)
+Figure 17.12. On the left, a single tessellated sphere is instanced six times using different model transforms to create this scene using the per-fragment shader program. The image on the right is rendered using a basic Whitted ray tracer. Notice the effect that shadows have on the perception of the scene. Per-fragment shading allows the specular highlight to be similar in both rendering styles.
+图 17.12。 在左侧，使用不同的模型变换将单个细分球体实例化六次，以使用每片段着色器程序创建此场景。 右侧图像是使用基本 Whitted 光线追踪器渲染的。 注意阴影对场景感知的影响。 每片段着色允许镜面高光在两种渲染风格中相似。
+
+Passing the projection and view matrices to the render functions affords an indirection for how these matrices are managed. These matrices would come from the camera classes which may be manipulated by interpreting keyboard, mouse, or joystick input. The initialization functions (at least for the surface derivatives) would contain the vertex buffer object and vertex array object allocation and initialization code. Aside from initiating the draw arrays for any vertex array objects, the render function would also need to activate shader programs and pass in the necessary matrices into the shaders, as illustrated previously in the dragon model example. As you work to integrate the image-order and object-order (hardware and software) algorithms into the same underlying data framework, a few software design challenges will pop up, mostly related to data access and organization. However, this is a highly useful exercise to become adept at software engineering for graphics programming and eventually gain solid experience hybridizing your rendering algorithms. 
+将投影和视图矩阵传递给渲染函数可以间接了解如何管理这些矩阵。 这些矩阵来自相机类，可以通过解释键盘、鼠标或操纵杆输入来操作它们。 初始化函数（至少对于表面导数）将包含顶点缓冲区对象和顶点数组对象分配和初始化代码。 除了启动任何顶点数组对象的绘制数组之外，渲染函数还需要激活着色器程序并将必要的矩阵传递到着色器中，如前面的龙模型示例中所示。 当您致力于将图像顺序和对象顺序（硬件和软件）算法集成到同一底层数据框架中时，将会出现一些软件设计挑战，主要与数据访问和组织有关。 然而，这是一个非常有用的练习，可以熟练掌握图形编程的软件工程，并最终获得混合渲染算法的扎实经验。
+
+## 17.17 Continued Learning  继续学习
+
+This chapter was designed to provide an introductory glimpse into graphics hardware programming, influenced by the OpenGL API. There are many directions that your continued learning could go. Many topics, such as framebuffer objects, render to texture, environment mapping, geometry shaders, compute shaders, and advanced illumination shaders were not covered. These areas represent the next stages in learning about graphics hardware, but even within the areas covered, there are many directions that one could go to develop stronger graphics hardware understanding. Graphics hardware programming will continue to evolve and change. Interested readers should expect these changes and look to the specification documents for OpenGL and the OpenGL Shading Language for many more details about what OpenGL is capable of doing and how the hardware relates to those computations.
+本章旨在介绍受 OpenGL API 影响的图形硬件编程。 您继续学习的方向有很多。 许多主题（例如帧缓冲区对象、渲染到纹理、环境映射、几何着色器、计算着色器和高级照明着色器）均未涵盖。 这些领域代表了学习图形硬件的下一阶段，但即使在所涵盖的领域内，人们也可以通过许多方向来加深对图形硬件的理解。 图形硬件编程将继续发展和变化。 感兴趣的读者应该期待这些变化，并查看 OpenGL 和 OpenGL 着色语言的规范文档，以获取有关 OpenGL 功能以及硬件如何与这些计算相关的更多详细信息。
+
+## Frequently Asked Questions 经常问的问题
+
+### How do I debug shader programs?  如何调试着色器程序？
+
+On most platforms, debugging both vertex shaders and fragment shaders is not simple. However, more and more support is available through various drivers, operating system extensions, and IDEs to provide pertinent information to the developer. It still can be challenging, so use the shaders to visually debug your code. If nothing comes up on the screen, try rendering the normal vectors, the half vector, or anything that give you a sense for where the error might be (or not be). Figure 17.13 illustrates a normal shader in operation. If images do appear on your window, make sure they are what you expect (refer to Figure 17.14)!
+在大多数平台上，调试顶点着色器和片段着色器并不简单。 然而，越来越多的支持可以通过各种驱动程序、操作系统扩展和 IDE 来为开发人员提供相关信息。 它仍然具有挑战性，因此请使用着色器以可视方式调试您的代码。 如果屏幕上没有显示任何内容，请尝试渲染法线向量、半向量或任何可以让您了解错误可能出现（或不出现）的位置的内容。 图 17.13 展示了正常运行的着色器。 如果图像确实出现在您的窗口中，请确保它们符合您的预期（请参阅图 17.14）！
+![Figure 17.13](Images/Figure 17.13.png)
+Figure 17.13. Applying the normal shader to a complex model for debugging purposes.
+图 17.13。 将普通着色器应用于复杂模型以进行调试。
+![Figure 17.14](Images/Figure 17.14.png)
+Figure 17.14. Visual debugging is important! Can you figure out what is wrong from the image or where to start debugging? When the incorrect stride is applied to the vertex array object, rendering goes awry.
+图 17.14。 可视化调试很重要！ 您能从图像中找出问题所在或从哪里开始调试吗？ 当错误的步幅应用于顶点数组对象时，渲染就会出错。
+
+## Notes  注释
+
+There are many good resources available to learn more about the technical details involved with programming graphics hardware. A good starting point might be the OpenGL and GLSL specification documents. They are available for free online at the opengl.org website. These documents will provide complete details for all the different and emerging versions of OpenGL.
+有许多很好的资源可用于了解有关图形硬件编程所涉及的技术细节的更多信息。 OpenGL 和 GLSL 规范文档可能是一个很好的起点。 它们可以在 opengl.org 网站上免费在线获取。 这些文档将为所有不同的和新兴的 OpenGL 版本提供完整的详细信息。
+
+## Exercises 练习
+
+The sections of this chapter are roughly organized to step students through the process of creating a modern OpenGL application. Some extra effort will be required to understand the details relating to setting up windows and OpenGL contexts. However, it should be possible to following the sections for a set of weekly one hour labs: 
+本章的各个部分大致是为了引导学生完成创建现代 OpenGL 应用程序的过程。 需要付出一些额外的努力来理解与设置窗口和 OpenGL 上下文相关的细节。 但是，应该可以按照以下部分进行一组每周一小时的实验：
+
+1. Lab 1: Basic code setup for OpenGL applications. This includes installing the necessary drivers and related software such as GLM and GLFW. Students can then write code to open a window and clear the color buffers.
+   实验 1：OpenGL 应用程序的基本代码设置。 这包括安装必要的驱动程序和相关软件，例如 GLM 和 GLFW。 然后，学生可以编写代码来打开窗口并清除颜色缓冲区。
+2. Lab 2: Creating a shader. Since a rudimentary shader is necessary to visualize the output in modern OpenGL, starting with efforts to create a very basic shader will go a long way. In this lab, or labs, students could build (or use provided) classes to load, compile, and link shaders into shader programs.
+   实验 2：创建着色器。 由于在现代 OpenGL 中可视化输出需要一个基本的着色器，因此从创建一个非常基本的着色器开始将大有帮助。 在这个或多个实验室中，学生可以构建（或使用提供的）类来加载、编译着色器并将其链接到着色器程序中。
+3. Lab 3: Create a clip coordinate triangle and shade. Using the shader classes from the previous lab, students will add the passthrough shader and create simple geometry to render.
+   实验 3：创建剪辑坐标三角形和阴影。 使用上一个实验中的着色器类，学生将添加直通着色器并创建简单的几何体进行渲染。
+4. Lab 4: Introduce GLM. Start using GLM to generate projection matrices and viewing matrices for viewing more generalized, yet simple, scenes. 
+   实验 4：介绍 GLM。 开始使用 GLM 生成投影矩阵和查看矩阵，以查看更通用但简单的场景。
+5. Lab 5: Use GLM for local transformations. Students can expand their working shader program to use local transforms, perhaps applying animations based on changing transforms. 
+   实验 5：使用 GLM 进行局部转换。 学生可以扩展他们的工作着色器程序以使用局部变换，也许可以根据变化的变换应用动画。
+6. Lab 6: Shader development. Develop the Lambertian or Blinn-Phong shaders. 
+   实验室 6：着色器开发。 开发 Lambertian 或 Blinn-Phong 着色器。
+7. Lab 7: Work with materials. Students can explore additional material properties and rendering styles with different shader programs. 
+   实验室 7：使用材料。 学生可以使用不同的着色器程序探索其他材质属性和渲染样式。
+8. Lab 8: Load 3D models. Using code to load OBJ files, students can further explore the capabilities of their graphics hardware including the limits of hardware processing for real-time applications. 
+   实验 8：加载 3D 模型。 使用代码加载 OBJ 文件，学生可以进一步探索其图形硬件的功能，包括实时应用程序的硬件处理限制。
+9. Lab 9: Textures. Using PNG (or other formats), students can load images onto the hardware and practice a variety of texture-mapping strategies. 
+   实验 9：纹理。 使用 PNG（或其他格式），学生可以将图像加载到硬件上并练习各种纹理映射策略。
+10. Lab 10: Integration with rendering code. If scene files are used to describe scenes for the ray tracer (or rasterizer), students’ OpenGL code can be integrated into a complete rendering framework using common structures and classes to build a complete system. 
+    实验 10：与渲染代码集成。 如果场景文件用于描述光线追踪器（或光栅器）的场景，则学生的 OpenGL 代码可以使用通用结构和类集成到完整的渲染框架中，以构建完整的系统。
+
+This list is only a guide. In labs for my computer graphics course, students are provided material to get them started on the week’s idea. After they get the basic idea working, the lab is completed once they add their spin or a creative exploration of the idea to their code. As students get familiar with graphics hardware programming, they can explore additional areas of interest, such as textures, render to texture, or more advanced shaders and graphics algorithms.
+此列表仅供参考。 在我的计算机图形学课程的实验室中，为学生提供了材料来帮助他们开始本周的想法。 在他们获得基本想法后，一旦他们将自己的想法或对该想法的创造性探索添加到代码中，实验室就完成了。 随着学生熟悉图形硬件编程，他们可以探索其他感兴趣的领域，例如纹理、渲染到纹理或更高级的着色器和图形算法。
+
+
+
+# 18  Light  光
+
+In this chapter, we discuss the practical issues of measuring light, usually called radiometry. The terms that arise in radiometry may at first seem strange and have terminology and notation that may be hard to keep straight. However, because radiometry is so fundamental to computer graphics, it is worth studying radiometry until it sinks in. This chapter also covers photometry, which takes radiometric quantities and scales them to estimate how much “useful” light is present. For example, a green light may seem twice as bright as a blue light of the same power because the eye is more sensitive to green light. Photometry attempts to quantify such distinctions. 
+在本章中，我们讨论测量光的实际问题，通常称为辐射测量。 辐射测量中出现的术语乍一看可能很奇怪，并且术语和符号可能很难理解。 然而，由于辐射测量对于计算机图形学来说是如此基础，因此值得研究辐射测量直到它被理解。本章还介绍了光度测量，它采用辐射测量量并对其进行缩放以估计存在多少“有用”光。 例如，绿光看起来可能是相同功率的蓝光的两倍，因为眼睛对绿光更敏感。 光度测定试图量化这种区别。
+
+## 18.1 Radiometry  辐射测量
+
+Although we can define radiometric units in many systems, we use SI (International System of Units) units. Familiar SI units include the metric units of meter (m) and gram (g). Light is fundamentally a propagating form of energy, so it is useful to define the SI unit of energy, which is the joule (J). 
+尽管我们可以在许多系统中定义辐射单位，但我们使用 SI（国际单位制）单位。 熟悉的 SI 单位包括公制单位米 (m) 和克 (g)。 光从根本上来说是一种能量的传播形式，因此定义能量的 SI 单位（焦耳 (J)）非常有用。
+
+### 18.1.1 Photons  光子
+
+To aid our intuition, we will describe radiometry in terms of collections of large numbers of photons, and this section establishes what is meant by a photon in this context. For the purposes of this chapter, a photon is a quantum of light that has a position, direction of propagation, and a wavelength $λ$. Somewhat strangely, the SI unit used for wavelength is nanometer (nm). This is mainly for historical reasons, and $1 nm = 10^{−9} m$. Another unit, the angstrom, is sometimes used, and one nanometer is ten angstroms. A photon also has a speed c that depends only on the refractive index n of the medium through which it propagates. Sometimes the frequency $f = c/λ$ is also used for light. This is convenient because unlike λ and c, f does not change when the photon refracts into a medium with a new refractive index. Another invariant measure is the amount of energy q carried by a photon, which is given by the following relationship:
+为了帮助我们的直觉，我们将用大量光子的集合来描述辐射测量，本节将确定光子在这种情况下的含义。 就本章而言，光子是具有位置、传播方向和波长 $λ$ 的光量子。 有点奇怪的是，用于波长的 SI 单位是纳米 (nm)。 这主要是历史原因，$1 nm = 10^{−9} m$。 有时使用另一个单位埃，一纳米等于十埃。 光子的速度 c 只取决于光子传播介质的折射率 n。 有时，频率 $f = c/λ$ 也用于光。 这很方便，因为与 λ 和 c 不同，当光子折射到具有新折射率的介质中时，f 不会改变。 另一个不变的度量是光子携带的能量 q，其由以下关系给出：
+$$
+q=hf=\frac{hc}{λ} \ \ \ \ (18.1)
+$$
+where $h = 6.63 × 10^{−34}$ J s is Plank’s Constant. Although these quantities can be measured in any unit system, we will use SI units whenever possible. 
+其中 $h = 6.63 × 10^{−34}$ J s 是普朗克常数。 尽管这些量可以用任何单位制来测量，但我们将尽可能使用 SI 单位。
+
+### 18.1.2 Spectral Energy  光谱能量
+
+If we have a large collection of photons, their total energy Q can be computed by summing the energy qi of each photon. A reasonable question to ask is “How is the energy distributed across wavelengths?” An easy way to answer this is to partition the photons into bins, essentially histogramming them. We then have an energy associated with an interval. For example, we can count all the energy between λ = 500 nm and λ = 600 nm and have it turn out to be 10.2 J, and this might be denoted q[500, 600] = 10.2. If we divided the wavelength interval into two 50 nm intervals, we might find that q[500, 550] = 5.2 and q[550, 600] = 5.0. This tells us there was a little more energy in the short wavelength half of the interval [500, 600]. If we divide into 25 nm bins, we might find q[500, 525] = 2.5, and so on. The nice thing about the system is that it is straightforward. The bad thing about it is that the choice of the interval size determines the number. 
+如果我们有大量光子，它们的总能量 Q 可以通过对每个光子的能量 qi 求和来计算。 一个合理的问题是“能量如何在波长上分布？” 回答这个问题的一个简单方法是将光子划分到箱中，本质上是对它们进行直方图绘制。 然后我们就有了与间隔相关的能量。 例如，我们可以计算 λ = 500 nm 和 λ = 600 nm 之间的所有能量，结果为 10.2 J，这可以表示为 q[500, 600] = 10.2。 如果我们将波长间隔分成两个 50 nm 的间隔，我们可能会发现 q[500, 550] = 5.2 和 q[550, 600] = 5.0。 这告诉我们在间隔 [500, 600] 的短波长一半中有更多的能量。 如果我们划分为 25 nm 的 bin，我们可能会发现 q[500, 525] = 2.5，依此类推。 该系统的优点在于它很简单。 其不好之处在于间隔大小的选择决定了数量。
+
+A more commonly used system is to divide the energy by the size of the interval. So instead of q[500, 600] = 10.2 we would have
+更常用的系统是将能量除以间隔的大小。 因此，我们将不用 q[500, 600] = 10.2
+$Q_λ[500, 600] = \frac{10.2}{100} = 0.12 J(nm)^{-1} $
+
+This approach is nice, because the size of the interval has much less impact on the overall size of the numbers. An immediate idea would be to drive the interval size Δλ to zero. This could be awkward, because for a sufficiently small Δλ, $Q_λ$ will either be zero or huge depending on whether there is a single photon or no photon in the interval. There are two schools of thought to solve that dilemma. The first is to assume that Δλ is small, but not so small that the quantum nature of light comes into play. The second is to assume that the light is a continuum rather than individual photons, so a true derivative $dQ/dλ$ is appropriate. Both ways of thinking about it are appropriate and lead to the same computational machinery. In practice, it seems that most people who measure light prefer small, but finite, intervals, because that is what they can measure in the lab. Most people who do theory or computation prefer infinitesimal intervals, because that makes the machinery of calculus available. 
+这种方法很好，因为间隔的大小对数字整体大小的影响要小得多。 一个直接的想法是将间隔大小 Δλ 驱动至零。 这可能会很尴尬，因为对于足够小的 Δλ，$Q_λ$ 将为零或很大，具体取决于间隔中是否有单个光子或没有光子。 有两种思想流派可以解决这个困境。 首先是假设 Δλ 很小，但不会小到光的量子性质发挥作用。 第二个是假设光是连续谱而不是单个光子，因此真正的导数 $dQ/dλ$ 是合适的。 两种思考方式都是合适的，并且会产生相同的计算机制。 在实践中，大多数测量光的人似乎更喜欢小但有限的间隔，因为这是他们可以在实验室中测量的。 大多数从事理论或计算的人更喜欢无穷小的区间，因为这使得微积分的机制变得可用。
+
+The quantity $Q_λ$ is called spectral energy, and it is an intensive quantity as opposed to an extensive quantity such as energy, length, or mass. Intensive quantities can be thought of as density functions that tell the density of an extensive quantity at an infinitesimal point. For example, the energy Q at a specific wavelength is probably zero, but the spectral energy (energy density) $Q_λ$ is a meaningful quantity. A probably more familiar example is that the population of a country may be 25 million, but the population at a point in that country is meaningless. However, the population density measured in people per square meter is meaningful, provided it is measured over large enough areas. Much like with photons, population density works best if we pretend that we can view population as a continuum where population density never becomes granular even when the area is small. 
+量 $Q_λ$ 称为谱能量，它是一个强度量，而不是能量、长度或质量等广延量。 密集量可以被认为是密度函数，它告诉无限小点处的广延量的密度。 例如，特定波长处的能量 Q 可能为零，但光谱能量（能量密度）$Q_λ$ 是一个有意义的量。 一个可能更熟悉的例子是，一个国家的人口可能有2500万，但那个国家某一点的人口是没有意义的。 然而，只要在足够大的区域内进行测量，以每平方米的人数来衡量的人口密度是有意义的。 就像光子一样，如果我们假设我们可以将人口视为一个连续体，即使面积很小，人口密度也永远不会变得颗粒状，那么人口密度效果最好。
+
+We will follow the convention of graphics where spectral energy is almost always used, and energy is rarely used. This results in a proliferation of λ subscripts if “proper” notation is used. Instead, we will drop the subscript and use Q to denote spectral energy. This can result in some confusion when people outside of graphics read graphics papers, so be aware of this standards issue. Your intuition about spectral energy might be aided by imagining a measurement device with a sensor that measures light energy Δq. If you place a colored filter in front of the sensor that allows only light in the interval $[λ − Δλ/2, λ + Δλ/2]$, then the spectral energy at λ is $Q = Δq/Δλ$. 
+我们将遵循图形惯例，其中几乎总是使用光谱能量，而很少使用能量。 如果使用“正确”的符号，这会导致 λ 下标的激增。 相反，我们将去掉下标并使用 Q 来表示光谱能量。 当图形之外的人阅读图形纸时，这可能会导致一些混乱，因此请注意这个标准问题。 想象一个带有测量光能 Δq 的传感器的测量设备可能会有助于您对光谱能量的直觉。 如果您在传感器前面放置一个彩色滤光片，仅允许 $[λ − Δλ/2, λ + Δλ/2]$ 区间内的光进入，则 λ 处的光谱能量为 $Q = Δq/Δλ$。
+
+### 18.1.3 Power  电源
+
+It is useful to estimate a rate of energy production for light sources. This rate is called power, and it is measured in watts, W , which is another name for joules per second. This is easiest to understand in a steady state, but because power is an intensive quantity (a density over time), it is well defined even when energy production is varying over time. The units of power may be more familiar, e.g., a 100-watt light bulb. Such bulbs draw approximately 100 J of energy each second. The power of the light produced will actually be less than 100 W because of heat loss, etc., but we can still use this example to help understand more about photons. For example, we can get a feel for how many photons are produced in a second by a 100 W light. Suppose the average photon produced has the energy of a λ = 500 nm photon. The frequency of such a photon is
+估计光源的能量产生率很有用。 该速率称为功率，以瓦特 (W) 为单位进行测量，W 是每秒焦耳的另一个名称。 这在稳定状态下最容易理解，但由于功率是一个密集量（随时间变化的密度），因此即使能源产量随时间变化，它也能得到很好的定义。 功率单位可能更为熟悉，例如 100 瓦灯泡。 这种灯泡每秒消耗大约 100 J 的能量。 由于热损失等原因，产生的光的功率实际上会低于 100W，但我们仍然可以使用这个例子来帮助更多地了解光子。 例如，我们可以了解 100 W 的光在一秒钟内产生了多少个光子。 假设产生的平均光子的能量为 λ = 500 nm 光子。 这种光子的频率是
+$$
+f = \frac{c}{λ} = \frac{3 × 10^8 ms^{−1}}{500 × 10^{−9} m} = 6 × 10^{14} s^{−1}
+$$
+The energy of that photon is $hf ≈ 4 × 10^{−19} J$. That means a staggering $10^{20}$ photons are produced each second, even if the bulb is not very efficient. This explains why simulating a camera with a fast shutter speed and directly simulated photons is an inefficient choice for producing images. 
+该光子的能量为 $hf ≈ 4 × 10^{−19} J$。 这意味着即使灯泡的效率不是很高，每秒也会产生惊人的 $10^{20}$ 光子。 这解释了为什么模拟具有快速快门速度和直接模拟光子的相机对于生成图像来说是低效的选择。
+
+As with energy, we are really interested in spectral power measured in $W(nm)^{−1}$. Again, although the formal standard symbol for spectral power is $Φ_λ$, we will use $Φ$ with no subscript for convenience and consistency with most of the graphics literature. One thing to note is that the spectral power for a light source is usually a smaller number than the power. For example, if a light emits a power of 100 W evenly distributed over wavelengths 400 nm to 800 nm, then the spectral power will be $100 W/400 nm = 0.25 W(nm)^{−1}$. This is something to keep in mind if you set the spectral power of light sources by hand for debugging purposes. 
+与能量一样，我们真正感兴趣的是以 $W(nm)^{−1}$ 为单位测量的光谱功率。 同样，虽然光谱功率的正式标准符号是 $Φ_λ$，但为了方便和与大多数图形文献保持一致，我们将使用不带下标的 $Φ$。 需要注意的一件事是，光源的光谱功率通常比功率更小。 例如，如果光发出 100 W 的功率，均匀分布在 400 nm 至 800 nm 的波长上，则光谱功率将为 $100 W/400 nm = 0.25 W(nm)^{−1}$。 如果您出于调试目的手动设置光源的光谱功率，则需要记住这一点。
+
+The measurement device for spectral energy in the last section could be modified by taking a reading with a shutter that is open for a time interval Δt centered at time t. The spectral power would then be $Φ = Δq/(ΔtΔλ)$.
+最后一节中的光谱能量测量装置可以通过使用以时间 t 为中心打开时间间隔 Δt 的快门读取读数来修改。 光谱功率将为 $Φ = Δq/(ΔtΔλ)$。
+
+### 18.1.4 Irradiance 辐照度
+
+The quantity irradiance arises naturally if you ask the question “How much light hits this point?” Of course the answer is “none,” and again we must use a density function. If the point is on a surface, it is natural to use area to define our density function. We modify the device from the last section to have a finite $ΔA$ area sensor that is smaller than the light field being measured. The spectral irradiance H is just the power per unit area $ΔΦ/ΔA$. Fully expanded this is
+如果你问“有多少光照射到这一点？”这个问题，数量辐照度自然会出现。 当然，答案是“无”，我们必须再次使用密度函数。 如果该点位于曲面上，则很自然地使用面积来定义我们的密度函数。 我们修改了上一节的设备，使其具有比被测量的光场更小的有限 $ΔA$ 面积传感器。 光谱辐照度H就是单位面积的功率$ΔΦ/ΔA$。 完全展开后是这样的
+$$
+H = \frac{Δq}{ΔA ΔtΔλ} \ \ \ \ (18.2)
+$$
+Thus, the full units of irradiance are $Jm^{−2}s^{−1}(nm)^{−1}$. Note that the SI units for radiance include inverse-meter-squared for area and inverse-nanometer for wavelength. This seeming inconsistency (using both nanometer and meter) arises because of the natural units for area and visible light wavelengths.
+因此，辐照度的完整单位为 $Jm^{−2}s^{−1}(nm)^{−1}$。 请注意，辐射亮度的 SI 单位包括面积的倒数米平方和波长的倒数纳米。 这种看似不一致（同时使用纳米和米）的原因是面积和可见光波长的自然单位。
+
+When the light is leaving a surface, e.g., when it is reflected, the same quantity as irradiance is called radiant exitance, E. It is useful to have different words for incident and exitant light, because the same point has potentially different irradiance and radiant exitance.
+当光离开表面时，例如，当它被反射时，与辐照度相同的量称为辐射出射度 E。对入射光和出射光使用不同的词很有用，因为同一点可能具有不同的辐照度和辐射度。 退出。
+
+### 18.1.5 Radiance 光辉
+
+Although irradiance tells us how much light is arriving at a point, it tells us little about the direction that light comes from. To measure something analogous to what we see with our eyes, we need to be able to associate “how much light” with a specific direction. We can imagine a simple device to measure such a quantity (Figure 18.1). We use a small irradiance meter and add a conical “baffler” which limits light hitting the counter to a range of angles with solid angle $Δσ$. The response of the detector is as follows:
+尽管辐照度告诉我们有多少光到达某个点，但它却无法告诉我们光来自的方向。 为了测量类似于我们用眼睛看到的东西，我们需要能够将“多少光”与特定方向联系起来。 我们可以想象一个简单的设备来测量这样的量（图 18.1）。 我们使用小型辐照度计并添加锥形“挡板”，将照射到柜台的光线限制在立体角 $Δσ$ 的角度范围内。 检测器的响应如下：
+![Figure 18.1](Images/Figure 18.1.png)
+Figure 18.1. By adding a blinder that shows only a small solid angle Δσ to the irradiance detector, we measure radiance.
+图 18.1。 通过向辐照度检测器添加仅显示小立体角 Δσ 的遮光罩，我们可以测量辐射率。
+
+$response = \frac{ΔH}{Δσ} = \frac{Δq}{ΔA Δσ Δt Δλ} \\$
+
+This is the spectral radiance of light traveling in space. Again, we will drop the “spectral” in our discussion and assume that it is implicit. 
+这是在太空中传播的光的光谱辐射亮度。 再次，我们将在讨论中放弃“光谱”并假设它是隐含的。
+
+Radiance is what we are usually computing in graphics programs. A wonderful property of radiance is that it does not vary along a line in space. To see why this is true, examine the two radiance detectors both looking at a surface as shown in Figure 18.2. Assume the lines the detectors are looking along are close enough together that the surface is emitting/reflecting light “the same” in both of the areas being measured. Because the area of the surface being sampled is proportional to squared distance, and because the light reaching the detector is inversely proportional to squared distance, the two detectors should have the same reading. 
+辐射度是我们通常在图形程序中计算的。 辐射度的一个奇妙特性是它不会沿空间线变化。 要了解为什么会出现这种情况，请检查两个均观察表面的辐射探测器，如图 18.2 所示。 假设探测器所观察的线足够近，以至于表面在两个被测量的区域中发射/反射的光“相同”。 因为被采样表面的面积与距离的平方成正比，并且因为到达检测器的光与距离的平方成反比，所以两个检测器应该具有相同的读数。
+![Figure 18.2](Images/Figure 18.2.png)
+Figure 18.2. The signal a radiance detector receives does not depend on the distance to the surface being measured. This figure assumes the detectors are pointing at areas on the surface that are emitting light in the same way.
+图 18.2。 辐射检测器接收的信号并不取决于到被测量表面的距离。 该图假设探测器指向表面上以相同方式发光的区域。
+
+It is useful to measure the radiance hitting a surface. We can think of placing the cone baffler from the radiance detector at a point on the surface and measuring the irradiance H on the surface originating from directions within the cone (Figure 18.3). Note that the surface “detector” is not aligned with the cone. For this reason we need to add a cosine correction term to our definition of radiance:
+测量照射到表面的辐射率很有用。 我们可以考虑将辐射检测器的锥体挡板放置在表面上的一点，并测量表面上源自锥体内方向的辐照度 H（图 18.3）。 请注意，表面“探测器”未与锥体对齐。 因此，我们需要在辐射率的定义中添加一个余弦校正项：
+![Figure 18.3](Images/Figure 18.3.png)
+Figure 18.3. The irradiance at the surface as masked by the cone is smaller than that measured at the detector by a cosine factor.
+图 18.3。 锥体遮蔽的表面处的辐照度比探测器处测量的辐照度小一个余弦因子。
+$$
+response = \frac{ΔH}{Δσ cos θ} = \frac{Δq}{ΔA cos θ Δσ Δt Δλ}
+$$
+As with irradiance and radiant exitance, it is useful to distinguish between radiance incident at a point on a surface and exitant from that point. Terms for these concepts sometimes used in the graphics literature are surface radiance $L_s$ for the radiance of (leaving) a surface, and field radiance $L_f$ for the radiance incident at a surface. Both require the cosine term, because they both correspond to the configuration in Figure 18.3:
+与辐照度和辐射出射度一样，区分表面上某一点的入射辐射度和从该点出射的辐射度非常有用。 有时在图形文献中使用的这些概念的术语是表面辐射率 $L_s$（离开）表面的辐射率，场辐射率 $L_f$ 表示入射到表面的辐射率。 两者都需要余弦项，因为它们都对应于图 18.3 中的配置：
+$$
+L_s = \frac{ΔE}{Δσ cos θ} \\
+L_f = \frac{ΔH}{Δσ cos θ}
+$$
+
+#### Radiance and Other Radiometric Quantities  辐射亮度和其他辐射量
+
+If we have a surface whose field radiance is $L_f$ , then we can derive all of the other radiometric quantities from it. This is one reason radiance is considered the “fundamental” radiometric quantity. For example, the irradiance can be expressed as
+如果我们有一个场辐射率为 $L_f$ 的表面，那么我们可以从中导出所有其他辐射量。 这是辐射率被认为是“基本”辐射量的原因之一。 例如，辐照度可以表示为
+$$
+H = \int_{all\ \bold{k}} L_f(\bold{k})\cos θ dσ
+$$
+This formula has several notational conventions that are common in graphics that make such formulae opaque to readers not familiar with them (Figure 18.4). First, $\bold{k}$ is an incident direction and can be thought of as a unit vector, a direction, or a (θ, φ) pair in spherical coordinates with respect to the surface normal. The direction has a differential solid angle dσ associated with it. The field radiance is potentially different for every direction, so we write it as a function $L(\bold{k})$.
+该公式具有图形中常见的几种符号约定，这使得这些公式对于不熟悉它们的读者来说不透明（图18.4）。 首先， $\bold{k}$ 是入射方向，可以被认为是相对于表面法线的球坐标中的单位向量、方向或 (θ, φ) 对。 该方向有一个与之相关的微分立体角 dσ。 每个方向的场辐射率可能不同，因此我们将其写为函数 $L(\bold{k})$。
+![Figure 18.4](Images/Figure 18.4.png)
+Figure 18.4. The direction $\bold{k}$ has a differential solid angle dσ associated with it.
+图 18.4。 方向 $\bold{k}$ 有一个与之相关的微分立体角 dσ。
+
+As an example, we can compute the irradiance H at a surface that has constant field radiance $L_f$ in all directions. To integrate, we use a classic spherical coordinate system and recall that the differential solid angle is
+例如，我们可以计算在所有方向上具有恒定场辐射 $L_f$ 的表面的辐照度 H。 为了积分，我们使用经典的球坐标系并回想一下微分立体角是
+$dσ ≡ sin θ dθ dφ,  $
+so the irradiance is 
+所以辐照度是
+$H = \int^{2\pi}_{φ=0}\int^{\frac{\pi}{2}}_{θ=0}L_f cos θ sin θ dθ dφ =  πLf .   \\$
+
+This relation shows us our first occurrence of a potentially surprising constant π. These factors of π occur frequently in radiometry and are an artifact of how we chose to measure solid angles, i.e., the area of a unit sphere is a multiple of π rather than a multiple of one. 
+这种关系向我们展示了一个可能令人惊讶的常数 π 的首次出现。 这些 π 因子在辐射测量中经常出现，并且是我们选择测量立体角的方式的产物，即单位球体的面积是 π 的倍数而不是 1 的倍数。
+
+Similarly, we can find the power hitting a surface by integrating the irradiance across the surface area:
+类似地，我们可以通过积分整个表面区域的辐照度来找到击中表面的功率：
+$Φ =  \int_{all\ \bold{x}}H(x)dA$
+
+where x is a point on the surface, and dA is the differential area associated with that point. Note that we don’t have special terms or symbols for incoming versus outgoing power. That distinction does not seem to come up enough to have encouraged the distinction. 
+其中 x 是表面上的点，dA 是与该点相关的微分面积。 请注意，我们没有针对输入功率和输出功率的特殊术语或符号。 这种区别似乎还不足以鼓励这种区别。
+
+### 18.1.6 BRDF 双向逆向分布函数
+
+Because we are interested in surface appearance, we would like to characterize how a surface reflects light. At an intuitive level, for any incident light coming from direction $\bold{k}_i$, there is some fraction scattered in a small solid angle near the outgoing direction $\bold{k}_o$. There are many ways we could formalize such a concept, and not surprisingly, the standard way to do so is inspired by building a simple measurement device. Such a device is shown in Figure 18.5, where a small light source is positioned in direction $\bold{k}_i$ as seen from a point on a surface, and a detector is placed in direction ko. For every directional pair $(\bold{k}_i, \bold{k}_o)$, we take a reading with the detector. 
+因为我们对表面外观感兴趣，所以我们想表征表面如何反射光。 在直观层面上，对于来自 $\bold{k}_i$ 方向的任何入射光，在出射方向 $\bold{k}_o$ 附近的小立体角中会有一些散射。 我们可以通过多种方法来形式化这样的概念，毫不奇怪，这样做的标准方法是受到构建一个简单的测量设备的启发。 这样的设备如图 18.5 所示，其中一个小光源位于从表面上的点看去的方向 $\bold{k}_i$ 上，探测器放置在方向 ko 上。 对于每个方向对 $(\bold{k}_i, \bold{k}_o)$，我们用探测器读取读数。
+![Figure 18.5](Images/Figure 18.5.png)
+Figure 18.5. A simple measurement device for directional reflectance. The positions of light and detector are moved to each possible pair of directions. Note that both $\bold{k}_i$ and $\bold{k}_o$ point away from the surface to allow reciprocity.
+图 18.5。 一种简单的定向反射率测量装置。 光和检测器的位置移动到每对可能的方向。 请注意，$\bold{k}_i$ 和 $\bold{k}_o$ 都指向远离表面的方向，以实现互易。
+
+Now we just have to decide how to measure the strength of the light source and make our reflection function independent of this strength. For example, if we replaced the light with a brighter light, we would not want to think of the surface as reflecting light differently. We could place a radiance meter at the point being illuminated to measure the light. However, for this to get an accurate reading that would not depend on the Δσ of the detector, we would need the light to subtend a solid angle bigger than Δσ. Unfortunately, the measurement taken by our roving radiance detector in direction $\bold{k}_o$ will also count light that comes from points outside the new detector’s cone. So this does not seem like a practical solution. 
+现在我们只需要决定如何测量光源的强度并使我们的反射函数独立于该强度。 例如，如果我们用更亮的光替换光，我们就不会希望表面以不同的方式反射光。 我们可以在被照射的点放置一个辐射计来测量光。 然而，为了获得不依赖于探测器 Δσ 的准确读数，我们需要光线对向大于 Δσ 的立体角。 不幸的是，我们的流动辐射探测器在 $\bold{k}_o$ 方向上进行的测量也会计算来自新探测器锥体之外的点的光。 所以这似乎不是一个实际的解决方案。
+
+Alternatively, we can place an irradiance meter at the point on the surface being measured. This will take a reading that does not depend strongly on subtleties of the light source geometry. This suggests characterizing reflectance as a ratio:
+或者，我们可以将辐照度计放置在被测量表面的点处。 这将需要一个不太依赖于光源几何形状的微妙之处的读数。 这表明将反射率表征为一个比率：
+$ρ =  \frac{L_s}{H} \\$
+
+where this fraction ρ will vary with incident and exitant directions $\bold{k}_i$ and $\bold{k}_o$, H is the irradiance for light position $\bold{k}_i$, and $L_s$ is the surface radiance measured in direction $\bold{k}_o$. If we take such a measurement for all direction pairs, we end up with a 4D function $ρ(\bold{k}_i, \bold{k}_o)$. This function is called the bidirectional reflectance distribution function (BRDF). The BRDF is all we need to know to characterize the directional properties of how a surface reflects light.
+其中该分数 ρ 将随入射和出射方向 $\bold{k}_i$ 和 $\bold{k}_o$ 变化，H 是光位置 $\bold{k}_i$ 的辐照度，$L_s$ 是 在 $\bold{k}_o$ 方向测量的表面辐射率。 如果我们对所有方向对进行这样的测量，我们最终会得到一个 4D 函数 $ρ(\bold{k}_i, \bold{k}_o)$。 该函数称为双向反射分布函数（BRDF）。 我们只需要知道 BRDF 即可描述表面反射光的方向特性。
+
+#### Directional Hemispherical Reflectance 定向半球反射率
+
+Given a BRDF, it is straightforward to ask, “What fraction of incident light is reflected?” However, the answer is not so easy; the fraction reflected depends on the directional distribution of incoming light. For this reason, we typically only set a fraction reflected for a fixed incident direction $\bold{k}_i$. This fraction is called the directional hemispherical reflectance. This fraction, $R(\bold{k}_i)$ is defined by
+给定 BRDF，很容易问“入射光的哪一部分被反射？” 然而，答案并不那么容易； 反射的部分取决于入射光的方向分布。 因此，我们通常只设置固定入射方向 $\bold{k}_i$ 反射的分数。 该分数称为定向半球反射率。 该分数 $R(\bold{k}_i)$ 定义为
+$R(\bold{k}_i) = \frac{power\ in\ all\ outgoing\ directions\ \bold{k}_o }{power\ in\ a\ beam\ from\ direction\ \bold{k}_i   } \\$
+
+Note that this quantity is between zero and one for reasons of energy conservation. If we allow the incident power $Φ_i$ to hit on a small area ΔA, then the irradiance is $Φ_i/ΔA$. Also, the ratio of the incoming power is just the ratio of the radiant exitance to irradiance:
+请注意，出于能量守恒的原因，该数量介于 0 和 1 之间。 如果我们让入射功率 $Φ_i$ 照射到一个小区域 ΔA，则辐照度为 $Φ_i/ΔA$。 此外，输入功率的比率就是辐射出射度与辐照度的比率：
+$R(\bold{k}_i) =  \frac{E}{H} \\$
+
+The radiance in a particular direction resulting from this power is by the definition of BRDF: 
+由该功率产生的特定方向的辐射度由 BRDF 定义：
+$L(\bold{k}_o) = Hρ(\bold{k}_i, \bold{k}_o) = \frac{Φ_i}{ΔA } \\$
+
+And from the definition of radiance, we also have 
+根据辐射度的定义，我们也有
+$L(\bold{k}_o) = \frac{ΔE}{Δσ_o cos θ_o  } \\$
+
+where E is the radiant exitance of the small patch in direction $\bold{k}_o$. Using these two definitions for radiance we get
+其中 E 是小斑块在 $\bold{k}_o$ 方向上的辐射出射度。 使用这两个辐射度定义，我们得到
+$H_ρ(\bold{k}_i, \bold{k}_o) = \frac{ΔE}{Δσ_o cos θ_o  }\\$
+
+Rearranging terms, we get 
+重新排列术语，我们得到
+$\frac{ΔE}{H} = ρ(\bold{k}_i, \bold{k}_o)Δσ_o cos θ_o.  \\$
+
+This is just the small contribution to E/H that is reflected near the particular $\bold{k}_o$. To find the total $R(\bold{k}_i)$, we sum over all outgoing $\bold{k}_o$. In integral form this is
+这只是反映在特定 $\bold{k}_o$ 附近对 E/H 的微小贡献。 为了找到总 $R(\bold{k}_i)$，我们对所有传出的 $\bold{k}_o$ 求和。 积分形式是
+$R(\bold{k}_i) = \int_{all\ \bold{k}_o}ρ(\bold{k}_i, \bold{k}_o)\cosθ_o dσ_o.  $
+
+#### Ideal Diffuse BRDF 理想的漫反射 BRDF
+
+An idealized diffuse surface is called Lambertian. Such surfaces are impossible in nature for thermodynamic reasons, but mathematically they do conserve energy. The Lambertian BRDF has ρ equal to a constant for all angles. This means the surface will have the same radiance for all viewing angles, and this radiance will be proportional to the irradiance. 
+理想化的漫反射表面称为朗伯表面。 由于热力学原因，这样的表面在自然界中是不可能的，但从数学上讲，它们确实节省了能量。 朗伯 BRDF 的 ρ 对于所有角度都等于常数。 这意味着表面对于所有视角都将具有相同的辐射亮度，并且该辐射亮度将与辐照度成正比。
+
+If we compute $R(\bold{k}_i)$ for a a Lambertian surface with $ρ = C$ we get
+如果我们计算朗伯曲面的 $R(\bold{k}_i)$ 且 $ρ = C$ 我们得到
+$R(\bold{k}_i) = \int_{all\ \bold{k}_o}C\cosθ_o dσ_o = \int^{2\pi}_{φ_o=0}  \int^{\pi/2}_{θ_o=0}C \cos θ_o \sin θ_o dθ_o dφ_o = \pi C \\$
+
+Thus, for a perfectly reflecting Lambertian surface (R = 1), we have $ρ = 1/π$, and for a Lambertian surface where $R(\bold{k}_i) = r$, we have
+因此，对于完美反射的朗伯表面 (R = 1)，我们有 $ρ = 1/π$，对于 $R(\bold{k}_i) = r$ 的朗伯表面，我们有
+$ρ(\bold{k}_i, \bold{k}_o) = \frac{r}{\pi} \\$
+This is another example where the use of a steradian for the solid angle determines the normalizing constant and thus introduces factors of π.
+这是另一个例子，其中使用立体角的球面度来确定归一化常数，从而引入 π 因子。
+
+## 18.2 Transport Equation 传输方程
+
+With the definition of BRDF, we can describe the radiance of a surface in terms of the incoming radiance from all different directions. Because in computer graphics we can use idealized mathematics that might be impractical to instantiate in the lab, we can also write the BRDF in terms of radiance only. If we take a small part of the light with solid angle $Δσ_i$ with radiance $L_i$ and “measure” the reflected radiance in direction $\bold{k}_o$ due to this small piece of the light, we can compute a BRDF (Figure 18.6). The irradiance due to the small piece of light is $H = L_i \cos θ_iΔσ_i$. Thus the BRDF is
+根据 BRDF 的定义，我们可以用来自所有不同方向的入射辐射率来描述表面的辐射率。 因为在计算机图形学中，我们可以使用在实验室中实例化可能不切实际的理想化数学，所以我们也可以仅根据辐射度来编写 BRDF。 如果我们取一小部分具有立体角$Δσ_i$、辐射度为$L_i$的光，并“测量”由于这小块光而在$\bold{k}_o$方向上反射的辐射度，我们可以计算出 BRDF（图 18.6）。 小片光的辐照度为 $H = L_i \cos θ_iΔσ_i$。 因此 BRDF 是
+$ρ =  \frac{L_o}{L_i \cos θ_iΔσ_i } \\$
+
+![Figure 18.6](Images/Figure 18.6.png)
+Figure 18.6. The geometry for the transport equation in its directional form. 
+图 18.6。 方向形式的输运方程的几何形状。
+
+This form can be useful in some situations. Rearranging terms, we can write down the part of the radiance that is due to light coming from direction $\bold{k}_i$: 
+这种形式在某些情况下很有用。 重新排列术语，我们可以写下由于来自 $\bold{k}_i$ 方向的光而产生的辐射部分：
+$ΔL_o = ρ(\bold{k}_i, \bold{k}_o)L_i \cos θ_iΔσ_i.  $
+
+If there is light coming from many directions $L_i(\bold{k}_i)$, we can sum all of them. In integral form, with notation for surface and field radiance, this is 
+如果有来自多个方向的光$L_i(\bold{k}_i)$，我们可以将它们全部相加。 以积分形式，用表面和场辐射率的符号表示，这是
+$L_s(\bold{k}_o) = \int_{all\ \bold{k}_i} ρ(\bold{k}_i, \bold{k}_o)L_f(\bold{k}_i) \cos θ_idσ_i.   $
+
+This is often called the rendering equation in computer graphics (Immel, Cohen, & Greenberg, 1986). 
+这通常称为计算机图形学中的渲染方程（Immel、Cohen 和 Greenberg，1986）。
+
+Sometimes it is useful to write the transport equation in terms of surface radiances only (Kajiya, 1986). Note, that in a closed environment, the field radiance $L_f(\bold{k}_i)$ comes from some surface with surface radiance $L_s(−\bold{k}_i) = L_f(\bold{k}_i)$ (Figure 18.7). The solid angle subtended by the point $\bold{x}'$ in the figure is given by
+ 有时仅根据表面辐射率来编写输运方程是有用的（Kajiya，1986）。 请注意，在封闭环境中，场辐射率 $L_f(\bold{k}_i)$ 来自表面辐射率 $L_s(−\bold{k}_i) = L_f(\bold{k}_i) 的某个表面 $（图 18.7）。 图中点 $\bold{x}'$ 所对的立体角由下式给出
+$Δσ_i =  \frac{ΔA' \cos θ'}{\|\bold{x}-  \bold{x}'\|^2} \\$
+
+![Figure 18.7](Images/Figure 18.7.png)
+Figure 18.7. The light coming into one point comes from another point.
+图 18.7。 进入一点的光来自另一点。
+
+where $ΔA'$ the the area we associate with $x'$. Substituting for $Δσ_i$ in terms of $ΔA'$ suggests the following transport equation:
+其中 $ΔA'$ 是我们与 $x'$ 关联的区域。 用 $ΔA'$ 代替 $Δσ_i$ 得出以下传输方程：
+$L_s(\bold{x}, \bold{k}_o) = \int_{all\ x'\ visible\ to\ \bold{x}}\frac{ρ(\bold{k}_i, \bold{k}_o)L_s(\bold{x'}, \bold{x}- \bold{x}')\cos θ_i \cos θ'}{\|\bold{x} - \bold{x}'\|^2} dA'\\$
+
+Note that we are using a non-normalized vector $\bold{x} − \bold{x}'$ to indicate the direction from $\bold{x}'$ to $\bold{x}$. Also note that we are writing $L_s$ as a function of position and direction. 
+请注意，我们使用非归一化向量 $\bold{x} − \bold{x}'$ 来指示从 $\bold{x}'$ 到 $\bold{x}$ 的方向。 另请注意，我们将 $L_s$ 写为位置和方向的函数。
+
+The only problem with this new transport equation is that the domain of integration is awkward. If we introduce a visibility function, we can trade off complexity in the domain with complexity in the integrand:
+这个新的传输方程的唯一问题是积分域很尴尬。 如果我们引入可见性函数，我们可以权衡域的复杂性和被积函数的复杂性：
+$L_s(x, \bold{k}_o) = \int_{all\ \bold{x}'} \frac{ρ(\bold{k}_i, \bold{k}_o)L_s(\bold{x'}, \bold{x}- \bold{x}')v(\bold{x}, \bold{x}')\cos θ_i \cos θ'}{\|\bold{x} - \bold{x}'\|^2} dA' \\ $
+
+where
+其中
+$$
+v(\bold{x}, \bold{x}') = \begin{cases}
+1\ \ \ \ \  if\ \bold{x}\ and\ \bold{x}’\ are\ mutually\ visible, \\
+0\ \ \ \ \ otherwise
+\end{cases}
+$$
+
+## 18.3 Photometry 光度测定
+
+For every spectral radiometric quantity there is a related photometric quantity that measures how much of that quantity is “useful” to a human observer. Given a spectral radiometric quantity $f_r(λ)$, the related photometric quantity $f_p$ is
+对于每个光谱辐射量，都有一个相关的光度量，用于测量该量中有多少对人类观察者“有用”。 给定光谱辐射量 $f_r(λ)$，相关光度量 $f_p$ 为
+$f_p = 683 \frac{lm}{W} \int^{800nm}_{λ  =380 nm  }\overline{y}(λ)f_r(λ) dλ   \\$
+
+where $\overline{y}$ is the luminous efficiency function of the human visual system. This function is zero outside the limits of integration above, so the limits could be 0 and $∞$ and $f_p$ would not change. The luminous efficiency function will be discussed in more detail in Chapter 19, but we discuss its general properties here. The leading constant is to make the definition consistent with historical absolute photometric quantities.
+其中$\overline{y}$是人类视觉系统的发光效率函数。 在上述积分限制之外，该函数为零，因此限制可以为 0，并且 $∞$ 和 $f_p$ 不会改变。 发光效率函数将在第 19 章中更详细地讨论，但我们在这里讨论它的一般属性。 主要常数是使定义与历史绝对光度量一致。
+
+The luminous efficiency function is not equally sensitive to all wavelengths (Figure 18.8). For wavelengths below 380 nm (the ultraviolet range), the light is not visible to humans and thus has a $\overline{y}$ value of zero. From 380 nm it gradually increases until λ = 555 nm where it peaks. This is a pure green light. Then, it gradually decreases until it reaches the boundary of the infrared region at 800 nm.
+发光效率函数对所有波长的敏感度不同（图 18.8）。 对于低于 380 nm（紫外线范围）的波长，人类看不到光，因此 $\overline{y}$ 值为零。 从 380 nm 开始，它逐渐增加，直到 λ = 555 nm，达到峰值。 这是纯粹的绿光。 然后逐渐减小，直至到达800 nm 处的红外区域边界。
+![Figure 18.8](Images/Figure 18.8.png)
+Figure 18.8. The luminous efficiency function versus wavelength (nm).
+图 18.8。 发光效率与波长（nm)的函数。
+
+The photometric quantity that is most commonly used in graphics is luminance, the photometric analog of radiance:
+图形中最常用的光度量是亮度，即辐射亮度的光度模拟：
+$$
+Y = 683\frac{lm}{W}\int^{800nm}_{λ =380 nm}\overline{y}(λ)L(λ) dλ.
+$$
+The symbol Y for luminance comes from colorimetry. Most other fields use the symbol L; we will not follow that convention because it is too confusing to use L for both luminance and spectral radiance. Luminance gives one a general idea of how “bright” something is independent of the adaptation of the viewer. Note that the black paper under noonday sun is subjectively darker than the lower luminance white paper under moonlight; reading too much into luminance is dangerous, but it is a very useful quantity for getting a quantitative feel for relative perceivable light output. The unit lm stands for lumens. Note that most light bulbs are rated in terms of the power they consume in watts, and the useful light they produce in lumens. More efficient bulbs produce more of their light where $\overline{y}$ is large and thus produce more lumens per watt. A “perfect” light would convert all power into 555 nm light and would produce 683 lumens per watt. The units of luminance are thus $(lm/W)(W/(m^2sr)) = lm/(m^2sr)$. The quantity one lumen per steradian is defined to be one candela (cd), so luminance is usually described in units $cd/m^2$.
+亮度符号 Y 来自比色学。 大多数其他字段使用符号 L； 我们不会遵循该约定，因为使用 L 表示亮度和光谱辐射率太混乱了。 亮度可以让人们大致了解某物的“明亮”程度，与观看者的适应无关。 请注意，正午阳光下的黑纸主观上比月光下亮度较低的白纸更暗； 过多地解读亮度是危险的，但对于获得相对可感知光输出的定量感觉来说，它是一个非常有用的量。 单位 lm 代表流明。 请注意，大多数灯泡的额定值是根据它们消耗的功率（以瓦为单位）和它们产生的有用光（以流明为单位）来衡量的。 更高效的灯泡在 $\overline{y}$ 较大的情况下产生更多的光，从而每瓦产生更多的流明。 “完美”的光会将所有能量转换为 555 nm 光，每瓦产生 683 流明。 因此，亮度单位为 $(lm/W)(W/(m^2sr)) = lm/(m^2sr)$。 每球面度一流明的数量定义为一坎德拉 (cd)，因此亮度通常以单位 $cd/m^2$ 来描述。
+
+## Frequently Asked Questions 经常问的问题
+
+### What is “intensity”?什么是“强度”？
+
+The term intensity is used in a variety of contexts and its use varies with both era and discipline. In practice, it is no longer meaningful as a specific radiometric quantity, but it is useful for intuitive discussion. Most papers that use it do so in place of radiance.
+“强度”一词在多种情况下都有使用，其用法随时代和学科的不同而变化。 在实践中，它作为特定的辐射量不再有意义，但对于直观讨论很有用。 大多数使用它的纸张都用它来代替辐射度。
+
+### What is “radiosity”?  什么是“光能传递”？
+
+The term radiosity is used in place of radiant exitance in some fields. It is also sometimes used to describe world-space light transport algorithms. 
+在某些领域中，术语“光能传递”用于代替辐射出射度。 它有时也用于描述世界空间光传输算法。
+
+## Notes  注释
+
+A common radiometric quantity not described in this chapter is radiant intensity (I), which is the spectral power per steradian emitted from an infinitesimal point source. It should usually be avoided in graphics programs because point sources cause implementation problems. A more rigorous treatment of radiometry can be found in Analytic Methods for Simulated Light Transport (Arvo, 1995). The radiometric and photometric terms in this chapter are from the Illumination Engineering Society’s standard that is increasingly used by all fields of science and engineering (American National Standard Institute, 1986). A broader discussion of radiometric and appearance standards can be found in Principles of Digital Image Synthesis (Glassner, 1995). 
+本章未描述的常见辐射量是辐射强度 (I)，它是从无穷小点源发射的每球面度的光谱功率。 在图形程序中通常应该避免它，因为点源会导致实现问题。 更严格的辐射测量处理可以在模拟光传输分析方法（Arvo，1995）中找到。 本章中的辐射和光度术语来自照明工程学会的标准，该标准越来越多地被科学和工程的所有领域使用（美国国家标准协会，1986）。 关于辐射测量和外观标准的更广泛讨论可以在《数字图像合成原理》（Glassner，1995）中找到。
+
+## Exercises 练习
+
+1. For a diffuse surface with outgoing radiance L, what is the radiant exitance? 
+   对于出射辐射率为 L 的漫射表面，辐射出射率是多少？
+2. What is the total power exiting a diffuse surface with an area of $4 m^2$ and a radiance of L? 
+   面积为 $4 m^2$、辐射率为 L 的漫射表面的总功率是多少？
+3. If a fluorescent light and an incandescent light both consume 20 watts of power, why is the fluorescent light usually preferred?
+   如果荧光灯和白炽灯的功耗均为 20 瓦，为什么通常首选荧光灯？
+
+# 19  Color  颜色
+
+
+
+Photons are the carriers of optical information. They propagate through media taking on properties associated with waves. At surface boundaries they interact with matter, behaving more as particles. They can also be absorbed by the retina, where the information they carry is transcoded into electrical signals that are subsequently processed by the brain. It is only there that a sensation of color is generated. 
+光子是光学信息的载体。 它们通过具有与波相关的特性的介质传播。 在表面边界，它们与物质相互作用，表现得更像粒子。 它们还可以被视网膜吸收，它们携带的信息被转码成电信号，随后由大脑处理。 只有在那里才会产生色彩的感觉。
+
+As a consequence, the study of color in all its guises touches upon several different fields: physics for the propagation of light through space, chemistry for its interaction with matter, and neuroscience and psychology for aspects relating to perception and cognition of color (Reinhard et al., 2008). 
+因此，对各种形式的颜色的研究涉及几个不同的领域：物理学研究光在空间中的传播，化学研究光与物质的相互作用，以及神经科学和心理学研究与颜色感知和认知相关的方面（Reinhard 等） 等，2008）。
+
+In computer graphics, we traditionally take a simplified view of how light propagates through space. Photons travel along straight paths until they hit a surface boundary and are then reflected according to a reflection function of some sort. A single photon will carry a certain amount of energy, which is represented by its wavelength. Thus, a photon will have only one wavelength. The relationship between its wavelength λ and the amount of energy it carries (ΔE) is given by 
+在计算机图形学中，我们传统上对光如何在空间中传播采取简化的观点。 光子沿着直线路径行进，直到到达表面边界，然后根据某种反射函数被反射。 单个光子将携带一定量的能量，用其波长表示。 因此，光子只有一个波长。 其波长 λ 与其携带的能量 (ΔE) 之间的关系由下式给出
+$λ ΔE = 1239.9,$
+where ΔE is measured in electron volts (eV). 
+其中 ΔE 以电子伏特 (eV) 为单位测量。
+
+In computer graphics, it is not very efficient to simulate single photons; instead large collections of them are simulated at the same time. If we take a very large number of photons, each carrying a possibly different amount of energy, then together they represent a spectrum. A spectrum can be thought of as a graph where the number of photons is plotted against wavelength. Because two photons of the same wavelength carry twice as much energy as a single photon of that wavelength, this graph can also be seen as a plot of energy against wavelength. An example of a spectrum is shown in Figure 19.1. The range of wavelengths to which humans are sensitive is roughly between 380 and 800 nanometers (nm). 
+在计算机图形学中，模拟单光子的效率不是很高； 相反，它们的大量集合是同时模拟的。 如果我们采用大量光子，每个光子可能携带不同的能量，那么它们一起代表一个光谱。 光谱可以被认为是一张图表，其中光子数相对于波长绘制。 由于相同波长的两个光子携带的能量是该波长的单个光子携带的能量的两倍，因此该图也可以视为能量与波长的关系图。 图 19.1 显示了一个频谱示例。 人类敏感的波长范围大致在 380 至 800 纳米 (nm) 之间。
+![Figure 19.1](Images/Figure 19.1.png)
+Figure 19.1. A spectrum describes how much energy is available at each wavelength λ, here measured as relative radiant power. This specific spectrum represents average daylight. 
+图 19.1。 光谱描述了每个波长 λ 处有多少可用能量，此处测量为相对辐射功率。 该特定光谱代表平均日光。
+
+When simulating light, it would therefore be possible to trace rays that each carry a spectrum. A renderer that accomplishes this is normally called a spectral renderer. From preceding chapters, it should be clear that we are not normally going through the expense of building spectral renderers. Instead, we replace spectra with representations that typically use red, green, and blue components. The reason that this is possible at all has to do with human vision and will be discussed later in this chapter. 
+因此，在模拟光时，可以追踪每条带有光谱的光线。 完成此任务的渲染器通常称为光谱渲染器。 从前面的章节可以清楚地看出，我们通常不会花费构建光谱渲染器的费用。 相反，我们用通常使用红色、绿色和蓝色分量的表示来替换光谱。 这之所以可能，与人类视觉有关，本章稍后将对此进行讨论。
+
+Simulating light by tracing rays takes care of the physics of light, although it should be noted that several properties of light, including, for instance, polarization, diffraction, and interference, are not modeled in this manner. 
+通过追踪光线来模拟光会考虑到光的物理特性，但应该注意的是，光的一些属性（包括偏振、衍射和干涉）并不是以这种方式建模的。
+
+At surface boundaries, we normally model what happens with light by means of a reflectance function. These functions can be measured directly by means of gonioreflectometers, leading to a large amount of tabled data, which can be more compactly represented by various different functions. Nonetheless, these reflectance functions are empirical in nature, i.e., they abstract away the chemistry that happens when a photon is absorbed and re-emitted by an electron. Thus, reflectance functions are useful for modeling in computer graphics, but do not offer an explanation as to why certain wavelengths of light are absorbed and others are reflected. We can therefore not use reflectance functions to explain why the light reflected off a banana has a spectral composition that appears to us as yellow. For that, we would have to study molecular orbital theory, a topic beyond the scope of this book. 
+在表面边界，我们通常通过反射函数来模拟光发生的情况。 这些函数可以通过测角反射仪直接测量，从而产生大量的表格数据，可以通过各种不同的函数更紧凑地表示这些数据。 尽管如此，这些反射函数本质上是经验性的，即它们抽象了光子被电子吸收和重新发射时发生的化学反应。 因此，反射函数对于计算机图形学建模很有用，但不能解释为什么某些波长的光被吸收而其他波长的光被反射。 因此，我们不能使用反射函数来解释为什么香蕉反射的光具有在我们看来为黄色的光谱成分。 为此，我们必须研究分子轨道理论，这个主题超出了本书的范围。
+
+Finally, when light reaches the retina, it is transcoded into electrical signals that are propagated to the brain. A large part of the brain is devoted to processing visual signals, part of which gives rise to the sensation of color. Thus, even if we know the spectrum of light that is reflected off a banana, we do not know yet why humans associate the term “yellow” with it. Moreover, as we will find out in the remainder of this chapter, our perception of color is vastly more complicated than it would seem at first glance. It changes with illumination, varies between observers, and varies within an observer over time. 
+最后，当光线到达视网膜时，它被转码成电信号，并传播到大脑。 大脑的很大一部分致力于处理视觉信号，其中一部分产生颜色感觉。 因此，即使我们知道香蕉反射的光谱，我们仍然不知道为什么人类将“黄色”一词与它联系起来。 此外，正如我们将在本章的其余部分中发现的那样，我们对颜色的感知比乍一看要复杂得多。 它随着照明的变化而变化，在观察者之间变化，并且随着时间的推移在观察者内部变化。
+
+In other words, the spectrum of light coming off a banana is perceived in the context of an environment. To predict how an observer perceives a “banana spectrum” requires knowledge of the environment that contains the banana as well as the observer’s environment. In many instances, these two environments are the same. However, when we are displaying a photograph of a banana on a monitor, then these two environments will be different. As human visual perception depends on the environment the observer is in, it may perceive the banana in the photograph differently from how an observer directly looking at the banana would perceive it. This has a significant impact on how we should deal with color and illustrates the complexities associated with color. 
+换句话说，香蕉发出的光谱是在环境背景下被感知的。 要预测观察者如何感知“香蕉光谱”，需要了解包含香蕉的环境以及观察者的环境。 在许多情况下，这两个环境是相同的。 然而，当我们在显示器上显示香蕉的照片时，这两种环境将会有所不同。 由于人类的视觉感知取决于观察者所处的环境，因此它对照片中香蕉的感知可能与观察者直接观看香蕉的感知不同。 这对我们如何处理颜色有重大影响，并说明了与颜色相关的复杂性。
+
+To emphasize the crucial role that human vision plays, we only have to look at the definition of color: “Color is the aspect of visual perception by which an observer may distinguish differences between two structure-free fields of view of the same size and shape, such as may be caused by differences in the spectral composition of the radiant energy concerned in the observation” (Wyszecki & Stiles, 2000). In essence, without a human observer there is no color. 
+为了强调人类视觉所发挥的关键作用，我们只需要看看颜色的定义：“颜色是视觉感知的一个方面，观察者可以通过颜色来区分两个相同大小和形状的无结构视场之间的差异。 ，例如可能是由观测中涉及的辐射能的光谱组成差异引起的”（Wyszecki & Stiles，2000）。 本质上，没有人类观察者就没有颜色。
+
+Luckily, much of what we know about color can be quantified, so that we can carry out computations to correct for the idiosyncrasies of human vision and thereby display images that will appear to observers the way the designer of those images intended. This chapter contains the theory and mathematics required to do so.
+幸运的是，我们对颜色的了解大部分都可以量化，这样我们就可以进行计算来纠正人类视觉的特性，从而以图像设计者的预期方式向观察者显示图像。 本章包含这样做所需的理论和数学。
+
+## 19.1 Colorimetry 比色法
+
+Colorimetry is the science of color measurement and description. Since color is ultimately a human response, color measurement should begin with human observation. The photodetectors in the human retina consist of rods and cones. The rods are highly sensitive and come into play in low-light conditions. Under normal lighting conditions, the cones are operational, mediating human vision. There are three cone types and together they are primarily responsible for color vision. 
+比色学是颜色测量和描述的科学。 由于颜色最终是人类的反应，因此颜色测量应从人类观察开始。 人类视网膜中的光电探测器由视杆细胞和视锥细胞组成。 这些视杆细胞非常敏感，在弱光条件下发挥作用。 在正常照明条件下，视锥细胞可以发挥作用，调节人类视觉。 视锥细胞分为三种类型，它们共同主要负责色觉。
+
+Although it may be possible to directly record the electrical output of cones while some visual stimulus is being presented, such a procedure would be invasive, while at the same time ignoring the sometimes substantial differences between observers. Moreover, much of the measurement of color was developed well before such direct recording techniques were available. 
+尽管在呈现一些视觉刺激时可以直接记录视锥细胞的电输出，但这样的过程将是侵入性的，同时忽略了观察者之间有时存在的实质性差异。 此外，许多颜色测量方法早在这种直接记录技术出现之前就已经开发出来了。
+
+The alternative is to measure color by means of measuring the human response to patches of color. This leads to color matching experiments, which will be described later in this section. Carrying out these experiments have resulted in several standardized observers, which can be thought of as statistical approximations of actual human observers. First, however, we need to describe some of the assumptions underlying the possibility of color matching, which are summarized by Grassmann’s laws. 
+另一种方法是通过测量人类对色块的反应来测量颜色。 这导致了颜色匹配实验，本节稍后将对此进行描述。 进行这些实验产生了几个标准化的观察者，可以将其视为实际人类观察者的统计近似值。 然而，首先，我们需要描述颜色匹配可能性背后的一些假设，这些假设由格拉斯曼定律进行了总结。
+
+### 19.1.1 Grassmann’s Laws 格拉斯曼定律
+
+Given that humans have three different cone types, the experimental laws of color matching can be summed up as the trichromatic generalization (Wyszecki & Stiles, 2000), which states that any color stimulus can be matched completely with an additive mixture of three appropriately modulated color sources. This feature of color is often used in practice, for instance by televisions and monitors which reproduce many different colors by adding a mixture of red, green, and blue light for each pixel. It is also the reason that renderers can be built using only three values to describe each color. 
+鉴于人类具有三种不同的视锥细胞类型，颜色匹配的实验定律可以总结为三色概括（Wyszecki & Stiles，2000），它指出任何颜色刺激都可以与三种适当调制颜色的加法混合物完全匹配 来源。 这种颜色特征在实践中经常使用，例如电视和显示器通过为每个像素添加红、绿和蓝光的混合来再现许多不同的颜色。 这也是渲染器可以仅使用三个值来描述每种颜色来构建的原因。
+
+The trichromatic generalization allows us to make color matches between any given stimulus and an additive mixture of three other color stimuli. Hermann Grassmann was the first to describe the algebraic rules to which color matching adheres. They are known as Grassmann’s laws of additive color matching (Grassmann, 1853) and are the following: 
+三色泛化使我们能够在任何给定的刺激和其他三种颜色刺激的附加混合物之间进行颜色匹配。 赫尔曼·格拉斯曼 (Hermann Grassmann) 是第一个描述颜色匹配所遵循的代数规则的人。 它们被称为格拉斯曼加色匹配定律（Grassmann，1853），如下：
+
+- Symmetry law. If color stimulus A matches color stimulus B, then B matches A. 
+  对称定律。 如果颜色刺激 A 与颜色刺激 B 匹配，则 B 与 A 匹配。
+- Transitive law. If A matches B and B matches C, then A matches C. 
+  传递律。 如果A匹配B且B匹配C，则A匹配C。
+- Proportionality law. If A matches B, then αA matches αB, where α is a positive scale factor.
+  比例法。 如果 A 与 B 匹配，则 αA 与 αB 匹配，其中 α 是正比例因子。
+- Additivity law. If A matches B, C matches D, and A + C matches B + D, then it follows that A + D matches B + C. 
+  可加性定律。 如果A匹配B，C匹配D，并且A+C匹配B+D，则A+D匹配B+C。
+
+The additivity law forms the basis for color matching and colorimetry as a whole. 
+可加性定律构成了整个色彩匹配和比色学的基础。
+
+### 19.1.2 Cone Responses  锥体反应
+
+Each cone type is sensitive to a range of wavelengths, spanning most of the full visible range. However, sensitivity to wavelengths is not evenly distributed, but contains a peak wavelength at which sensitivity is greatest. The location of this peak wavelength is different for each cone type. The three cone types are classified as S, M, and L cones, where the letters stand for short, medium, and long, indicating where in the visible spectrum the peak sensitivity is located. 
+每种锥体类型都对一定范围的波长敏感，涵盖大部分完整可见光范围。 然而，对波长的敏感度并不是均匀分布的，而是包含敏感度最大的峰值波长。 对于每种锥体类型，该峰值波长的位置都不同。 三种视锥细胞类型分为 S、M 和 L 视锥细胞，其中字母代表短、中、长，表示可见光谱中峰值灵敏度所在的位置。
+
+The response of a given cone is then the magnitude of the electrical signal it outputs, as a function of the spectrum of wavelengths incident upon the cone. The cone response functions for each cone type as a function of wavelength λ are then given by L(λ), M(λ), and S(λ). They are plotted in Figure 19.2. 
+给定锥体的响应就是它输出的电信号的幅度，作为入射到锥体上的波长光谱的函数。 每种锥体类型的锥体响应函数作为波长 λ 的函数由 L(λ)、M(λ) 和 S(λ) 给出。 它们如图 19.2 所示。
+![Figure 19.2](Images/Figure 19.2.png)
+Figure 19.2. The cone response functions for L, M, and S cones.  
+图 19.2。 L、M 和 S 视锥细胞的视锥细胞响应函数。
+
+The actual response to a stimulus with a given spectral composition Φ(λ) is then given for each cone type by
+然后，对于每种锥体类型，对具有给定光谱成分 Φ(λ) 的刺激的实际响应由下式给出：
+$$
+L = \int_λΦ(λ) L(λ) dλ, \\
+M = \int_λΦ(λ) M(λ) dλ, \\
+S = \int_λΦ(λ) S(λ) dλ, \\
+$$
+These three integrated responses are known as tristimulus values. 
+这三个综合响应称为三刺激值。
+
+### 19.1.3 Color Matching Experiments 配色实验
+
+Given that tristimulus values are created by integrating the product of two functions over the visible range, it is immediately clear that the human visual system does not act as a simple wavelength detector. Rather, our photo-receptors act as approximately linear integrators. As a result, it is possible to find two different spectral compositions, say $Φ_1(λ)$ and $Φ_2(λ)$, that after integration yield the same response (L, M, S). This phenomenon is known as metamerism, an example of which is shown in Figure 19.3. 
+鉴于三刺激值是通过对可见光范围内的两个函数的乘积进行积分而创建的，因此很明显人类视觉系统不能充当简单的波长检测器。 相反，我们的光感受器充当近似线性积分器。 因此，可以找到两种不同的光谱成分，例如 $Φ_1(λ)$ 和 $Φ_2(λ)$，积分后会产生相同的响应 (L、M、S)。 这种现象称为同色异谱，其示例如图 19.3 所示。
+![Figure 19.3](Images/Figure 19.3.png)
+Figure 19.3. Two stimuli $Φ_1(λ)$ and $Φ_2(λ)$ leading to the same tristimulus values after integration. 
+图 19.3。 积分后两个刺激 $Φ_1(λ)$ 和 $Φ_2(λ)$ 产生相同的三刺激值。
+
+Metamerism is the key feature of human vision that allows the construction of color reproduction devices, including the color figures in this book and anything reproduced on printers, televisions, and monitors. 
+同色异谱是人类视觉的关键特征，它允许构建色彩再现设备，包括本书中的彩色图形以及打印机、电视和显示器上再现的任何内容。
+
+Color matching experiments also rely on the principle of metamerism. Suppose we have three differently colored light sources, each with a dial to alter its intensity. We call these three light sources primaries. We should now be able to adjust the intensity of each in such a way that when mixed together additively, the resulting spectrum integrates to a tristimulus value that matches the perceived color of a fourth unknown light source. When we carry out such an experiment, we have essentially matched our primaries to an unknown color. The positions of our three dials are then a representation of the color of the fourth light source. 
+配色实验也依赖于同色异谱的原理。 假设我们有三个不同颜色的光源，每个光源都有一个旋钮来改变其强度。 我们将这三种光源称为原色。 我们现在应该能够以这样的方式调整每个强度，即当加法混合在一起时，所得光谱积分为与第四个未知光源的感知颜色相匹配的三刺激值。 当我们进行这样的实验时，我们基本上将我们的原色与未知的颜色进行了匹配。 我们三个刻度盘的位置代表了第四个光源的颜色。
+
+In such an experiment, we have used Grassmann’s laws to add the three spectra of our primaries. We have also used metamerism, because the combined spectrum of our three primaries is almost certainly different from the spectrum of the fourth light source. However, the tristimulus values computed from these two spectra will be identical, having produced a color match. 
+在这样的实验中，我们使用格拉斯曼定律将我们的原色的三个光谱相加。 我们还使用了同色异谱，因为我们的三个基色的组合光谱几乎肯定与第四个光源的光谱不同。 然而，根据这两个光谱计算出的三刺激值将是相同的，从而产生了颜色匹配。
+
+Note that we do not actually have to know the cone response functions to carry out such an experiment. As long as we use the same observer under the same conditions, we are able to match colors and record the positions of our dials for each color. However, it is quite inconvenient to have to carry out such experiments every time we want to measure colors. For this reason, we do want to know the spectral cone response functions and average those for a set of different observers to eliminate interobserver variability. 
+请注意，我们实际上不必知道锥体响应函数即可进行此类实验。 只要我们在相同的条件下使用相同的观察者，我们就能够匹配颜色并记录每种颜色的表盘位置。 但每次要测量颜色时都必须进行这样的实验，非常不方便。 出于这个原因，我们确实想知道光谱锥响应函数并对一组不同观察者进行平均，以消除观察者间的变异性。
+
+### 19.1.4 Standard Observers 标准观察员
+
+If we perform a color matching experiment for a large range of colors, carried out by a set of different observers, it is possible to generate an average color matching dataset. If we specifically use monochromatic light sources against which to match our primaries, we can repeat this experiment for all visible wavelengths. The resulting tristimulus values are then called spectral tristimulus values, and can be plotted against wavelength λ, shown in Figure 19.4. 
+如果我们由一组不同的观察者对大范围的颜色进行颜色匹配实验，则可以生成平均颜色匹配数据集。 如果我们专门使用单色光源来匹配我们的原色，我们可以对所有可见波长重复这个实验。 由此产生的三刺激值称为光谱三刺激值，并且可以根据波长 λ 绘制，如图 19.4 所示。
+![Figure 19.4](Images/Figure 19.4.png)
+Figure 19.4. Spectral tristimulus values averaged over many observers. The primaries where monochromatic light sources with wavelengths of 435.8, 546.1, and 700 nm.  
+图 19.4。 光谱三刺激值对许多观察者进行平均。 原色采用波长为 435.8、546.1 和 700 nm 的单色光源。
+
+By using a well-defined set of primary light sources, the spectral tristimulus values lead to three color matching functions. The Commission Internationale d’Eclairage (CIE) has defined three such primaries to be monochromatic light sources of 435.8, 546.1, and 700 nm, respectively. With these three monochromatic light sources, all other visible wavelengths can be matched by adding different amounts of each. The amount of each required to match a given wavelength λ is encoded in color matching functions, given by $\overline{r}(λ)$, $\overline{g}(λ)$, and $\overline{b}(λ)$ and plotted in Figure 19.4. Tristimulus values associated with these color matching functions are termed R, G, and B. 
+通过使用一组明确的主光源，光谱三刺激值产生三个颜色匹配函数。 国际照明委员会 (CIE) 将三种原色定义为分别为 435.8、546.1 和 700 nm 的单色光源。 有了这三种单色光源，所有其他可见波长都可以通过添加不同数量的每种光源来匹配。 匹配给定波长 λ 所需的每种颜色的数量都用颜色匹配函数进行编码，由 $\overline{r}(λ)$、$\overline{g}(λ)$ 和 $\overline{b}( λ)$ 并绘制在图 19.4 中。 与这些颜色匹配函数相关的三刺激值称为 R、G 和 B。
+
+Given that we are adding light, and light cannot be negative, you may have noticed an anomaly in Figure 19.4: to create a match for some wavelengths, it is necessary to subtract light. Although there is no such thing as negative light, we can use Grassmann’s laws once more, and instead of subtracting light from the mixture of primaries, we can add the same amount of light to the color that is being matched. 
+鉴于我们正在添加光，并且光不能为负，您可能已经注意到图 19.4 中的异常情况：为了创建某些波长的匹配，有必要减去光。 虽然不存在负光这样的东西，但我们可以再次使用格拉斯曼定律，而不是从原色混合中减去光，我们可以向正在匹配的颜色添加相同量的光。
+
+The CIE $\overline{r}(λ)$, $\overline{g}(λ)$, and $\overline{b}(λ)$ color matching functions allow us to determine if a spectral distribution $\bold{Φ}_1$ matches a second spectral distribution $\bold{Φ}_2$  by simply comparing the resulting tristimulus values obtained by integrating with these color matching functions:
+CIE $\overline{r}(λ)$、$\overline{g}(λ)$ 和 $\overline{b}(λ)$ 颜色匹配函数允许我们确定光谱分布 $\bold{ Φ}_1$ 通过简单地比较通过与这些颜色匹配函数集成获得的三刺激值来匹配第二光谱分布 $\bold{Φ}_2$：
+$$
+\int_{λ}\bold{Φ}_1(λ)\overline{r}(λ) = \int_{λ}\bold{Φ}_2(λ)\overline{r}(λ) \\
+\int_{λ}\bold{Φ}_1(λ)\overline{g}(λ) = \int_{λ}\bold{Φ}_2(λ)\overline{g}(λ) \\
+\int_{λ}\bold{Φ}_1(λ)\overline{b}(λ) = \int_{λ}\bold{Φ}_2(λ)\overline{b}(λ) \\
+$$
+Of course, a color match is only guaranteed if all three tristimulus values match. 
+当然，只有当所有三个三刺激值都匹配时才能保证颜色匹配。
+
+The importance of these color matching functions lies in the fact that we are now able to communicate and describe colors compactly by means of tristimulus values. For a given spectral function, the CIE color matching functions provide a precise way in which to calculate tristimulus values. As long as everybody uses the same color matching functions, it should always be possible to generate a match. 
+这些颜色匹配函数的重要性在于我们现在能够通过三刺激值来紧凑地传达和描述颜色。 对于给定的光谱函数，CIE 颜色匹配函数提供了计算三刺激值的精确方法。 只要每个人都使用相同的颜色匹配函数，就应该总是可以生成匹配的颜色。
+
+If the same color matching functions are not available, then it is possible to transform one set of tristimulus values into a different set of tristimulus values appropriate for a corresponding set of primaries. The CIE has defined one such a transform for two specific reasons. First, in the 1930s numerical integrations were difficult to perform, and even more so for functions that can be both positive and negative. Second, the CIE had already developed the photopic luminance response function, CIE V (λ). It became desirable to have three integrating functions, of which V (λ) is one and all three being positive over the visible range. 
+如果相同的颜色匹配函数不可用，则可以将一组三色刺激值变换成适合于对应的原色组的另一组三色刺激值。 CIE 出于两个具体原因定义了这样一种转换。 首先，在 20 世纪 30 年代，数值积分很难执行，对于既可以是正值也可以是负值的函数来说更是如此。 其次，CIE 已经开发了明视亮度响应函数 CIE V (λ)。 人们希望具有三个积分函数，其中 V (λ) 为 1，并且所有三个积分函数在可见光范围内均为正值。
+
+To create a set of positive color matching functions, it is necessary to define imaginary primaries. In other words, to reproduce any color in the visible spectrum, we need light sources that cannot be physically realized. The color matching functions that were settled upon by the CIE are named $\overline{x}(λ)$, $\overline{y}(λ)$, and $\overline{z}(λ)$ and are shown in Figure 19.5. Note that $\overline{y}(λ)$ is equal to the photopic luminance response function $V(λ)$ and that each of these functions is indeed positive. They are known as the CIE 1931 standard observer. 
+要创建一组正颜色匹配函数，需要定义假想原色。 换句话说，为了再现可见光谱中的任何颜色，我们需要无法物理实现的光源。 CIE 确定的颜色匹配函数被命名为 $\overline{x}(λ)$、$\overline{y}(λ)$ 和 $\overline{z}(λ)$，并显示在 图 19.5。 请注意，$\overline{y}(λ)$ 等于明视亮度响应函数$V(λ)$，并且这些函数中的每一个实际上都是正的。 他们被称为 CIE 1931 标准观察员。
+![Figure 19.5](Images/Figure 19.5.png)
+Figure 19.5. The CIE $\overline{x}(λ)$, $\overline{y}(λ)$, and $\overline{z}(λ)$ color matching functions.  
+图 19.5。 CIE $\overline{x}(λ)$、$\overline{y}(λ)$ 和 $\overline{z}(λ)$ 颜色匹配函数。
+
+The corresponding tristimulus values are termed X, Y , and Z, to avoid confusion with R, G, and B tristimulus values that are normally associated with realizable primaries. The conversion from (R, G, B) tristimulus values to (X, Y, Z) tristimulus values is defined by a simple 3×3 transform:
+相应的三色刺激值被称为 X、Y 和 Z，以避免与通常与可实现的原色相关的 R、G 和 B 三色刺激值混淆。 从 (R, G, B) 三色刺激值到 (X, Y, Z) 三色刺激值的转换由简单的 3×3 变换定义：
+$$
+\begin{bmatrix}
+X \\ Y \\ Z
+\end{bmatrix} = \frac{1}{0.17697} \begin{bmatrix}
+0.4900 & 0.3100 & 0.2000 \\
+0.17697 & 0.81240 & 0.01063 \\
+0.0000 & 0.0100 & 0.9900 \\
+\end{bmatrix}\cdot \begin{bmatrix}
+R\\ G\\ B
+\end{bmatrix}
+$$
+To calculate tristimulus values, we typically directly integrate the standard observer color matching functions with the spectrum of interest $Φ(λ)$, rather than go through the CIE $\overline{r}(λ)$, $\overline{g}(λ)$, and $\overline{b}(λ)$ color matching functions first, followed by the above transformation. It allows us to calculate consistent color measurements and also determine when two colors match each other. 
+为了计算三刺激值，我们通常直接将标准观察者颜色匹配函数与感兴趣的光谱 $Φ(λ)$ 相结合，而不是通过 CIE $\overline{r}(λ)$, $\overline{g} (λ)$ 和 $\overline{b}(λ)$ 首先进行颜色匹配函数，然后进行上述变换。 它使我们能够计算一致的颜色测量值，并确定两种颜色何时相互匹配。
+
+### 19.1.5 Chromaticity Coordinates  色度坐标
+
+Every color can be represented by a set of three tristimulus values (X, Y, Z). We could define an orthogonal coordinate system with X, Y , and Z axes and plot each color in the resulting 3D space. This is called a color space. The spatial extent of the volume in which colors lie is then called the color gamut.
+每种颜色都可以由一组三个三刺激值（X、Y、Z）表示。 我们可以定义一个具有 X、Y 和 Z 轴的正交坐标系，并在生成的 3D 空间中绘制每种颜色。 这称为色彩空间。 颜色所在体积的空间范围称为色域。
+
+Visualizing colors in a 3D color space is fairly difficult. Moreover, the Y - value of any color corresponds to its luminance, by virtue of the fact that $\overline{y}(λ)$ equals $V(λ)$. We could therefore project tristimulus values to a 2D space which approximates chromatic information, i.e., information which is independent of luminance. This projection is called a chromaticity diagram and is obtained by normalization while at the same time removing luminance information:
+在 3D 色彩空间中可视化颜色相当困难。 此外，任何颜色的 Y 值都对应于其亮度，因为 $\overline{y}(λ)$ 等于 $V(λ)$。 因此，我们可以将三刺激值投影到近似色度信息（即独立于亮度的信息）的二维空间。 该投影称为色度图，通过归一化同时去除亮度信息而获得：
+$$
+x = \frac{X}{X + Y + Z} \\
+y = \frac{Y}{X + Y + Z} \\
+z = \frac{Z}{X + Y + Z} \\
+$$
+Given that x + y + z equals 1, the z-value is redundant, allowing us to plot the x and y chromaticities against each other in a chromaticity diagram. Although x and y by themselves are not sufficient to fully describe a color, we can use these two chromaticity coordinates and one of the three tristimulus values, traditionally Y , to recover the other two tristimulus values:
+鉴于 x + y + z 等于 1，z 值是多余的，允许我们在色度图中绘制 x 和 y 色度。 尽管 x 和 y 本身不足以完全描述颜色，但我们可以使用这两个色度坐标和三个三色刺激值之一（传统上为 Y ）来恢复其他两个三色刺激值：
+$$
+X = \frac{x}{y}Y \\
+Z = \frac{1 - x - y}{y} Y
+$$
+By plotting all monochromatic (spectral) colors in a chromaticity diagram, we obtain a horseshoe-shaped curve. The points on this curve are called spectrum loci. All other colors will generate points lying inside this curve. The spectrum locus for the 1931 standard observer is shown in Figure 19.6. The purple line between either end of the horseshoe does not represent a monochromatic color, but rather a combination of short and long wavelength stimuli. 
+通过在色度图中绘制所有单色（光谱）颜色，我们获得了马蹄形曲线。 这条曲线上的点称为频谱轨迹。 所有其他颜色都会生成位于该曲线内的点。 1931 年标准观测器的频谱轨迹如图 19.6 所示。 马蹄形两端之间的紫色线并不代表单色，而是短波长和长波长刺激的组合。
+![Figure 19.6](Images/Figure 19.6.png)
+Figure 19.6. The spectrum locus for the CIE 1931 standard observer.  
+图 19.6。 CIE 1931 标准观察者的光谱轨迹。
+
+A (non-monochromatic) primary can be integrated over all visible wavelengths, leading to (X, Y, Z) tristimulus values, and subsequently to an (x, y) chromaticity coordinate, i.e., a point on a chromaticity diagram. Repeating this for two or more primaries yields a set of points on a chromaticity diagram that can be connected by straight lines. The volume spanned in this manner represents the range of colors that can be reproduced by the additive mixture of these primaries. Examples of three-primary systems are shown in Figure 19.7. 
+（非单色）原色可以在所有可见波长上积分，产生 (X, Y, Z) 三刺激值，并随后产生 (x, y) 色度坐标，即色度图上的点。 对两个或多个原色重复此操作，会在色度图上产生一组可以通过直线连接的点。 以这种方式跨越的体积代表可以通过这些原色的加法混合物再现的颜色范围。 三主系统的示例如图 19.7 所示。
+![Figure 19.7](Images/Figure 19.7.png)
+Figure 19.7. The chromaticity boundaries of the CIE RGB primaries at 435.8, 546.1, and 700 nm (solid) and a typical HDTV (dashed). 
+图 19.7。 435.8、546.1 和 700 nm 处的 CIE RGB 原色（实线）和典型 HDTV（虚线)的色度边界。
+
+Chromaticity diagrams provide insight into additive color mixtures. However, they should be used with care. First, the interior of the horseshoe should not be colored, as any color reproduction system will have its own primaries and can only reproduce some parts of the chromaticity diagram. Second, as the CIE color matching functions do not represent human cone sensitivities, the distance between any two points on a chromaticity diagram is not a good indicator for how differently these colors will be perceived. 
+色度图提供了对加色混合物的深入了解。 但是，应谨慎使用它们。 首先，马蹄铁的内部不应该被着色，因为任何颜色再现系统都有自己的原色，并且只能再现色度图的某些部分。 其次，由于 CIE 颜色匹配函数并不代表人类视锥细胞的敏感度，因此色度图上任意两点之间的距离并不能很好地指示这些颜色的感知差异程度。
+
+A more uniform chromaticity diagram was developed to at least in part address the second of these problems. The CIE $u'v'$ chromaticity diagram provides a perceptually more uniform spacing and is therefore generally preferred over (x, y) chromaticity diagrams. It is computed from (X, Y, Z) tristimulus values by applying a different normalization,
+开发了更均匀的色度图，以至少部分解决第二个问题。 CIE $u'v'$ 色度图提供了感知上更均匀的间距，因此通常优于 (x, y) 色度图。 它是通过应用不同的归一化根据 (X, Y, Z) 三刺激值计算得出的，
+$$
+u' = \frac{4X}{X+15Y+3Z} \\
+v' = \frac{9Y}{X+15Y+3Z}
+$$
+and can alternatively be computed directly from (x, y) chromaticity coordinates:  
+也可以直接从 (x, y) 色度坐标计算：
+$$
+u' = \frac{4x}{-2x+12y+3} \\
+v' = \frac{9y}{-2x+12y+3}
+$$
+A CIE $u'v'$ chromaticity diagram is shown in Figure 19.8. 
+CIE $u'v'$ 色度图如图 19.8 所示。
+![Figure 19.8](Images/Figure 19.8.png)
+Figure 19.8. The CIE $u'v'$ chromaticity diagram. 
+图 19.8。 CIE $u'v'$ 色度图。
+
+## 19.2 Color Spaces 色彩空间
+
+As explained above, each color can be represented by three numbers, for instance defined by (X, Y, Z) tristimulus values. However, its primaries are imaginary, meaning that it is not possible to construct a device that has three light sources (all positive) that can reproduce all colors in the visible spectrum. 
+如上所述，每种颜色可以由三个数字表示，例如由（X，Y，Z）三刺激值定义。 然而，它的原色是虚数，这意味着不可能构建具有三个光源（均为正）且可以再现可见光谱中所有颜色的设备。
+
+For the same reason, image encoding and computations on images may not be practical. There is, for instance, a large number of possible XY Z values that do not correspond to any physical color. This would lead to inefficient use of available bits for storage and to a higher requirement for bit-depth to preserve visual integrity after image processing. Although it may be possible to build a capture device that has primaries that are close to the CIE XY Z color matching functions, the cost of hardware and image processing make this an unattractive option. It is not possible to build a display that corresponds to CIE XY Z. For these reasons, it is necessary to design other color spaces: physical realizability, efficient encoding, perceptual uniformity, and intuitive color specification. 
+出于同样的原因，图像编码和图像计算可能不切实际。 例如，存在大量不对应于任何物理颜色的可能 XY Z 值。 这将导致存储可用位的使用效率低下，并且对位深度提出更高的要求，以在图像处理后保持视觉完整性。 尽管可以构建具有接近 CIE XY Z 颜色匹配功能的原色的捕获设备，但硬件和图像处理的成本使其成为一个没有吸引力的选择。 不可能构建与 CIE XY Z 相对应的显示器。出于这些原因，有必要设计其他色彩空间：物理可实现性、高效编码、感知均匀性和直观的色彩规范。
+
+The CIE XY Z color space is still actively used, mostly for the conversion between other color spaces. It can be seen as a device-independent color space. Other color spaces can then be defined in terms of their relationship to CIE XY Z, which is often specified by a specific transform. For instance, linear and additive trichromatic display devices can be transformed to and from CIE XY Z by means of a simple 3 × 3 matrix. Some nonlinear additional transform may also be specified, for instance to minimize perceptual errors when data is stored with a limited bit-depth, or to enable display directly on devices that have a nonlinear relationship between input signal and the amount of light emitted. 
+CIE XY Z 色彩空间仍然被积极使用，主要用于其他色彩空间之间的转换。 它可以被看作是一个独立于设备的色彩空间。 其他色彩空间可以根据它们与 CIE XY Z 的关系来定义，这通常由特定的变换指定。 例如，线性和加法三色显示设备可以通过简单的 3 × 3 矩阵在 CIE XY Z 之间进行转换。 还可以指定一些非线性附加变换，例如，以在以有限位深度存储数据时最小化感知错误，或者使得能够直接在输入信号和发射的光量之间具有非线性关系的设备上进行显示。
+
+### 19.2.1 Constructing a Matrix Transform 构造矩阵变换
+
+For a display device with three primaries, say red, green, and blue, we can measure the spectral composition of the emitted light by sending the color vectors (1, 0, 0), (0, 1, 0), and (0, 0, 1). These vectors represent the three cases namely where one of the primaries is full on, and the other two are off. From the measured spectral output, we can then compute the corresponding chromaticity coordinates $(x_R, y_R)$, $(x_G, y_G)$, and $(x_B, y_B)$. 
+对于具有三基色（例如红色、绿色和蓝色）的显示设备，我们可以通过发送颜色向量 (1, 0, 0)、(0, 1, 0) 和 (0 , 0, 1)。 这些向量代表三种情况，即其中一个初级完全打开，而另外两个关闭。 根据测量的光谱输出，我们可以计算相应的色度坐标 $(x_R, y_R)$、$(x_G, y_G)$ 和 $(x_B, y_B)$。
+
+The white point of a display is defined as the spectrum emitted when the color vector (1, 1, 1) is sent to the display. Its corresponding chromaticity coordinate is $(x_W , y_W)$. The three primaries and the white point characterize the display and are each required to construct a transformation matrix between the display’s color space and CIE XY Z. 
+显示器的白点定义为将颜色矢量 (1, 1, 1) 发送到显示器时发出的光谱。 其对应的色度坐标为$(x_W , y_W)$。 三原色和白点表征了显示器的特征，并且每一个都需要在显示器的色彩空间和 CIE XY Z 之间构建变换矩阵。
+
+These four chromaticity coordinates can be extended to chromaticity triplets reconstructing the z-coordinate from $z = 1−x−y,$ leading to triplets $(x_R, y_R, z_R)$, $(x_G, y_G, z_G)$, $(x_B, y_B, z_B)$, and $(x_W , y_W , z_W )$. If we know the maximum luminance of the white point, we can compute its corresponding tristimulus value $(X_W , Y_W , Z_W )$ and then solve the following set of equations for the luminance ratio scalars $S_R, S_G$, and $S_B$:
+这四个色度坐标可以扩展到色度三元组，从 $z = 1−x−y,$ 重建 z 坐标，得到三元组 $(x_R, y_R, z_R)$, $(x_G, y_G, z_G)$, $ (x_B, y_B, z_B)$ 和 $(x_W , y_W , z_W )$。 如果我们知道白点的最大亮度，我们可以计算其相应的三刺激值 $(X_W , Y_W , Z_W )$，然后求解以下一组方程以获得亮度比标量 $S_R、S_G$ 和 $S_B$ :
+$$
+X_W = x_R S_R + x_G S_G + x_B S_B, \\
+Y_W = y_R S_R + y_G S_G + y_B S_B, \\
+Z_W = z_R S_R + z_G S_G + z_B S_B.
+$$
+The conversion between RGB and XYZ is then given by 
+RGB 和 XYZ 之间的转换由下式给出
+$$
+\begin{bmatrix}
+X\\ Y\\ Z
+\end{bmatrix} = \begin{bmatrix}
+x_R S_R & x_G S_G & x_B S_B \\
+y_R S_R & y_G S_G & y_B S_B \\
+z_R S_R & z_G S_G & z_B S_B
+\end{bmatrix}
+\begin{bmatrix}
+R \\G \\B
+\end{bmatrix}
+$$
+The luminance of any given color can be computed by evaluating the middle row of a matrix constructed in this manner: 
+任何给定颜色的亮度可以通过评估以此方式构造的矩阵的中间行来计算：
+$Y = y_R S_R R + y_G S_G G + y_B S_B B  $
+
+To convert between XYZ and RGB of a given device, the above matrix can simply be inverted. 
+要在给定设备的 XYZ 和 RGB 之间进行转换，只需反转上述矩阵即可。
+
+If an image is represented in an RGB color space for which the primaries and white point are unknown, then the next best thing is to assume that the image was encoded in a standard RGB color space. A reasonable choice is then to assume that the image was specified according to ITU-R BT.709, which is the specification used for encoding and broadcasting of HDTV. Its primaries and white point are specified in Table 19.1. Note that the same primaries and white point are used to define the well-known sRGB color space. The transformation between this RGB color space and CIE XYZ is and vice versa given by
+如果图像以 RGB 颜色空间表示，而原色和白点未知，那么最好的办法是假设该图像是在标准 RGB 颜色空间中编码的。 合理的选择是假设图像是根据 ITU-R BT.709 指定的，这是用于 HDTV 编码和广播的规范。 其原色和白点在表 19.1 中指定。 请注意，相同的原色和白点用于定义众所周知的 sRGB 色彩空间。 此 RGB 颜色空间与 CIE XYZ 之间的变换为（反之亦然）：
+
+|      |   R    |   G    |   B    | White  |
+| :--: | :----: | :----: | :----: | :----: |
+|  x   | 0.6400 | 0.3000 | 0.1500 | 0.3127 |
+|  y   | 0.3300 | 0.6000 | 0.0600 | 0.3290 |
+
+Table 19.1. The (x, y) chromaticity coordinates for the primaries and white point specified by ITU-R BT.709. The sRGB standard also uses these primaries and white point.  
+表 19.1。 ITU-R BT.709 指定的原色和白点的 (x, y) 色度坐标。 sRGB 标准也使用这些原色和白点。
+$$
+\ \begin{bmatrix}
+X\\ Y\\ Z
+\end{bmatrix} = \begin{bmatrix}
+0.4124 & 0.3576 & 0.1805 \\
+0.2126 & 0.7152 & 0.0722 \\
+0.0193 & 0.1192 & 0.9505
+\end{bmatrix}
+\begin{bmatrix}
+R \\G \\B
+\end{bmatrix} \\
+\begin{bmatrix}
+R \\G \\B
+\end{bmatrix} = \begin{bmatrix}
+3.2405 & −1.5371 & −0.4985 \\
+−0.9693 & 1.8706 & 0.0416 \\
+0.0556 & −0.2040 & 1.0572
+\end{bmatrix} \begin{bmatrix}
+X\\ Y\\ Z
+\end{bmatrix}
+$$
+By substituting the maximum RGB values of the device, we can compute the white point. For ITU-R BT.709, the maximum values are $(R_W , G_W , B_W) = (100, 100, 100)$, leading to a white point of $(X_W , Y_W , Z_W) = (95.05, 100.00, 108.90)$. 
+通过替换设备的最大 RGB 值，我们可以计算白点。 对于 ITU-R BT.709，最大值为 $(R_W , G_W , B_W) = (100, 100, 100)$，导致白点为 $(X_W , Y_W , Z_W) = (95.05, 100.00, 108.90)$。
+
+In addition to a linear transformation, the sRGB color space is characterized by a subsequent nonlinear transform. The nonlinear encoding is given by
+除了线性变换之外，sRGB 色彩空间的特征还在于后续的非线性变换。 非线性编码由下式给出
+$$
+R_{sRGB} = \begin{cases}
+1.055R^{1/2.4} - 0.055\ \ \ \ \ \ \ \ \ \  R > 0.0031308\\
+12.92R\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ R ≤ 0.0031308
+\end{cases} \\
+G_{sRGB} = \begin{cases}
+1.055G^{1/2.4} - 0.055\ \ \ \ \ \ \ \ \ \  G > 0.0031308\\
+12.92G\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ G ≤ 0.0031308
+\end{cases} \\
+B_{sRGB} = \begin{cases}
+1.055B^{1/2.4} - 0.055\ \ \ \ \ \ \ \ \ \ B > 0.0031308\\
+12.92B\ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ B ≤ 0.0031308
+\end{cases} \\
+$$
+This nonlinear encoding helps minimize perceptual errors due to quantization errors in digital applications.  
+这种非线性编码有助于最大限度地减少数字应用中由于量化误差而导致的感知误差。
+
+### 19.2.2 Device-Dependent RGB Spaces  设备相关的 RGB 空间
+
+As each device typically has its own set of primaries and white point, we call the associated RGB color spaces device-dependent. It should be noted that even if all these devices operate in an RGB space, they may have very different primaries and white points. If we therefore have an image specified in some RGB space, it may appear very different to us, depending upon which device we display it. 
+由于每个设备通常都有自己的一组原色和白点，因此我们将关联的 RGB 颜色空间称为设备相关的。 应该注意的是，即使所有这些设备都在 RGB 空间中运行，它们也可能具有非常不同的原色和白点。 因此，如果我们在某个 RGB 空间中指定了一个图像，那么它对我们来说可能会显得非常不同，具体取决于我们显示它的设备。
+
+This is clearly an undesirable situation, resulting from a lack of color management. However, if the image is specified in a known RGB color space, it can first be converted to XYZ, which is device independent, and then subsequently it can be converted to the RGB space of the device on which it will be displayed. 
+这显然是一种不受欢迎的情况，是由于缺乏色彩管理造成的。 然而，如果图像是在已知的 RGB 颜色空间中指定的，则可以首先将其转换为与设备无关的 XYZ，然后将其转换为将在其上显示的设备的 RGB 空间。
+
+There are several other RGB color spaces that are well defined. They each consist of a linear matrix transform followed by a nonlinear transform, akin to the aforementioned sRGB color space. The nonlinear transform can be parameterized as follows:
+还有其他几个定义明确的 RGB 色彩空间。 它们均由线性矩阵变换和非线性变换组成，类似于前面提到的 sRGB 颜色空间。 非线性变换可以参数化如下：
+$$
+R_{nonlinear} = \begin{cases}
+(1+f)R^γ - f \ \ \ \ t < R ≤ 1 \\
+sR \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0 ≤ R ≤ t
+\end{cases} \\
+G_{nonlinear} = \begin{cases}
+(1+f)G^γ - f \ \ \ \ t < G ≤ 1 \\
+sG \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0 ≤ G ≤ t
+\end{cases} \\
+R_{nonlinear} = \begin{cases}
+(1+f)R^γ - f \ \ \ \ t < R ≤ 1 \\
+sR \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ 0 ≤ R ≤ t
+\end{cases} \\
+$$
+The parameters s, f, t and γ, together with primaries and white point, specify a class of RGB color spaces that are used in various industries. Several common transformations are listed in Table 19.2. 
+参数 s、f、t 和 γ 与原色和白点一起指定了用于各个行业的一类 RGB 颜色空间。 表 19.2 列出了几种常见的转换。
+![Table 19.2](Images/Table 19.2.png)
+Table 19.2. Transformations for standard RGB color spaces (after (Pascale, 2003)). 
+表 19.2。 标准 RGB 颜色空间的转换（继（Pascale，2003）之后)。
+
+### 19.2.3 LMS Cone Space  LMS 锥体空间
+
+The aforementioned cone signals can be expressed in terms of the CIE XYZ color space. The matrix transform to compute LMS signals from XY Z and vice versa are given by
+上述锥体信号可以用CIE XYZ颜色空间来表达。 用于计算来自 XY Z 的 LMS 信号（反之亦然）的矩阵变换由下式给出
+$$
+\ \begin{bmatrix}
+L\\ M\\ S
+\end{bmatrix} = \begin{bmatrix}
+0.38971 & 0.68898 & −0.07868 \\
+−0.22981 & 1.18340 & 0.04641 \\
+0.00000 & 0.00000 & 1.00000
+\end{bmatrix}\begin{bmatrix}
+X\\ Y\\ Z
+\end{bmatrix} \\
+\begin{bmatrix}
+X\\ Y\\ Z
+\end{bmatrix} = \begin{bmatrix}
+1.91019 & −1.11214 & 0.20195 \\
+0.37095 & 0.62905 & 0.00000 \\
+0.00000 & 0.00000 & 1.00000
+\end{bmatrix}\begin{bmatrix}
+L\\ M\\ S
+\end{bmatrix}
+$$
+This transform is known as the Hunt-Pointer-Estevez transform (Hunt, 2004) and is used in chromatic adaptation transforms as well as in color appearance modeling. 
+该变换称为 Hunt-Pointer-Estevez 变换（Hunt，2004），用于色彩适应变换以及颜色外观建模。
+
+### 19.2.4 CIE 1976 L∗a∗b∗ 
+
+Color opponent spaces are characterized by a channel representing an achromatic channel (luminance), as well as two channels encoding color opponency. These are frequently red-green and yellow-blue channels. These color opponent channels thus encode two chromaticities along one axis, which can have both positive and negative values. For instance, a red-green channel encodes red for positive values and green for negative values. The value zero encodes a special case: neutral which is neither red or green. The yellow-blue channel works in much the same way. 
+颜色对立空间的特征是一个通道代表一个消色差通道（亮度），以及两个编码颜色对立的通道。 这些通道通常是红绿通道和黄蓝通道。 因此，这些颜色对立通道沿一个轴编码两个色度，可以同时具有正值和负值。 例如，红绿通道将红色编码为正值，将绿色编码为负值。 值零编码一种特殊情况：中性，既不是红色也不是绿色。 黄蓝色通道的工作原理大致相同。
+
+As at least two colors are encoded on each of the two chromatic axes, it is not possible to encode a mixture of red and green. Neither is it possible to encode yellow and blue simultaneously. While this may seem a disadvantage, it is known that the human visual system computes similar attributes early in the visual pathway. As a result, humans are not able to perceive colors that are simultaneously red and green, or yellow and blue. We do not see anything resembling reddishgreen, or yellowish-blue. We are, however, able to perceive mixtures of colors such as yellowish-red (orange) or greenish-blue, as these are encoded across the chromatic channels. 
+由于在两个色轴中的每一个上至少编码两种颜色，所以不可能对红色和绿色的混合进行编码。 也不可能同时对黄色和蓝色进行编码。 虽然这似乎是一个缺点，但众所周知，人类视觉系统在视觉通路的早期计算类似的属性。 因此，人类无法感知同时为红色和绿色，或黄色和蓝色的颜色。 我们看不到任何类似红绿色或黄蓝色的东西。 然而，我们能够感知黄红色（橙色）或绿蓝色等颜色的混合，因为这些颜色是通过色通道编码的。
+
+The most relevant color opponent system for computer graphics is the CIE 1976 L∗a∗b∗ color model. It is a perceptually more or less uniform color space, useful, among other things, for the computation of color differences. It is also known as CIELAB. 
+计算机图形学最相关的颜色对手系统是 CIE 1976 L*a*b* 颜色模型。 它是一个在感知上或多或少均匀的色彩空间，除其他外，对于计算色差很有用。 它也被称为 CIELAB。
+
+The input to CIELAB are the stimulus (X, Y, Z) tristimulus values as well as the tristimulus values of a diffuse white reflecting surface that is lit by a known illuminant, $(X_n, Y_n, Z_n)$. CIELAB therefore goes beyond being an ordinary color space, as it takes into account a patch of color in the context of a known illumination. It can thus be seen as a rudimentary color appearance space. 
+CIELAB 的输入是刺激 (X, Y, Z) 三刺激值以及由已知光源 $(X_n, Y_n, Z_n)$ 照亮的漫反射白色反射表面的三刺激值。 因此，CIELAB 超越了普通的色彩空间，因为它考虑了已知照明背景下的一小块色彩。 因此它可以被视为一个基本的颜色外观空间。
+
+The three channels defined in CIELAB are L∗, a∗, and b∗. The L∗ channel encodes the lightness of the color, i.e., the perceived reflectance of a patch with tristimulus value (X, Y, Z). The a∗ and b∗ are chromatic opponent channels. The transform between XYZ and CIELAB is given by
+CIELAB 中定义的三个通道是 L*、a* 和 b*。 L* 通道对颜色的亮度进行编码，即具有三刺激值 (X, Y, Z) 的色块的感知反射率。 a* 和 b* 是彩色对立通道。 XYZ 和 CIELAB 之间的变换由下式给出
+$$
+\begin{bmatrix}
+L∗\\ a∗\\ b∗
+\end{bmatrix}
+= \begin{bmatrix}
+0 & 116 & 0 & −16 \\
+500 & −500 & 0 & 0 \\
+0 & 200 & −200 & 0
+\end{bmatrix}
+\begin{bmatrix}
+f(X/X_n) \\
+f(Y/Y_n) \\
+f(Z/Z_n) \\
+1
+\end{bmatrix}
+$$
+The function f is defined as
+函数 f 定义为
+$$
+f(r) = \begin{cases}
+\sqrt[3]{r} \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ for\ r > 0.008856, \\
+7.787 r + \frac{16}{116} \ \ \ \ \ \ \ for\ r ≤ 0.008856.
+\end{cases}
+$$
+As can be seen from this formulation, the chromatic channels do depend on the luminance Y . Although this is perceptually accurate, it means that we cannot plot the values of a∗ and b∗ in a chromaticity diagram. The lightness L∗ is normalized between 0 and 100 for black and white. Although the a∗ and b∗ channels are not explicitly constrained, they are typically in the range [−128, 128]. 
+从这个公式可以看出，色彩通道确实取决于亮度 Y 。 尽管这在感知上是准确的，但这意味着我们无法在色度图中绘制 a* 和 b* 的值。 对于黑色和白色，亮度 L* 标准化为 0 到 100 之间。 尽管 a* 和 b* 通道没有明确约束，但它们通常在 [−128, 128] 范围内。
+
+As CIELAB is approximately perceptually linear, it is possible to take two colors, convert them to CIELAB, and then estimate the perceived color difference by computing the Euclidean distance between them. This leads to the following color difference formula:
+由于 CIELAB 在感知上近似线性，因此可以采用两种颜色，将它们转换为 CIELAB，然后通过计算它们之间的欧几里德距离来估计感知的色差。 由此得出以下色差公式：
+$ΔE^∗_{ab} = [(ΔL^∗)^2 + (Δa^∗)^2 + (Δb^∗)^2  ]^{1/2}  \\$
+
+The letter E stands for difference in sensation (in German, Empfindung) (Judd, 1932).
+字母 E 代表感觉差异（德语为 Empfindung）（Judd，1932）。
+
+Finally, the inverse transform between CIELAB and XYZ is given by
+最后，CIELAB 和 XYZ 之间的逆变换由下式给出
+![Formula 19.1](Images/Formula 19.1.png)
+
+## 19.3 Chromatic Adaptation 半音适应
+
+The CIELAB color space just described takes as input both a tristimulus value of the stimulus and the tristimulus value of light reflected off a white diffuse patch. As such, it forms the beginnings of a system in which the viewing environment is taken into account. 
+刚刚描述的 CIELAB 色彩空间将刺激的三色刺激值和从白色漫射斑块反射的光的三色刺激值作为输入。 因此，它构成了考虑观看环境的系统的开端。
+
+The environment in which we observe objects and images has a large influence on how we perceive those objects. The range of viewing environments that we encounter in daily life is very large, from sunlight to starlight and from candlelight to fluorescent light. The lighting conditions not only constitute a very large range in the amount of light that is present, but also vary greatly in the color of the emitted light.
+我们观察物体和图像的环境对我们感知这些物体的方式有很大影响。 我们在日常生活中遇到的观看环境范围非常广，从阳光到星光，从烛光到荧光灯。 照明条件不仅在存在的光量方面构成非常大的范围，而且在发出的光的颜色方面也有很大的变化。
+
+The human visual system accommodates these changes in the environment through a process called adaptation. Three different types of adaptation can be distinguished, namely light adaptation, dark adaptation, and chromatic adaptation. Light adaptation refers to the changes that occur when we move from a very dark to a very light environment. When this happens, at first we are dazzled by the light, but soon we adapt to the new situation and begin to distinguish objects in our environment. Dark adaptation refers to the opposite—when we go from a light environment to a dark environment. At first, we see very little, but after a given amount of time, details will start to emerge. The time needed to adapt to the dark is generally much longer than for light adaptation. 
+人类视觉系统通过称为适应的过程来适应环境中的这些变化。 可以区分三种不同类型的适应，即光适应、暗适应和色适应。 光适应是指当我们从非常黑暗的环境移动到非常明亮的环境时发生的变化。 当这种情况发生时，一开始我们会被光线弄得眼花缭乱，但很快我们就适应了新的情况并开始区分环境中的物体。 暗适应指的是相反的情况——当我们从明亮的环境进入黑暗的环境时。 起初，我们看到的很少，但经过一段时间后，细节就会开始显现。 适应黑暗所需的时间通常比适应光所需的时间长得多。
+
+Chromatic adaptation refers to our ability to adapt, and largely ignore, variations in the color of the illumination. Chromatic adaptation is, in essence, the biological equivalent of the white balancing operation that is available on most modern cameras. The human visual system effectively normalizes the viewing conditions to present a visual experience that is fairly consistent. Thus, we exhibit a certain amount of color constancy: object reflectances appear relatively constant despite variations in illumination. 
+色彩适应是指我们适应并在很大程度上忽略照明颜色变化的能力。 本质上，色彩适应在生物学上相当于大多数现代相机上提供的白平衡操作。 人类视觉系统有效地标准化观看条件，以呈现相当一致的视觉体验。 因此，我们表现出一定程度的颜色恒定性：尽管照明发生变化，物体反射率仍显得相对恒定。
+
+Although we are able to largely ignore changes in viewing environment, we are not able to do so completely. For instance, colors appear much more colorful on a sunny day than they do on a cloudy day. Although the appearances have changed, we do not assume that object reflectance's themselves have actually changed their physical properties. We thus understand that the lighting conditions have influenced the overall color appearance. Nonetheless, color constancy does apply to chromatic content. Chromatic adaptation allows white objects to appear white for a large number of lighting conditions, as shown in Figure 19.9.
+虽然我们可以在很大程度上忽略观看环境的变化，但我们不能完全做到这一点。 例如，颜色在晴天比在阴天显得更加丰富多彩。 尽管外观发生了变化，但我们并不认为物体反射率本身实际上改变了它们的物理属性。 因此我们了解到照明条件影响了整体颜色外观。 尽管如此，颜色恒常性确实适用于彩色内容。 色彩适应允许白色物体在大量照明条件下呈现白色，如图 19.9 所示。
+![Figure 19.9](Images/Figure 19.9.png)
+Figure 19.9. A series of light sources plotted in the CIE $u'v'$ chromaticity diagram. A white piece of paper illuminated by any of these light sources maintains a white color appearance. 
+图 19.9。 在 CIE $u'v'$ 色度图中绘制的一系列光源。 一张白色的纸在任何这些光源的照射下都会保持白色的外观。
+
+Computational models of chromatic adaptation tend to focus on the gain control mechanism in the cones. One of the simplest models assumes that each cone adapts independently to the energy that it absorbs. This means that different cone types adapt differently dependent on the spectrum of the light being absorbed. Such adaptation can then be modeled as an adaptive and independent rescaling of the cone signals:
+色适应的计算模型倾向于关注锥体中的增益控制机制。 最简单的模型之一假设每个锥体独立地适应其吸收的能量。 这意味着不同的锥体类型根据被吸收的光的光谱进行不同的适应。 然后，这种适应可以被建模为锥体信号的自适应且独立的重新缩放：
+$$
+L_a = α L, \\
+M_a = β M, \\
+S_a = γ S,
+$$
+where $(L_a, M_a, S_a)$ are the chromatically adapted cone signals, and α, β, and γ are the independent gain controls which are determined by the viewing environment. This type of independent adaptation is also known as von-Kries adaptation. An example is shown in Figure 19.10. 
+其中 $(L_a, M_a, S_a)$ 是色度适应的锥体信号，α、β 和 γ 是由观看环境确定的独立增益控制。 这种类型的独立适应也称为 von-Kries 适应。 图 19.10 显示了一个示例。
+![Figure 19.10](Images/Figure 19.10.png)
+Figure 19.10. An example of von Kries–style independent photoreceptor gain control. The relative cone responses (solid line) and the relative adapted cone responses to CIE illuminant A (dashed) are shown. The separate patch of color represents CIE illuminant A rendered into the sRGB color space.
+图 19.10。 冯·克里斯式独立感光器增益控制的一个例子。 显示了相对锥体响应（实线）和对 CIE 光源 A（虚线)的相对适应锥体响应。 单独的色块代表渲染到 sRGB 色彩空间的 CIE 光源 A。
+
+The adapting illumination can be measured off a white surface in the scene. In the ideal case, this would be a Lambertian surface. In a digital image, the adapting illumination can also be approximated as the maximum tristimulus values of the scene. The light measured or computed in this manner is the adapting white, given by $(L_w, M_w, S_w)$. Von Kries adaptation is then simply a scaling by the reciprocal of the adapting white, carried out in cone response space: 
+可以在场景中的白色表面上测量适应照明。 在理想情况下，这将是朗伯曲面。 在数字图像中，自适应照明也可以近似为场景的最大三刺激值。 以这种方式测量或计算的光是适应白光，由 $(L_w, M_w, S_w)$ 给出。 那么，Von Kries 适应只是在锥体响应空间中进行的适应白的倒数的缩放：
+$$
+\begin{bmatrix}
+L_a\\ M_a\\ S_a
+\end{bmatrix} = \begin{bmatrix}
+\frac{1}{L_w} & 0 & 0 \\
+0 & \frac{1}{M_w} & 0 \\
+0 & 0 & \frac{1}{S_w}
+\end{bmatrix}\begin{bmatrix}
+L \\M \\S
+\end{bmatrix}
+$$
+In many cases, we are interested in what stimulus should be generated under one illumination to match a given color under a different illumination. For example, if we have a colored patch illuminated by daylight, we may ask ourselves what tristimulus values should be generated to create a matching color patch that will be illuminated by incandescent light. 
+在许多情况下，我们感兴趣的是在一种照明下应该产生什么刺激来匹配不同照明下的给定颜色。 例如，如果我们有一个被日光照亮的色块，我们可能会问自己应该生成什么三刺激值来创建将被白炽光照亮的匹配色块。
+
+We are thus interested in computing corresponding colors, which can be achieved by cascading two chromatic adaptation calculations. In essence, the previously mentioned von Kries transform divides out the adapting illuminant—in our example, the daylight illumination. If we subsequently multiply in the incandescent illuminant, we have computed a corresponding color. If the two illuminants are given by $(L_{w,1}, M_{w,1}, S_{w,1})$ and $(L_{w,2}, M_{w,2}, S_{w,2})$, the corresponding color $(L_c, M_c, S_c)$ is given by
+因此，我们感兴趣的是计算相应的颜色，这可以通过级联两个色彩适应计算来实现。 本质上，前面提到的冯·克里斯变换划分了适应光源——在我们的例子中，是日光照明。 如果我们随后乘以白炽光源，我们就计算出相应的颜色。 如果两个光源由 $(L_{w,1}, M_{w,1}, S_{w,1})$ 和 $(L_{w,2}, M_{w,2}, S_{ w,2})$，相应的颜色$(L_c, M_c, S_c)$由下式给出
+$$
+\begin{bmatrix}
+L_c\\ M_c\\ S_c
+\end{bmatrix} = \begin{bmatrix}
+L_{w,2} & 0 & 0 \\
+0 & M_{w,2} & 0 \\
+0 & 0 & S_{w,2}
+\end{bmatrix}
+\begin{bmatrix}
+\frac{1}{L_{w,1}} & 0 & 0 \\
+0 & \frac{1}{M_{w,1}} & 0 \\
+0 & 0 & \frac{1}{S_{w,1}}
+\end{bmatrix}
+\begin{bmatrix}
+L \\M \\S
+\end{bmatrix}
+$$
+There are several more complicated and, therefore, more accurate chromatic adaptation transform in existence (Reinhard et al., 2008). However, the simple von Kries model remains remarkably effective in modeling chromatic adaptation and can thus be used to achieve white balancing in digital images. 
+存在几种更复杂、因此更准确的色适应变换（Reinhard et al., 2008）。 然而，简单的 von Kries 模型在模拟色彩适应方面仍然非常有效，因此可用于实现数字图像中的白平衡。
+
+The importance of chromatic adaptation in the context of rendering, is that we have moved one step closer to taking into account the viewing environment of the observer, without having to correct for it by adjusting the scene and rerendering our imagery. Instead, we can model and render our scenes, and then, as an image postprocess, correct for the illumination of the viewing environment. To ensure that white balancing does not introduce artifacts, however, it is important to ensure that the image is rendered to a floating-point format. If rendered to traditional 8- bit image formats, the chromatic adaptation transform may amplify quantization errors.
+渲染环境中色彩适应的重要性在于，我们在考虑观察者的观看环境方面又向前迈进了一步，而无需通过调整场景和重新渲染图像来进行纠正。 相反，我们可以对场景进行建模和渲染，然后作为图像后处理，校正观看环境的照明。 然而，为了确保白平衡不会引入伪影，确保将图像渲染为浮点格式非常重要。 如果渲染为传统的 8 位图像格式，色适应变换可能会放大量化误差。
+
+## 19.4 Color Appearance 颜色外观
+
+While colorimetry allows us to accurately specify and communicate color in a device-independent manner, and chromatic adaptation allows us to predict color matches across changes in illumination, these tools are still insufficient to describe what colors actually look like. 
+虽然比色法使我们能够以独立于设备的方式准确地指定和传达颜色，并且色彩适应使我们能够预测照明变化下的颜色匹配，但这些工具仍然不足以描述颜色的实际外观。
+
+To predict the actual perception of an object, we need to know more information about the environment and take that information into account. The human visual system is constantly adapting to its environment, which means that the perception of color will be strongly influenced by such changes. Color appearance models take into account measurements of the stimulus itself, as well as the viewing environment. This means that the resulting description of color is independent of viewing condition. 
+为了预测对物体的实际感知，我们需要了解更多有关环境的信息并将这些信息考虑在内。 人类视觉系统不断适应其环境，这意味着对颜色的感知将受到这种变化的强烈影响。 颜色外观模型考虑了刺激本身以及观看环境的测量。 这意味着所得到的颜色描述与观看条件无关。
+
+The importance of color appearance modeling can be seen in the following example. Consider an image being displayed on an LCD screen. When making a print of the same image and viewing it in a different context, more often than not the image will look markedly different. Color appearance models can be used to predict the changes required to generate an accurate cross-media color reproduction (Fairchild, 2005). 
+从下面的例子可以看出颜色外观建模的重要性。 考虑 LCD 屏幕上显示的图像。 当打印相同的图像并在不同的环境中查看它时，图像通常看起来会明显不同。 颜色外观模型可用于预测生成准确的跨媒体颜色再现所需的变化（Fairchild，2005）。
+
+Although color appearance modeling offers important tools for color reproduction, actual implementations tend to be relatively complicated and cumbersome in practical use. It can be anticipated that this situation may change over time. However, until then, we leave their description to more specialized textbooks (Fairchild, 2005). 
+尽管颜色外观建模为颜色再现提供了重要的工具，但实际实现在实际使用中往往相对复杂和繁琐。 可以预见，随着时间的推移，这种情况可能会发生变化。 然而，在那之前，我们将它们的描述留给更专业的教科书（Fairchild，2005）。
+
+## Notes 注释
+
+Of all the books on color theory, Reinhard et al.’s work (Reinhard et al., 2008) is most directly geared toward engineering disciplines, including computer graphics, computer vision, and image processing. Other general introductions to color theory are given by Berns (Berns, 2000) and Stone (Stone, 2003). Wyszecki and Stiles have produced a comprehensive volume of data and formulae, forming an indispensable reference work (Wyszecki & Stiles, 2000). For color reproduction, we recommend Hunt’s book (Hunt, 2004). Color appearance models are comprehensively described in Fairchild’s book (Fairchild, 2005). For color issues related to video and HDTV Poynton’s book is essential (Poynton, 2003).
+在所有关于色彩理论的书籍中，Reinhard 等人的著作（Reinhard 等人，2008）最直接面向工程学科，包括计算机图形学、计算机视觉和图像处理。 Berns (Berns, 2000) 和 Stone (Stone, 2003) 对色彩理论进行了其他一般介绍。 Wyszecki 和 Stiles 提供了大量的数据和公式，形成了不可缺少的参考书（Wyszecki & Stiles，2000）。 对于色彩再现，我们推荐 Hunt 的书（Hunt，2004）。 Fairchild 的书中全面描述了颜色外观模型（Fairchild，2005）。 对于与视频和 HDTV 相关的色彩问题，Poynton 的书至关重要（Poynton，2003）。
+
+
+
