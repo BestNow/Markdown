@@ -57,7 +57,7 @@ Almost any endeavor can make some use of computer graphics, but the major consum
 - **Simulation** can be thought of as accurate video gaming. For example, a flight simulator uses sophisticated 3D graphics to simulate the experience of flying an airplane. Such simulations can be extremely useful for initial training in safety-critical domains such as driving, and for scenario training for experienced users such as specific fire-fighting situations that are too costly or dangerous to create physically.
   **模拟**可以被认为是准确的视频游戏。例如，飞行模拟器使用复杂的3D图形来模拟飞行飞机的体验。这样的模拟对于安全关键领域（如驾驶）的初步培训以及对于经验丰富的用户（如特定的消防情况）的情景培训非常有用，这些情况在物理上过于昂贵或危险。
 - **Medical imaging** creates meaningful images of scanned patient data. For example, a computed tomography (CT) dataset is composed of a large 3D rectangular array of density values. Computer graphics is used to create shaded images that help doctors extract the most salient information from such data.
-  **医学成像**创建有意义的扫描患者数据的图像。例如，计算机断层扫描（CT）数据集由大量的3D矩形密度值数组组成。计算机图形学用于创建阴影图像，以帮助医生从这些数据中提取最重要的信息。
+  **医学成像**创建有意义的扫描患者数据的图像。例如，计算机断层扫描（CT）数据集由大量的3D矩形密度值数组组成。计算机图形学用于创建着色图像，以帮助医生从这些数据中提取最重要的信息。
 - **Information visualization** creates images of data that do not necessarily have a “natural’ visual depiction. For example, the temporal trend of the price of ten different stocks does not have an obvious visual depiction, but clever graphing techniques can help humans see the patterns in such data.
   **信息可视化**创建数据的图像，这些数据不一定具有“自然”的视觉描述。例如，十种不同股票价格的时间趋势没有明显的视觉描述，但巧妙的绘图技术可以帮助人们看到这些数据中的模式。
 
@@ -67,7 +67,7 @@ A key part of using graphics libraries is dealing with a graphics API. An applic
 使用图形库的关键部分是处理图形API。应用程序编程接口（API）是一组标准函数，用于执行一组相关操作，图形API是一组函数，用于在屏幕上的窗口中绘制图像和3D表面等基本操作。
 
 Every graphics program needs to be able to use two related APIs: a graphics API for visual output and a user-interface API to get input from the user. There are currently two dominant paradigms for graphics and user-interface APIs. The first is the integrated approach, exemplified by Java, where the graphics and user interface toolkits are integrated and portable packages that are fully standardized and supported as part of the language. The second is represented by Direct3Dand OpenGL, where the drawing commands are part of a software library tied toa language such as C++, and the user-interface software is an independent entity that might vary from system to system. In this latter approach, it is problematic to write portable code, although for simple programs it may be possible to use a portable library layer to encapsulate the system specific user-interface code. 
-每个图形程序都需要能够使用两个相关的API：用于视觉输出的图形API和用于从用户获取输入的用户界面API。目前有两种主要的图形和用户界面API范例。第一种是集成方法，例如Java，其中图形和用户界面工具包是集成和可移植的包，完全标准化并作为语言的一部分得到支持。第二种是由Direct3D和OpenGL代表的方法，其中绘图命令是与诸如C++之类的语言绑定的软件库的一部分，用户界面软件是一个独立的实体，可能因系统而异。在后一种方法中，编写可移植代码存在问题，尽管对于简单的程序，可能可以使用可移植库层来封装特定于系统的用户界面代码。
+每个图形程序都需要能够使用两个相关的API：用于视觉输出的图形API和用于从用户获取输入的用户界面API。目前有两种主要的图形和用户界面API范例。第一种是**集成方法**，例如Java，其中图形和用户界面工具包是集成和可移植的包，完全标准化并作为语言的一部分得到支持。第二种是由Direct3D和OpenGL代表的方法，其中绘图命令是与诸如C++之类的语言**绑定的软件库的一部分**，用户界面软件是一个独立的实体，可能因系统而异。在后一种方法中，编写可移植代码存在问题，尽管对于简单的程序，可能可以使用可移植库层来封装特定于系统的用户界面代码。
 
 Whatever your choice of API, the basic graphics calls will be largely the same, and the concepts of this book will apply.
 无论您选择哪种API，基本的图形调用将基本相同，并且本书的概念将适用。
@@ -75,10 +75,10 @@ Whatever your choice of API, the basic graphics calls will be largely the same, 
 ## 1.4 Graphics Pipeline 图形管道
 
 Every desktop computer today has a powerful 3D graphics pipeline. This is a special software/hardware subsystem that efficiently draws 3D primitives in perspective. Usually these systems are optimized for processing 3D triangles with shared vertices. The basic operations in the pipeline map the 3D vertex locations to 2D screen positions and shade the triangles so that they both look realistic and appear in proper back-to-front order.
-今天的每台台式计算机都有一个强大的3D图形管道。这是一个特殊的软件/硬件子系统，可以有效地以透视方式绘制3D基元。通常，这些系统被优化为处理具有共享顶点的3D三角形。管道中的基本操作将3D顶点位置映射到2D屏幕位置，并对三角形进行着色，使其既看起来逼真又按正确的前后顺序出现。
+今天的每台台式计算机都有一个强大的3D图形管道。这是一个特殊的软件/硬件子系统，可以有效地以透视方式绘制3D基元。通常，这些系统<u>被优化为处理具有共享顶点的3D三角形</u>。管道中的基本操作将3D顶点位置映射到2D屏幕位置，并对三角形进行着色，使其既看起来逼真又按正确的前后顺序出现。
 
 Although drawing the triangles in valid back-to-front order was once the most important research issue in computer graphics, it is now almost always solved using the z-buffer, which uses a special memory buffer to solve the problem in a brute-force manner.
-虽然以有效的前后顺序绘制三角形曾经是计算机图形学中最重要的研究问题，但现在几乎总是使用z缓冲区来解决这个问题，z缓冲区使用特殊的内存缓冲区以蛮力方式解决问题。
+虽然以有效的前后顺序绘制三角形曾经是计算机图形学中最重要的研究问题，但现在几乎总是使用**z缓冲区**来解决这个问题，z缓冲区使用特殊的内存缓冲区以蛮力方式解决问题。
 
 It turns out that the geometric manipulation used in the graphics pipeline can be accomplished almost entirely in a 4D coordinate space composed of three traditional geometric coordinates and a fourth homogeneous coordinate that helps with perspective viewing. These 4D coordinates are manipulated using 4 x 4matrices and 4-vectors. The graphics pipeline, therefore, contains much machinery for efficiently processing and composing such matrices and vectors. This4D coordinate system is one of the most subtle and beautiful constructs used in computer science, and it is certainly the biggest intellectual hurdle to jump when learning computer graphics. A big chunk of the first part of every graphics book deals with these coordinates.
 事实证明，图形管道中使用的几何操作几乎可以完全在由三个传统几何坐标和第四个用于透视视图的齐次坐标组成的4D坐标空间中完成。这些4D坐标使用4 x 4矩阵和4向量进行操作。因此，图形管道包含了大量的机制，用于高效地处理和组合这些矩阵和向量。这个4D坐标系统是计算机科学中使用的最微妙和最美丽的构造之一，也是学习计算机图形学时最大的知识难点。每本图形书的第一部分都涉及这些坐标。
@@ -110,7 +110,7 @@ $$
 -a / (-\infin) = +0 \\
 $$
 
-> IEEE floating-point has two representations for zero, one that is treated as positive and one that is treated as negative. The distinction between –0 and +0 only occasionally matters, but it is worth keeping in mind for those occasions when it does.  
+> IEEE floating-point has two representations for zero, one that is treated as positive and one that is treated as negative. The distinction between –0 and +0 only occasionally matters, but it is worth keeping in mind for those occasions when it does. 
 > IEEE浮点数有两种表示0的方式，一种是正的，一种是负的。-0和+0之间的区别只是偶尔重要，但在这种情况下值得记住。
 
 Other operations involving infinite values behave the way one would expect. Again for positive a, the behavior is as follows:
@@ -175,7 +175,7 @@ There are no magic rules for making code more efficient. Efficiency is achieved 
 没有什么神奇的规则可以使代码更加高效。通过仔细的权衡，可以实现效率，而这些权衡对于不同的架构是不同的。然而，可预见的未来，一个好的启发式是程序员应该更加关注内存访问模式而不是操作计数。这与二十年前的最佳启发式相反。这种转变是因为内存的速度没有跟上处理器的速度而发生的。由于这种趋势的持续，**有限和连贯的内存访问对于优化的重要性只会增加**。
 
 A reasonable approach to making code fast is to proceed in the following order, taking only those steps which are needed:
-使代码快速的一个合理方法是按照以下顺序进行，只采取必要的步骤：
+提高代码运行速度的一个合理方法是按照以下顺序进行，仅采取必要的步骤：
 
 1. Write the code in the most straightforward way possible. Compute inter-mediate results as needed on the fly rather than storing them. 
    尽可能以最直接的方式编写代码。根据需要动态地计算中间结果，而不是存储它们。
@@ -189,7 +189,7 @@ A reasonable approach to making code fast is to proceed in the following order, 
    如果分析揭示了数值计算中的瓶颈，请检查编译器生成的汇编代码，以查找遗漏的效率。重写源代码以解决您发现的任何问题。
 
 The most important of these steps is the first one. Most “optimizations’ make the code harder to read without speeding things up. In addition, time spent upfront optimizing code is usually better spent correcting bugs or adding features. Also, beware of suggestions from old texts; some classic tricks such as using integers instead of reals may no longer yield speed because modern CPUs can usually perform floating-point operations just as fast as they perform integer operations. In all situations, profiling is needed to be sure of the merit of any optimization fora specific machine and compiler.
-这些步骤中最重要的是第一步。大多数“优化”使代码难以阅读，但却没有加快速度。此外，花在优化代码上的时间通常最好花在纠正错误或添加功能上。此外，要小心旧文本中的建议;一些经典的技巧，比如使用整数代替实数，可能不再提高速度，因为现代CPU执行浮点运算的速度通常和执行整数运算一样快。在所有情况下，都需要进行分析，以确保针对特定机器和编译器的任何优化的优点。
+其中最重要的一步是第一步。大多数“优化”措施使代码难以阅读，而并未提高执行速度。此外，花费时间在优化代码上通常比纠正错误或添加功能更为明智。同时，要小心古老文本中的建议；一些经典技巧，比如使用整数而非实数，可能因为现代 CPU 通常能够像执行整数操作一样快速执行浮点运算，而不再带来性能提升。在任何情况下，都需要进行性能分析，以确保针对特定的机器和编译器进行的任何优化是有效的。
 
 ## 1.7 Designing and Coding Graphics Programs 设计和编码图形程序
 
@@ -199,10 +199,10 @@ Certain common strategies are often useful in graphics programming. In this sect
 ### 1.7.1 Class Design 类设计
 
 A key part of any graphics program is to have good classes or routines for geometric entities such as vectors and matrices, as well as graphics entities such as RGB colors and images. These routines should be made as clean and efficient as possible. A universal design question is whether locations and displacements should be separate classes because they have different operations, e.g. , a location multiplied by one-half makes no geometric sense while one-half of a displacement does (Goldman, 1985: DeRose, 1989). There is little agreement on this question， which can spur hours of heated debate among graphics practitioners, but for the sake of example let's assume we will not make the distinction.
-任何图形程序的关键部分是拥有良好的类或例程，用于几何实体（如向量和矩阵）以及图形实体（如RGB颜色和图像）。这些例程应尽可能地简洁和高效。一个通用的设计问题是位置和位移是否应该是单独的类，因为它们具有不同的操作，例如，将位置乘以一半没有几何意义，而将位移的一半则有（Goldman, 1985: DeRose, 1989）。对于这个问题，人们的意见不一，这可能会引发图形从业者数小时的激烈辩论，但为了举例，我们假设我们不会做出区分。
+任何图形程序的关键部分是具备良好的类或例程，用于处理几何实体，如向量和矩阵，以及图形实体，如RGB颜色和图像。这些例程应该尽可能地简洁而高效。一个普遍的设计问题是，位置和位移是否应该是独立的类，因为它们具有不同的操作，例如，将位置乘以一半在几何上没有意义，而位移的一半却有（Goldman, 1985; DeRose, 1989）。关于这个问题，图形从业者之间意见分歧较大，可能引发数小时的激烈辩论，但为了举例，让我们假设我们不会进行这种区分。
 
 > I believe strongly in the KISS(“keep it simple, stupid’) principle, and in that light the argument fortwo classes is not compelling enough to justify the added complexity. -PS
-> 我强烈相信KISS（“保持简单，愚蠢”）原则，在这种情况下，两个类的论点不足以证明增加的复杂性是合理的。-PS 
+> 我坚信“保持简单，愚蠢”（KISS）的原则，基于这一观点，支持使用两个类的论点并不足以证明其复杂性的增加是合理的。 -PS
 
 > I like keeping points and vectors separate because it makes code more readable and can let the compiler catch some bugs.-S.M
 > 我喜欢将点和向量分开，因为这可以使代码更易读，并且可以让编译器捕捉一些错误。-S.M
@@ -224,7 +224,7 @@ This implies that some basic classes to be written include:
   **image.** 具有输出操作的RGB像素的2D数组。
 
 In addition, you might or might not want to add classes for intervals, orthonormal bases, and coordinate frames.
-此外，您可能或可能不想添加间隔、正交基和坐标框的类。
+此外，您可能会选择或不选择为区间、正交规范基和坐标框架添加类。
 
 > You might also consider a special class for unit-length  vectors, although I have found them more pain than they are worth.-PS.
 > 您可能还需要考虑为单位长度向量设计一个特殊的类，尽管我发现它们比它们的价值更痛苦。-PS。
@@ -234,7 +234,7 @@ In addition, you might or might not want to add classes for intervals, orthonorm
 ### 1.7.2 Float vs. Double
 
 Modern architecture suggests that keeping memory use down and maintaining coherent memory access are the keys to efficiency. This suggests using single-precision data. However, avoiding numerical problems suggests using double precision arithmetic. The tradeoffs depend on the program, but it is nice to have a default in your class definitions.
-现代架构建议将内存使用量降至最低并保持连贯的内存访问是提高效率的关键。这表明应使用单精度数据。然而，避免数值问题则建议使用双精度算术。权衡取决于程序，但在类定义中设置默认值是很好的选择。
+现代架构表明，保持内存使用量的控制和维护内存访问的一致性是提高效率的关键。这暗示着使用单精度数据。然而，避免数值问题则建议使用双精度算法。权衡取决于程序的特性，但在类定义中设置一个默认值是个不错的选择。
 
 > I suggest using doubles for geometric computation and floats for color computation. For data that occupies a lot of memory, such as triangle meshes,I suggest storing float data, but con-verting to double when data is accessed through member functions.-PS.
 > 我建议在几何计算中使用双精度，而在颜色计算中使用单精度。对于占用大量内存的数据，例如三角形网格，我建议存储单精度数据，但在通过成员函数访问数据时将其转换为双精度。-PS。
@@ -249,7 +249,7 @@ If you ask around, you may find that as programmers become more experienced,they
 
 **The Scientific Method 科学方法**
 In graphics programs there is an alternative to traditional debugging that is often very useful. The downside to it is that it is very similar to what computer programmers are taught not to do early in their careers, so you may feel “naughty”if you do it: we create an image and observe what is wrong with it. Then, we develop a hypothesis about what is causing the problem and test it. For example,in a ray-tracing program we might have many somewhat random looking dark pixels. This is the classic “shadow acne” problem that most people run into when they write a ray tracer. Traditional debugging is not helpful here; instead, we must realize that the shadow rays are hitting the surface being shaded. We might notice that the color of the dark spots is the ambient color, so the direct lighting is what is missing. Direct lighting can be turned off in shadow, so you might hypothesize that these points are incorrectly being tagged as in shadow when they are not. To test this hypothesis, we could turn off the shadowing check and recompile. This would indicate that these are false shadow tests, and we could continue our detective work. The key reason that this method can sometimes be good practice is that we never had to spot a false value or really determine our conceptual error. Instead, we just narrowed in on our conceptual error experimentally. Typically only a few trials are needed to track things down, and this type of debugging is enjoyable.
-在图形程序中，有一种传统调试的替代方法，通常非常有用。它的缺点是它与计算机程序员在职业生涯早期所学的内容非常相似，因此您可能会感到“naughty”（不安分）：我们创建一个图像并观察其中的问题。然后，我们提出一个关于问题原因的假设并进行测试。例如，在光线追踪程序中，我们可能会有许多看起来有些随机的黑色像素。这是大多数人编写光线追踪器时遇到的经典“阴影痤疮”问题。传统的调试在这里没有帮助；相反，我们必须意识到阴影光线正在击中被遮蔽的表面。我们可能会注意到暗斑点的颜色是环境颜色，因此缺少直接照明。直接照明可以在阴影中关闭，因此您可能会假设这些点被错误地标记为在阴影中，而实际上并不是。为了测试这个假设，我们可以关闭阴影检查并重新编译。这将表明这些是虚假的阴影测试，我们可以继续进行侦探工作。这种方法有时可以成为良好的实践的关键原因是我们从未发现过虚假值或真正确定我们的概念错误。相反，我们只是通过实验缩小了我们的概念错误。通常只需要几次尝试就可以追踪事物，这种调试方式是令人愉快的。
+在图形程序中，有一种传统调试的替代方法通常非常有用。它的缺点在于，它与计算机程序员在职业生涯早期所学的内容非常相似，因此你可能会感到“调皮”：我们创建一幅图像并观察其中的问题。然后，我们提出关于问题原因的假设并加以测试。例如，在光线追踪程序中，我们可能会看到许多看起来有些随机的黑色像素。这是大多数人在编写光线追踪器时遇到的经典“阴影痘”问题。传统的调试在这里没有帮助；相反，我们必须意识到阴影光线击中了被着色的表面。我们可能会注意到这些暗点的颜色是环境颜色，因此缺少的是直接照明。在阴影中可以关闭直接照明，因此你可能会假设这些点被错误地标记为在阴影中。为了测试这一假设，我们可以关闭阴影检查并重新编译。这将表明这些是虚假的阴影测试，我们可以继续我们的侦探工作。这种方法有时可以成为良好的实践的关键原因在于，我们从未必须找出错误的值或真正确定我们的概念错误。相反，我们只是通过实验逐渐缩小了我们的概念错误。通常只需要几次尝试就能找到问题，而这种类型的调试是令人愉悦的。
 
 **Images as Coded Debugging Output 图像作为编码调试输出**
 In many cases, the easiest channel by which to get debugging information out of a graphics program is the output image itself. If you want to know the value of some variable for part of a computation that runs for every pixel, you can just modify your program temporarily to copy that value directly to the output image and skip the rest of the calculations that would normally be done. For instance, if you suspect a problem with surface normals is causing a problem with shading, you can copy the normal vectors directly to the image (x goes to red, y goes to green,z goes to blue), resulting in a color-coded illustration of the vectors actually being used in your computation. Or, if you suspect a particular value is sometimes out of its valid range, make your program write bright red pixels where that happens. Other common tricks include drawing the back sides of surfaces with an obvious color (when they are not supposed to be visible), coloring the image by the ID numbers of the objects, or coloring pixels by the amount of work they took to compute.
@@ -285,4 +285,4 @@ Often it is hard to understand what your program is doing, because it computes a
 
 **Notes 注**
 The discussion of software engineering is influenced by the Effective C++ series (Meyers, 1995, 1997), the Extreme Programming movement (Beck & Andres, 2004), and The Practice of Programming (Kernighan & Pike, 1999). The discussion of experimental debugging is based on discussions with Steve Parker. There are a number of annual conferences related to computer graphics, including ACM SIGGRAPH and SIGGRAPH Asia, Graphics Interface, the Game Developers Conference (GDC), Eurographics, Pacific Graphics, High Performance Graphics, the Eurographics Symposium on Rendering, and IEEE VisWeek. These can be readily found by web searches on their names.
-软件工程的讨论受到了Effective C++系列（Meyers，1995, 1997），极限编程运动（Beck＆Andres，2004）和编程实践（Kernighan＆Pike，1999）的影响。实验调试的讨论基于与Steve Parker的讨论。有许多与计算机图形相关的年度会议，包括ACM SIGGRAPH和SIGGRAPH Asia，Graphics Interface，游戏开发者大会（GDC），Eurographics，Pacific Graphics，High Performance Graphics，Eurographics渲染研讨会和IEEE VisWeek。这些会议可以通过网络搜索它们的名称轻松找到。
+对软件工程的讨论受到《Effective C++》系列（Meyers，1995，1997）、极限编程运动（Beck＆Andres，2004）和《编程实践》（Kernighan＆Pike，1999）的影响。对实验性调试的讨论基于与Steve Parker的交流。与计算机图形相关的许多年度会议包括ACM SIGGRAPH和SIGGRAPH Asia、Graphics Interface、游戏开发者大会（GDC）、Eurographics、Pacific Graphics、High Performance Graphics、Eurographics渲染学术研讨会和IEEE VisWeek。这些会议可通过网络搜索其名称轻松找到。
