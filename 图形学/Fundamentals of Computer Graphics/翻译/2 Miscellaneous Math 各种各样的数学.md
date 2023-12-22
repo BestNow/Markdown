@@ -1,15 +1,12 @@
 # 2 Miscellaneous Math 各种各样的数学
 
 Much of graphics is just translating math directly into code. The cleaner the math,the cleaner the resulting code; so much of this book concentrates on using just theright math for the job. This chapter reviews various tools from high school andcollege mathematics and is designed to be used more as a reference than as a tu-torial. It may appear to be a hodge-podge of topics and indeed it is; each topicis chosen because it is a bit unusual in “standard’ math curricula, because it isof central importance in graphics, or because it is not typically treated from a ge-ometric standpoint. In addition to establishing a review of the notation used inthe book, the chapter also emphasizes a few points that are sometimes skippedin the standard undergraduate curricula, such as barycentric coordinates on tri-angles. This chapter is not intended to be a rigorous treatment of the material;instead intuition and geometric interpretation are emphasized. A discussion oflinear algebra is deferred until Chapter 5 just before transformation matrices arediscussed. Readers are encouraged to skim this chapter to familiarize themselveswith the topics covered and to refer back to it as needed. The exercises at the endof the chapter may be useful in determining which topics need a refresher.
-图形学中的很多内容只是将数学直接转换为代码。 数学越干净，生成的代码就越干净；因此，本书的很多内容都集中在使用正确的数学来完成工作。 本章回顾了高中和大学数学中的各种工具，并旨在作为参考而非教程使用。 它可能看起来像一堆杂乱无章的主题，而事实上确实如此；每个主题都是因为它在“标准”数学课程中有些不寻常，因为它在图形学中具有核心重要性，或者因为它通常不从几何角度处理。 除了建立本书中使用的符号的审查外，本章还强调了一些标准本科课程中有时会跳过的要点，例如三角形的重心坐标。 本章不旨在对材料进行严格的处理；相反，强调直觉和几何解释。 线性代数的讨论推迟到第5章之前，就在讨论变换矩阵之前。 鼓励读者浏览本章以熟悉所涵盖的主题，并根据需要参考它。 章末的练习可能有助于确定哪些主题需要复习。
+图形学的很大一部分就是将数学直接转化为代码。数学越清晰，得到的代码就越清晰；因此，本书的很大一部分集中在选择适合工作的正确数学上。本章回顾了高中和大学数学的各种工具，旨在作为参考而非教程使用。它可能看起来是一个杂乱无章的主题集合，而事实上确实如此；每个主题的选择是因为它在“标准”数学课程中有些不寻常，因为它在图形学中至关重要，或者因为它通常不从几何的角度加以处理。除了建立本书中使用的符号的回顾之外，本章还强调了一些在标准本科课程中有时会被忽略的要点，比如三角形上的重心坐标。本章不旨在对材料进行严格的处理；相反，强调直觉和几何解释。对线性代数的讨论将推迟到第5章，就在讨论变换矩阵之前。鼓励读者略读本章以熟悉所涵盖的主题，并在需要时返回查阅。章末的练习可能有助于确定哪些主题需要温习。
 
 ## 2.1 Sets and Mappings 集合和映射
 
-Mappings, also called functions, are basic to mathematics and programming. Likea function in a program, a mapping in math takes an argument of one type and maps it to (returns) an object of a particular type. In a program we say “type; inmath we would identify the set. When we have an object that is a member of aset, we use the $\in$ symbol. For example, $a \in \bold{S} $,
-映射，也称为函数，是数学和编程的基础。就像程序中的函数一样，数学中的映射接受一个类型的参数并将其映射到（返回）特定类型的对象。在程序中，我们说“类型”；在数学中，我们会确定集合。当我们有一个属于集合的对象时，我们使用 $\in$ 符号。例如，$a \in \bold{S} $。
-
-can be read "a is a member of set $\bold{S}$." Given any two sets **A** and **B**, we can createa third set by taking the Cartesian product of the two sets, denoted $\bold{A} \cross \bold{B}$. This set $\bold{A} \cross \bold{B}$ is composed of all possible ordered pairs (a, b) where $a \in \bold{A} $ and $b \in \bold{B} $. As a shorthand, we use the notation $\bold{A}^2$to denote $\bold{A} \cross \bold{A} $. We can extendthe Cartesian product to create a set of all possible ordered triples from three sets and so on for arbitrarily long ordered tuples from arbitrarily many sets.
-可以读作“a是集合$\bold{S}$的成员”。给定任意两个集合**A**和**B**，我们可以通过取这两个集合的笛卡尔积来创建第三个集合，表示为$\bold{A} \cross \bold{B}$。这个集合$\bold{A} \cross \bold{B}$由所有可能的有序对(A, B)组成，其中$ a \in \bold{A} $和$ b \in \bold{B}$。作为速记，我们使用符号$\bold{A}^2$来表示$\bold{A} \cross \bold{A} $。我们可以将笛卡尔积扩展到从三个集合中创建所有可能的有序三元组，以及从任意多个集合中创建任意长的有序元组。
+Mappings, also called functions, are basic to mathematics and programming. Likea function in a program, a mapping in math takes an argument of one type and maps it to (returns) an object of a particular type. In a program we say “type; inmath we would identify the set. When we have an object that is a member of aset, we use the $\in$ symbol. For example, $a \in \bold{S} $, can be read "a is a member of set $\bold{S}$." Given any two sets **A** and **B**, we can createa third set by taking the Cartesian product of the two sets, denoted $\bold{A} \cross \bold{B}$. This set $\bold{A} \cross \bold{B}$ is composed of all possible ordered pairs (a, b) where $a \in \bold{A} $ and $b \in \bold{B} $. As a shorthand, we use the notation $\bold{A}^2$to denote $\bold{A} \cross \bold{A} $. We can extendthe Cartesian product to create a set of all possible ordered triples from three sets and so on for arbitrarily long ordered tuples from arbitrarily many sets.
+映射，又称为函数，在数学和编程中都是基本的概念。类似于程序中的函数，在数学中，<u>映射接受一种类型的参数并将其映射到（返回）特定类型的对象</u>。在程序中我们说“类型”；而在数学中我们则会确定这个集合。当我们有一个属于某个集合的对象时，我们使用符号 $\in$。例如，$a \in \bold{S}$，可解读为“a是集合 $\bold{S}$ 的成员”。给定任意两个集合 **A** 和 **B**，我们可以通过取这两个集合的笛卡尔积来创建第三个集合，表示为 $\bold{A} \times \bold{B}$。这个集合 $\bold{A} \times \bold{B}$ 包含所有可能的有序对 (a, b)，其中 $a \in \bold{A}$ 且 $b \in \bold{B}$。作为一种简写，我们使用符号 $\bold{A}^2$ 表示 $\bold{A} \times \bold{A}$。我们可以扩展笛卡尔积的概念，从三个集合创建所有可能的有序三元组，以此类推，构建来自任意多个集合的任意长有序元组。
 
 Common sets of interest include
 常见的感兴趣的集合包括：
@@ -28,23 +25,23 @@ Common sets of interest include
 - $S^2$ — 单位球面上的3D点($\R^3$中的点)的集合。
 
 Note that although $S^2$ is composed of points embedded in three-dimensional space, they are on a surface that can be parameterized with two variables, so it can be thought of as a 2D set. Notation for mappings uses the arrow and a colon,for example:
-请注意，虽然$S^2$是由嵌入在三维空间中的点组成的，但它们位于一个可以用两个变量参数化的表面上，因此它可以被认为是一个二维集合。映射的表示法使用箭头和冒号，例如:
+请注意，尽管 $S^2$ 由嵌入在三维空间中的点组成，但它们位于一个可以用两个变量参数化的表面上，因此可以被视为一个二维集合。映射的符号使用箭头和冒号，例如：
 $f:\R \mapsto \Z$
 
-which you can read as “There is a function called f that takes a real number as input and maps it to an integer. Here, the set that comes before the arrow is called the domain of the function, and the set on the right-hand side is called the target. Computer programmers might be more comfortable with the following equivalent language: “There is a function called f which has one real argument and returns an integer. In other words, the set notation above is equivalent to the common programming notation:
-你可以这样读：“有一个名为f的函数，它以实数作为输入并将其映射到整数。” 这里，箭头前面的集合称为函数的定义域，右侧的集合称为目标。计算机程序员可能更喜欢以下等效语言：“有一个名为f的函数，它有一个实数参数并返回一个整数。“ 换句话说，上面的集合符号等价于常见的编程符号：
+which you can read as “There is a function called $f$ that takes a real number as input and maps it to an integer." Here, the set that comes before the arrow is called the domain of the function, and the set on the right-hand side is called the target. Computer programmers might be more comfortable with the following equivalent language: “There is a function called $f$ which has one real argument and returns an integer." In other words, the set notation above is equivalent to the common programming notation:
+你可以理解为：“存在一个名为 $f$ 的函数，接受一个实数作为输入，并将其映射到一个整数。” 在这里，箭头前面的集合被称为函数的定义域，右侧的集合被称为目标集。对于计算机程序员来说，下面的等价语言可能更为熟悉：“存在一个名为 $f$ 的函数，它有一个实数参数并返回一个整数。” 换句话说，上面的集合表示法与常见的编程表示法是等价的：
 $integer\ f(real) \leftarrow equivalent \rightarrow f:\R \mapsto \Z.$
 
 So the colon-arrow notation can be thought of as a programming syntax. It’s that simple.
 所以冒号箭头符号可以被看作是一种编程语法。就是这么简单。
 
-The point f(a) is called the image of a, and the image of a set A (a subset of the domain) is the subset of the target that contains the images of all points in A. The image of the whole domain is called the range of the function. 
-点f(a)称为a的像，集合A（定义域的子集）的像是包含A中所有点的像的目标的子集。整个定义域的像称为函数的值域。
+The point $f(a)$ is called the image of $a$, and the image of a set $A$ (a subset of the domain) is the subset of the target that contains the images of all points in $A$. The image of the whole domain is called the range of the function. 
+点 $f(a)$ 被称为 $a$ 的像，而集合 $A$（定义域的子集）的像是目标中包含 $A$ 中所有点的子集。整个定义域的像被称为函数的值域。
 
 ### 2.1.1 Inverse Mappings 逆映射
 
 If we have a function $f:\bold{A} \mapsto \bold{B}$, there may exist an inverse function $f^{-1}:\bold{B} \mapsto \bold{A}$, which is defined by the rule $f^{-1}(b) = a$ where $b = f(a)$. This definition only works if every $b \in \bold{B}$ is an image of some point under $f$ (that is, the range equals the target) and if there is only one such point (that is, there is only one $a$ for which $f(a) = b$). Such mappings or functions are called bijections. A bijection maps every $a \in A$ to a unique $b \in \bold{B}$, and for every $b \in \bold{B}$, there is exactly one $a \in \bold{A}$ such that $f(a) = b$ (Figure 2.1). A bijection between a group of riders and horses indicates that everybody rides a single horse, and every horse is ridden. The two functions would be rider(horse) and horse(rider). These are inverse functions of each other. Functions that are not bijections have no inverse (Figure 2.2).
-如果我们有一个函数$f:\bold{A} \mapsto \bold{B}$，则可能存在一个逆函数 $f^{-1}:\bold{B} \mapsto \bold{A}$，其由规则$f^{-1}(b) = a$定义，其中$b = f(a)$。此定义仅在每个$b \in \bold{B}$都是$f$下某个点的图像（即，范围等于目标）且只有一个这样的点（即，只有一个$a$满足$f(a) = b$）时才有效。这样的映射或函数称为双射。双射将每个$a \in A$映射到唯一的$b \in \bold{B}$，并且对于每个$b \in \bold{B}$，都有一个$a \in \bold{A}$满足$f(a) = b$（图2.1）。骑手和马之间的双射表明每个人都骑一匹马，每匹马都被骑。两个函数将是$rider(horse)$和$horse(rider)$。它们是彼此的逆函数。不是双射的函数没有逆（图2.2）。
+如果我们有一个函数 $f: \bold{A} \mapsto \bold{B}$，可能存在一个逆函数 $f^{-1}: \bold{B} \mapsto \bold{A}$，其定义规则为 $f^{-1}(b) = a$，其中 $b = f(a)$。这个定义只有在每个 $b \in \bold{B}$ 都是 $f$ 下某一点的像（即，值域等于目标）且只有一个这样的点（即，只有一个 $a$ 使得 $f(a) = b$）时才成立。这样的映射或函数被称为双射。双射将每个 $A$ 中的 $a$ 映射到唯一的 $B$ 中的 $b$，对于每个 $B$ 中的 $b$，恰好存在一个 $A$ 中的 $a$ 使得 $f(a) = b$（图2.1）。在骑手和马之间存在双射表明每个人骑一匹马，每匹马都被骑。这两个函数分别是 rider(horse) 和 horse(rider)。它们是彼此的逆函数。不是双射的函数没有逆函数（图2.2）。
 
 <img src=".\Images\Figure 2.1.png" alt="Figure 2.1" style="zoom: 67%;" />
 Figure 2.1. A bijection $f$ and the inverse function $f^{-1}$. Note that $f^{–1}$ is also a bijection. 
@@ -54,7 +51,7 @@ Figure 2.2.The function $g$ does not have an inverse be-cause two elements of $\
 图2.2. 函数$g$没有逆，因为$\bold{d}$的两个元素映射到$\bold{E}$的同一个元素。函数h没有逆，因为$\bold{F}$的$T$没有$\bold{d}$的元素映射到它。
 
 An example of a bijection is $f : \R \mapsto \R$, with $f(x) = x^3$. The inverse function is $f^{-1}(x) = \sqrt[3]{x}$. This example shows that the standard notation can be somewhat awkward because $x$ is used as a dummy variable in both $f$ and $f^{-1}$. It is sometimes more intuitive to use different dummy variables, with $y = f(x)$ and $x = f^{-1}(y)$. This yields the more intuitive $y = x^3$ and $x = \sqrt[3]{y}$. An example of a function that does not have an inverse is $sqr : \R \mapsto \R$, where $sqr(x) = x^2$. This is true for two reasons: first $x^2 = (-x)^2$, and second no members of the domain map to the negative portions of the target. Note that we can define an inverse if we restrict the domain and range to $\R ^+$. Then  $\sqrt{x}$ is a valid inverse.
-双射的一个例子是$f: \R \mapsto \R$，其中$f(x) = x^3$。逆函数是$f^{-1}(x) = \sqrt[3]{x}$。这个例子表明，标准表示法可能有些笨拙，因为$x$在$f$和$f^{-1}$中都被用作哑变量。有时使用不同的虚拟变量更直观，例如$y = f(x)$和$x = f^{-1}(y)$。这产生了更直观的$y = x^3$和$x = \sqrt[3]{y}$。一个没有逆函数的例子是$sqr: \R \mapsto \R$，其中$sqr(x) = x^2$。这有两个原因:首先$x^2 = (-x)^2$，其次，没有域的成员映射到目标的负部分。注意，如果我们将定义域和值域限制为$\R ^+$，我们可以定义逆。那么$\sqrt{x}$是一个有效的逆。
+一个双射的例子是 $f : \R \mapsto \R$，其中 $f(x) = x^3$。逆函数是 $f^{-1}(x) = \sqrt[3]{x}$。这个例子显示了标准符号可能有些不太自然，因为 $x$ 在 $f$ 和 $f^{-1}$ 中都被用作虚拟变量。有时使用不同的虚拟变量更直观，如 $y = f(x)$ 和 $x = f^{-1}(y)$。这导致更直观的表示 $y = x^3$ 和 $x = \sqrt[3]{y}$。一个没有逆函数的函数的例子是 $sqr : \R \mapsto \R$，其中 $sqr(x) = x^2$。这是因为有两个原因：首先 $x^2 = (-x)^2$，其次定义域的成员没有映射到目标的负部分。请注意，如果我们将定义域和值域限制为 $\R ^+$，那么我们就可以定义一个逆函数，即 $\sqrt{x}$。
 
 ### 2.1.2 Intervals 区间
 
@@ -65,7 +62,7 @@ Figure 2.3. Three equivalent ways to denote the interval from a to b that includ
 图2.3. 表示包括b但不包括a的区间a到b的三种等效方法。
 
 Intervals are particularly useful in conjunction with set operations: intersection, union, and difference. For example, the intersection of two intervals is the set of points they have in common. The symbol $\cap$ is used for intersection. For ex-ample, $[3, 5) \cap [4, 6] = [4, 5)$. For unions, the symbol $\cup$ is used to denote points in either interval. For example, $[3, 5) \cup [4, 6] = [3, 6]$. Unlike the first two operators, the difference operator produces different results depending on argument order. The minus sign is used for the difference operator, which returns the points in the left interval that are not also in the right. For example, $[3, 5) - [4, 6] = [3, 4)$ and $[4, 6] - [3, 5) = [5, 6]$. These operations are particularly easy to visualize using interval diagrams (Figure 2.4).
-区间在与集合操作(交集、并并和差)结合时特别有用。例如，两个区间的交集是它们共有的点的集合。符号$\cap$表示交集。例如:$[3, 5) \cap [4, 6] = [4, 5)$。对于联合，符号$\cup$用于表示任一区间中的点。例如:$[3, 5) \cup [4, 6] = [3, 6]$。与前两个操作符不同，差操作符根据参数顺序产生不同的结果。负号用于差分运算符，它返回左边区间中不在右边区间中的点。例如:$[3, 5) - [4, 6] = [3, 4)$、$[4, 6] - [3, 5) = [5, 6]$。使用间隔图(图2.4)，这些操作特别容易可视化。
+区间在与集合操作结合时特别有用：交集、并集和差集。例如，两个区间的交集是它们共有的点组成的集合。符号 $\cap$ 被用于表示交集。例如，$[3, 5) \cap [4, 6] = [4, 5)$。对于并集，符号 $\cup$ 表示属于任一区间的点。例如，$[3, 5) \cup [4, 6] = [3, 6]$。与前两个运算符不同，差集运算符根据参数顺序产生不同的结果。减号用于表示差集运算符，它返回左区间中而右区间中没有的点。例如，$[3, 5) - [4, 6] = [3, 4)$ 和 $[4, 6] - [3, 5) = [5, 6]$。利用区间图表（图2.4）可以更容易地可视化这些操作。
 <img src=".\Images\Figure 2.4.png" alt="Figure 2.3" style="zoom:67%;" />
 Figure 2.4. Interval operations on [3,5) and [4,6].
 图2.4 在[3,5)和[4,6]上的区间运算。
@@ -101,7 +98,7 @@ $$
 The constant multipliers above are unity only for $a \equiv e$
 上述常数乘数仅在$a \equiv e$时为1。
 
-## 2.2 Solving Quadratic Equations
+## 2.2 Solving Quadratic Equations 解二次方程
 
 A quadratic equation has the form
 二次方程有这样的形式
@@ -133,8 +130,9 @@ $x = \frac{-B \pm \sqrt{B^2 - 4AC}}{2A}  \ \ \ (2.1) \\ $
 > 一种强健的实现将使用等效表达式$2C/(-B \mp \sqrt{B^2 - 4AC})$来计算其中一个根，具体取决于B的符号（练习7）。
 
 Here the "$\pm$" symbol means there are two solutions, one with a plus sign and one with a minus sign. Thus $3\pm1$ equals “two or four.” Note that the term that determines the number of real solutions is
-这里的"$\pm$"符号表示有两个解，一个带正号，一个带负号。因此，$3\pm1$ 等于“二或四”。请注意，决定实数解数量的术语是
-$D \equiv B^2 -4AC$
+这里的 "$\pm$" 符号表示有两个解，一个带正号，一个带负号。因此，$3\pm1$ 等于 "二或四"。注意，决定实数解个数的术语是
+
+$$D \equiv B^2 -4AC$$
 
 which is called the discriminant of the quadratic equation. If $D > 0$, there are two real solutions (also called roots). If $D = 0$, there is one real solution (a “double" root). If $D < 0$, there are no real solutions.
 这被称为二次方程的判别式。如果$D > 0$，则有两个实数解（也称为根）。如果$D = 0$，则有一个实数解（“双重”根）。如果$D < 0$，则没有实数解。
@@ -153,9 +151,9 @@ Although we take angles somewhat for granted, we should return to their definiti
 虽然我们有点理所当然地考虑角度，但我们应该回到它们的定义，以便我们可以将角度的概念扩展到球体上。 角度是由两个半线（源自原点的无限射线）或方向之间形成的，必须使用某种约定来决定它们之间创建的角度的两种可能性，如图2.6所示。 角度由它在单位圆上切出的弧段长度定义。 通常的约定是使用较小的弧长，并通过指定两个半线的顺序来确定角度的符号。 使用该约定，所有角度都在$[-\pi, \pi]$范围内。
 ![Figure 2.6](.\Images\Figure 2.6.png)
 Figure 2.6 Two half-lines cut the unit circle into two arcs. The length of either arc is a valid angle “between” the two half-lines. Either we can use the convention that the smaller length is the angle, or that the two half-lines are specified in a certain order and the arc that determines angle $\varphi$ is the one swept out counterclockwise from the first to the second half-line. 
-图2.6中，两个半线将单位圆分为两个弧。任何一个弧的长度都是两个半线之间的有效角度。我们可以使用较小的长度作为角度的度量，或者按照某种顺序指定两个半线，并且从第一个半线逆时针扫过的弧确定角度$\varphi$
+图2.6 两条半射线将**单位圆**分割成两个弧。**任一弧的长度都是两条半射线之间有效的角度**。我们可以采用较小长度为角度的约定，或者规定两条半射线的顺序，并且确定角度 $\varphi$ 的弧是从第一条半射线逆时针扫过到第二条半射线的弧。
 
-Each of these angles is the length of the arc of the unit circle that is “cut” by the two directions. Because the perimeter of the unit circle is $2\pi$, the two possible angles sum to $2\pi$. The unit of these arc lengths is radians. Another common unit is degrees, where the perimeter of the circle is 360 degrees. Thus, an angle that is $\pi$ radians is 180 degrees, usually denoted 180◦. The conversion between degrees and radians is  
+Each of these angles is the length of the arc of the unit circle that is “cut” by the two directions. Because the perimeter of the unit circle is $2\pi$, the two possible angles sum to $2\pi$. The unit of these arc lengths is radians. Another common unit is degrees, where the perimeter of the circle is 360 degrees. Thus, an angle that is $\pi$ radians is 180 degrees, usually denoted 180◦. The conversion between degrees and radians is 
 每个角度都是由两个方向“切割”的单位圆的弧的长度。由于单位圆的周长为$2\pi$，因此两个可能的角度之和为$2\pi$。这些弧长的单位是弧度。另一个常见的单位是度，其中圆的周长为360度。因此，一个$\pi$弧度的角度是180度，通常表示为180◦。度和弧度之间的转换公式为
 $$
 degrees = \frac{180}{\pi} radians; \\
@@ -164,8 +162,8 @@ $$
 
 ### 2.3.2 Trigonometric Functions 三角函数
 
-Given a right triangle with sides of length a, o, and h, where h is the length of the longest side (which is always opposite the right angle), or hypotenuse, an important relation is described by the Pythagorean theorem:
-给定一个边长为a、o和h的直角三角形，其中h是最长的边(总是直角的对边)或斜边的长度，毕达哥拉斯定理描述了一个重要的关系:
+Given a right triangle with sides of length $a$, $o$, and $h$, where h is the length of the longest side (which is always opposite the right angle), or hypotenuse, an important relation is described by the Pythagorean theorem:
+考虑一个直角三角形，其三边长度分别为 $a$、$o$ 和 $h$，其中 $h$ 是最长边的长度（始终位于直角的对边），也称为斜边。这时，一个重要的关系由毕达哥拉斯定理（勾股定理）描述：
 $a^2 + o^2 = h^2$
 
 You can see that this is true from Figure 2.7, where the big square has area $(a+o)^2$, the four triangles have the combined area $2ao$, and the center square has area $h^2$.
@@ -187,23 +185,23 @@ $$
 \cot{\varphi} ≡ a/o \\
 $$
 These definitions allow us to set up polar coordinates, where a point is coded as a distance from the origin and a signed angle relative to the positive x-axis(Figure 2.8). Note the convention that angles are in the range $\varphi \in (-\pi, \pi] $, and that the positive angles are counterclockwise from the positive x-axis. This convention that counterclockwise maps to positive numbers is arbitrary, but it is used in many contexts in graphics so it is worth committing to memory.
-这些定义允许我们建立极坐标系，其中一个点被编码为相对于正x轴的距离和带符号的角度（图2.8）。请注意，角度在$\varphi \in (-\pi, \pi] $范围内，并且正角度是从正x轴逆时针旋转的。这种逆时针映射到正数的约定是任意的，但在许多图形上下文中使用，因此值得记忆。
+这些定义使我们能够建立极坐标系，其中一个点的编码是相对于原点的距离和相对于正 x 轴的有符号角度（图2.8）。请注意，角度的约定是 $\varphi \in (-\pi, \pi]$ 范围内，正角是相对于正 x 轴逆时针方向的。逆时针映射到正数的这种约定是任意的，但在许多图形上下文中都被使用，因此值得记住。
 ![Figure 2.8](.\Images\Figure 2.8.png)
 Figure 2.8. Polar coordinates for the point $(x_a, y_a) = (1, \sqrt{3})$ is $(r_a, \varphi_a) = (2, \pi/3)$.
 图2.8.  点$(x_a, y_a) = (1, \sqrt{3})$ 的极坐标为$(r_a, \varphi_a) = (2, \pi/3)$。
 
 Trigonometric functions are periodic and can take any angle as an argument. For example, $\sin(A) = \sin(A + 2)$. This means the functions are not invertible when considered with the domain $\R$. This problem is avoided by restricting the range of standard inverse functions, and this is done in a standard way in almost all modern math libraries (e.g., (Plauger, 1991)). The domains and ranges are:
-三角函数是周期性的，可以将任何角度作为参数。例如，$\sin(A) = \sin(A + 2)$。这意味着在定义域$\R$上，这些函数不可逆。这个问题可以通过限制标准反函数的范围来避免，这在几乎所有现代数学库中都是以标准方式完成的（例如，（Plauger，1991））。定义域和值域如下：
+三角函数是周期性的，可以将任何角度作为参数。例如，$\sin(A) = \sin(A + 2\pi)$。这意味着在定义域$\R$上，这些函数不可逆。这个问题可以通过限制标准反函数的范围来避免，这在几乎所有现代数学库中都是以标准方式完成的（例如，（Plauger，1991））。定义域和值域如下：
 $$
 \asin: [-1, 1] \mapsto [-\pi/2, \pi/2] \\
 \acos: [-1, 1] \mapsto [0, \pi] \\
 \atan: \R \mapsto [-\pi/2, \pi/2] \\
 \atan2: \R^2 \mapsto [-\pi, \pi] \\
 $$
-The last function, $atan2(s, c)$ is often very useful. It takes an $s$ value proportional to $\sin A$ and a $c$ value that scales $\cos A$ by the same factor and returns $A$. The factor is assumed to be positive. One way to think of this is that it returns the angle of a 2D Cartesian point $(s, c)$ in polar coordinates (Figure 2.9).
-最后一个函数$atan2(s, c)$通常非常有用。它接受与$\sin A$成比例的$s$值和将$\cos A$按相同因子缩放的$c$值，并返回$A$。假定该因子为正。一种思考方式是，它返回二维笛卡尔坐标系中点$(s, c)$的极坐标角度（图2.9）。
+The last function, $\atan2(s, c)$ is often very useful. It takes an $s$ value proportional to $\sin A$ and a $c$ value that scales $\cos A$ by the same factor and returns $A$. The factor is assumed to be positive. One way to think of this is that it returns the angle of a 2D Cartesian point $(s, c)$ in polar coordinates (Figure 2.9).
+最后一个函数，$\atan2(s, c)$，通常非常有用。它接受一个与 $\sin A$ 成比例的 $s$ 值和一个通过相同因子缩放 $\cos A$ 的 $c$ 值，并返回 $A$。假定该因子为正。可以将其理解为返回极坐标中二维笛卡尔坐标点 $(s, c)$ 的角度（图2.9）。
 ![Figure 2.9](.\Images\Figure 2.9.png)
-Figure 2.9. The function $\atan2(s,c)$ returns the angle $A$ and is often very useful in graphics  
+Figure 2.9. The function $\atan2(s,c)$ returns the angle $A$ and is often very useful in graphics 
 图2.9 函数$\atan2(s,c)$返回角度$A$，在图形中通常非常有用
 
 ### 2.3.3 Useful Identities 有用的公式
@@ -221,14 +219,15 @@ Shifting\ identities:正负号转换 \\
 $$
 
 $$
-Pythagorean\ identities: \\
+Pythagorean\ identities: 
+毕达哥拉斯恒等式：\\
 \sin^2 A + \cos^2 A = 1 \\
 \sec^2 A − \tan^2 A = 1 \\
 \csc^2 A − \cot^2 A = 1 \\
 $$
 
 $$
-Addition\ and\ subtraction\ identities: \\
+Addition\ and\ subtraction\ identities: 加法与减法恒等式：\\
 \sin(A + B) = \sin A \cos B + \sin B \cos A \\
 \sin(A − B) = \sin A \cos B − \sin B \cos A \\
 \sin(2A) = 2\sin A \cos A \\
@@ -262,7 +261,7 @@ $$
 c^2 = a^2 + b^2 - 2ab\cos C \ \ \ (Law\ of\ cosines) \\
 \frac{a + b}{a - b} = \frac{\tan{(\frac{A+B}{2})}}{\tan{(\frac{A-B}{2})}} \ \ \ (Law\ of\ tangents)
 $$
-The area of a triangle can also be computed in terms of these side lengths:  
+The area of a triangle can also be computed in terms of these side lengths: 
 三角形的面积也可以用这些边长来计算:
 $triangle\ area = \frac{1}{4}\sqrt{ (a + b + c)(-a + b + c)(a - b + c)(a + b - c)} \\  $
 
@@ -271,7 +270,8 @@ $triangle\ area = \frac{1}{4}\sqrt{ (a + b + c)(-a + b + c)(a - b + c)(a + b - c
 ## 2.4 Vectors 向量
 
 A vector describes a length and a direction. It can be usefully represented by an arrow. Two vectors are equal if they have the same length and direction even if we think of them as being located in different places (Figure 2.11). As much as possible, you should think of a vector as an arrow and not as coordinates or numbers. At some point we will have to represent vectors as numbers in our programs, but even in code they should be manipulated as objects and only the low-level vector operations should know about their numeric representation (DeRose, 1989). Vectors will be represented as bold characters, e.g., $\bold{a}$. A vector's length is denoted $\|\bold{a}\|$ . A unit vector is any vector whose length is one. The zero vector is the vector of zero length. The direction of the zero vector is undefined.
-矢量表示长度和方向。它可以用箭头来表示。如果两个向量的长度和方向相同，即使我们认为它们位于不同的地方，它们也是相等的(图2.11)。尽可能地，你应该把矢量想象成一个箭头，而不是坐标或数字。在某些情况下，我们必须在程序中将向量表示为数字，但即使在代码中，它们也应该作为对象进行操作，并且只有低级向量操作才应该知道它们的数字表示(DeRose, 1989)。向量将被表示为粗体字符，例如，$\bold{a}$。向量的长度表示为$\|\bold{a}\|$。单位向量是任何长度为1的向量。零向量是长度为0的向量。零向量的方向没有定义。![Figure 2.11](.\Images\Figure 2.11.png)
+矢量描述长度和方向。它可以通过箭头有益地表示。如果两个矢量具有相同的长度和方向，即使我们认为它们位于不同的位置，它们也是相等的（图2.11）。在尽可能的情况下，你应该将矢量看作箭头，而不是坐标或数字。在程序中，我们将不得不将矢量表示为数字，但即使在代码中，它们也应该作为对象进行操作，只有低级别的矢量操作应该知道它们的数值表示（DeRose，1989）。矢量将用粗体字符表示，例如，$\bold{a}$。矢量的长度表示为 $|\bold{a}|$。单位矢量是长度为一的任意矢量。零矢量是零长度的矢量，其方向未定义。
+![Figure 2.11](.\Images\Figure 2.11.png)
 Figure 2.11. These two vectors are the same because they have the same length and direction.
 图2.11 这两个向量是相同的因为它们有相同的长度和方向
 
@@ -307,18 +307,18 @@ Vectors can also be multiplied. In fact, there are several kinds of products inv
 ### 2.4.2 Cartesian Coordinates of a Vector 向量的笛卡尔坐标
 
 A 2D vector can be written as a combination of any two nonzero vectors which are not parallel. This property of the two vectors is called linear independence. Two linearly independent vectors form a 2D basis, and the vectors are thus referred toas basis vectors. For example, a vector $\bold{c}$ may be expressed as a combination of two basis vectors $\bold{a}$ and $\bold{b}$ (Figure 2.15):
-二维向量可以写成任意两个不平行的非零向量的组合。这两个向量的性质叫做线性无关。两个线性无关的向量构成一个二维基，因此这两个向量被称为基向量。例如，向量$\bold{c}$ 可以表示为两个基向量$\bold{a}$和$\bold{b}$的组合(图2.15):
+一个二维矢量可以写成任意两个非平行的非零矢量的组合。这两个矢量的这一性质被称为线性独立。两个线性独立的矢量构成一个二维基，因此这些矢量被称为基矢量。例如，一个矢量 $\bold{c}$ 可以表示为两个基矢量 $\bold{a}$ 和 $\bold{b}$ 的组合（图2.15）：
 $\bold{c} = a_c\bold{a} + b_c\bold{b} \ \ \ \ \ \ (2.3)$.
 <img src=".\Images\Figure 2.15.png" alt="Figure 2.15" style="zoom:80%;" />
 Figure 2.15. Any 2D vector $\bold{c}$ is a weighted sum of any two nonparallel 2D vectors $\bold{a}$ and $\bold{b}$.
 图2.15 任意二维向量$\bold{c}$是任意两个非平行二维向量$\bold{a}$和$\bold{b}$的加权和。
 
 Note that the weights $a_c$ and $b_c$ are unique. Bases are especially useful if the two vectors are orthogonal, i.e., they are at right angles to each other. It is even more useful if they are also unit vectors in which case they are orthonormal. If we assume two such “special" vectors $\bold{x}$ and $\bold{y}$ are known to us, then we can use them to represent all other vectors in a Cartesian coordinate system, where each vector is represented as two real numbers. For example, a vector $\bold{a}$ might be represented as
-注意，权重$a_c$和$b_c$是唯一的。如果两个向量是正交的，即它们彼此成直角，基就特别有用。如果它们也是单位向量的话就更有用了在这种情况下它们是标准正交的。如果我们假设两个这样的“特殊向量”$\bold{x}$和$\bold{y}$是已知的，那么我们可以用它们来表示笛卡尔坐标系中的所有其他向量，其中每个向量都用两个实数表示。例如，向量$\bold{a}$可以表示为
+注意，权重$a_c$和$b_c$是唯一的。如果两个向量是正交的，即它们彼此成直角，基就特别有用。如果它们也是单位向量的话就更有用了在这种情况下它们是**标准正交**的。如果我们假设两个这样的“特殊向量”$\bold{x}$和$\bold{y}$是已知的，那么我们可以用它们来表示笛卡尔坐标系中的所有其他向量，其中每个向量都用两个实数表示。例如，向量$\bold{a}$可以表示为
 $\bold{a} = x_a\bold{x} + y_a\bold{y}$,
 
-where $x_a$ and $y_a$ are the real Cartesian coordinates of the 2D vector a (Figure 2.16). Note that this is not really any different conceptually from Equation (2.3), where the basis vectors were not orthonormal. But there are several advantages to a Cartesian coordinate system. For instance, by the Pythagorean theorem, the length of $\bold{a}$ is
-其中，$x_a$和$y_a$为二维向量a的实笛卡尔坐标(图2.16)。请注意，这在概念上与公式(2.3)没有任何不同，其中基向量不是标准正交的。但是笛卡尔坐标系有几个优点。例如，根据勾股定理，$\bold{a}$的长度为
+where $x_a$ and $y_a$ are the real Cartesian coordinates of the 2D vector $\bold{a}$ (Figure 2.16). Note that this is not really any different conceptually from Equation (2.3), where the basis vectors were not orthonormal. But there are several advantages to a Cartesian coordinate system. For instance, by the Pythagorean theorem, the length of $\bold{a}$ is
+其中，$x_a$ 和 $y_a$ 分别是二维矢量 $\bold{a}$ 的实际笛卡尔坐标（图2.16）。请注意，从概念上讲，这与方程（2.3）并没有太大不同，其中基矢量不是正交的。但笛卡尔坐标系有几个优势。例如，根据毕达哥拉斯定理，矢量 $\bold{a}$ 的长度是
 $\|\bold{a}\| = \sqrt{x_a^2 + y_a^2}$
 <img src=".\Images\Figure 2.16.png" alt="Figure 2.16" style="zoom:80%;" />
 Figure 2.16. A 2D Cartesian basis for vectors.
@@ -328,7 +328,7 @@ It is also simple to compute dot products, cross products, and coordinates of ve
 在笛卡尔坐标系中计算点积、叉积和向量坐标也很简单，我们将在接下来的章节中看到。
 
 By convention we write the coordinates of a either as an ordered pair $(x_a, y_a)$or a column matrix:
-按照惯例，我们将a的坐标写成有序对$(x_a, y_a)$或列矩阵:
+按照惯例，我们将$\bold{a}$的坐标写成有序对$(x_a, y_a)$或列矩阵:
 $\bold{a} = \begin{bmatrix} x_a \\ y_a \end{bmatrix}$
 
 The form we use will depend on typographic convenience. We will also occasionally write the vector as a row matrix, which we will indicate as $\bold{a}^T$.
@@ -336,7 +336,7 @@ The form we use will depend on typographic convenience. We will also occasionall
 $\bold{a}^T = \begin{bmatrix} x_a & y_a \end{bmatrix}$
 
 We can also represent 3D, 4D, etc., vectors in Cartesian coordinates. For the 3D case, we use a basis vector z that is orthogonal to both x and y.
-我们也可以用笛卡尔坐标表示3D, 4D等向量。对于三维情况，我们使用一个基向量z，它与x和y都正交。
+我们也可以用笛卡尔坐标表示3D, 4D等向量。对于三维情况，我们使用一个基向量$\bold{z}$，它与$\bold{x}$和$\bold{y}$都正交。
 
 
 
@@ -350,7 +350,7 @@ Figure 2.17. The dot product is related to length and angle and is one of the mo
 图2.17 点积与长度和角度有关，是图形学中最重要的公式之一
 
 The most common use of the dot product in graphics programs is to compute the cosine of the angle between two vectors.
-点积在图形程序中最常用的用法是计算两个向量夹角的余弦值。
+点积在图形程序中最常用的用法是**计算两个向量夹角的余弦值**。
 
 The dot product can also be used to find the projection of one vector onto another. This is the length $\bold{a} \rightarrow \bold{b}$ of a vector $\bold{a}$ that is projected at right angles onto a vector $\bold{b}$ (Figure 2.18):
 点积也可以用来求一个向量在另一个向量上的投影。这是向量$\bold{a}$以直角投影到向量$\bold{b}$上的长度$\bold{a} \rightarrow \bold{b}$(图2.18):
@@ -383,11 +383,11 @@ $\bold{a} \cdot \bold{b} = x_ax_b +y_ay_b + z_az_b$
 ### 2.4.4 Cross Product 叉乘
 
 The cross product $\bold{a} \cross \bold{b}$ is usually used only for three-dimensional vectors; generalized cross products are discussed in references given in the chapter notes. The cross product returns a 3D vector that is perpendicular to the two arguments of the cross product. The length of the resulting vector is related to $\sin\varphi$:
-叉乘$\bold{a} \cross \bold{b}$通常只用于三维向量；在本章附注的参考文献中讨论了广义叉积。叉乘返回一个垂直于叉乘的两个参数的三维向量。结果向量的长度与$\sin\varphi$有关:
+叉乘$\bold{a} \cross \bold{b}$通常只用于三维向量；在本章附注的参考文献中讨论了广义叉积。**叉乘返回一个垂直于叉乘的两个参数的三维向量**。结果向量的长度与$\sin\varphi$有关:
 $\|\bold{a} \cross \bold{b}\| = \|\bold{a}\|\|\bold{b}\|\sin\varphi$
 
 The magnitude $\|\bold{a} \cross \bold{b}\|$ is equal to the area of the parallelogram formed by vectors $\bold{a}$ and $\bold{b}$. In addition, $\bold{a} \cross \bold{b}$ is perpendicular to both $\bold{a}$ and $\bold{b}$ (Figure 2.19). Note that there are only two possible directions for such a vector. By definition, the vectors in the direction of the x-, y- and z-axes are given by
-$\|\bold{a} \cross \bold{b}\|$ 的大小 等于由向量 $\bold{a}$ 和 $\bold{b}$ 形成的平行四边形的面积。 此外，$\bold{a} \cross \bold{b}$ 垂直于$\bold{a}$ 和$\bold{b}$（图2.19）。 请注意，这样的向量只有两个可能的方向。 根据定义，x、y 和 z 轴方向上的向量由下式给出
+$\|\bold{a} \cross \bold{b}\|$ 的大小等于由向量 $\bold{a}$ 和 $\bold{b}$ 形成的平行四边形的面积。 此外，$\bold{a} \cross \bold{b}$ 垂直于$\bold{a}$ 和$\bold{b}$（图2.19）。 请注意，这样的向量只有两个可能的方向。 根据定义，x、y 和 z 轴方向上的向量由下式给出
 $$
 \bold{x} = (1, 0, 0) \\
 \bold{y} = (0, 1, 0) \\
@@ -398,24 +398,24 @@ Figure 2.19.The cross product $\bold{a} \cross \bold{b}$ is a 3D vector perpendi
 图2.19 叉积是一个$\bold{a} \cross \bold{b}$垂直于3D向量$\bold{a}$和$\bold{b}$的三维向量，它的长度等于所示平行四边形的面积
 
 and we set as a convention that $\|\bold{x} \cross \bold{y}\|$must be in the plus or minus z direction. The choice is somewhat arbitrary, but it is standard to assume that
-我们设定$\|\bold{x} \cross \bold{y}\|$必须在正负z方向上。这个选择有些武断，但这是标准的假设
+我们设定$\|\bold{x} \cross \bold{y}\|$必须在正负$\bold{z}$方向上。这个选择有些武断，但这是标准的假设
 $\bold{z} = \bold{x} \cross \bold{y}$
 
 All possible permutations of the three Cartesian unit vectors are
 三个笛卡尔单位向量的所有可能的排列是
 $$
-\bold{x} × \bold{y} = +\bold{z} \\
-\bold{y} × \bold{z} = -\bold{z} \\
-\bold{y} × \bold{z} = +\bold{x} \\
-\bold{z} × \bold{y} = -\bold{x} \\
-\bold{z} × \bold{x} = +\bold{y} \\
-\bold{x} × \bold{z} = -\bold{y} \\
+\bold{x} × \bold{y} = +\bold{z} ,\\
+\bold{y} × \bold{x} = -\bold{z} ,\\
+\bold{y} × \bold{z} = +\bold{x} ,\\
+\bold{z} × \bold{y} = -\bold{x} ,\\
+\bold{z} × \bold{x} = +\bold{y} ,\\
+\bold{x} × \bold{z} = -\bold{y} .\\
 $$
 Because of the $\sin\varphi$ property, we also know that a vector cross itself is the zero-vector, so $\bold{x} \cross \bold{x} = \bold{0}$ and so on. Note that the cross product is not commutative, i.e., $\bold{x} \cross \bold{y} \ne \bold{y} \cross \bold{x}$. The careful observer will note that the above discussion does not allow us to draw an unambiguous picture of how the Cartesian axes relate. More specifically, if we put $\bold{x}$ and $\bold{y}$ on a sidewalk, with $\bold{x}$ pointing east and $\bold{y}$ pointing north, then does $\bold{z}$ point up to the sky or into the ground? The usual convention is to have $\bold{z}$ point to the sky. This is known as a right-handed coordinate system. This name comes from the memory scheme of “grabbing” $\bold{x}$ with your right palm and fingers and rotating it toward $\bold{y}$. The vector $\bold{z}$ should align with your thumb. This is illustrated in Figure 2.20.
-由于$\sin\varphi$的性质，我们也知道一个向量与自身相交是零向量，所以$\bold{x} \cross \bold{x} = \bold{0}$等等。注意叉乘是不可交换的，也就是$\bold{x} \cross \bold{y} \ne \bold{y} \cross \bold{x}$。细心的观察者会注意到，上面的讨论并不能让我们明确地描绘出笛卡尔轴之间的关系。更具体地说，如果我们把$\bold{x}$和$\bold{y}$放在水平面上，$\bold{x}$指向东，$\bold{y}$指向北，那么$\bold{z}$是指向天空还是指向地面?通常的惯例是$\bold{z}$指向天空。这被称为右手坐标系。这个名字来自于用右手手掌和手指“抓住”$\bold{x}$，并将其旋转到$\bold{y}$的记忆方案。向量$\bold{z}$应该与你的拇指对齐。如图2.20所示。
+由于 $\sin\varphi$ 属性，我们也知道一个向量与其自身的叉积是零向量，因此 $\bold{x} \cross \bold{x} = \bold{0}$ 等等。请注意，叉积不是可交换的，即 $\bold{x} \cross \bold{y} \ne \bold{y} \cross \bold{x}$。细心的观察者会注意到上面的讨论并未让我们明确地描绘出笛卡尔坐标轴之间的关系。更具体地说，如果我们将 $\bold{x}$ 和 $\bold{y}$ 放在水平面上，使 $\bold{x}$ 指向东方，$\bold{y}$ 指向北方，那么 $\bold{z}$ 是指向天空还是地面呢？通常的约定是让 $\bold{z}$ 指向天空。这被称为右手坐标系。这个名字来自于“用右手掌和手指”抓住 $\bold{x}$ 并将其朝着 $\bold{y}$ 旋转的记忆方案。向量 $\bold{z}$ 应该与您的大拇指对齐。这在图2.20中有所说明。
 <img src=".\Images\Figure 2.20.png" alt="Figure 2.20" style="zoom:67%;" />
 Figure 2.20. The “right-hand rule" for cross products. Imagine placing the base your right palm where $\bold{a}$ and $\bold{b}$ join at their tails, and pushing the arrow of $\bold{a}$ toward $\bold{b}$. Your extended right thumb should point toward $\bold{a} \cross \bold{b}$.
-图2.20 叉乘的右手定则。想象一下，把你的右手掌底部放在$\bold{a}$和$\bold{b}$尾部连接的地方，然后把$\bold{a}$的箭头推向$\bold{b}$。你伸出的右手拇指应该指向。$\bold{a} \cross \bold{b}$
+图2.20. 叉乘的“右手法则”。想象一下，将您的右掌的底部放在$\bold{a}$和$\bold{b}$尾部相接的地方，然后将$\bold{a}$的箭头推向$\bold{b}$。您伸出的右手拇指应指向$\bold{a} \cross \bold{b}$。
 
 The cross product has the nice property that
 外积有一个很好的性质
@@ -452,12 +452,12 @@ $\|\bold{u}\| = \|\bold{v}\| = 1$
 $\bold{u} \cdot \bold{v} = 0$
 
 In 3D, three vectors $\bold{u}$, $\bold{v}$, and $\bold{w}$ form an orthonormal basis if 
-在三维空间中，三个向量$\bold{u}$， $\bold{v}$和$\bold{w}$构成一个标准正交基if
+在三维空间中，三个向量$\bold{u}$， $\bold{v}$和$\bold{w}$构成一个标准正交基
 $\|\bold{u}\| = \|\bold{v}\| = \|\bold{w}\| = 1$
 $\bold{u} \cdot \bold{v} = \bold{v} \cdot \bold{w} = \bold{w} \cdot \bold{u} = 0$
 
 This orthonormal basis is right-handed provided 
-这个标准正交基是右手性的
+这个标准正交基是右手性的条件是
 $\bold{w} = \bold{u} \cdot \bold{v}$
 
 and otherwise it is left-handed.
@@ -526,6 +526,48 @@ $\bold{v} = \bold{w} \cross \bold{u}$
 An example of a situation where this construction is used is surface shading, where a basis aligned to the surface normal is needed but the rotation around the normal is often unimportant.
 使用这种构造的一个例子是表面着色，其中需要一个与表面法线对齐的基，但围绕法线的旋转通常不重要。
 
+> ChatGPT：
+>
+> 从单个向量构造基的过程涉及到线性代数中的一些基本概念。一个基是向量空间中的一组线性无关的向量，这组向量能够生成整个向量空间。对于三维空间，我们通常使用三个线性无关的基向量来构造基。下面是从单个向量构造基的一种方法：
+>
+> 假设我们有一个非零向量 $\bold{v}$，我们希望构造一组基，使得这个向量是这组基的一部分。
+>
+> 1. **单位化：** 首先，将向量 $\bold{v}$ 单位化，即将其长度归一化为1。我们可以通过将向量除以其长度得到单位向量 $\hat{v}$。
+>
+>    $\hat{v} = \frac{\bold{v}}{\|\bold{v}\|} \\$
+>
+> 2. **正交化：** 然后，我们需要构造与 $\hat{v}$ 正交的向量。这可以通过在空间中选择与 $\hat{v}$ 正交的向量 $\bold{u}$ 来实现。
+>
+>    $\bold{u}=任意选择与\hat{v}正交的向量$
+>
+> 3. **叉乘得到第三个基向量：** 对于三维空间，我们可以使用叉乘来得到第三个与前两个向量都正交的向量。如果我们选择 $\bold{u}$ 和 $\hat{v}$，那么第三个基向量 $\bold{w}$ 可以通过叉乘计算得到：
+>
+>    $\bold{w} = \bold{u} \cross \hat{v}$
+>
+> 现在，我们得到了一组基向量 ${\hat{v}, \bold{u}, \bold{w}}$，它们是线性无关的，且 $\bold{v}$ 可以表示为这组基的线性组合。这是一种方法，实际上，我们可以通过多种方式构造基，具体取决于问题的背景和要求。
+
+> 正交化是一种线性代数中的操作，目的是将一组线性相关的向量转换为一组线性无关的正交或规范正交向量。在正交化的过程中，通过一系列操作，使得得到的向量之间的内积为零，从而增加了向量集合的数学性质。
+>
+> 有两种常见的正交化方法：Gram-Schmidt 正交化和施密特正交化。
+>
+> 1. **Gram-Schmidt 正交化：** 对于给定的向量集合 ${\bold{v}_1, \bold{v}_2, \ldots, \bold{v}_n}$，Gram-Schmidt 正交化的步骤如下：
+>
+>    - 第一个向量不变。
+>    - 对于后续的每个向量 $\bold{v}_i$，将其投影到前面所有已经正交化的向量上并从原始向量中减去投影，得到正交化后的向量 $\bold{u}_i$。
+>    - 归一化得到单位向量 $\hat{u}_i$。
+>
+>    这样得到的向量集合 ${\hat{u}_1, \hat{u}_2, \ldots, \hat{u}_n}$ 是一组正交或规范正交向量。
+>
+> 2. **施密特正交化：** 与Gram-Schmidt类似，但采用了一种递归的方式。对于给定的向量集合 ${\bold{v}_1, \bold{v}_2, \ldots, \bold{v}_n}$，施密特正交化的步骤如下：
+>
+>    - 对第一个向量 $\bold{v}_1$ 归一化得到单位向量 $\hat{u}_1$。
+>    - 对于后续的每个向量 $\bold{v}_i$，将其与前面所有已经正交化的向量进行投影运算，然后减去投影得到正交化后的向量 $\bold{u}_i$。
+>    - 归一化得到单位向量 $\hat{u}_i$。
+>
+>    这样也得到一组正交或规范正交向量。
+
+
+
 ### 2.4.7 Constructing a Basis from Two Vectors 从两个向量构造基
 
 The procedure in the previous section can also be used in situations where the rotation of the basis around the given vector is important. A common example is building a basis for a camera: it's important to have one vector aligned in the direction the camera is looking, but the orientation of the camera around that vector is not arbitrary, and it needs to be specified somehow. Once the orientation is pinned down, the basis is completely determined. 
@@ -551,7 +593,7 @@ This procedure won't work if $\bold{a}$ and $\bold{b}$ are collinear. In this ca
 如果$\bold{a}$和$\bold{b}$共线，此过程将不起作用。在这种情况下，$\bold{b}$对于选择我们应该使用哪个垂直于$\bold{a}$的方向没有帮助:它垂直于所有方向。
 
 In the example of specifying camera positions (Section 4.3), we want to construct a frame that has $\bold{w}$ parallel to the direction the camera is looking, and $\bold{v}$ should point out the top of the camera. To orient the camera upright, we build the basis around the view direction, using the straight-up direction as the reference vector to establish the camera's orientation around the view direction. Setting $\bold{v}$ as close as possible to straight up exactly matches the intuitive notion of “holding the camera straight.”
-在指定摄像机位置的例子中(第4.3节)，我们想要构造一个帧，其中$\bold{w}$平行于摄像机所看的方向，$\bold{v}$应该指向摄像机的顶部。为了使摄像机垂直定向，我们围绕视角方向建立基，以垂直方向作为参考向量，围绕视角方向建立摄像机的方向。将$\bold{v}$设置为尽可能接近垂直，正好符合“保持相机垂直”的直观概念。
+在指定摄像机位置的示例中（第4.3节），我们希望构建一个坐标系，使得$\bold{w}$与摄像机所朝向的方向平行，而$\bold{v}$应指向相机的顶部。为了使摄像机保持竖直，我们围绕视角方向构建基础，利用垂直方向作为参考向量，以确定摄像机在视角方向周围的方向。将$\bold{v}$尽量设置为垂直向上，与“保持摄像机平直”的直观概念完全相符。
 
 > If you want me to set $\bold{w}$ and $\bold{v}$ to two nonperpendicular directions, something has to give-with this scheme I'll set everything the way you want, except I'll make the smallest change to $\bold{v}$ so that it is in fact perpendicular to $\bold{w}$.
 > 如果你想让我把$\bold{w}$和$\bold{v}$设置为两个不垂直的方向，就必须做出一些让步——在这个方案中，我将按照你想要的方式设置所有内容，除了我将对$\bold{v}$做最小的改变，使它实际上垂直于$\bold{w}$。
@@ -565,10 +607,10 @@ Occasionally you may find problems caused in your computations by a basis that i
 有时，您可能会发现计算中出现的问题是由本应正交的基导致的，但由于计算中的舍入误差，或者基被存储在低精度文件中，错误已经悄然出现。
 
 The procedure of the previous section can be used; simply constructing the basis anew using the existing $\bold{w}$ and $\bold{v}$ vectors will produce a new basis that is orthonormal and is close to the old one.
-可以使用上一节的过程； 只需使用现有的 $\bold{w}$ 和 $\bold{v}$ 向量重新构建基础，就会产生一个正交且接近旧基础的新基础。
+前一节的步骤可以被使用；仅仅通过利用已有的$\bold{w}$和$\bold{v}$向量重新构建基础，就能够生成一个新的正交归一基，且与旧基接近。
 
 This approach is good for many applications, but it is not the best available. It does produce accurately orthogonal vectors, and for nearly orthogonal starting bases the result will not stray far from the starting point. However, it is asymmetric: it “favors” $\bold{w}$ over $\bold{v}$ and $\bold{v}$ over $\bold{u}$ (whose starting value is thrown away).It chooses a basis close to the starting basis but has no guarantee of choosing the closest orthonormal basis. When this is not good enough, the SVD (Section 5.4.1)can be used to compute an orthonormal basis that is guaranteed to be closest to the original basis.
-这种方法适用于许多应用程序，但并不是最好的方法。 它确实产生准确的正交向量，并且对于几乎正交的起始基，结果不会偏离起始点太远。 然而，它是不对称的：它“青睐”$\bold{w}$ 而不是 $\bold{v}$，并且“青睐”$\bold{v}$ 而不是 $\bold{u}$（其起始值被丢弃）。 它选择接近起始基础的基础，但不能保证选择最接近的正交基础。 当这还不够好时，SVD（第 5.4.1 节）可用于计算保证最接近原始基的正交基。
+这种方法在许多应用中是可行的，但并非最佳选择。它确实能够生成准确正交的向量，对于初始基近乎正交的情况，结果不会偏离初始点太远。然而，它是不对称的：它“偏向”$\bold{w}$而非$\bold{v}$，并且$\bold{v}$优于$\bold{u}$（其初始值被丢弃）。它选择一个接近初始基的基础，但无法保证选择到最接近的正交基。当这还不够好时，可以使用奇异值分解（第5.4.1节）来计算一个确保最接近原始基础的正交基。
 
 ## 2.5 Curves and Surfaces 曲线和曲面
 
@@ -588,22 +630,22 @@ $f(x,y)=(x -x_c)^2 + (y - y_c)^2 -r^2$
 where $(x_c, y_c)$ is a 2D point and $r$ is a nonzero real number. If we take $f(x, y) = 0$, the points where this equality holds are on the circle with center $(x_c, y_c)$ and radius $r$. The reason that this is called an “implicit” equation is that the points $(x,y)$ on the curve cannot be immediately calculated from the equation and instead must be determined by solving the equation. Thus, the points on the curve are not generated by the equation explicitly, but they are buried somewhere implicitly in the equation.
 其中 $(x_c, y_c)$ 是 2D 点，$r$ 是非零实数。 如果我们取 $f(x, y) = 0$，则该等式成立的点位于以 $(x_c, y_c)$ 为圆心、以 $r$ 为半径的圆上。 之所以将其称为“隐式”方程，是因为曲线上的点 $(x,y)$ 无法立即从方程中计算出来，而必须通过求解方程来确定。 因此，曲线上的点不是由方程显式生成的，而是隐式地隐藏在方程中的某个位置。
 
-It is interesting to note that $f$ does have values for all $(x, y)$. We can think of $f$ as a terrain, with sea level at $f = 0$ (Figure 2.22). The shore is the implicit curve. The value of $f$ is the altitude. Another thing to note is that the curve partitions space into regions where $f > 0$, $f < 0$, and $f = 0$. So you evaluate $f$ to decide whether a point is “inside" a curve. Note that $f(x,y) = c$ is a curve for any constant $c$, and $c = 0$ is just used as a convention. For example, if $f(x, y) = x^2 +y^2 - 1$, varying $c$ just gives a variety of circles centered at the origin (Figure 2.23)
-有趣的是，$f$ 确实具有所有 $(x, y)$ 的值。 我们可以将 $f$ 视为一个地形，海平面为 $f = 0$（图 2.22）。 海岸是隐式曲线。 $f$ 的值是海拔高度。 另一件需要注意的事情是，曲线将空间划分为 $f > 0$、$f < 0$ 和 $f = 0$ 的区域。 因此，您可以评估 $f$ 来确定某个点是否在曲线“内部”。请注意，$f(x,y) = c$ 是任何常数 $c$ 的曲线，而 $c = 0$ 仅用作 例如，如果 $f(x, y) = x^2 +y^2 - 1$，则改变 $c$ 只会给出以原点为中心的各种圆（图 2.23）
+It is interesting to note that $f$ does have values for all $(x, y)$. We can think of $f$ as a terrain, with sea level at $f = 0$ (Figure 2.22). The shore is the implicit curve. The value of $f$ is the altitude. Another thing to note is that the curve partitions space into regions where $f > 0$, $f < 0$, and $f = 0$. So you evaluate $f$ to decide whether a point is “inside" a curve. Note that $f(x,y) = c$ is a curve for any constant $c$, and $c = 0$ is just used as a convention. For example, if $f(x, y) = x^2 +y^2 - 1$, varying $c$ just gives a variety of circles centered at the origin (Figure 2.23).
+有趣的是，我们可以注意到$f$对于所有的$(x, y)$都有值。我们可以将$f$看作是一个地形，其中$f = 0$时为海平面（见图2.22）。海岸线即为隐式曲线，而$f$的值则表示海拔高度。另一个需要注意的地方是，该曲线将空间划分为$f > 0$、$f < 0$和$f = 0$的区域。因此，通过评估$f$的值，我们可以确定一个点是否在曲线的“内部”。需要注意的是，对于任何常数$c$，$f(x, y) = c$都是一条曲线，而$c = 0$只是一种惯例。例如，如果$f(x, y) = x^2 + y^2 - 1$，改变$c$只会得到以原点为中心的各种圆形（见图2.23）。
 <img src=".\Images\Figure 2.22.png" alt="Figure 2.22" style="zoom:67%;" />
 Figure 2.22. An implicit function $f(x,y) = 0$ can be thought of as a height field where $f$ is the height (top). A path where the height is zero is the implicit curve (bottom).
 图 2.22。 隐式函数 $f(x,y) = 0$ 可以被视为高度字段，其中 $f$ 是高度（顶部）。 高度为零的路径是隐式曲线（底部）。
 
 ![Figure 2.23](.\Images\Figure 2.23.png)
-Figure 2.23. An implicit function $f(x,y) = 0$ can be thought of as a height field where $f$ is the height (top). A path where the height is zero is the implicit curve (bottom)
-图 2.23。 隐式函数 $f(x,y) = 0$ 可以被视为高度字段，其中 $f$ 是高度（顶部）。 高度为零的路径是隐式曲线（下)
+Figure 2.23. The various circles represented by $f(x, y) = x^2 + y^2 - 1.$
+图2.23：由$f(x, y) = x^2 + y^2 - 1$ 表示的各种圆形。
 
 We can compress our notation using vectors. If we have $\bold{c} = (x_c, y_c)$ and $\bold{p} = (x, y)$, then our circle with center c and radius r is defined by those position vectors that satisfy
 我们可以使用向量来压缩我们的符号。 如果我们有 $\bold{c} = (x_c, y_c)$ 和 $\bold{p} = (x, y)$，那么以 c 为中心、以 r 为半径的圆由满足以下条件的位置向量定义：
 $(\bold{p} - \bold{c} )\cdot (\bold{p} - \bold{c}) -r^2 = 0$
 
 This equation, if expanded algebraically, will yield Equation (2.9), but it is easier to see that this is an equation for a circle by “reading” the equation geometrically. It reads, “points $\bold{p}$ on the circle have the following property: the vector from $\bold{c}$ to $\bold{p}$ when dotted with itself has value $r^2$." Because a vector dotted with itself is just its own length squared, we could also read the equation as, “points $\bold{p}$ on the circle have the following property: the vector from $\bold{c}$ to $\bold{p}$ has squared length $r^2$."
-这个方程如果用代数展开，将得到方程（2.9），但通过几何“解读”方程，更容易看出这是一个圆方程。 它写道：“圆上的点 $\bold{p}$ 具有以下属性：从 $\bold{c}$ 到 $\bold{p}$ 的向量在点上自身时具有值 $r^2$。 因为用自身点缀的向量只是其自身长度的平方，所以我们也可以将方程读作“圆上的点 $\bold{p}$ 具有以下属性：从 $\bold{c}$ 到 $\bold{c}$ 的向量 $\bold{p}$ 的长度为 $r^2$ 的平方。”
+这个方程，如果代数上展开，将得到方程（2.9），但通过在几何上“阅读”方程，我们更容易看出这是一个描述圆的方程。它的含义是：“圆上的点 $\bold{p}$ 具有以下特性：从 $\bold{c}$ 到 $\bold{p}$ 的向量与自身点乘的结果为 $r^2$。”由于向量与自身点乘的结果就是它的长度的平方，我们也可以将这个方程理解为：“圆上的点 $\bold{p}$ 具有以下特性：从 $\bold{c}$ 到 $\bold{p}$ 的向量的平方长度为 $r^2$。”
 
 Even better, is to observe that the squared length is just the squared distance from $\bold{c}$ to $\bold{p}$, which suggests the equivalent form
 更好的是，观察到平方长度只是从 $\bold{c}$ 到 $\bold{p}$ 的平方距离，这表明了等效形式
@@ -614,26 +656,27 @@ and, of course, this suggests
 $\|\bold{p} - \bold{c}\| - r = 0$
 
 The above could be read “the points $\bold{p}$ on the circle are those a distance $r$ from the center point $\bold{c}$,which is as good a definition of circle as any. This illustrates that the vector form of an equation often suggests more geometry and intuition than the equivalent full-blown Cartesian form with $x$ and $y$. For this reason, itis usually advisable to use vector forms when possible. In addition, you can support a vector class in your code; the code is cleaner when vector forms are used. The vector-oriented equations are also less error prone in implementation: once you implement and debug vector types in your code, the cut-and-paste errors involving $x$, $y$, and $z$ will go away. It takes a little while to get used to vectors in these equations, but once you get the hang of it, the payoff is large.
-上面的内容可以理解为“圆上的点 $\bold{p}$ 是距中心点 $\bold{c}$ 距离 $r$ 的点，这是圆的一个很好的定义。 这说明方程的矢量形式通常比带有 $x$ 和 $y$ 的等效完整笛卡尔形式暗示更多的几何形状和直觉。 因此，通常建议尽可能使用载体形式。 此外，您可以在代码中支持向量类； 使用向量形式时代码更清晰。 面向向量的方程在实现中也不易出错：一旦在代码中实现和调试向量类型，涉及 $x$、$y$ 和 $z$ 的剪切和粘贴错误就会消失。 需要一些时间来适应这些方程中的向量，但一旦掌握了它的窍门，回报是巨大的。
+上述内容可以解读为‘圆上的点 $\bold{p}$ 是距离中心点 $\bold{c}$ 为 $r$ 的点，这是对圆的一种非常恰当的定义。这表明，方程的向量形式往往比具有 $x$ 和 $y$ 的等效笛卡尔形式更容易理解。因此，通常建议在可能的情况下使用向量形式。此外，在您的代码中使用向量形式可以支持向量类；使用向量形式时，代码更为清晰。基于向量的方程在实现中也更不容易出错：一旦您在代码中实现并调试了向量类型，涉及 $x$、$y$ 和 $z$ 的剪切粘贴错误将不再存在。适应在这些方程中使用向量可能需要一些时间，但一旦掌握，带来的回报是十分可观的。
 
-### 2.5.2 The 2D Gradient 2D 渐变
+### 2.5.2 The 2D Gradient 二维梯度
 
 If we think of the function $f(x, y)$ as a height field with $height = f(x,y)$, the gradient vector points in the direction of maximum upslope, i.e., straight uphill. The gradient vector $\nabla f(x, y)$ is given by 
-如果我们将函数 $f(x, y)$ 视为一个高度场，其中 $height = f(x,y)$，则梯度向量指向最大上坡方向，即笔直上坡。 梯度向量 $\nabla f(x, y)$ 由下式给出
+如果我们将函数$f(x, y)$视为一个高度场，其中$height = f(x, y)$，那么斜率向量指向最大上坡的方向，即笔直上山的方向。斜率向量$\nabla f(x, y)$由以下表达式给出：
 $\nabla f(x, y) = \left(\frac{\partial f}{\partial x}, \frac{\partial f}{\partial y}\right) \\$ 
 
 The gradient vector evaluated at a point on the implicit curve $f(x,y) = 0$ is perpendicular to the tangent vector of the curve at that point. This perpendicular vector is usually called the normal vector to the curve. In addition, since the gradient points uphill, it indicates the direction of the $f(x, y) > 0$ region.
-在隐式曲线 $f(x,y) = 0$ 上的一点处计算的梯度向量垂直于该点处曲线的切向量。 该垂直矢量通常称为曲线的法向矢量。 另外，由于梯度指向上坡，因此它指示$f(x,y) > 0$区域的方向。
+在隐式曲线 $f(x,y) = 0$ 上的一点处计算的斜率向量垂直于该点处曲线的切向量。 该垂直矢量通常称为曲线的法向矢量。 另外，由于梯度指向上坡，因此它指示$f(x,y) > 0$区域的方向。
 
 In the context of height fields, the geometric meaning of partial derivatives and gradients is more visible than usual. Suppose that near the point $(a, b)$, $f(x, y)$ is a plane (Figure 2.24). There is a specific uphill and downhill direction. At right angles to this direction s a direction that is level with respect to the plane. Any intersection between the plane and the $f(x,y) = 0$ plane will be in the direction that is level. Thus the uphill/downhill directions will be perpendicular to the line of intersection $f(x, y) = 0$. To see why the partial derivative has something to do with this, we need to visualize its geometric meaning. Recall that the conventional derivative of a 1D function $y = g(x)$ is
-在高度场的背景下，偏导数和梯度的几何意义比平常更明显。 假设在点$(a,b)$附近，$f(x,y)$是一个平面（图2.24）。 有特定的上坡和下坡方向。 与该方向成直角的是相对于平面水平的方向。 该平面与 $f(x,y) = 0$ 平面之间的任何交点都将沿水平方向。 因此，上坡/下坡方向将垂直于交线 $f(x, y) = 0$。 为了明白为什么偏导数与此有关，我们需要形象化它的几何意义。 回想一下，一维函数 $y = g(x)$ 的常规导数是
-<img src=".\Images\Figure 2.24.png" alt="Figure 2.24" style="zoom:67%;" />
-Figure 2.24. A surface $height = f(x, y)$ is locally planar near $(x,y) = (a,b)$. The gradient is a projection of the up-hill direction onto the $height = 0$ plane.
-图 2.24.  表面 $height = f(x, y)$ 在 $(x,y) = (a,b)$ 附近局部为平面。 梯度是上山方向在 $height = 0$ 平面上的投影。
+在高度场的语境中，偏导数和梯度的几何意义比平常更为明显。假设在点$(a, b)$附近，$f(x, y)$是一个平面（见图2.24）。存在特定的上坡和下坡方向。与这个方向垂直的是相对于平面水平的方向。平面与$f(x, y) = 0$平面的任何交点将在水平方向上。因此，上坡和下坡方向将与交线$f(x, y) = 0$的方向垂直。为了理解偏导数与此的关系，我们需要直观地看到其几何意义。回想一维函数$y = g(x)$的常规导数是
 $$
 \frac{dy}{dx} = \lim\limits_{\Delta x\to 0}\frac{\Delta y}{\Delta x} = 
 \lim\limits_{\Delta x\to 0}\frac{g(x + \Delta x) - g(x)}{\Delta x} \ \ \ \ (2.10)
 $$
+<img src=".\Images\Figure 2.24.png" alt="Figure 2.24" style="zoom:67%;" />
+Figure 2.24. A surface $height = f(x, y)$ is locally planar near $(x,y) = (a,b)$. The gradient is a projection of the up-hill direction onto the $height = 0$ plane.
+图2.24. 在点$(x,y) = (a,b)$附近，表面$height = f(x, y)$在局部是平面的。梯度是上坡方向在$height = 0$平面上的投影。
+
 This measures the slope of the tangent line to $g$ (Figure 2.25)
 这测量了 $g$ 切线的斜率（图 2.25）
 ![Figure 2.25](.\Images\Figure 2.25.png)
@@ -641,7 +684,7 @@ Figure 2.25. The derivative of a 1D function measures the slope of the line tang
 图 2.25  一维函数的导数测量与曲线相切的直线的斜率
 
 The partial derivative is a generalization of the 1D derivative. For a 2D function $f(x,y)$, we can't take the same limit for $x$ as in Equation (2.10), because $f$ can change in many ways for a given change in $x$. However, if we hold $y$ constant, we can define an analog of the derivative, called the partial derivative(Figure 2.26):
-偏导数是一维导数的推广。 对于 2D 函数 $f(x,y)$，我们不能对 $x$ 采取与等式 (2.10) 中相同的限制，因为对于 $x$ 的给定变化，$f$ 可以以多种方式变化。 然而，如果我们保持 $y$ 不变，我们可以定义导数的模拟，称为偏导数（图 2.26）：
+偏导数是一维导数的推广。 对于 2D 函数 $f(x,y)$，我们不能对 $x$ 采取与等式 (2.10) 中相同的限制，因为对于 $x$ 的给定变化，$f$ 可以以多种方式变化。 然而，如果我们**保持 $y$ 不变**，我们可以定义导数的模拟，称为偏导数（图 2.26）：
 $\frac{\Delta f}{\Delta x} = 
 \lim\limits_{\Delta x\to 0}\frac{f(x + \Delta x, y) - f(x, y)}{\Delta x} \\$
 ![Figure 2.26](.\Images\Figure 2.26.png)
@@ -675,10 +718,63 @@ $(x_∇, y_∇) = k'\left(\frac{∂f}{∂x} ,\frac{∂f}{∂y} \right)\\ $
 where $k'$ is any nonzero constant. By definition,“uphill" implies a positive change in $f$, so we would like $k' > 0$, and $k' = 1$ is a perfectly good convention.
 其中 $k'$ 是任何非零常数。 根据定义，“上坡”意味着 $f$ 发生积极变化，因此我们希望 $k' > 0$，而 $k' = 1$ 是一个非常好的约定。
 
-As an example of the gradient, consider the implicit circle $x^2 + y^2 - 1 = 0$ with gradient vector $(2x,2y)$, indicating that the outside of the circle is the positive region for the function $f(x,y) = x^2 + y^2 - 1$. Note that the length of the gradient vector can be different depending on the multiplier in the implicit equation. For example, the unit circle can be described by $Ax^2 + Ay^2 - A = 0$ for any nonzero $A$. The gradient for this curve is $(2Ax, 2Ay)$. This will be normal (perpendicular) to the circle, but will have a length determined by $A$. For $A > 0$, the normal will point outward from the circle, and for $A < 0$, it will point inward. This switch from outward to inward is as it should be, since the positive region switches inside the circle. In terms of the height-field view, $h = Ax^2 + Ay^2 - A$, and the circle is at zero altitude. For $A > 0$, the circle encloses a depression, and for $A < 0$, the circle encloses a bump. As $A$ becomes more negative, the bump increases in height, but the $h = 0$ circle doesn't change. The direction of maximum uphill doesn't change, but the slope increases. The length of the gradient reflects this change in degree of the slope. So intuitively, you can think of the gradient's direction as pointing uphill and its magnitude as measuring how uphill the slope is.
-作为梯度的示例，考虑带有梯度向量 $(2x,2y)$ 的隐式圆 $x^2 + y^2 - 1 = 0$，表示圆的外部是函数 $f  (x,y) = x^2 + y^2 - 1$的正区域。 请注意，梯度向量的长度可能会有所不同，具体取决于隐式方程中的乘数。 例如，对于任何非零 $A$，单位圆可以通过 $Ax^2 + Ay^2 - A = 0$ 来描述。 该曲线的梯度为 $(2Ax, 2Ay)$。 这将垂直于圆，但其长度由 $A$ 确定。 对于 $A > 0$，法线将从圆指向外，而对于 $A < 0$，法线将指向圆内。 这种从外向内的切换是理所应当的，因为正区域在圆内切换。 就高度场视图而言，$h = Ax^2 + Ay^2 - A$，圆的高度为零。 对于 $A > 0$，圆圈包围凹陷，对于 $A < 0$，圆圈包围凸起。 随着 $A$ 变得更负，凹凸的高度会增加，但 $h = 0$ 圆圈不会改变。 最大上坡方向不变，但坡度增加。 坡度的长度反映了坡度的变化。 直观上，您可以将梯度的方向视为指向上坡，将其大小视为测量坡度的坡度。
+As an example of the gradient, consider the implicit circle $x^2 + y^2 - 1 = 0$ with gradient vector $(2x,2y)$, indicating that the outside of the circle is the positive region for the function $f(x,y) = x^2 + y^2 - 1$. Note that the length of the gradient vector can be different depending on the multiplier in the implicit equation. For example, the unit circle can be described by $Ax^2 + Ay^2 - A = 0$ for any nonzero $A$. The gradient for this curve is $(2Ax, 2Ay)$. This will be normal (perpendicular) to the circle, but will have a length determined by $A$. For $A > 0$, the normal will point outward from the circle, and for $A < 0$, it will point inward. This switch from outward to inward is as it should be, since the positive region switches inside the circle. 
+作为梯度的一个例子，考虑隐式圆 $x^2 + y^2 - 1 = 0$，其梯度向量为 $(2x, 2y)$，表明圆的外部是函数 $f(x, y) = x^2 + y^2 - 1$ 的正区域。请注意，梯度向量的长度可能会因隐式方程中的乘数而异。例如，单位圆可以用 $Ax^2 + Ay^2 - A = 0$ 描述，其中 $A$ 是任意非零常数。该曲线的梯度为 $(2Ax, 2Ay)$。这将是与圆正交的法向量，但其长度由 $A$ 决定。对于 $A > 0$，法向量将指向圆外，而对于 $A < 0$，法向量将指向圆内。这从外向内的转变是合理的，因为正区域在圆内部发生了变化。
+
+In terms of the height-field view, $h = Ax^2 + Ay^2 - A$, and the circle is at zero altitude. For $A > 0$, the circle encloses a depression, and for $A < 0$, the circle encloses a bump. As $A$ becomes more negative, the bump increases in height, but the $h = 0$ circle doesn't change. The direction of maximum uphill doesn't change, but the slope increases. The length of the gradient reflects this change in degree of the slope. So intuitively, you can think of the gradient's direction as pointing uphill and its magnitude as measuring how uphill the slope is.
+从高度场的角度来看，$h = Ax^2 + Ay^2 - A$，而圆位于零高度。对于 $A > 0$，圆围绕着一个凹陷，而对于 $A < 0$，圆围绕着一个凸起。随着 $A$ 变得更加负数，凸起的高度增加，但 $h = 0$ 圆不发生变化。最大上坡的方向不变，但坡度增加。梯度的长度反映了坡度程度的这种变化。因此，直观地说，你可以将梯度的方向视为指向上坡，其大小测量坡度有多陡。
+
+> **二维梯度**是一个矢量，表示一个二维函数在某一点上的变化率和方向。对于二维函数$f(x, y)$，其梯度通常表示为$\nabla f(x, y)$或者$\langle \frac{\partial f}{\partial x}, \frac{\partial f}{\partial y} \rangle$。
+>
+> 计算二维函数在某一点的梯度可以通过计算偏导数来实现。假设有一个二维函数$f(x, y)$，则在某一点$(a, b)$处的梯度$\nabla f(a, b)$计算如下：
+> $$
+> ∇f(a,b)= \langle\frac{∂f}{∂x}(a, b), \frac{∂f}{∂y}(a, b)\rangle
+> $$
+> 其中，$\frac{\partial f}{\partial x}$表示对$x$的偏导数，$\frac{\partial f}{\partial y}$表示对$y$的偏导数。这两个偏导数分别给出了函数在$(a, b)$点上沿$x$轴和$y$轴方向的变化率。
+>
+> 梯度的方向是变化最快的方向，而梯度的大小则表示变化率的大小。在二维空间中，梯度向量的大小可以通过以下公式计算：
+> $$
+> ∣∇f(a,b)∣=\sqrt{(\frac{∂f}{∂x}(a, b))^ 2 + (\frac{∂f}{∂y}(a, b))^ 2}
+> $$
+> 这个大小表示函数在$(a, b)$点上的变化率的大小。
+
+> 偏导数是多元函数对其中一个变量的偏微分。在数学中，当一个函数依赖于多个变量时，我们可以计算它对其中一个变量的变化率，而保持其他变量不变。这就是偏导数的概念。
+>
+> 对于一个具有两个或更多变量的函数，如果我们想要了解函数在某个特定点上对其中一个变量的变化率，就会使用偏导数。偏导数通常用符号$∂$表示，后面跟着变量的名称。例如，对于一个具有两个变量$x$和$y$的函数f(x, y)，它的偏导数可以写成∂f/∂x表示对x的偏导数，或者$∂f/∂y$表示对y的偏导数。
+>
+> 数学上，偏导数的定义是通过极限来描述的。对于一个函数f(x, y)，在某一点(x₀, y₀)处对x的偏导数定义为：
+> $$
+> \frac{∂f}{∂x}(x_0, y_0) = \lim_{Δx→0} \frac{f(x_0 + Δx, y_0)−f(x_0, y_0)}{Δx}
+> $$
+> 
+>
+> 类似地，对y的偏导数定义为：
+> $$
+> \frac{∂f}{∂y}(x_0, y_0) = \lim_{Δy→0} \frac{f(x_0, y_0 + Δy)−f(x_0, y_0)}{Δy}
+> $$
+> 偏导数在微积分和数学建模中非常重要，用于分析多变量函数的性质和行为。
+
+
 
 #### Implicit 2D Lines 隐式二维直线
+
+> "Implicit 2D Lines" 指的是在平面上描述直线的隐式方程。直线的隐式方程通常以一种形式表示，其中不直接给出 $y$ 关于 $x$ 的显式表达式，而是通过一个等式来定义直线。
+>
+> 一般而言，一条直线可以表示为 $Ax + By + C = 0$，其中 $A$、$B$、$C$ 是常数，而 $(x, y)$ 是直线上的点。这是直线的标准形式，也是一个隐式方程。在这个方程中，直线上的每个点都满足这个等式，而不需要显式地解出 $y$。
+>
+> 对于 "Implicit 2D Lines"，我们可以通过这个方程来表达一条直线。考虑两个点 $(x_0, y_0)$ 和 $(x_1, y_1)$，我们可以使用这两点构建直线的隐式方程。首先，计算出直线的斜率 $m$：
+> $$
+> m = \frac{y_1-y_0}{x_1-x_0}
+> $$
+> 
+>
+> 然后，选择一个垂直于直线的向量 $(A, B)$。一个简单的选择是 $(A, B) = (y_0 - y_1, x_1 - x_0)$。有了这个向量，我们可以得到隐式方程：
+> $$
+> (y_0−y_1)x+(x_1−x_0)y+(x_0y_1−x_1y_0)=0
+> $$
+> 这就是通过两点构建的直线的隐式方程。对于这个方程中的每个点 $(x, y)$，等式都成立，因此它描述了整条直线。
+>
+> 这种表示方法的优势在于，即使直线是垂直或平行于坐标轴的，这个方程仍然有效。而且，这种形式更容易用于某些数学运算和几何推导。
 
 The familiar “slope-intercept” form of the line is
 熟悉的直线“斜截距”形式是
@@ -701,14 +797,11 @@ Because we can multiply an implicit equation by any constant without changing th
 因为我们可以将隐式方程乘以任何常数而不改变它为零的点，所以对于任何非零 $k$，$kf(x,y) = 0$ 是相同的曲线。 这允许同一行有多种隐式形式，例如，
 $2y - 2mx - 2b = 0$
 
-One reason the slope-intercept form is sometimes awkward is that it can't represent some lines such as $x = 0$ because $m$ would have to be infinite. For this reason, a more general form is often useful:
-斜率截距形式有时很尴尬的原因之一是它无法表示某些线，例如 $x = 0$，因为 $m$ 必须是无限的。 因此，更通用的形式通常很有用：
+One reason the slope-intercept form is sometimes awkward is that it can't represent some lines such as $x = 0$ because $m$ would have to be infinite. For this reason, a more general form is often useful for real numbers $A$, $B$, $C$:
+斜率截距形式有时显得不太方便的一个原因是，它无法表示一些线，比如 $x = 0$，因为斜率 $m$ 将不得不是无穷大。因此，为了这个原因，对于实数 $A$、$B$、$C$，通常会使用更一般的形式：
 $$
 Ax + By + C = 0 \ \ \ \ \ (2.15)
 $$
-for real numbers $A$, $B$, $C$
-对于实数$A$, $B$, $C$
-
 Suppose we know two points on the line, $(x_0, y_0)$ and $(x_1, y_1)$. What $A$, $B$ and $C$ describe the line through these two points? Because these points lie on the line, they must both satisfy Equation (2.15):
 假设我们知道直线上的两个点，$(x_0, y_0)$ 和 $(x_1, y_1)$。 $A$、$B$ 和 $C$ 描述了穿过这两个点的线？ 因为这些点位于直线上，所以它们必须都满足方程（2.15）：
 $Ax_0 + By_0 + C = 0 \\
@@ -728,12 +821,12 @@ Figure 2.29.The gradient vector $(A, B)$ is perpendicular to the implicit line $
 图 2.29. 梯度向量 $(A, B)$ 垂直于隐式直线 $Ax + By + C = 0$。
 
 We can start with any $(A, B)$ perpendicular to $(x_1 - x_0, y_1 - y_0)$. Such a vector is just $(A, B) = (y_0 - y_1, x_1 - x_0)$ by the same reasoning as in Section 2.5.2. This means that the equation of the line through $(x_0, y_0)$ and $(x_1, y_1)$ is
-我们可以从任何垂直于 $(x_1 - x_0, y_1 - y_0)$ 的 $(A, B)$ 开始。 这样的向量就是 $(A, B) = (y_0 - y_1, x_1 - x_0)$，其推理与第 2.5.2 节中相同。 这意味着通过 $(x_0, y_0)$ 和 $(x_1, y_1)$ 的直线方程为
+我们可以从任意垂直于 $(x_1 - x_0, y_1 - y_0)$ 的向量 $(A, B)$ 开始。根据2.5.2节中相同的推理，这样的一个向量就是 $(A, B) = (y_0 - y_1, x_1 - x_0)$。这意味着通过 $(x_0, y_0)$ 和 $(x_1, y_1)$ 的直线方程是：
 $$
 (y_0 - y_1)x + (x_1 - x_0) + C = 0 \ \ \ \ \ (2.16)
 $$
 Now we just need to find $C$. Because $(x_0, y_0)$ and $(x_1, y_1)$ are on the line, they must satisfy Equation (2.16). We can plug either value in and solve for $C$. Doing this for $(x_0, y_0)$ yields $C = x_0y_1 - x_1y_0$, and thus the full equation for the line is
-现在我们只需要找到$C$。 由于 $(x_0, y_0)$ 和 $(x_1, y_1)$ 在线，因此它们必须满足方程（2.16）。 我们可以代入任一值并求解 $C$。 对 $(x_0, y_0)$ 执行此操作会产生 $C = x_0y_1 - x_1y_0$，因此该线的完整方程为
+现在我们只需要找到$C$。 由于 $(x_0, y_0)$ 和 $(x_1, y_1)$ 在线上，因此它们必须满足方程（2.16）。 我们可以代入任一值并求解 $C$。 对 $(x_0, y_0)$ 执行此操作会产生 $C = x_0y_1 - x_1y_0$，因此该线的完整方程为
 $$
 (y_0 - y_1)x + (x_1 - x_0)y + x_0y_1 - x_1y_0 = 0 \ \ \ \ \ (2.17)
 $$
@@ -747,7 +840,7 @@ An interesting property of the implicit line equation is that it can be used to 
 $$
 distance = k\sqrt{A^2 + B^2} \ \ \ \ \ \ (2.18)
 $$
-![Figure 2.30](G:\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 2.30.png)
+![Figure 2.30](Images\Figure 2.30.png)
 Figure 2.30.The value of the implicit function $f(x,y) =Ax + By + C$ is a constant times the signed distance from $Ax + By + C= 0$
 图 2.30.  隐式函数 $f(x,y) =Ax + By + C$ 的值是常数乘以距 $Ax + By + C= 0$ 的有符号距离
 
@@ -803,7 +896,7 @@ Figure 2.32.The ellipse with center $(x_c, y_c)$ and semiaxes of length $a$ and 
 > Try setting $a = b = r$ in the ellipse equation and compare to the circle equation.
 > 尝试在椭圆方程中设置 $a = b = r$ 并与圆方程进行比较。
 
-### 2.5.3 3D Implicit Surfaces
+### 2.5.3 3D Implicit Surfaces 三维隐式表面
 
 Just as implicit equations can be used to define curves in 2D, they can be used to define surfaces in 3D. As in 2D, implicit equations implicitly define a set of points that are on the surface:
 正如隐式方程可用于定义 2D 曲线一样，它们也可用于定义 3D 曲面。 与 2D 中一样，隐式方程隐式定义表面上的一组点：
@@ -813,14 +906,14 @@ Any point $(x, y, z)$ that is on the surface results in zero when given as an ar
 当作为 $f$ 的参数给出时，表面上的任何点 $(x, y, z)$ 都会导致零。 不在表面上的任何点都会产生非零的数字。 您可以通过评估 $f$ 来检查点是否在曲面上，也可以通过查看 $f$ 的符号来检查点位于曲面的哪一侧，但您不能总是在曲面上显式构造点。 使用向量表示法，我们将 $\bold{p} = (x,y,z)$ 的函数写为
 $f(\bold{p}) = 0$
 
-### 2.5.4 Surface Normal to an Implicit Surface
+### 2.5.4 Surface Normal to an Implicit Surface 隐式表面的法向量
 
 A surface normal (which is needed for lighting computations, among other things)is a vector perpendicular to the surface. Each point on the surface may have a different normal vector. In the same way that the gradient provides a normal to an implicit curve in 2D, the surface normal at a point $\bold{p}$ on an implicit surface is given by the gradient of the implicit function
 表面法线（除其他外，照明计算所需）是垂直于表面的向量。 表面上的每个点可能具有不同的法向量。 与梯度提供 2D 隐式曲线法线的方式相同，隐式曲面上点 $\bold{p}$ 处的曲面法线由隐式函数的梯度给出
 $\bold{n} = \nabla f(\bold{p}) = \left(\frac{\partial f(\bold{p})}{\partial x }, \frac{\partial f(\bold{p})}{\partial y }, \frac{\partial f(\bold{p})}{\partial z }\right)\\$
 
 The reasoning is the same as for the 2D case: the gradient points in the direction of fastest increase in $f$, which is perpendicular to all directions tangent to the surface, in which $f$ remains constant. The gradient vector points toward the side of the surface where $f(\bold{p}) > 0$, which we may think of as “into" the surface or “out from” the surface in a given context. If the particular form of $f$ creates inward-facing gradients, and outward-facing gradients are desired, the surface $-f(\bold{p}) = 0$ is the same as surface $f(\bold{p}) = 0$ but has directionally reversed gradients, i.e., $-\nabla f(p) =  \nabla (-f(p))$.
-推理与 2D 情况相同：梯度点位于 $f$ 增加最快的方向，该方向垂直于与表面相切的所有方向，其中 $f$ 保持恒定。 梯度向量指向 $f(\bold{p}) > 0$ 的表面一侧，我们可以将其视为在给定上下文中“进入”表面或“离开”表面。 $f$ 的形式创建向内的渐变，并且需要向外的渐变，表面 $-f(\bold{p}) = 0$ 与表面 $f(\bold{p}) = 0 相同 $ 但具有方向相反的梯度，即 $-\nabla f(p) = \nabla (-f(p))$。
+这一推理与二维情形相同：梯度指向 $f$ 增加最快的方向，即垂直于与表面相切的所有方向，这些方向中 $f$ 保持恒定。梯度向量指向表面上 $f(\bold{p}) > 0$ 的一侧，我们可以在特定语境中将其理解为进入表面或者离开表面。如果 $f$ 的具体形式导致内向梯度，而我们期望得到外向梯度，那么表面 $-f(\bold{p}) = 0$ 与表面 $f(\bold{p}) = 0$ 梯度值相同，但其梯度方向相反，即 $-\nabla f(p) = \nabla (-f(p))$。
 
 ### 2.5.5 Implicit Planes 隐式平面
 
@@ -845,7 +938,7 @@ $$
 (\bold{p} - \bold{a}) \cdot ((\bold{b} - \bold{a}) \cross (\bold{c} - \bold{a})) = 0 \ \ \  \ \ (2.22)
 $$
 A geometric way to read this equation is that the volume of the parallelepiped defined by $\bold{p} - \bold{a}$, $\bold{b} - \bold{a}$, and $\bold{c} - \bold{a}$ is zero, i.e., they are coplanar. This can only be true if $\bold{p}$ is in the same plane as $\bold{a}$, $\bold{b}$, and $\bold{c}$. The full-blown Cartesian representation for this is given by the determinant (this is discussed in more detail in Section 5.3):
-阅读该方程的几何方法是，平行六面体的体积由 $\bold{p} - \bold{a}$、$\bold{b} - \bold{a}$ 和 $\bold{c 定义 } - \bold{a}$ 为零，即它们共面。 仅当 $\bold{p}$ 与 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 在同一平面时，这才成立。 完整的笛卡尔表示由行列式给出（这将在第 5.3 节中更详细地讨论）：
+从几何学的角度来解读这个方程，即由 $\bold{p} - \bold{a}$、$\bold{b} - \bold{a}$ 和 $\bold{c} - \bold{a}$ 定义的平行六面体的体积为零，也就是它们共面。这只有在 $\bold{p}$ 与 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 所在平面上时才成立。这在完整的笛卡尔表示中通过行列式给出（更详细地讨论在第5.3节）：
 $$
 \begin{vmatrix}
 	x - x_a & y - y_a & z - z_a \\
@@ -857,7 +950,7 @@ The determinant can be expanded (see Section 5.3 for the mechanics of expanding 
 行列式可以扩展到（有关扩展行列式的机制，请参阅第 5.3 节）到具有许多项的膨胀形式。
 
 Equations (2.22) and (2.23) are equivalent, and comparing them is instructive. Equation (2.22) is easy to interpret geometrically and will yield efficient code. In addition, it is relatively easy to avoid a typographic error that compiles into incorrect code if it takes advantage of debugged cross and dot product code. Equation (2.23) is also easy to interpret geometrically and will be efficient pro-vided an efficient 3 x 3 determinant function is implemented. It is also easy to implement without a typo if a function $determinant(\bold{a}, \bold{b}, \bold{c})$ is available. It will be especially easy for others to read your code if you rename the determinant function volume. So both Equations (2.22) and (2.23) map well into code. The full expansion of either equation into $x-$, $y-$, and $z-$components is likely to generate typos. Such typos are likely to compile and, thus, to be especially pesky. This is an excellent example of clean math generating clean code and bloated math generating bloated code.
-方程（2.22）和（2.23）是等价的，比较它们是有启发性的。 方程（2.22）很容易从几何角度解释，并且会产生高效的代码。 此外，如果利用调试后的叉乘和点乘代码，则相对容易避免编译成不正确代码的印刷错误。 方程 (2.23) 也很容易从几何角度解释，并且只要实现高效的 3 x 3 行列式函数，它就会很有效。 如果函数 $determinant(\bold{a}, \bold{b}, \bold{c})$ 可用，则也很容易实现而不会出现拼写错误。 如果您重命名行列式函数体积，其他人将特别容易阅读您的代码。 因此方程（2.22）和（2.23）都可以很好地映射到代码中。 将任一方程完全展开为 $x-$、$y-$ 和 $z-$ 分量都可能会产生拼写错误。 此类拼写错误很可能会被编译，因此特别令人讨厌。 这是一个很好的例子，干净的数学生成干净的代码，臃肿的数学生成臃肿的代码。
+方程 (2.22) 和 (2.23) 是等价的，将它们进行比较是有益的。方程 (2.22) 在几何上易于解释，并且可以生成高效的代码。此外，它相对容易避免排版错误，如果利用已调试过的叉积和点积代码，就可以避免编译出错误的代码。方程 (2.23) 也在几何上易于解释，并且在实现了高效的 $3 \times 3$ 行列式函数的情况下将是高效的。如果有一个名为 $determinant(\bold{a}, \bold{b}, \bold{c})$ 的函数可用，实现它也是相对容易的，并且如果将这个函数重命名为 volume，那么对于他人阅读您的代码也会更加容易理解。因此，无论是方程 (2.22) 还是 (2.23) 都可以很好地映射到代码中。将任一方程完全展开为 $x$、$y$ 和 $z$ 分量可能会产生排版错误。这样的排版错误有可能编译通过，因此尤其让人头疼。这是一个干净的数学产生干净代码，而臃肿的数学产生臃肿代码的绝佳例子。
 
 #### 3D Quadric Surfaces 3D 二次曲面
 
@@ -886,19 +979,20 @@ A parametric curve is controlled by a single parameter that can be considered a 
 $\begin{bmatrix}x \\ y \end{bmatrix} = \begin{bmatrix}g(t) \\ h(t) \end{bmatrix}$
 
 Here $(x, y)$ is a point on the curve, and t is the parameter that influences the curve. For a given $t$, there will be some point determined by the functions $g$ and $h$. For continuous $g$ and $h$, a small change in $t$ will yield a small change in $x$ and $y$. Thus, as $t$ continuously changes, points are swept out in a continuous curve. This is a nice feature because we can use the parameter $t$ to explicitly construct points on the curve. Often we can write a parametric curve in vector form,
-这里$(x,y)$是曲线上的点，t是影响曲线的参数。 对于给定的$t$，存在由函数$g$和$h$确定的某个点。 对于连续的 $g$ 和 $h$，$t$ 的微小变化将导致 $x$ 和 $y$ 的微小变化。 因此，随着 $t$ 不断变化，点会以连续曲线的形式被扫出。 这是一个很好的功能，因为我们可以使用参数 $t$ 显式地构造曲线上的点。 通常我们可以写出矢量形式的参数曲线，
+这里$(x,y)$是曲线上的点，t是影响曲线的参数。对于给定的$t$，存在由函数$g$和$h$确定的某个点。对于连续的 $g$ 和 $h$，$t$ 的微小变化将导致 $x$ 和 $y$ 的微小变化。 因此，随着 $t$ 不断变化，点会以连续曲线的形式被扫出。这是一个很好的功能，因为我们可以使用参数 $t$ 显式地构造曲线上的点。通常我们可以写出矢量形式的参数曲线，
 $\bold{p} = f(t)$
 
-where $f$ is a vector-valued function. $f :\R \mapsto \R^2$ .Such vector functions can generate very clean code, so they should be used when possible.
-其中 $f$ 是向量值函数。 $f :\R \mapsto \R^2$ 。此类向量函数可以生成非常干净的代码，因此应尽可能使用它们。
+where $f$ is a vector-valued function， $f :\R \mapsto \R^2$ .Such vector functions can generate very clean code, so they should be used when possible.
+其中 $f$ 是向量值函数， $f :\R \mapsto \R^2$ 。此类向量函数可以生成非常干净的代码，因此应尽可能使用它们。
 
 We can think of the curve with a position as a function of time. The curve can go anywhere and could loop and cross itself. We can also think of the curve as having a velocity at any point. For example, the point $\bold{p}(t)$ is traveling slowly near $t = -2$ and quickly between $t = 2$ and $t = 3$. This type of “moving point“ vocabulary is often used when discussing parametric curves even when the curve is not describing a moving point.
-我们可以将位置视为时间的函数的曲线。 曲线可以去任何地方，并且可以循环和交叉。 我们还可以认为曲线在任意点都有速度。 例如，点 $\bold{p}(t)$ 在 $t = -2$ 附近缓慢移动，并在 $t = 2$ 和 $t = 3$ 之间快速移动。 在讨论参数曲线时，即使曲线没有描述移动点，也经常使用这种类型的“移动点”词汇。
+我们可以将具有时间位置函数的曲线看作是随时间变化的。这条曲线可以在任何地方运动，甚至可以环绕并交叠自身。我们还可以将曲线在任意点变化看作是有速度的。例如，在 $t = -2$ 附近，点 $\bold{p}(t)$ 移动缓慢，而在 $t = 2$ 到 $t = 3$ 之间移动迅速。这种“移动点”词汇经常在讨论参数曲线时使用，即使曲线并不描述一个实际移动的点。
 
 #### 2D Parametric Lines 2D 参数线
 
 A parametric line in 2D that passes through points $\bold{p}_0 = (x_0, y_0)$ and $\bold{p}_1 =(x_1, y_1)$ can be written as
 穿过点 $\bold{p}_0 = (x_0, y_0)$ 和 $\bold{p}_1 =(x_1, y_1)$ 的二维参数线可以写为
+
 $\begin{bmatrix}x \\y \\\end{bmatrix} = \begin{bmatrix}x_0 + t(x_1 - x_0) \\y_0 + t(y_1 - y_0) \\\end{bmatrix}$
 
 Because the formulas for $x$ and $y$ have such similar structure, we can use the vector form for $\bold{p} = (x, y)$ (Figure 2.34): 
@@ -925,7 +1019,7 @@ A circle with center $(x_c, y_c)$ and radius $r$ has a parametric form:
 $\begin{bmatrix}x \\y \\\end{bmatrix} = \begin{bmatrix}x_c + r\cos \varphi \\ y_c + r\sin \varphi\\\end{bmatrix}$
 
 To ensure that there is a unique parameter $\varphi$ for every point on the curve, we can restrict its domain: $\varphi \in [0, 2\pi)$ or  $\varphi \in (-\pi, \pi]$ or any other half-open interval of length $2\pi$.
-为了确保曲线上的每个点都有唯一的参数 $\varphi$，我们可以限制其域： $\varphi \in [0, 2\pi)$ 或 $\varphi \in (-\pi, \ pi]$ 或任何其他长度为 $2\pi$ 的半开区间。
+为了确保曲线上的每个点都有唯一的参数 $\varphi$，我们可以限制其域： $\varphi \in [0, 2\pi)$ 或 $\varphi \in (-\pi, \pi]$ 或任何其他长度为 $2\pi$ 的半开区间。
 
 An axis-aligned ellipse can be constructed by scaling the $x$ and $y$ parametric equations separately:
 轴对齐的椭圆可以通过分别缩放 $x$ 和 $y$ 参数方程来构造：
@@ -1010,7 +1104,7 @@ Figure 2.35. The geometry for spherical coordinates.
 > Pretend for the sake of argument that the Earth is exactly spherical.
 > 为了论证的目的，假装地球是正球形的。
 
-> The θ and φ here may or may not seem reversed depending on your background; the use of these symbols varies across disciplines. In this book we will always assume the meaning of θ and φ used in Equation (2.24) and depicted in Figure 2.35  
+> The θ and φ here may or may not seem reversed depending on your background; the use of these symbols varies across disciplines. In this book we will always assume the meaning of θ and φ used in Equation (2.24) and depicted in Figure 2.35 
 > 这里的 θ 和 φ 可能看起来颠倒，也可能不颠倒，具体取决于您的背景； 这些符号的使用因学科而异。 在本书中，我们将始终假设方程 (2.24) 中使用的 θ 和 φ 的含义，如图 2.35 所示
 
 Ideally, we'd like to write this in vector form, but it isn't feasible for this particular parametric form.
@@ -1028,40 +1122,38 @@ With implicit surfaces, the derivative of the function $f$ gave us the surface n
 Consider the function $\bold{q}(t) = \bold{p}(t, v_0)$. This function defines a parametric curve obtained by varying $u$ while holding $v$ fixed at the value $v_0$. This curve, called an isoparametric curve (or sometimes “isoparm” for short) lies in the sur-face. The derivative of $\bold{q}$ gives a vector tangent to the curve, and since the curve lies in the surface the vector $\bold{q}'$ also lies in the surface. Since it was obtained by varying one argument of $\bold{p}$, the vector $\bold{q}'$ is the partial derivative of $\bold{p}$ with respect to $u$, which we'll denote $\bold{p}_u$. A similar argument shows that the partial derivative $\bold{p}_v$ gives the tangent to the isoparametric curves for constant $u$, which is a second tangent vector to the surface.
 考虑函数 $\bold{q}(t) = \bold{p}(t, v_0)$。 该函数定义了一条参数曲线，该曲线通过改变 $u$ 同时将 $v$ 固定在值 $v_0$ 来获得。 这条曲线称为等参曲线（有时简称为“等参曲线”），位于表面。 $\bold{q}$ 的导数给出与曲线相切的向量，并且由于曲线位于曲面中，因此向量 $\bold{q}'$ 也位于曲面中。 由于它是通过改变 $\bold{p}$ 的一个参数获得的，因此向量 $\bold{q}'$ 是 $\bold{p}$ 相对于 $u$ 的偏导数，我们将其 表示$\bold{p}_u$。 类似的论点表明，偏导数 $\bold{p}_v$ 给出了常数 $u$ 的等参曲线的切线，它是曲面的第二个切向量。
 
-The derivative of $\bold{p}$, then, gives two tangent vectors at any point on the sur-face. The normal to the surface may be found by taking the cross product of these vectors: since both are tangent to the surface, their cross product, which is perpendicular to both tangents, is normal to the surface. The right-hand rule for cross products provides a way to decide which side is the front, or outside, of the surface; we will use the convention that the vector
-然后，$\bold{p}$ 的导数给出了表面上任意点的两个切向量。 可以通过取这些向量的叉积来找到表面的法线：由于两者都与表面相切，因此垂直于两条切线的它们的叉积垂直于表面。 叉积的右手定则提供了一种方法来确定哪一侧是曲面的正面或外侧； 我们将使用向量的约定
-$\bold{n} = \bold{p}_u \cross \bold{p}_v$
+The derivative of $\bold{p}$, then, gives two tangent vectors at any point on the sur-face. The normal to the surface may be found by taking the cross product of these vectors: since both are tangent to the surface, their cross product, which is perpendicular to both tangents, is normal to the surface. The right-hand rule for cross products provides a way to decide which side is the front, or outside, of the surface; we will use the convention that the vector points toward the outside of the surface.
+因此，$\bold{p}$ 的导数在曲面上的任意点处给出两个切向量。曲面的法向量可以通过对这些向量进行叉积来找到：因为两者都切于曲面，它们的叉积即垂直于这两个切向量的法向量也就垂直于曲面。对于叉积的右手规则提供了一种决定哪一侧是曲面的前面或外侧的方法；我们将使用向量指向曲面外侧的约定。
 
-points toward the outside of the surface.
-指向表面的外侧。
+$\bold{n} = \bold{p}_u \cross \bold{p}_v$
 
 ### 2.5.9 Summary of Curves and Surfaces 曲线和曲面总结
 
 Implicit curves in 2D or surfaces in 3D are defined by scalar-valued functions of two or three variables, $f : \R^2 \rightarrow \R$ or $f : \R^3 \rightarrow \R$, and the surface consists of all points where the function is zero:
-2D 中的隐式曲线或 3D 中的曲面由两个或三个变量的标量值函数 $f : \R^2 \rightarrow \R$ 或 $f : \R^3 \rightarrow \R$ 和曲面定义 由函数为零的所有点组成：
+在二维中的隐式曲线，或在三维中的隐式曲面，由关于两个或三个变量的标量值函数定义，即 $f : \R^2 \rightarrow \R$ 或 $f : \R^3 \rightarrow \R$。曲面包含所有使得函数值为零的点：
 $S = \{\bold{p} | f(\bold{p}) = 0\}$
 
 Parametric curves in 2D or 3D are defined by vector-valued functions of one variable, $\bold{p} : D  \subset \R \rightarrow \R^2$ or $\bold{p} : D \subset \R \rightarrow \R^3$, and the curve is swept out as $t$ varies over all of $D$:
-2D 或 3D 参数曲线由一个变量的向量值函数定义， $\bold{p} : D \subset \R \rightarrow \R^2$ 或 $\bold{p} : D \subset \R \rightarrow \R ^3$，并且随着 $t$ 在所有 $D$ 上变化，曲线被扫除：
+在二维或三维中，参数曲线由关于一个变量的向量值函数定义，即 $\bold{p} : D \subset \R \rightarrow \R^2$ 或 $\bold{p} : D \subset \R \rightarrow \R^3$，而曲线是当 $t$ 在 $D$ 的所有取值范围内变化时所绘制的：
 $S = \{\bold{p}(t)| t\in D\}.$
 
 Parametric surfaces in 3D are defined by vector-valued functions of two variables, $\bold{p} : D \subset \R^2 \rightarrow \R^3$, and the surface consists of the images of all points $(u, v)$ in the domain:
-3D 中的参数化曲面由两个变量的向量值函数 $\bold{p} : D \subset \R^2 \rightarrow \R^3$ 定义，并且该曲面由所有点 $(u , v)$ 在域中：
+在三维中，参数曲面由关于两个变量的向量值函数定义，即 $\bold{p} : D \subset \R^2 \rightarrow \R^3$，而曲面包括域内所有点 $(u, v)$ 的图像：
 $S = \{\bold{p}(t)| (u,v) \in D\}.$
 
 For implicit curves and surfaces, the normal vector is given by the derivative of $f$ (the gradient), and the tangent vector (for a curve) or vectors (for a surface) can be derived from the normal by constructing a basis.
-对于隐式曲线和曲面，法线向量由$f$（梯度）的导数给出，并且可以通过构造基从法线导出切向量（对于曲线）或向量（对于曲面）  
+ 对于隐式曲线和曲面，法向量由 $f$ 的导数（梯度）给出，而切向量（对于曲线）或切向量组（对于曲面）可以通过构建一个基于法向量的基来导出。 
 
 For parametric curves and surfaces, the derivative of $\bold{p}$ gives the tangent vector(for a curve) or vectors (for a surface), and the normal vector can be derived from the tangents by constructing a basis.
-对于参数曲线和曲面，$\bold{p}$ 的导数给出切向量（对于曲线）或向量（对于曲面），并且可以通过构造基从切线导出法向量。
+对于参数曲线和曲面，$\bold{p}$ 的导数给出了切向量（对于曲线）或切向量组（对于曲面），而法向量可以通过构建一个基于切向量的基来导出。
 
 ## 2.6 Linear Interpolation 线性插值
 
 Perhaps the most common mathematical operation in graphics is linear interpolation. We have already seen an example of linear interpolation of position to form line segments in 2D and 3D, where two points $\bold{a}$ and $\bold{b}$ are associated with a parameter $t$ to form the line $\bold{p} = (1 - t)\bold{a} + t\bold{b}$. This is interpolation because $\bold{p}$ goes through $\bold{a}$ and $\bold{b}$ exactly at $t = 0$ and $t = 1$. It is linear interpolation because the weighting terms $t$ and $1 - t$ are linear polynomials of $t$.
-也许图形中最常见的数学运算是线性插值。 我们已经看到了在 2D 和 3D 中通过位置线性插值形成线段的示例，其中两个点 $\bold{a}$ 和 $\bold{b}$ 与参数 $t$ 关联以形成线 $\bold{p} = (1 - t)\bold{a} + t\bold{b}$。 这是插值，因为 $\bold{p}$ 恰好在 $t = 0$ 和 $t = 1$ 处经过 $\bold{a}$ 和 $\bold{b}$。 它是线性插值，因为加权项 $t$ 和 $1 - t$ 是 $t$ 的线性多项式。
+在图形学中，或许最常见的数学运算就是线性插值。我们已经看到了在二维和三维中通过位置的线性插值形成线段的例子，其中两个点 $\bold{a}$ 和 $\bold{b}$ 与参数 $t$ 相关联，形成直线 $\bold{p} = (1 - t)\bold{a} + t\bold{b}$。这是插值，因为在 $t = 0$ 和 $t = 1$ 时，$\bold{p}$ 正好经过 $\bold{a}$ 和 $\bold{b}$。它是线性插值，因为权重项 $t$ 和 $1 - t$ 是 $t$ 的线性多项式。
 
 Another common linear interpolation is among a set of positions on the x-axis: $x_0, x_1, ..., x_n$, and for each $x_i$ we have an associated height, $y_i$. We want to create a continuous function $y = f(x)$ that interpolates these positions, so that $f$ goes through every data point, i.e., $f(x_i) = y_i$. For linear interpolation, the points$(x_i, y_i)$ are connected by straight line segments. It is natural to use parametric line equations for these segments. The parameter $t$ is just the fractional distance between $x_i$ and $x_{i+1}$:
-另一种常见的线性插值是在 x 轴上的一组位置之间进行：$x_0、x_1、...、x_n$，对于每个 $x_i$，我们都有一个关联的高度 $y_i$。 我们想要创建一个连续函数 $y = f(x)$ 来插值这些位置，以便 $f$ 遍历每个数据点，即 $f(x_i) = y_i$。 对于线性插值，点$(x_i, y_i)$ 通过直线段连接。 对这些段使用参数线方程是很自然的。 参数 $t$ 只是 $x_i$ 和 $x_{i+1}$ 之间的小数距离：
+另一种常见的线性插值是在x轴上一组位置之间进行的：$x_0, x_1, ..., x_n$，对于每个$x_i$，我们有一个关联的高度$y_i$。我们想要创建一个连续的函数$y = f(x)$，使其插值这些位置，以便$f$通过每个数据点，即$f(x_i) = y_i$。对于线性插值，点$(x_i, y_i)$由直线段连接。使用这些线段的参数方程是很自然的。参数$t$正好是$x_i$和$x_{i+1}$之间的分数距离：
 $$
 f(x) = y_i + \frac{x - x_i}{x_{i+1} - x_i}(y_{i + 1} - y_i) \ \ \ \ \ \ (2.26)
 $$
@@ -1081,8 +1173,8 @@ Triangles in both 2D and 3D are the fundamental modeling primitive in many graph
 
 ### 2.7.1 2D Triangles 2D 三角形
 
-If we have a 2D triangle defined by 2D points $\bold{a}$, $\bold{b}$. and $\bold{c}$. we can first find its area:
-如果我们有一个由 2D 点 $\bold{a}$、$\bold{b}$ 定义的 2D 三角形。 和$\bold{c}$。 我们首先可以求出它的面积：
+If we have a 2D triangle defined by 2D points $\bold{a}$, $\bold{b}$ and $\bold{c}$. we can first find its area:
+如果我们有一个由二维点 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 定义的二维三角形，我们首先可以找到它的面积：
 $$
 area = \frac{1}{2}
 \begin{vmatrix}x_b - x_a & x_c - x_a \\ y_b - y_a& y_c - y_a\\\end{vmatrix}
@@ -1092,7 +1184,7 @@ The derivation of this formula can be found in Section 5.3. This area will have 
 这个公式的推导可以在5.3节中找到。 如果点 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 按逆时针顺序，则该区域的符号为正，否则符号为负。
 
 Often in graphics, we wish to assign a property, such as color, at each triangle vertex and smoothly interpolate the value of that property across the triangle. There are a variety of ways to do this, but the simplest is to use barycentric coordinates. One way to think of barycentric coordinates is as a nonorthogonal coordinate system as was discussed briefly in Section 2.4.2. Such a coordinate system is shown in Figure 2.36, where the coordinate origin is a and the vectors from $\bold{a}$, $\bold{b}$, and $\bold{c}$ are the basis vectors. With that origin and those basis vectors, any point $\bold{p}$ can be written as
-通常在图形中，我们希望在每个三角形顶点分配一个属性，例如颜色，并在整个三角形上平滑地插入该属性的值。 有多种方法可以做到这一点，但最简单的是使用重心坐标。 考虑重心坐标的一种方法是将其视为非正交坐标系，如第 2.4.2 节中简要讨论的那样。 这样的坐标系如图2.36所示，其中坐标原点为a，来自$\bold{a}$、$\bold{b}$和$\bold{c}$的向量是基向量。 有了原点和基向量，任何点 $\bold{p}$ 都可以写成
+通常在图形中，我们希望在每个三角形顶点分配一个属性，例如颜色，并在整个三角形上平滑地插入该属性的值。 有多种方法可以做到这一点，但最简单的是使用**重心坐标**。 考虑重心坐标的一种方法是将其视为非正交坐标系，如第 2.4.2 节中简要讨论的那样。 这样的坐标系如图2.36所示，其中坐标原点为a，来自$\bold{a}$、$\bold{b}$和$\bold{c}$的向量是基向量。 有了原点和基向量，任何点 $\bold{p}$ 都可以写成
 $$
 \bold{p} = \bold{a} + β(\bold{b} − \bold{a}) + γ(\bold{c} − \bold{a})\ \ \ \ \ (2.28)
 $$
@@ -1105,7 +1197,7 @@ Note that we can reorder the terms in Equation (2.28) to get
 请注意，我们可以对方程（2.28）中的项进行重新排序，得到
 $\bold{p} = (1 - β - γ)\bold{a} + β\bold{b} + γ\bold{c}  $
 
-Often people define a new variable α to improve the symmetry of the equations:  
+Often people define a new variable α to improve the symmetry of the equations: 
 人们常常定义一个新变量 α 来提高方程的对称性：
 $α ≡ 1 - β - γ  $
 
@@ -1120,13 +1212,13 @@ $$
 α + β + γ = 1 \ \ \ \ (2.30)
 $$
 Barycentric coordinates seem like an abstract and unintuitive construct at first, but they turn out to be powerful and convenient. You may find it useful to think of how street addresses would work in a city where there are two sets of parallel streets, but where those sets are not at right angles. The natural system would essentially be barycentric coordinates, and you would quickly get used to them. Barycentric coordinates are defined for all points on the plane. A particularly nice feature of barycentric coordinates is that a point $\bold{p}$ is inside the triangle formed by $\bold{a}$, $\bold{b}$, and $\bold{c}$ if and only if 
-重心坐标乍一看似乎是一个抽象且不直观的结构，但事实证明它们非常强大且方便。 您可能会发现，考虑在有两组平行街道但这些街道不成直角的城市中街道地址如何工作很有用。 自然系统本质上是重心坐标，您很快就会习惯它们。 为平面上的所有点定义重心坐标。 重心坐标的一个特别好的特征是，点 $\bold{p}$ 位于由 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 形成的三角形内部，如果并且 除非
+重心坐标乍看起来是一种抽象而不直观的构造，但事实证明它们是强大且方便的。你可以设想一下，在一个城市中，有两组平行的街道，但这两组街道并不呈直角。自然的系统本质上就是重心坐标，而你会很快适应它们。重心坐标适用于平面上的所有点。重心坐标的一个特别好的特性是，点 $\bold{p}$ 在由 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 形成的三角形内当且仅当
 $0 < α < 1, \\
 0 < β < 1,\\
 0 < γ < 1  $
 
 If one of the coordinates is zero and the other two are between zero and one, then you are on an edge. If two of the coordinates are zero, then the other is one, and you are at a vertex. Another nice property of barycentric coordinates is that Equation (2.29) in effect mixes the coordinates of the three vertices in a smooth way. The same mixing coefficients $(α, β, γ)$ can be used to mix other properties, such as color, as we will see in the next chapter.
-如果其中一个坐标为零，而另外两个坐标介于 0 和 1 之间，那么您就处于边缘。 如果其中两个坐标为零，则另一个坐标为 1，此时您位于顶点。 重心坐标的另一个很好的特性是方程（2.29）实际上以平滑的方式混合了三个顶点的坐标。 相同的混合系数 $(α, β, γ)$ 可用于混合其他属性，例如颜色，我们将在下一章中看到。
+如果其中一个坐标为零，而另外两个坐标介于零和一之间，那么你就在一条边上。如果两个坐标为零，那么另一个坐标为一，你就在一个顶点上。重心坐标的另一个良好性质是，方程（2.29）实际上以一种平滑的方式混合了三个顶点的坐标。相同的混合系数 $(α, β, γ)$ 可以用于混合其他属性，比如颜色，我们将在下一章中看到。
 
 Given a point p, how do we compute its barycentric coordinates? One way is to write Equation (2.28) as a linear system with unknowns $β$ and $γ$, solve, and set $α = 1 - β - γ$. That linear system is 
 给定一个点 p，我们如何计算它的重心坐标？ 一种方法是将方程 (2.28) 写为具有未知数 $β$ 和 $γ$ 的线性系统，求解并设置 $α = 1 - β - γ$。 该线性系统是
@@ -1138,18 +1230,18 @@ Although it is straightforward to solve Equation (2.31) algebraically, it is oft
 虽然用代数方法求解方程（2.31）很简单，但计算直接的几何解通常是富有成效的。
 
 One geometric property of barycentric coordinates is that they are the signed scaled distance from the lines through the triangle sides, as is shown for $\beta$ in Figure 2.37. Recall from Section 2.5.2 that evaluating the equation $f(x, y)$ for the line $f(x,y) = 0$ returns the scaled signed distance from $(x,y)$ to the line. Also recall that if $f(x,y) = 0$ is the equation for a particular line, so is $kf(x, y) = 0$ for any nonzero $k$. Changing $k$ scales the distance and controls which side of the line has positive signed distance, and which negative. We would like to choose $k$ such that, for example, $kf(x,y) = \beta$. Since $k$ is only one unknown, we can force this with one constraint, namely that at point $\bold{b}$ we know $\beta = 1$. So if the line $f_{ac}(x, y) = 0$ goes through both $\bold{a}$ and $\bold{c}$, then we can compute $\beta$ for a point $(x, y)$ as follows:
-重心坐标的一个几何属性是它们是从穿过三角形边的线到带符号的缩放距离，如图 2.37 中的 $\beta$ 所示。 回想一下第 2.5.2 节，对线 $f(x,y) = 0$ 计算方程 $f(x, y)$ 会返回从 $(x,y)$ 到线的缩放符号距离。 另请记住，如果 $f(x,y) = 0$ 是特定直线的方程，那么对于任何非零 $k$，$kf(x, y) = 0$ 也是如此。 更改 $k$ 会缩放距离并控制线的哪一侧具有正符号距离，哪一侧具有负符号距离。 我们希望选择 $k$，例如 $kf(x,y) = \beta$。 由于 $k$ 只是一个未知数，我们可以用一个约束来强制这一点，即在点 $\bold{b}$ 处我们知道 $\beta = 1$。 因此，如果线 $f_{ac}(x, y) = 0$ 同时经过 $\bold{a}$ 和 $\bold{c}$，那么我们可以计算点 $(x , y)$ 如下：
+重心坐标的一个几何特性是，它们**是通过三角形边缘的直线的带符号的缩放距离**，正如在图2.37中展示的 $\beta$ 那样。回顾一下第2.5.2节，对于线 $f(x, y) = 0$，计算方程 $f(x, y)$ 的值返回从 $(x, y)$ 到该线的带符号的缩放距离。还要记得，如果 $f(x, y) = 0$ 是特定直线的方程，那么对于任何非零的 $k$，$kf(x, y) = 0$ 也是该直线的方程。改变 $k$ 将缩放距离，并控制着直线的哪一侧具有正的带符号距离，哪一侧是负的。我们希望选择 $k$，使得，例如，$kf(x, y) = \beta$。由于 $k$ 是唯一未知数，我们可以通过一个约束来强制实现这一点，即在点 $\bold{b}$ 处我们知道 $\beta = 1$。因此，如果线 $f_{ac}(x, y) = 0$ 通过 $\bold{a}$ 和 $\bold{c}$，那么我们可以计算点 $(x, y)$ 的 $\beta$ 如下：
 $$
 \beta = \frac{f_{ac}(x, y)}{f_{ac}(x_b, y_b)} \ \ \ \ \ (2.32) \\
 $$
 ![Figure 2.37](.\Images\Figure 2.37.png)
-Figure 2.37. The barycentric coordinate $β$ is the signed scaled distance from the line through $\bold{a}$ and $\bold{c}$  
+Figure 2.37. The barycentric coordinate $β$ is the signed scaled distance from the line through $\bold{a}$ and $\bold{c}$ 
 图 2.37  重心坐标 $β$ 是距通过 $\bold{a}$ 和 $\bold{c}$ 的线的带符号缩放距离
 
 and we can compute $γ$ and $α$ in a similar fashion. For efficiency, it is usually wise to compute only two of the barycentric coordinates directly and to compute the third using Equation (2.30).
 我们可以用类似的方式计算 $γ$ 和 $α$。 为了提高效率，通常明智的做法是直接计算两个重心坐标，并使用方程（2.30）计算第三个。
 
-To find this “ideal” form for the line through $\bold{p}_0$ and $\bold{p}_1$, we can first use the technique of Section 2.5.2 to find some valid implicit lines through the vertices. Equation (2.17) gives us  
+To find this “ideal” form for the line through $\bold{p}_0$ and $\bold{p}_1$, we can first use the technique of Section 2.5.2 to find some valid implicit lines through the vertices. Equation (2.17) gives us 
 为了找到通过 $\bold{p}_0$ 和 $\bold{p}_1$ 的直线的“理想”形式，我们可以首先使用 2.5.2 节的技术来找到一些通过顶点的有效隐式直线。 方程（2.17）给出了我们
 $f_{ab}(x, y) ≡ (y_a - y_b)x + (x_b - x_a)y + x_ay_b - x_by_a = 0  $
 
@@ -1157,7 +1249,7 @@ Note that $f_{ab}(x_c, y_c)$ probably does not equal one, so it is probably not 
 请注意，$f_{ab}(x_c, y_c)$ 可能不等于 1，因此它可能不是我们寻求的理想形式。 除以 $f_{ab}(x_c, y_c)$ 我们得到
 $γ =  \frac{(y_a - y_b)x + (x_b - x_a)y + x_ay_b - x_by_a  }{(y_a - y_b)x_c + (x_b - x_a)y_c + x_ay_b - x_by_a  }\\$
 
-The presence of the division might worry us because it introduces the possibility of divide-by-zero, but this cannot occur for triangles with areas that are not near zero. There are analogous formulas for $α$ and $β$, but typically only one is needed:  
+The presence of the division might worry us because it introduces the possibility of divide-by-zero, but this cannot occur for triangles with areas that are not near zero. There are analogous formulas for $α$ and $β$, but typically only one is needed: 
 除法的存在可能会让我们担心，因为它引入了被零除的可能性，但对于面积不接近零的三角形来说，这种情况不会发生。 $α$ 和 $β$ 有类似的公式，但通常只需要一个：
 $β =  \frac{(y_a - y_c)x + (x_c - x_a)y + x_ay_c - x_cy_a  }{(y_a - y_c)x_b + (x_c - x_a)y_b + x_ay_c - x_cy_a  } \\
 α = 1 - β - γ  $
@@ -1173,7 +1265,7 @@ $$
 Figure 2.38. The barycentric coordinates are proportional to the areas of the three subtriangles shown 
 图 2.38  重心坐标与所示的三个子三角形的面积成正比
 
-where $A$ is the area of the triangle. Note that $A = A_a + A_b + A_c$, so it can be computed with two additions rather than a full area formula. This rule still holds for points outside the triangle if the areas are allowed to be signed. The reason for this is shown in Figure 2.39. Note that these are signed areas and will be computed correctly as long as the same signed area computation is used for both $A$ and the subtriangles $A_a, A_b, $ and $ A_c$.  
+where $A$ is the area of the triangle. Note that $A = A_a + A_b + A_c$, so it can be computed with two additions rather than a full area formula. This rule still holds for points outside the triangle if the areas are allowed to be signed. The reason for this is shown in Figure 2.39. Note that these are signed areas and will be computed correctly as long as the same signed area computation is used for both $A$ and the subtriangles $A_a, A_b, $ and $ A_c$. 
 其中 $A$ 是三角形的面积。 请注意，$A = A_a + A_b + A_c$，因此可以通过两次加法而不是完整的面积公式来计算。 如果允许对三角形外的区域进行签名，则该规则仍然适用于三角形之外的点。 其原因如图 2.39 所示。 请注意，这些是有符号面积，只要对 $A$ 和子三角形 $A_a、A_b $和$ A_c$ 使用相同的有符号面积计算，就可以正确计算。
 ![Figure 2.39](.\Images\Figure 2.39.png)
 Figure 2.39. The area of the two triangles shown is base times height and are thus the same, as is any triangle with a vertex on the $β = 0.5$ line. The height and thus the area is proportional to $β$ 
@@ -1193,7 +1285,7 @@ Now, as we vary $β$ and $γ$, we sweep out a plane.
 The normal vector to a triangle can be found by taking the cross product of any two vectors in the plane of the triangle (Figure 2.40). It is easiest to use two of the three edges as these vectors, for example, 
 三角形的法向量可以通过三角形平面中任意两个向量的叉积来找到（图 2.40）。 最简单的是使用三个边中的两个作为这些向量，例如，
 ![Figure 2.40](.\Images\Figure 2.40.png)
-Figure 2.40. The normal vector of the triangle is perpendicular to all vectors in the plane of the triangle, and thus perpendicular to the edges of the triangle  
+Figure 2.40. The normal vector of the triangle is perpendicular to all vectors in the plane of the triangle, and thus perpendicular to the edges of the triangle 
 图 2.40 三角形的法向量垂直于三角形平面内的所有向量，因此也垂直于三角形的边
 $$
 \bold{n} = (\bold{b} − \bold{a}) \cross (\bold{c} − \bold{a}). \ \ \ (2.34)
@@ -1201,7 +1293,7 @@ $$
 Note that this normal vector is not necessarily of unit length, and it obeys the right-hand rule of cross products. 
 请注意，该法向量不一定是单位长度，并且它遵循叉积的右手定则。
 
-The area of the triangle can be found by taking the length of the cross product:  
+The area of the triangle can be found by taking the length of the cross product: 
 三角形的面积可以通过叉积的长度求得：
 $$
 area = \frac{1}{2}\| (\bold{b} − \bold{a}) × (\bold{c} − \bold{a}) \| \ \ \ \ (2.35)
@@ -1216,7 +1308,7 @@ $α =  \frac{\bold{n} · \bold{n}_a  }{\|\bold{n}\|^2} \\
 β =  \frac{\bold{n} · \bold{n}_b  }{\|\bold{n}\|^2} \\
 γ =  \frac{\bold{n} · \bold{n}_c  }{\|\bold{n}\|^2}$
 
-where $\bold{n}$ is Equation (2.34) evaluated with vertices $\bold{a}$, $\bold{b}$, and $\bold{c}$; $\bold{n}_a$ is Equation (2.34) evaluated with vertices $\bold{b}$, $\bold{c}$, and $\bold{p}$, and so on, i.e.,  
+where $\bold{n}$ is Equation (2.34) evaluated with vertices $\bold{a}$, $\bold{b}$, and $\bold{c}$; $\bold{n}_a$ is Equation (2.34) evaluated with vertices $\bold{b}$, $\bold{c}$, and $\bold{p}$, and so on, i.e., 
 其中 $\bold{n}$ 是用顶点 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$ 计算的方程 (2.34)； $\bold{n}_a$ 是用顶点 $\bold{b}$、$\bold{c}$ 和 $\bold{p}$ 计算的方程 (2.34)，依此类推，即
 $$
 \bold{n}_a = (\bold{c} − \bold{b}) × (\bold{p} − \bold{b}) \\
@@ -1233,13 +1325,13 @@ It turns out that there is no “nice” analogy of division for vectors. Howeve
 
 ### Is there something as clean as barycentric coordinates for polygons with more than three sides?  对于具有三个以上边的多边形，是否有像重心坐标一样清晰的东西？
 
-Unfortunately there is not. Even convex quadrilaterals are much more complicated. This is one reason triangles are such a common geometric primitive in graphics.  
+Unfortunately there is not. Even convex quadrilaterals are much more complicated. This is one reason triangles are such a common geometric primitive in graphics. 
 不幸的是没有。 即使凸四边形也要复杂得多。 这就是三角形在图形中如此常见的几何基元的原因之一。
 
 ### Is there an implicit form for 3D lines? 3D 线是否有隐式形式？
 
-No. However, the intersection of two 3D planes defines a 3D line, so a 3D line can be described by two simultaneous implicit 3D equations  
-不会。但是，两个 3D 平面的交集定义了一条 3D 线，因此 3D 线可以通过两个联立隐式 3D 方程来描述
+No. However, the intersection of two 3D planes defines a 3D line, so a 3D line can be described by two simultaneous implicit 3D equations.
+不会。但是，两个 3D 平面的交集定义了一条 3D 线，因此 3D 线可以通过两个联立隐式 3D 方程来描述。
 
 ## Notes 注释
 
@@ -1248,15 +1340,15 @@ The history of vector analysis is particularly interesting. It was largely inven
 
 ## Exercises 练习
 
-1. The cardinality of a set is the number of elements it contains. Under IEEE floating point representation (Section 1.5), what is the cardinality of the floats?  
+1. The cardinality of a set is the number of elements it contains. Under IEEE floating point representation (Section 1.5), what is the cardinality of the floats? 
    集合的基数是它包含的元素的数量。 在 IEEE 浮点表示（第 1.5 节）下，浮点数的基数是多少？
-2. Is it possible to implement a function that maps 32-bit integers to 64-bit integers that has a well-defined inverse? Do all functions from 32-bit integers to 64-bit integers have well-defined inverses?  
+2. Is it possible to implement a function that maps 32-bit integers to 64-bit integers that has a well-defined inverse? Do all functions from 32-bit integers to 64-bit integers have well-defined inverses? 
    是否可以实现一个将 32 位整数映射到具有明确定义的逆的 64 位整数的函数？ 从 32 位整数到 64 位整数的所有函数都具有明确定义的逆函数吗？
-3. Specify the unit cube (x-, y-, and z-coordinates all between 0 and 1 inclusive) in terms of the Cartesian product of three intervals.  
+3. Specify the unit cube (x-, y-, and z-coordinates all between 0 and 1 inclusive) in terms of the Cartesian product of three intervals. 
    根据三个区间的笛卡尔积指定单位立方体（x、y 和 z 坐标均在 0 和 1 之间（包括 0 和 1））。
-4. If you have access to the natural log function $\ln(x)$, specify how you could use it to implement a $\log(b, x)$ function where $b$ is the base of the log. What should the function do for negative $b$ values? Assume an IEEE floating point implementation.  
+4. If you have access to the natural log function $\ln(x)$, specify how you could use it to implement a $\log(b, x)$ function where $b$ is the base of the log. What should the function do for negative $b$ values? Assume an IEEE floating point implementation. 
    如果您有权使用自然对数函数 $\ln(x)$，请指定如何使用它来实现 $\log(b, x)$ 函数，其中 $b$ 是对数的基数。 对于负 $b$ 值，函数应该做什么？ 假设采用 IEEE 浮点实现。
-5. Solve the quadratic equation $2x^2 + 6x + 4 = 0$.  
+5. Solve the quadratic equation $2x^2 + 6x + 4 = 0$. 
    求解二次方程 $2x^2 + 6x + 4 = 0$。
 6. Implement a function that takes in coefficients $A$, $B$, and $C$ for the quadratic equation $Ax^2 + Bx + C = 0$ and computes the two solutions. Have the function return the number of valid (not NaN) solutions and fill in the return arguments so the smaller of the two solutions is first.
    实现一个函数，该函数接受二次方程 $Ax^2 + Bx + C = 0$ 的系数 $A$、$B$ 和 $C$ 并计算两个解。 让函数返回有效（非 NaN）解决方案的数量并填写返回参数，以便两个解决方案中较小的一个位于第一个。
