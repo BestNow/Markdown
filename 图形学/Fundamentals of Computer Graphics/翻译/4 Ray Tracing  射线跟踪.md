@@ -1,22 +1,22 @@
 # 4 Ray Tracing  射线跟踪
 
-One of the basic tasks of computer graphics is rendering three-dimensional objects: taking a scene, or model, composed of many geometric objects arranged in 3D space and producing a 2D image that shows the objects as viewed from a particular viewpoint. It is the same operation that has been done for centuries by architects and engineers creating drawings to communicate their designs to others.  
-计算机图形学的基本任务之一是渲染三维对象：采用一个场景或模型，由在3D空间中排列的许多几何对象组成，并产生一个2D图像，该对象从特定的角度显示为视图所示的对象。 这是建筑师和工程师创建图纸以将其设计传达给他人的几个世纪相同的操作。
+One of the basic tasks of computer graphics is rendering three-dimensional objects: taking a scene, or model, composed of many geometric objects arranged in 3D space and producing a 2D image that shows the objects as viewed from a particular viewpoint. It is the same operation that has been done for centuries by architects and engineers creating drawings to communicate their designs to others. 
+计算机图形学的基本任务之一是渲染三维对象：将一个场景或模型，由许多在三维空间中排列的几何对象组成，转化为一个显示这些对象的二维图像，从而展示它们在特定视角下的外观。这个操作类似于几个世纪以来建筑师和工程师为了向他人传达设计而进行的绘图工作。
 
 Fundamentally, rendering is a process that takes as its input a set of objects and produces as its output an array of pixels. One way or another, rendering involves  considering how each object contributes to each pixel; it can be organized in two general ways. In object-order rendering, each object is considered in turn, and for each object all the pixels that it influences are found and updated. In image-order rendering, each pixel is considered in turn, and for each pixel all the objects that influence it are found and the pixel value is computed. You can think of the difference in terms of the nesting of loops: in image-order rendering the “for each pixel” loop is on the outside, whereas in object-order rendering the “for each object” loop is on the outside. 
-从根本上讲，渲染是一个将其输入一组对象的过程，并作为其输出作为一个像素数组。 一种或另一种方式，渲染涉及考虑每个对象如何对每个像素贡献； 它可以通过两种一般的方式组织。 在对象订单渲染中，依次考虑每个对象，对于每个对象，都发现并更新了其影响的所有像素。 在图像订单渲染中，依次考虑每个像素，对于每个像素，所有影响它的对象都被发现并计算出像素值。 您可以想到循环嵌套的差异：在图像顺序中，呈现“每个像素”循环在外部，而在对象顺序中，呈现“每个对象”循环在外部。
+从根本上说，渲染是一个以一组对象作为输入并生成一组像素作为输出的过程。以某种方式，渲染涉及考虑每个对象如何影响每个像素；它可以以两种一般的方式组织。在对象顺序渲染中，逐个考虑每个对象，对于每个对象，找到并更新其影响的所有像素。在图像顺序渲染中，逐个考虑每个像素，对于每个像素，找到影响它的所有对象，并计算像素值。你可以从循环的嵌套角度来思考这种差异：在图像顺序渲染中，“对于每个像素”的循环在外部，而在对象顺序渲染中，“对于每个对象”的循环在外部。
 
 > If the output is a vector image rather than a raster image, rendering doesn’t have to involve pixels, but we’ll assume raster images in this book. 
 > 如果输出是矢量图像而不是光栅图像，则渲染不必涉及像素，但我们将在本书中假设光栅图像。
 
 Image-order and object-order rendering approaches can compute exactly the same images, but they lend themselves to computing different kinds of effects and have quite different performance characteristics. We’ll explore the comparative strengths of the approaches in Chapter 8 after we have discussed them both, but, broadly speaking, image-order rendering is simpler to get working and more flexible in the effects that can be produced, and usually (though not always) takes much more execution time to produce a comparable image. 
-图像顺序和对象订购渲染方法可以计算完全相同的图像，但它们可以计算不同种类的效果并具有完全不同的性能特征。 我们将在讨论两者之间的第8章中探讨方法的比较优势，但是从广义上讲，图像订单渲染更为简单，可以在可以产生的效果上更加灵活，通常不是（尽管不是） 总是）需要更多的执行时间来产生可比的图像。
+图像顺序和对象顺序的渲染方法可以计算出完全相同的图像，但它们适用于计算不同类型的效果，并具有相当不同的性能特征。我们将在第8章中讨论了两者之后探讨它们的比较优势，但总体而言，图像顺序渲染更容易上手，在产生各种效果方面更加灵活，通常（尽管不总是）需要更多的执行时间来生成一个可比的图像。
 
 > In a ray tracer, it is easy to compute accurate shadows and reflections, which are awkward in the object-order framework. 
-> 在射线示踪剂中，很容易计算准确的阴影和反射，这在对象订购框架中很尴尬。
+> 在光线追踪器中，计算准确的阴影和反射较为容易，而在对象顺序框架中则显得复杂。
 
-Ray tracing is an image-order algorithm for making renderings of 3D scenes, and we’ll consider it first because it’s possible to get a ray tracer working without developing any of the mathematical machinery that’s used for object-order rendering.  
-光线追踪是一种用于渲染 3D 场景的图像顺序算法，我们将首先考虑它，因为无需开发任何用于对象顺序渲染的数学机制即可让光线追踪器工作。
+Ray tracing is an image-order algorithm for making renderings of 3D scenes, and we’ll consider it first because it’s possible to get a ray tracer working without developing any of the mathematical machinery that’s used for object-order rendering. 
+光线追踪是一种用于制作三维场景渲染的图像顺序算法，我们首先考虑它，因为可以在不开发用于对象顺序渲染的数学机制的情况下使光线追踪器工作。
 
 ## 4.1 The Basic Ray-Tracing Algorithm 基本光线追踪算法
 
