@@ -1331,7 +1331,7 @@ Unfortunately there is not. Even convex quadrilaterals are much more complicated
 ### Is there an implicit form for 3D lines? 3D 线是否有隐式形式？
 
 No. However, the intersection of two 3D planes defines a 3D line, so a 3D line can be described by two simultaneous implicit 3D equations.
-不会。但是，两个 3D 平面的交集定义了一条 3D 线，因此 3D 线可以通过两个联立隐式 3D 方程来描述。
+没有。但是，两个 3D 平面的交集定义了一条 3D 线，因此 3D 线可以通过两个联立隐式 3D 方程来描述。
 
 ## Notes 注释
 
