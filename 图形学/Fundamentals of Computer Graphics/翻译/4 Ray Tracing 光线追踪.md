@@ -1,4 +1,4 @@
-# 4 Ray Tracing  射线跟踪
+# 4 Ray Tracing  光线追踪
 
 One of the basic tasks of computer graphics is rendering three-dimensional objects: taking a scene, or model, composed of many geometric objects arranged in 3D space and producing a 2D image that shows the objects as viewed from a particular viewpoint. It is the same operation that has been done for centuries by architects and engineers creating drawings to communicate their designs to others. 
 计算机图形学的基本任务之一是渲染三维对象：将一个场景或模型，由许多在三维空间中排列的几何对象组成，转化为一个显示这些对象的二维图像，从而展示它们在特定视角下的外观。这个操作类似于几个世纪以来建筑师和工程师为了向他人传达设计而进行的绘图工作。
@@ -23,20 +23,20 @@ Ray tracing is an image-order algorithm for making renderings of 3D scenes, and 
 A ray tracer works by computing one pixel at a time, and for each pixel the basic task is to find the object that is seen at that pixel’s position in the image. Each pixel “looks” in a different direction, and any object that is seen by a pixel must intersect the viewing ray, a line that emanates from the viewpoint in the direction that pixel is looking. The particular object we want is the one that intersects the viewing ray nearest the camera, since it blocks the view of any other objects behind it. Once that object is found, a shading computation uses the intersection point, surface normal, and other information (depending on the desired type of rendering) to determine the color of the pixel. This is shown in Figure 4.1, where the ray intersects two triangles, but only the first triangle hit, $T_2$, is shaded. A basic ray tracer therefore has three parts: 
 光线追踪器的工作原理是一次计算一个像素，对于每个像素，基本任务是找到在图像中该像素位置看到的物体。 每个像素“看”的方向不同，并且像素所看到的任何对象都必须与视线相交，视线是从视点沿像素所看的方向发出的线。 我们想要的特定对象是与最接近相机的视线相交的对象，因为它阻挡了其后面的任何其他对象的视图。 一旦找到该对象，着色计算就会使用交点、表面法线和其他信息（取决于所需的渲染类型）来确定像素的颜色。 如图 4.1 所示，其中光线与两个三角形相交，但只有第一个三角形 $T_2$ 被着色。 因此，基本的光线追踪器由三个部分组成：
 <img src=".\Images\Figure 4.1.png" alt="Figure 4.1" style="zoom:50%;" />
-Figure 4.1. The ray is “traced” into the scene and the first object hit is the one seen through the pixel. In this case, the triangle $T_2$ is returned.  
+Figure 4.1. The ray is “traced” into the scene and the first object hit is the one seen through the pixel. In this case, the triangle $T_2$ is returned. 
 图 4.1  光线被“追踪”到场景中，第一个击中的物体是通过像素看到的物体。 在本例中，返回三角形 $T_2$。
 
 A basic ray tracer therefore has three parts: ·
 因此，基本的光线追踪器由三个部分组成：
 
 1. ray generation, which computes the origin and direction of each pixel’s viewing ray based on the camera geometry;
-   光线生成，根据相机几何图形计算每个像素观看光线的原点和方向;
+   光线生成，根据相机几何图形计算**每个像素观看光线的原点和方向**;
 2. ray intersection, which finds the closest object intersecting the viewing ray;
    光线相交，寻找与观察光线相交的最近的物体;
-3. shading, which computes the pixel color based on the results of ray intersection.  
+3. shading, which computes the pixel color based on the results of ray intersection. 
    着色，基于光线相交的结果计算像素颜色。
 
-The structure of the basic ray tracing program is:  
+The structure of the basic ray tracing program is: 
 基本光线追踪程序的结构是:
 
 ```lua
@@ -51,38 +51,38 @@ for each pixel do
 ```
 
 This chapter covers basic methods for ray generation, ray intersection, and shading, that are sufficient for implementing a simple demonstration ray tracer. For a really useful system, more efficient ray intersection techniques from Chapter 12 need to be added, and the real potential of a ray tracer will be seen with the more advanced shading methods from Chapter 10 and the additional rendering techniques from Chapter 13. 
-这一章涵盖了光线生成、光线交叉和阴影的基本方法，这足以实现一个简单的演示光线追踪器。对于一个真正有用的系统，需要在第12章中添加更有效的光线交叉技术，而光线追踪器的真正潜力将在第10章中更高级的阴影方法和第13章中额外的渲染技术中看到。
+本章涵盖了光线生成、光线相交和着色的基本方法，足以实现一个简单的演示光线追踪器。然而，若欲打造一款真正实用的系统，则需要引入第12章更高效的光线相交技术。而真正展现光线追踪器的潜力，则体现在第10章更先进的着色方法以及第13章的附加渲染技术。
 
  
 
-## 4.2 Perspective 看法
+## 4.2 Perspective 透视
 
 The problem of representing a 3D object or scene with a 2D drawing or painting was studied by artists hundreds of years before computers. Photographs also represent 3D scenes with 2D images. While there are many unconventional ways to make images, from cubist painting to fisheye lenses (Figure 4.2) to peripheral cameras, the standard approach for both art and photography, as well as computer graphics, is linear perspective, in which 3D objects are projected onto an image plane in such a way that straight lines in the scene become straight lines in the image. 
-在计算机出现之前数百年，艺术家们就已经研究了用 2D 绘图或绘画来表示 3D 对象或场景的问题。 照片还用 2D 图像表示 3D 场景。 虽然有许多非常规的图像制作方法，从立体派绘画到鱼眼镜头（图 4.2）再到外围相机，但艺术和摄影以及计算机图形学的标准方法是线性透视，其中 3D 对象被投影到 图像平面，使场景中的直线变成图像中的直线。
+艺术家在计算机问世数百年前就已开始研究用二维的绘画或素描来表现三维物体或场景的问题。而照片同样以二维图像呈现三维场景。尽管创作图像的方法多种多样，从立体主义绘画到鱼眼镜头（见图4.2）再到周边摄像机，但在艺术、摄影以及计算机图形学中，一直以来的标准方法都是线性透视。这种透视方法中，三维物体被投影到图像平面上，使得场景中的直线在图像中保持为直线。
 <img src=".\Images\Figure 4.2.png" alt="Figure 4.2" style="zoom:67%;" />
 Figure 4.2. An image taken with a fisheye lens is not a linear perspective image. Photo courtesy Philip Greenspun. 
 图4.2 用鱼眼镜头拍摄的图像不是线性透视图像。图片由Philip Greenspun提供。
 
-The simplest type of projection is parallel projection, in which 3D points are mapped to 2D by moving them along a projection direction until they hit the image plane (Figures 4.3–4.4). The view that is produced is determined by the choice of projection direction and image plane. If the image plane is perpendicular  to the view direction, the projection is called orthographic; otherwise it is called oblique.  
-最简单的投影类型是平行投影，其中 3D 点通过沿投影方向移动直至到达图像平面来映射到 2D（图 4.3-4.4）。 所产生的视图由投影方向和图像平面的选择决定。 如果像平面垂直于视线方向，则该投影称为正交投影； 否则称为斜的。
-<img src="G:\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 4.3.png" alt="Figure 4.3" style="zoom:80%;" />
+The simplest type of projection is parallel projection, in which 3D points are mapped to 2D by moving them along a projection direction until they hit the image plane (Figures 4.3–4.4). The view that is produced is determined by the choice of projection direction and image plane. If the image plane is perpendicular  to the view direction, the projection is called orthographic; otherwise it is called oblique. 
+最简单的投影类型是平行投影，其中3D点通过沿投影方向移动，直至碰到图像平面而映射为2D图像（见图4.3-4.4）。所得的视图由投影方向和图像平面的选择决定。若图像平面与视角方向垂直，则称为正交投影；否则称为斜投影。这一选择影响着最终呈现的视觉效果，是一种在视觉艺术和计算机图形学中常用的基础技术。
+<img src=".\Images\Figure 4.3.png" alt="Figure 4.3" style="zoom:80%;" />
 Figure 4.3. When projection lines are parallel and perpendicular to the image plane, the resulting views are called orthographic. 
-图 4.3  当投影线平行和垂直于图像平面时，所得视图称为正交视图。
-<img src="G:\笔记\Markdown\图形学\Fundamentals of Computer Graphics\Images\Figure 4.4.png" alt="Figure 4.4" style="zoom:80%;" />
+图 4.3  当**投影线平行和垂直于图像平面**时，所得视图称为**正交视图**。
+<img src="Images\Figure 4.4.png" alt="Figure 4.4" style="zoom:80%;" />
 Figure 4.4. A parallel projection that has the image plane at an angle to the projection direction is called oblique (right). In perspective projection, the projection lines all pass through the viewpoint, rather than being parallel (left). The illustrated perspective view is non-oblique because a projection line drawn through the center of the image would be perpendicular to the image plane.
-图 4.4  像平面与投影方向成一定角度的平行投影称为斜投影（右投影）。 在透视投影中，投影线全部穿过视点，而不是平行（左）。 所示透视图是非倾斜的，因为穿过图像中心绘制的投影线将垂直于图像平面。
+图 4.4  像**平面与投影方向成一定角度的平行投影称为斜投影**（右边的投影）。在透视投影中，投影线全部穿过视点，而不是平行（左边的投影）。所示透视图是非倾斜的，因为穿过图像中心绘制的投影线将垂直于图像平面。
 
 Parallel projections are often used for mechanical and architectural drawings because they keep parallel lines parallel and they preserve the size and shape of planar objects that are parallel to the image plane. 
 平行投影通常用于机械和建筑绘图，因为它们使平行线保持平行，并保持与图像平面平行的平面物体的大小和形状。
 
 > Some books reserve “orthographic” for projection directions that are parallel to the coordinate axes. 
-> 有些书保留“正射影”的投影方向平行于坐标轴。 
+> 有些书籍将“正交投影”一词保留给与坐标轴平行的投影方向。
 
 The advantages of parallel projection are also its limitations. In our everyday experience (and even more so in photographs) objects look smaller as they get farther away, and as a result parallel lines receding into the distance do not appear parallel. This is because eyes and cameras don’t collect light from a single viewing direction; they collect light that passes through a particular viewpoint. As has been recognized by artists since the Renaissance, we can produce natural-looking views using perspective projection: we simply project along lines that pass through a single point, the viewpoint, rather than along parallel lines (Figure 4.4). In this way, objects farther from the viewpoint naturally become smaller when they are projected. A perspective view is determined by the choice of viewpoint (rather than projection direction) and image plane. As with parallel views, there are oblique and non-oblique perspective views; the distinction is made based on the projection direction at the center of the image.
-平行投影的优点也是它的局限性。 在我们的日常经验中（在照片中更是如此），物体随着距离越来越远而看起来越来越小，因此，后退到远处的平行线看起来并不平行。 这是因为眼睛和相机不会收集来自单一观察方向的光线；而是收集光线。 它们收集通过特定视点的光线。 正如文艺复兴以来的艺术家所认识到的那样，我们可以使用透视投影产生自然的视图：我们只需沿着穿过单个点（即视点）的线进行投影，而不是沿着平行线进行投影（图 4.4）。 这样，距离视点较远的物体在投影时自然会变小。 透视图是由视点（而不是投影方向）和图像平面的选择决定的。 与平行视图一样，也有倾斜透视图和非倾斜透视图； 区分是根据图像中心的投影方向进行的。
+平行投影的优势同时也是其局限所在。在我们日常的经验中（甚至在照片中更为明显），随着物体远离观察者，它们看起来越来越小，导致远处的平行线在投影中不再呈平行状态。这是因为眼睛和相机不是从单一的视角收集光线，而是通过特定的观察点收集光线。正如自文艺复兴时期以来艺术家所认识到的那样，我们可以通过透视投影来产生自然的视觉效果：我们只需沿着通过一个单一点（即观察点）的线进行投影，而不是沿着平行线（见图4.4）。这样，远离观察点的物体在投影时自然而然地变小。透视视图的形成由观察点的选择（而非投影方向）和图像平面决定。与平行视图一样，透视视图可分为斜投影和非斜投影，这一区别基于图像中心的投影方向。
 
 You may have learned about the artistic conventions of three-point perspective, a system for manually constructing perspective views (Figure 4.5). A surprising fact about perspective is that all the rules of perspective drawing will be followed automatically if we follow the simple mathematical rule underlying perspective: objects are projected directly toward the eye, and they are drawn where they meet a view plane in front of the eye.
-您可能已经了解了三点透视的艺术惯例，这是一种手动构建透视图的系统（图 4.5）。 关于透视的一个令人惊讶的事实是，如果我们遵循透视背后的简单数学规则，则将自动遵循透视绘制的所有规则：对象直接投影到眼睛，并在与眼睛前面的视图平面相交的位置绘制它们 。
+或许你已经了解过三点透视法的艺术惯例，这是一种手工构建透视视图的系统（见图4.5）。关于透视的一个令人惊讶的事实是，如果我们遵循透视的简单数学规则，即物体直接朝向眼睛投影，并在眼前的视平面上绘制它们相交的位置，那么透视绘图的所有规则将会自动得到遵循。
 <img src=".\Images\Figure 4.5.png" alt="Figure 4.5" style="zoom:67%;" />
 Figure 4.5. In three-point perspective, an artist picks “vanishing points” where parallel lines meet. Parallel horizontal lines will meet at a point on the horizon. Every set of parallel lines has its own vanishing points. These rules are followed automatically if we implement perspective based on the correct geometric principles. 
 图4.5 在三点透视法中，艺术家选择平行线相交的“消失点”。平行的水平线会在地平线上的一点相交。每一组平行线都有自己的消失点。如果我们基于正确的几何原理实现透视图，就会自动遵循这些规则。
@@ -90,66 +90,66 @@ Figure 4.5. In three-point perspective, an artist picks “vanishing points” w
 ## 4.3 Computing Viewing Rays  计算观察光线
 
 From the previous section, the basic tools of ray generation are the viewpoint (or view direction, for parallel views) and the image plane. There are many ways to work out the details of camera geometry; in this section we explain one based on orthonormal bases that supports normal and oblique parallel and orthographic views. 
-从上一节可知，光线生成的基本工具是视点（或视图方向，对于平行视图）和图像平面。 有很多方法可以计算出相机几何的细节； 在本节中，我们将解释一种基于正交基的方法，该基支持法线视图、倾斜平行视图和正交视图。
+在前一节中，光线生成的基本工具是观察点（对于平行视图则是视角方向）和图像平面。有许多方法可以处理相机几何的细节；在这一节中，我们将解释一种基于正交基的方法，支持正交和斜交平行以及正交视图。
 
 In order to generate rays, we first need a mathematical representation for a ray. A ray is really just an origin point and a propagation direction; a 3D parametric line is ideal for this. As discussed in Section 2.5.7, the 3D parametric line from the eye e to a point s on the image plane (Figure 4.6) is given by 
-为了生成射线，我们首先需要射线的数学表示。 射线实际上只是一个原点和一个传播方向； 3D 参数线非常适合此目的。 如第 2.5.7 节所述，从眼睛 e 到图像平面上的点 s（图 4.6）的 3D 参数线由下式给出
+为了生成光线，我们首先需要一个光线的数学表示。光线实际上只是一个起源点和传播方向；一个三维参数化线非常适合这个目的。正如在第2.5.7节讨论的那样，从眼睛e到图像平面上的点s的三维参数化线（见图4.6）由下式给出
 $\bold{p}(t) = \bold{e} + t(s - \bold{e})  $
 ![Figure 4.6](.\Images\Figure 4.6.png)
 Figure 4.6. The ray from the eye to a point on the image plane. 
 图 4.6 从眼睛到图像平面上的一点的光线
 
 This should be interpreted as, “we advance from e along the vector $(\bold{s} - \bold{e})$ a fractional distance $t$ to find the point $\bold{p}$.” So given $t$, we can determine a point $\bold{p}$. The point $\bold{e}$ is the ray’s origin, and $\bold{s} - \bold{e}$ is the ray’s direction. 
-这应该被解释为，“我们从 e 沿着向量 $(\bold{s} - \bold{e})$ 前进一小部分距离 t 来找到点 $\bold{p}$。” 因此给定$t$，我们可以确定一个点$\bold{p}$。 点 $\bold{e}$ 是射线的原点，$\bold{s} - \bold{e}$ 是射线的方向。
+这应该被解释为，“我们从 e 沿着向量 $(\bold{s} - \bold{e})$ 前进一小部分距离 $t$ 来找到点 $\bold{p}$。” 因此给定$t$，我们可以确定一个点$\bold{p}$。 点 $\bold{e}$ 是射线的原点，$\bold{s} - \bold{e}$ 是射线的方向。
 
 Note that $\bold{p}(0) = \bold{e}$, and $\bold{p}(1) = \bold{s}$, and more generally, if $0 < t_1 < t_2$, then $\bold{p}(t_1)$ is closer to the eye than $\bold{p}(t_2)$. Also, if $t < 0$, then $\bold{p}(t)$ is “behind” the eye. These facts will be useful when we search for the closest object hit by the ray that is not behind the eye. 
-请注意 $\bold{p}(0) = \bold{e}$ 和 $\bold{p}(1) = \bold{s}$，更一般地说，如果 $0 < t_1 < t_2$，则 $\bold{p}(t_1)$ 比 $\bold{p}(t_2)$ 更接近眼睛。 另外，如果 $t < 0$，则 $\bold{p}(t)$ 位于眼睛“后面”。 当我们搜索光线击中的、不在眼睛后面的最近物体时，这些事实将很有用。
+请注意，$\bold{p}(0) = \bold{e}$，$\bold{p}(1) = \bold{s}$，更一般地，如果$0 < t_1 < t_2$，那么$\bold{p}(t_1)$比$\bold{p}(t_2)$更靠近眼睛。此外，如果$t < 0$，那么$\bold{p}(t)$位于眼睛的“后方”。这些事实在我们寻找射线击中的最近物体时将会很有用，尤其是那些在眼睛前面的物体。
 
 > Caution: we are overloading the variable $t$, which is the ray parameter and also the v-coordinate of the top edge of the image. 
-> 注意：我们正在重载变量 $t$，它是光线参数，也是图像上边缘的 v 坐标。
+> 注意：我们正在对变量$t$进行重载，它既是射线参数，也是图像顶部边缘的v坐标。
 
 To compute a viewing ray, we need to know $\bold{e}$ (which is given) and $\bold{s}$. Finding $\bold{s}$ may seem difficult, but it is actually straightforward if we look at the problem in the right coordinate system. 
 为了计算视线，我们需要知道 $\bold{e}$ （已给出）和 $\bold{s}$。 找到$\bold{s}$可能看起来很困难，但如果我们在正确的坐标系中看问题，实际上很简单。
 
 All of our ray-generation methods start from an orthonormal coordinate frame known as the camera frame, which we’ll denote by $\bold{e}$, for the eye point, or viewpoint, and $\bold{u}$, $\bold{v}$, and $\bold{w}$ for the three basis vectors, organized with $\bold{u}$ pointing rightward (from the camera’s view), $\bold{v}$ pointing upward, and $\bold{w}$ pointing backward, so that {$\bold{u}$, $\bold{v}$, $\bold{w}$} forms a right-handed coordinate system. The most common way  to construct the camera frame is from the viewpoint, which becomes $\bold{e}$, the view  direction, which is $-\bold{w}$, and the up vector, which is used to construct a basis that has $\bold{v}$ and $\bold{w}$ in the plane defined by the view direction and the up direction, using  the process for constructing an orthonormal basis from two vectors described in Section 2.4.7. 
-我们所有的光线生成方法都从称为相机坐标系的正交坐标系开始，我们用 $\bold{e}$ 表示眼点或视点，用 $\bold{u}$ 表示， $\bold{v}$ 和 $\bold{w}$ 表示三个基向量，组织为 $\bold{u}$ 指向右侧（从相机的角度），$\bold{v}$ 指向上方， $\bold{w}$ 向后指向，使得 {$\bold{u}$、$\bold{v}$、$\bold{w}$} 构成右手坐标系。 构造相机框架最常见的方法是从视点开始，它变成 $\bold{e}$，视图方向，它是 $-\bold{w}$，以及向上向量，它用于构造一个 在由视图方向和向上方向定义的平面中具有 $\bold{v}$ 和 $\bold{w}$ 的基，使用第 2.4.7 节中描述的从两个向量构造正交基的过程。
+我们所有的光线生成方法都始于一个正交坐标框架，被称为相机坐标系，我们用$\bold{e}$表示眼睛点或观察点，$\bold{u}$、$\bold{v}$和$\bold{w}$表示三个基向量。这些基向量按照{$\bold{u}$，$\bold{v}$，$\bold{w}$}的顺序组织，其中$\bold{u}$指向右侧（从相机的视角），$\bold{v}$指向上方，$\bold{w}$指向背后，使得{$\bold{u}$，$\bold{v}$，$\bold{w}$}形成一个右手坐标系。构建相机坐标系的最常见方法是从观察点开始，观察点成为$\bold{e}$，视线方向为$-\bold{w}$，上向量用于构建一个基，该基在由视线方向和上方向定义的平面上包含$\bold{v}$和$\bold{w}$，使用构建正交基的过程，该过程在第2.4.7节中描述了从两个向量构建正交基的方法。
 <img src=".\Images\Figure 4.7.png" alt="Figure 4.7" style="zoom:67%;" />
-Figure 4.7. The sample points on the screen are mapped to a similar array on the 3D window. A viewing ray is sent to each of these locations.  
-图 4.7  屏幕上的采样点被映射到 3D 窗口上的类似阵列。 观察光线被发送到这些位置中的每一个。
+Figure 4.7. The sample points on the screen are mapped to a similar array on the 3D window. A viewing ray is sent to each of these locations. 
+图4.7。屏幕上的采样点被映射到3D窗口上的相似数组中。每个这些位置都发送一条视线。
 
 ![Figure 4.8](.\Images\Figure 4.8.png)
 Figure 4.8. The vectors of the camera frame, together with the view direction and up direction. The $\bold{w}$ vector is opposite the view direction, and the $\bold{v}$ vector is coplanar with $\bold{w}$ and the up vector. 
-图 4.8  相机框架的向量，以及视图方向和向上方向。 $\bold{w}$ 向量与视图方向相反，$\bold{v}$ 向量与 $\bold{w}$ 和向上向量共面。
+图4.8。相机坐标系的向量，以及视线方向和上方向。$\bold{w}$向量与视线方向相反，而$\bold{v}$向量与$\bold{w}$和上向量在同一平面上。
 
-> Since $\bold{v}$ and $\bold{w}$ have to be perpendicular, the up vector and $\bold{v}$ are not generally the same. But setting the up vector to point straight upward in the scene will orient the camera in the way we would think of as “upright.”  
-> 由于 $\bold{v}$ 和 $\bold{w}$ 必须垂直，因此向上向量和 $\bold{v}$ 通常不相同。 但是，将向上向量设置为在场景中笔直向上，将使相机以我们认为的“直立”方式定向。
+> Since $\bold{v}$ and $\bold{w}$ have to be perpendicular, the up vector and $\bold{v}$ are not generally the same. But setting the up vector to point straight upward in the scene will orient the camera in the way we would think of as “upright.” 
+> 由于$\bold{v}$和$\bold{w}$必须垂直，上向量和$\bold{v}$通常不相同。但是，将上向量设置为在场景中指向直上将使相机朝向我们所认为的“站立的”方向。
 
 ### 4.3.1 Orthographic Views 正交视图
 
-For an orthographic view, all the rays will have the direction $-\bold{w}$. Even though a parallel view doesn’t have a viewpoint per se, we can still use the origin of the  camera frame to define the plane where the rays start, so that it’s possible for objects to be behind the camera.  
-对于正交视图，所有光线的方向都是 $-\bold{w}$。 即使平行视图本身没有视点，我们仍然可以使用相机框架的原点来定义光线开始的平面，这样物体就有可能位于相机后面。
+For an orthographic view, all the rays will have the direction $-\bold{w}$. Even though a parallel view doesn’t have a viewpoint per se, we can still use the origin of the  camera frame to define the plane where the rays start, so that it’s possible for objects to be behind the camera. 
+对于正交视图，所有的光线都将具有$-\bold{w}$的方向。尽管平行视图本身没有固定的观察点，我们仍然可以使用相机坐标系的原点来定义光线起始的平面，从而使物体有可能位于相机的背后。
 
-The viewing rays should start on the plane defined by the point $\bold{e}$ and the vectors $\bold{u}$ and $\bold{v}$; the only remaining information required is where on the plane the image is supposed to be. We’ll define the image dimensions with four numbers, for the four sides of the image: $l$ and $r$ are the positions of the left and right edges of the image, as measured from $\bold{e}$ along the $\bold{u}$ direction; and $b$ and $t$ are the positions of the bottom and top edges of the image, as measured from $\bold{e}$ along the $\bold{v}$ direction. Usually $l < 0 < r$ and $b < 0 < t$. (See Figure 4.9.)  
-视线应从点 $\bold{e}$ 和向量 $\bold{u}$ 和 $\bold{v}$ 定义的平面开始； 唯一需要的剩余信息是图像在平面上的位置。 我们将用四个数字定义图像的四个边的图像尺寸：$l$ 和 $r$ 是图像左边缘和右边缘的位置，从 $\bold{e}$ 沿 $\bold{u}$ 方向； $b$ 和 $t$ 是图像底部和顶部边缘的位置，从 $\bold{e}$ 沿 $\bold{v}$ 方向测量。 通常 $l < 0 < r$ 且 $b < 0 < t$。 （见图 4.9。）
+The viewing rays should start on the plane defined by the point $\bold{e}$ and the vectors $\bold{u}$ and $\bold{v}$; the only remaining information required is where on the plane the image is supposed to be. We’ll define the image dimensions with four numbers, for the four sides of the image: $l$ and $r$ are the positions of the left and right edges of the image, as measured from $\bold{e}$ along the $\bold{u}$ direction; and $b$ and $t$ are the positions of the bottom and top edges of the image, as measured from $\bold{e}$ along the $\bold{v}$ direction. Usually $l < 0 < r$ and $b < 0 < t$. (See Figure 4.9.) 
+视线应该起始于由点$\bold{e}$和向量$\bold{u}$、$\bold{v}$定义的平面上；唯一缺失的信息是图像应该在平面上的哪个位置。我们将用四个数字定义图像的尺寸，分别对应图像的四边：$l$和$r$分别表示图像的左边和右边的位置，以$\bold{e}$沿着$\bold{u}$方向测量；而$b$和$t$分别表示图像的底边和顶边的位置，以$\bold{e}$沿着$\bold{v}$方向测量。通常情况下，$l < 0 < r$ 以及 $b < 0 < t$。（见图4.9。）
 ![Figure 4.9](.\Images\Figure 4.9.png)
-Figure 4.9. Ray generation using the camera frame. Left: In an orthographic view, the rays start at the pixels’ locations on the image plane, and all share the same direction, which is equal to the view direction. Right: In a perspective view, the rays start at the viewpoint, and each ray’s direction is defined by the line through the viewpoint, $\bold{e}$, and the pixel’s location on the image plane.  
-图 4.9  使用相机框架生成光线。 左：在正交视图中，光线从图像平面上的像素位置开始，并且全部共享相同的方向，该方向等于视图方向。 右：在透视图中，光线从视点开始，每条光线的方向由通过视点的线 $\bold{e}$ 和图像平面上的像素位置定义。
+Figure 4.9. Ray generation using the camera frame. Left: In an orthographic view, the rays start at the pixels’ locations on the image plane, and all share the same direction, which is equal to the view direction. Right: In a perspective view, the rays start at the viewpoint, and each ray’s direction is defined by the line through the viewpoint, $\bold{e}$, and the pixel’s location on the image plane. 
+图4.9。使用相机坐标系进行光线生成。左图：在正交视图中，光线起始于图像平面上像素的位置，且所有光线具有相同的方向，即与视线方向相同。右图：在透视视图中，光线起始于观察点，每条光线的方向由通过观察点$\bold{e}$和图像平面上像素位置的直线定义。
 
-> It might seem logical that orthographic viewing rays should start from infinitely far away, but then it would not be possible to make orthographic views of an object inside a room, for instance  
-> 正交观察光线应该从无限远的地方开始，这似乎是合乎逻辑的，但是，例如，就不可能对房间内的物体进行正交视图
+> It might seem logical that orthographic viewing rays should start from infinitely far away, but then it would not be possible to make orthographic views of an object inside a room, for instance 
+> 或许从无穷远处开始的正交视线似乎是合乎逻辑的，但这样的话就无法制作室内物体的正交视图了，比如一个房间内的物体。
 
 > Many systems assume that $l = – r$ and $b = – t$ so that a width and a height suffice.
 > 许多系统假设 $l = – r$ 和 $b = – t$ 这样宽度和高度就足够了
 
 In Section 3.2 we discussed pixel coordinates in an image. To fit an image with $n_x × n_y$ pixels into a rectangle of size $(r - l) \cross (t - b)$, the pixels are spaced a distance $(r - l)/n_x$ apart horizontally and $(t - b)/n_y$ apart vertically, with a half-pixel space around the edge to center the pixel grid within the image rectangle. This means that the pixel at position $(i, j)$ in the raster image has the position
-在 3.2 节中，我们讨论了图像中的像素坐标。 要将具有 $n_x × n_y$ 像素的图像放入大小为 $(r - l) \cross (t - b)$ 的矩形中，像素的水平间隔距离为 $(r - l)/n_x$，并且 $ (t - b)/n_y$ 垂直分开，边缘周围有半像素空间，使像素网格在图像矩形内居中。 这意味着光栅图像中位置 $(i, j)$ 处的像素的位置为
+在第3.2节中，我们讨论了图像中的像素坐标。为了将一个包含$n_x × n_y$像素的图像适配到尺寸为$(r - l) \cross (t - b)$的矩形中，水平间隔为$(r - l)/n_x$，垂直间隔为$(t - b)/n_y$，在图像矩形边缘周围有半个像素的空间以将像素网格置于图像矩形的中心位置。这意味着光栅图像中位置为$(i, j)$的像素的位置是：
 $$
 u = l + (r − l)(i + 0.5)/n_x, \\
 v = b + (t − b)(j + 0.5)/n_y, \\
 (4.1)
 $$
 where $(u, v)$ are the coordinates of the pixel’s position on the image plane, measured with respect to the origin $\bold{e}$ and the basis $\{\bold{u}, \bold{v}\}$. 
-其中 $(u, v)$ 是像素在图像平面上的位置坐标，相对于原点 $\bold{e}$ 和基准  进行$\{\bold{u}, \bold{v}\}$测量。
+其中，$(u, v)$ 是像素在图像平面上的坐标，相对于原点 $\bold{e}$ 和基底 ${\bold{u}, \bold{v}}$ 来测量。
 
 In an orthographic view, we can simply use the pixel’s image-plane position as the ray’s starting point, and we already know the ray’s direction is the view direction. The procedure for generating orthographic viewing rays is then: 
 在正交视图中，我们可以简单地使用像素的图像平面位置作为射线的起点，并且我们已经知道射线的方向就是视图方向。 生成正交观察光线的过程是：
@@ -159,15 +159,15 @@ ray.direction ← -\bold{w} \\
 ray.origin ← \bold{e} + u\bold{u} + v\bold{v} \\ $
 
 > With $l$ and $r$ both specified, there is redundancy: moving the viewpoint a bit to the right and correspondingly decreasing $l$ and $r$ will not change the view (and similarly on the $\bold{v}$-axis) 
-> 如果同时指定了$l$和$r$，就存在冗余:将视点向右移动一点并相应减少$l$和$r$不会改变视图(在$\bold{v}$-轴上也是如此)
+> 当$l$和$r$都已指定时，存在冗余：稍微将观察点向右移动，并相应减小$l$和$r$将不会改变视图（在$\bold{v}$轴上同样如此）。
 
-It’s very simple to make an oblique parallel view: just allow the image plane normal w to be specified separately from the view direction $\bold{d}$. The procedure is then exactly the same, but with $\bold{d}$ substituted for $-\bold{w}$. Of course $\bold{w}$ is still used to construct $\bold{u}$ and $\bold{v}$.  
-制作倾斜平行视图非常简单：只需将图像平面法线 w 与视图方向 $\bold{d}$ 分开指定即可。 过程完全相同，但用 $\bold{d}$ 替换 $-\bold{w}$。 当然$\bold{w}$仍然用来构造$\bold{u}$和$\bold{v}$。
+It’s very simple to make an oblique parallel view: just allow the image plane normal w to be specified separately from the view direction $\bold{d}$. The procedure is then exactly the same, but with $\bold{d}$ substituted for $-\bold{w}$. Of course $\bold{w}$ is still used to construct $\bold{u}$ and $\bold{v}$. 
+制作斜交平行视图非常简单：只需允许图像平面法线$\bold{w}$与视线方向$\bold{d}$分别指定。然后，程序完全相同，只是用$\bold{d}$代替$-\bold{w}$。当然，$\bold{w}$仍然用于构建$\bold{u}$和$\bold{v}$。
 
-### 4.3.2 Perspective Views
+### 4.3.2 Perspective Views 透视视图
 
 For a perspective view, all the rays have the same origin, at the viewpoint; it is the directions that are different for each pixel. The image plane is no longer positioned at $\bold{e}$, but rather some distance $d$ in front of $\bold{e}$; this distance is the image plane distance, often loosely called the focal length, because choosing $d$ plays the same role as choosing focal length in a real camera. The direction of each ray is defined by the viewpoint and the position of the pixel on the image plane. This situation is illustrated in Figure 4.9, and the resulting procedure is similar to the  orthographic one:
-对于透视图，所有光线在视点处具有相同的原点； 这是每个像素的不同方向。 图像平面不再位于$\bold{e}$处，而是位于$\bold{e}$前面一段距离$d$处； 这个距离是像平面距离，通常被宽松地称为焦距，因为选择 $d$ 与在真实相机中选择焦距起着相同的作用。 每条光线的方向由视点和图像平面上像素的位置定义。 这种情况如图 4.9 所示，生成的过程与拼字法类似：
+透视视图中，所有光线都源自观察点；不同的是各像素的方向。图像平面不再位于$\bold{e}$处，而是在$\bold{e}$前方一段距离$d$处；这个距离称为图像平面距离，通常宽松地称为焦距，因为选择$d$的作用类似于在真实相机中选择焦距。每条光线的方向由观察点和图像平面上像素的位置定义。这种情况在图4.9中有所说明，生成的过程与正交视图类似：
 $compute\ u\ and\ v\ using\ (4.1) \\
 ray.direction ← -d \bold{w} + u \bold{u} + v \bold{v} \\
 ray.origin ← \bold{e}$
