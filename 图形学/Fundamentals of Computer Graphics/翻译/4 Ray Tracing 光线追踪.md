@@ -177,20 +177,20 @@ As with parallel projection, oblique perspective views can be achieved by specif
 
 ## 4.4 Ray-Object Intersection 射线-物体相交
 
-Once we’ve generated a ray $\bold{e}+ t\bold{d}$, we next need to find the first intersection with any object where $t > 0$. In practice, it turns out to be useful to solve a slightly more general problem: find the first intersection between the ray and a surface that occurs at a $t$ in the interval $[t_0, t_1]$. The basic ray intersection is the case where $t_0 = 0$ and $t_1 = +∞$. We solve this problem for both spheres and triangles. In the next section, multiple objects are discussed.  
-一旦我们生成了一条射线 $\bold{e}+ t\bold{d}$，接下来我们需要找到与 $t > 0$ 的任何对象的第一个交点。 在实践中，事实证明，它对于解决一个稍微更普遍的问题很有用：找到光线和表面之间的第一个交点，该交点出现在区间 $[t_0, t_1]$ 中的 $t$ 处。 基本射线相交是 $t_0 = 0$ 且 $t_1 = +∞$ 的情况。 我们针对球体和三角形解决了这个问题。 在下一节中，将讨论多个对象。
+Once we’ve generated a ray $\bold{e}+ t\bold{d}$, we next need to find the first intersection with any object where $t > 0$. In practice, it turns out to be useful to solve a slightly more general problem: find the first intersection between the ray and a surface that occurs at a $t$ in the interval $[t_0, t_1]$. The basic ray intersection is the case where $t_0 = 0$ and $t_1 = +∞$. We solve this problem for both spheres and triangles. In the next section, multiple objects are discussed. 
+生成了射线$\bold{e}+ t\bold{d}$后，接下来我们需要寻找与任何物体的首次相交，其中$t > 0$。在实践中，解决一个略微更一般的问题会变得更为实用：找到射线与表面的首次交点，该交点发生在区间$[t_0, t_1]$内的$t$。基本的射线相交是$t_0 = 0$且$t_1 = +∞$的情况。我们为球体和三角形都解决了这个问题。在下一部分中，将讨论多个对象的情况。
 
 ### 4.4.1 Ray-Sphere Intersection   射线-球体相交
 
 Given a ray $\bold{p}(t) = \bold{e} + t\bold{d}$ and an implicit surface $f(\bold{p}) = 0$ (see Section 2.5.3), we’d like to know where they intersect. Intersection points occur when points on the ray satisfy the implicit equation, so the values of $t$ we seek are those that solve the equation
-给定一条射线 $\bold{p}(t) = \bold{e} + t\bold{d}$ 和一个隐式曲面 $f(\bold{p}) = 0$ （参见第 2.5.3 节）， 我们想知道它们相交的地方。 当射线上的点满足隐式方程时，就会出现交点，因此我们寻求的 $t$ 值就是解方程的值
+考虑一条射线$\bold{p}(t) = \bold{e} + t\bold{d}$和一个隐式表面$f(\bold{p}) = 0$（详见第2.5.3节），我们希望知道它们在何处相交。相交点发生在射线上的点满足隐式方程的情况下，因此我们寻找的$t$值是解该方程的值
 $f(\bold{p}(t)) = 0\ or\ f(\bold{e} + t\bold{d}) = 0  $
 
 A sphere with center $\bold{c} = (x_c, y_c, z_c)$ and radius R can be represented by the implicit equation
 中心为 $\bold{c} = (x_c, y_c, z_c)$ 且半径为 R 的球体可以用隐式方程表示
 $(x - x_c)^2 + (y - y_c)^2 + (z - z_c)^2 - R^2 = 0.  $
 
-We can write this same equation in vector form:  
+We can write this same equation in vector form: 
 我们可以将同样的方程写成向量形式：
 $(\bold{p} - \bold{c}) · (\bold{p} - \bold{c}) - R^2 = 0.  $
 
@@ -207,19 +207,19 @@ Here, everything is known except the parameter $t$, so this is a classic quadrat
 $At^2 + Bt + C = 0  $
 
 The solution to this equation is discussed in Section 2.2. The term under the square root sign in the quadratic solution, $B^2 - 4AC$, is called the discriminant and tells us how many real solutions there are. If the discriminant is negative, its square root is imaginary and the line and sphere do not intersect. If the discriminant is positive, there are two solutions: one solution where the ray enters the sphere and one where it leaves. If the discriminant is zero, the ray grazes the sphere, touching it at exactly one point. Plugging in the actual terms for the sphere and canceling a factor of two, we get 
-该方程的解在 2.2 节中讨论。 二次解中平方根符号下的项 $B^2 - 4AC$ 称为判别式，它告诉我们有多少个实数解。 如果判别式为负，则其平方根为虚数，并且直线和球面不相交。 如果判别式为正，则有两种解决方案：一种是光线进入球体的解决方案，另一种是光线离开球体的解决方案。 如果判别式为零，则光线擦过球体，恰好接触到一个点。 代入球体的实际项并取消两倍，我们得到
+这个方程的解讨论在第2.2节中。在二次方程的解中，位于平方根符号下的表达式$B^2 - 4AC$被称为判别式，它告诉我们有多少个实数解。如果判别式为负，其平方根为虚数，表示直线与球体不相交。如果判别式为正，有两个解：一个解表示射线进入球体，另一个解表示射线离开球体。如果判别式为零，射线与球体相切，恰好在一个点上接触。将实际的球体术语代入并约去一个因子二，我们得到
 $t = \frac{-\bold{d} · (\bold{e} - \bold{c}) ±  \sqrt{(\bold{d} · (\bold{e} - \bold{c}))^2 - (\bold{d} · \bold{d}) ((\bold{e} - \bold{c}) · (\bold{e} - \bold{c}) - R^2)  }}{(\bold{d} · \bold{d})}\\$
 
 In an actual implementation, you should first check the value of the discriminant before computing other terms. If the sphere is used only as a bounding object for more complex objects, then we need only determine whether we hit it; checking the discriminant suffices. 
 在实际实现中，您应该在计算其他项之前首先检查判别式的值。 如果球体仅用作更复杂物体的边界物体，那么我们只需要确定是否击中它即可； 检查判别式就足够了。
 
 As discussed in Section 2.5.4, the normal vector at point $\bold{p}$ is given by the gradient $\bold{n} = 2(\bold{p} - \bold{c})$. The unit normal is $(\bold{p} - \bold{c})/R$. 
-正如第 2.5.4 节中所讨论的，点 $\bold{p}$ 处的法向量由梯度 $\bold{n} = 2(\bold{p} - \bold{c})$ 给出。 单位法线为$(\bold{p} - \bold{c})/R$。
+正如第2.5.4节所讨论的，点$\bold{p}$处的法向量由梯度给出，即$\bold{n} = 2(\bold{p} - \bold{c})$。单位法向量为$(\bold{p} - \bold{c})/R$。
 
 ### 4.4.2 Ray-Triangle Intersection 射线-三角形相交
 
-There are many algorithms for computing ray-triangle intersections. We will present the form that uses barycentric coordinates for the parametric plane containing the triangle, because it requires no long-term storage other than the vertices of the triangle (Snyder & Barr, 1987).  
-有许多计算射线与三角形相交的算法。 我们将提出使用重心坐标作为包含三角形的参数平面的形式，因为它除了三角形的顶点之外不需要长期存储（Snyder & Barr，1987）。
+There are many algorithms for computing ray-triangle intersections. We will present the form that uses barycentric coordinates for the parametric plane containing the triangle, because it requires no long-term storage other than the vertices of the triangle (Snyder & Barr, 1987). 
+计算光线与三角形相交的算法有很多种。我们将介绍一种采用重心坐标表示法的形式，用于参数化包含该三角形的平面，因为这种方法除了三角形的顶点之外，不需要长期存储其他信息（Snyder＆Barr，1987）。
 
 To intersect a ray with a parametric surface, we set up a system of equations where the Cartesian coordinates all match: 
 为了使射线与参数曲面相交，我们建立了一个方程组，其中笛卡尔坐标都是匹配的:
@@ -240,7 +240,7 @@ $$
 \bold{e} + t\bold{d} = \bold{a} + β(\bold{b} − \bold{a}) + γ(\bold{c} − \bold{a}), (4.2)
 $$
 for some $t$, $β$, and $γ$. The intersection $\bold{p}$ will be at $\bold{e} + t\bold{d}$ as shown in Figure 4.10. Again, from Section 2.7.2, we know the intersection is inside the triangle if and only if $β > 0$, $γ > 0$, and $β + γ < 1$. Otherwise, the ray has hit the plane outside the triangle, so it misses the triangle. If there are no solutions, either the triangle is degenerate or the ray is parallel to the plane containing the triangle. 
-对于一些 $t$、$β$ 和 $γ$。 交集 $\bold{p}$ 将位于 $\bold{e} + t\bold{d}$，如图 4.10 所示。 同样，根据第 2.7.2 节，我们知道当且仅当 $β > 0$、$γ > 0$ 且 $β + γ < 1$ 时，交点位于三角形内部。 否则，光线击中了三角形外部的平面，因此它错过了三角形。 如果没有解，则三角形是退化的，或者射线平行于包含三角形的平面。
+对于某些$t$、$β$和$γ$。如图4.10所示，交点$\bold{p}$将位于$\bold{e} + t\bold{d}$。再次从第2.7.2节得知，仅当$β > 0$，$γ > 0$且$β + γ < 1$时，交点在三角形内。否则，光线击中了三角形外部的平面，因此未与三角形相交。如果没有解，要么三角形是退化的，要么光线与包含三角形的平面平行。
 ![Figure 4.10](.\Images\Figure 4.10.png)
 Figure 4.10. The ray hits the plane containing the triangle at point $\bold{p}$
 图4.10 射线在点$\bold{p}$处击中包含三角形的平面
@@ -251,7 +251,7 @@ $x_e + tx_d = x_a + β(x_b - x_a) + γ(x_c - x_a), \\
 y_e + ty_d = y_a + β(y_b - y_a) + γ(y_c - y_a), \\
 z_e + tz_d = z_a + β(z_b - z_a) + γ(z_c - z_a).  $
 
-This can be rewritten as a standard linear system:  
+This can be rewritten as a standard linear system: 
 这可以重写为一个标准的线性系统:
 $$
 \begin{bmatrix}
@@ -270,8 +270,8 @@ y_a − y_e \\
 z_a − z_e
 \end{bmatrix}
 $$
-The fastest classic method to solve this 3 × 3 linear system is Cramer’s rule. This gives us the solutions  
-解决这个 3 × 3 线性系统最快的经典方法是 Cramer 法则。 这给了我们解决方案
+The fastest classic method to solve this 3 × 3 linear system is Cramer’s rule. This gives us the solutions 
+解决这个3 × 3线性系统的最快经典方法是克莱默法则。 这给了我们解决方案
 $$
 β = \frac{\begin{vmatrix}
 x_a − x_e & x_a − x_c & x_d \\
@@ -329,9 +329,9 @@ $$
 M = a(ei − hf) + b(gf − di) + c(dh − eg)
 $$
 We can reduce the number of operations by reusing numbers such as “ei-minus-hf.”
-我们可以通过重复使用“ei-minus-hf”等数字来减少运算次数。
+我们可以通过重复使用诸如“ei-minus-hf”等数字来减少操作次数。
 
-The algorithm for the ray-triangle intersection for which we need the linear solution can have some conditions for early termination. Thus, the function should look something like:  
+The algorithm for the ray-triangle intersection for which we need the linear solution can have some conditions for early termination. Thus, the function should look something like: 
 我们需要线性解的射线与三角形相交的算法可以有一些提前终止的条件。 因此，该函数应该类似于：
 
 ```python
@@ -364,7 +364,7 @@ $t = \frac{(\bold{p}_1 - \bold{e}) · \bold{n}  } {\bold{d} · \bold{n}  } \\$
 This allows us to compute $\bold{p}$. If $\bold{p}$ is inside the polygon, then the ray hits it; otherwise, it does not.
 这使我们能够计算$\bold{p}$。 如果 $\bold{p}$ 在多边形内部，则光线击中它； 否则，它不会。
 
-We can answer the question of whether $\bold{p}$ is inside the polygon by projecting the point and polygon vertices to the $xy$ plane and answering it there. The easiest way to do this is to send any 2D ray out from $\bold{p}$ and to count the number of intersections between that ray and the boundary of the polygon (Sutherland, Sproull, & Schumacker, 1974; Glassner, 1989). If the number of intersections is odd, then the point is inside the polygon; otherwise it is not. This is true because a ray that goes in must go out, thus creating a pair of intersections. Only a ray that starts inside will not create such a pair. To make computation simple, the 2D ray may as well propagate along the x-axis:  
+We can answer the question of whether $\bold{p}$ is inside the polygon by projecting the point and polygon vertices to the $xy$ plane and answering it there. The easiest way to do this is to send any 2D ray out from $\bold{p}$ and to count the number of intersections between that ray and the boundary of the polygon (Sutherland, Sproull, & Schumacker, 1974; Glassner, 1989). If the number of intersections is odd, then the point is inside the polygon; otherwise it is not. This is true because a ray that goes in must go out, thus creating a pair of intersections. Only a ray that starts inside will not create such a pair. To make computation simple, the 2D ray may as well propagate along the x-axis: 
 我们可以通过将点和多边形顶点投影到 $xy$ 平面并在那里回答来回答 $\bold{p}$ 是否在多边形内部的问题。 最简单的方法是从 $\bold{p}$ 发出任何 2D 射线，并计算该射线与多边形边界之间的交点数量 (Sutherland, Sproull, & Schumacker, 1974; Glassner, 1989 ）。 如果交点的数量是奇数，则该点在多边形内部； 否则就不是。 这是正确的，因为进入的光线必须出去，从而创建一对交叉点。 只有从内部开始的射线不会创建这样的射线对。 为了使计算简单，2D 射线也可以沿 x 轴传播：
 $$
 \begin{bmatrix}
@@ -404,9 +404,9 @@ Now, all computations can use $\bold{p}$(index0) rather than $x_p$, and so on.
 Another approach to polygons, one that is often used in practice, is to replace them by several triangles.
 另一种在实践中经常使用的多边形方法是将它们替换为多个三角形。
 
-### 4.4.4 Intersecting a Group of Objects 一组对象相交
+### 4.4.4 Intersecting a Group of Objects 射线与组对象相交
 
-Of course, most interesting scenes consist of more than one object, and when we intersect a ray with the scene we must find only the closest intersection to the camera along the ray. A simple way to implement this is to think of a group of objects as itself being another type of object. To intersect a ray with a group, you simply intersect the ray with the objects in the group and return the intersection with the smallest $t$ value. The following code tests for hits in the interval $t ∈ [t_0, t_1]$:  
+Of course, most interesting scenes consist of more than one object, and when we intersect a ray with the scene we must find only the closest intersection to the camera along the ray. A simple way to implement this is to think of a group of objects as itself being another type of object. To intersect a ray with a group, you simply intersect the ray with the objects in the group and return the intersection with the smallest $t$ value. The following code tests for hits in the interval $t ∈ [t_0, t_1]$: 
 当然，最有趣的场景由多个对象组成，当我们将一条光线与场景相交时，我们必须只找到沿光线与相机最近的交点。 实现这一点的一个简单方法是将一组对象本身视为另一种类型的对象。 要将射线与组相交，只需将射线与组中的对象相交并返回具有最小 $t$ 值的交集。 以下代码测试区间 $t ∈ [t_0, t_1]$ 中的命中：
 
 ```python
@@ -423,57 +423,101 @@ return hit
 Figure 4.11. A simple scene rendered with only ray generation and surface intersection, but no shading; each pixel is just set to a fixed color depending on which object it hit. 
 图 4.11  一个简单的场景，仅使用光线生成和表面相交进行渲染，但没有着色； 每个像素只是根据它击中的对象设置为固定颜色。
 
+### ChatGPT
+
+> 判断射线与球体是否相交通常涉及参数化表示法和代数几何的概念。以下是详细的步骤：
+>
+> 1. **射线参数化：** 射线可以用参数方程表示为 $ \bold{p}(t) = \bold{o} + t\bold{d} $，其中 $ \bold{o} $ 是射线的起点， $ \bold{d} $ 是射线的方向向量，而 $ t $ 是参数，可以是实数。
+>
+> 2. **球体方程：** 球体的方程通常为 $ (\bold{p} - \bold{c}) \cdot (\bold{p} - \bold{c}) = r^2 $，其中 $ \bold{c} $ 是球心的位置向量， $ r $ 是球的半径。
+>
+> 3. **代入射线方程：** 将射线方程代入球体方程，得到一个关于 $ t $ 的二次方程。具体而言，将射线方程中的 $ \bold{p} $ 替换为 $ \bold{o} + t\bold{d} $。方程形式为：
+>    
+>    $ ( \bold{o} + t\bold{d} - \bold{c}) \cdot (\bold{o} + t\bold{d} - \bold{c}) = r^2 $
+>
+>    这将导致一个形如 $ at^2 + bt + c = 0 $ 的二次方程，其中：
+>
+>    $ a = \bold{d} \cdot \bold{d} $,
+>    $ b = 2(\bold{d} \cdot (\bold{o} - \bold{c})) $,
+>    $ c = (\bold{o} - \bold{c}) \cdot (\bold{o} - \bold{c}) - r^2 $
+>
+> 4. **判别式：** 使用判别式 $ \Delta = b^2 - 4ac $ 来确定方程的解的性质。如果 $ \Delta < 0 $，则射线与球没有交点；如果 $ \Delta = 0 $，则射线与球相切于一个点；如果 $ \Delta > 0 $，则射线与球相交于两个点。
+>
+> 5. **解方程：** 如果存在相交点，通过解二次方程得到 $ t $ 的值。然后将这些值代入射线方程，可以找到相应的交点。
+>
+> 这样，通过这一系列步骤，你可以判断射线是否与给定的球体相交，并找到交点的位置。
+
+> 判断射线与三角形是否相交是计算机图形学和计算几何中的常见问题。以下是详细的步骤：
+>
+> 1. **射线参数化：** 射线可以用参数方程表示为 $ \bold{p}(t) = \bold{o} + t\bold{d} $，其中 $ \bold{o} $ 是射线的起点， $ \bold{d} $ 是射线的方向向量，而 $ t $ 是参数，可以是实数。
+>
+> 2. **三角形的表示：** 三角形由三个顶点 $ \bold{v}_1, \bold{v}_2, \bold{v}_3 $ 组成。可以使用重心坐标系（barycentric coordinates）表示三角形内的点 $ \bold{p} $。重心坐标满足 $ \bold{p} = \beta\bold{v}_1 + \gamma\bold{v}_2 + (1-\beta-\gamma)\bold{v}_3 $，其中 $ \beta, \gamma $ 是重心坐标。
+>
+> 3. **射线与平面相交：** 将射线方程 $ \bold{p}(t) = \bold{o} + t\bold{d} $ 代入平面方程，可以得到一个关于 $ t $ 的表达式。平面方程通常表示为 $ \bold{n} \cdot (\bold{p} - \bold{v}_1) = 0 $，其中 $ \bold{n} $ 是三角形所在平面的法向量。
+>
+> 4. **求解重心坐标 $ \beta, \gamma $：** 利用射线与平面的交点，可以得到 $ t $ 的值。然后，通过将 $ \bold{p}(t) $ 代入重心坐标的表达式，求解 $ \beta, \gamma $。
+>
+> 5. **判断相交：** 如果 $ \beta, \gamma $ 满足 $ 0 \leq \beta \leq 1, 0 \leq \gamma \leq 1, \beta + \gamma \leq 1 $，则射线与三角形相交。这是因为在重心坐标系中，点 $ \bold{p} $ 在三角形内的条件为 $ 0 \leq \beta, \gamma \leq 1 $ 且 $ \beta + \gamma \leq 1 $。
+>
+> 6. **计算交点：** 如果相交，可以通过将 $ t $ 带入射线方程 $ \bold{p}(t) $ 计算实际的交点坐标。
+>
+> 通过这一系列步骤，你可以判断射线是否与给定的三角形相交，并找到交点的位置。
+
+
+
+
+
 ## 4.5 Shading  着色
 
 Once the visible surface for a pixel is known, the pixel value is computed by evaluating a shading model. How this is done depends entirely on the application—methods range from very simple heuristics to elaborate numerical computations. In this chapter we describe the two most basic shading models; more advanced models are discussed in Chapter 10.
-一旦知道像素的可见表面，就可以通过评估着色模型来计算像素值。 如何做到这一点完全取决于应用程序，方法范围从非常简单的启发式到复杂的数值计算。 在本章中，我们描述了两种最基本的着色模型； 第 10 章讨论了更高级的模型。
+一旦确定了像素的可见表面，就通过评估一种着色模型来计算像素值。关于这一过程的具体实现，完全取决于应用的性质——方法从非常简单的经验法则到复杂的数值计算不等。在本章中，我们描述了两种最基本的着色模型；更高级的模型将在第十章进行探讨。
 
 Most shading models, one way or another, are designed to capture the process of light reflection, whereby surfaces are illuminated by light sources and reflect part of the light to the camera. Simple shading models are defined in terms of illumination from a point light source. The important variables in light reflection are the light direction $\bold{l}$, which is a unit vector pointing toward the light source; the view direction $\bold{v}$, which is a unit vector pointing toward the eye or camera; the surface normal $\bold{n}$, which is a unit vector perpendicular to the surface at the point where reflection is taking place; and the characteristics of the surface—color, shininess, or other properties depending on the particular model. 
-大多数着色模型都以某种方式设计为捕捉光反射的过程，即表面被光源照亮并将部分光反射到相机。 简单的着色模型是根据点光源的照明来定义的。 光反射中重要的变量是光方向$\bold{l}$，它是指向光源的单位向量； 视图方向$\bold{v}$，它是指向眼睛或相机的单位向量； 表面法线$\bold{n}$，它是发生反射的点处垂直于表面的单位向量； 以及表面特征——颜色、光泽度或其他属性，具体取决于特定模型。
+大多数着色模型在某种程度上都旨在捕捉光反射的过程，即表面受到光源照射并将部分光线反射给摄像机。简单的着色模型是基于来自点光源的照明定义的。在光反射中的重要变量包括光线方向 $\bold{l}$，它是指向光源的单位向量；视图方向 $\bold{v}$，它是指向眼睛或摄像机的单位向量；表面法线 $\bold{n}$，它是在反射发生的点处垂直于表面的单位向量；以及表面的特性——颜色、光泽度或者依赖于具体模型的其他属性。
 
 ### 4.5.1 Lambertian Shading 朗伯着色
 
 The simplest shading model is based on an observation made by Lambert in the 18th century: the amount of energy from a light source that falls on an area of surface depends on the angle of the surface to the light. A surface facing directly toward the light receives maximum illumination; a surface tangent to the light direction (or facing away from the light) receives no illumination; and in between the illumination is proportional to the cosine of the angle $θ$ between the surface normal and the light source (Figure 4.12). This leads to the Lambertian shading model: 
-最简单的着色模型基于 Lambert 在 18 世纪的观察：光源落在表面区域上的能量取决于表面与光线的角度。 直接面向光的表面接收最大照度； 与光方向相切（或背向光）的表面不受照明； 其间的照明度与表面法线和光源之间的角度 $θ$ 的余弦成正比（图 4.12）。 这导致了朗伯着色模型：
+最简单的着色模型基于18世纪Lambert的一个观察：光源投射到表面区域的能量量取决于表面与光线的角度。正对光源的表面接收到最大的照明；与光线方向相切（或背对光源）的表面不受照明；而在两者之间，照明与表面法线与光源之间的角度$θ$的余弦成正比（见图4.12）。由此产生了Lambertian着色模型：
 $L = k_d I max(0, \bold{n} · \bold{l})  $
 
-where $L$ is the pixel color; $k_d$ is the diffuse coefficient, or the surface color; and $I$ is the intensity of the light source. Because $\bold{n}$ and $\bold{l}$ are unit vectors, we can  use $\bold{n} · \bold{l}$ as a convenient shorthand (both on paper and in code) for $\cos θ$. This equation (as with the other shading equations in this section) applies separately to the three color channels, so the red component of the pixel value is the product of the red diffuse component, the red light source intensity, and the dot product; the same holds for green and blue.  
-其中$L$为像素颜色;$k_d$为漫射系数，即表面颜色;$I$为光源的强度。因为$\bold{n}$和$\bold{l}$是单位向量，我们可以使用$\bold{n}·\bold{l}$作为$\cos θ$的方便速记(无论是在纸上还是在代码中)。该方程(与本节中的其他阴影方程一样)分别适用于三个颜色通道，因此像素值的红色分量是红色漫射分量、红色光源强度和点积的乘积;绿色和蓝色也是如此。
+where $L$ is the pixel color; $k_d$ is the diffuse coefficient, or the surface color; and $I$ is the intensity of the light source. Because $\bold{n}$ and $\bold{l}$ are unit vectors, we can  use $\bold{n} · \bold{l}$ as a convenient shorthand (both on paper and in code) for $\cos θ$. This equation (as with the other shading equations in this section) applies separately to the three color channels, so the red component of the pixel value is the product of the red diffuse component, the red light source intensity, and the dot product; the same holds for green and blue. 
+其中，$L$代表像素颜色；$k_d$是漫反射系数，即表面颜色；$I$是光源强度。由于$\bold{n}$和$\bold{l}$是单位向量，我们可以使用$\bold{n} · \bold{l}$作为$\cos θ$的便捷缩写（在纸上和代码中都如此）。这个方程（与本节中的其他着色方程一样）分别应用于三个颜色通道，因此像素值的红色分量是红色漫反射分量、红色光源强度和点积的乘积；绿色和蓝色同理。
 ![Figure 4.12](.\Images\Figure 4.12.png)
 Figure 4.12. Geometry for Lambertian shading.
 图 4.12  朗伯着色的几何形状。
 
-> Illumination from real point sources falls off as distance squared, but that is often more trouble than it’s worth in a simple renderer.  
-> 来自真实点光源的照明随着距离的平方而下降，但在简单的渲染器中，这通常比它的价值更麻烦。
+> Illumination from real point sources falls off as distance squared, but that is often more trouble than it’s worth in a simple renderer. 
+> 真实点光源的照明随距离的平方衰减，然而在简单的渲染器中，这通常带来的麻烦往往超过了其所值。
 
-The vector $\bold{l}$ is computed by subtracting the intersection point of the ray and surface from the light source position. Don’t forget that $\bold{v}$, $\bold{l}$, and $\bold{n}$ all must be unit vectors; failing to normalize these vectors is a very common error in shading computations.  
-向量$\bold{l}$是通过从光源位置减去光线和表面的交点来计算的。 不要忘记 $\bold{v}$、$\bold{l}$ 和 $\bold{n}$ 都必须是单位向量； 未能对这些向量进行归一化是着色计算中非常常见的错误。
+The vector $\bold{l}$ is computed by subtracting the intersection point of the ray and surface from the light source position. Don’t forget that $\bold{v}$, $\bold{l}$, and $\bold{n}$ all must be unit vectors; failing to normalize these vectors is a very common error in shading computations. 
+向量$\bold{l}$通过从射线与表面的交点到光源位置进行减法计算而得。切勿忘记$\bold{v}$、$\bold{l}$和$\bold{n}$都必须是单位向量；在着色计算中未对这些向量进行归一化是一个非常常见的错误。
 
-> When in doubt, make light sources neutral in color, with equal red, green, and blue intensities.  
-> 如有疑问，请使光源颜色为中性，具有相同的红色、绿色和蓝色强度。
+> When in doubt, make light sources neutral in color, with equal red, green, and blue intensities. 
+> 当迷茫时，让光源保持中性颜色，红、绿、蓝三种强度相等。
 
 ### 4.5.2 Blinn-Phong Shading Blinn-Phong 着色
 
-Lambertian shading is view independent: the color of a surface does not depend on the direction from which you look. Many real surfaces show some degree of shininess, producing highlights, or specular reflections, that appear to move around as the viewpoint changes. Lambertian shading doesn’t produce any highlights and leads to a very matte, chalky appearance, and many shading models add a specular component to Lambertian shading; the Lambertian part is then the diffuse component.  
-朗伯着色与视图无关：表面的颜色不取决于您观察的方向。 许多真实的表面显示出一定程度的光泽，产生高光或镜面反射，随着视点的变化而看起来会移动。 朗伯着色不会产生任何高光，并会导致非常哑光、白垩色的外观，并且许多着色模型向朗伯着色添加镜面反射组件； 那么朗伯部分就是漫反射分量。
+Lambertian shading is view independent: the color of a surface does not depend on the direction from which you look. Many real surfaces show some degree of shininess, producing highlights, or specular reflections, that appear to move around as the viewpoint changes. Lambertian shading doesn’t produce any highlights and leads to a very matte, chalky appearance, and many shading models add a specular component to Lambertian shading; the Lambertian part is then the diffuse component. 
+Lambertian着色是与视角无关的：表面的颜色不取决于观察的方向。许多真实的表面显示出一定程度的光泽，产生高光或镜面反射，随着视点的变化而呈现出移动的效果。Lambertian着色不会产生任何高光，呈现出一种非常哑光、粉笔般的外观，因此许多着色模型在Lambertian着色基础上添加了镜面成分；而Lambertian部分则是漫反射成分。
 
 A very simple and widely used model for specular highlights was proposed by Phong (Phong, 1975) and later updated by Blinn (J. F. Blinn, 1976) to the form most commonly used today. The idea is to produce reflection that is at its brightest when $\bold{v}$ and $\bold{l}$ are symmetrically positioned across the surface normal, which is when mirror reflection would occur; the reflection then decreases smoothly as the vectors move away from a mirror configuration. 
 Phong (Phong, 1975)提出了一个非常简单和广泛使用的镜面高光模型，后来由Blinn (J. F. Blinn, 1976)更新为今天最常用的形式。这个想法是产生最亮的反射，当$\bold{v}$和$\bold{l}$对称地放置在表面法线上，这是镜子反射发生的时候；然后，随着矢量远离镜像配置，反射平滑地减小。
 
 ![Figure 4.15](.\Images\Figure 4.15.png)
-Figure 4.13. A simple scene rendered with diffuse shading from a single light source.  
-图4.13 一个简单的场景渲染漫射阴影从一个单一的光源。
+Figure 4.13. A simple scene rendered with diffuse shading from a single light source. 
+图4.13。用来自单一光源的漫反射着色渲染的简单场景。
 
 ![Figure 4.14](.\Images\Figure 4.14.png)
 Figure 4.14. A simple scene rendered with diffuse shading and shadows (Section 4.7) from three light sources. 
-图4.14 一个简单的场景渲染漫射阴影和阴影(第4.7节)从三个光源。
+图4.14。用来自三个光源的漫反射着色和阴影（第4.7节)渲染的简单场景。
 
 ![Figure 4.13](.\Images\Figure 4.13.png)
-Figure 4.15. A simple scene rendered with diffuse shading (blue sphere), Blinn-Phong shading (green sphere), and shadows from three light sources.  
-图4.15 一个简单的场景渲染漫射阴影(蓝色球)，Blinn-Phong阴影(绿色球)，并从三个光源的阴影。
+Figure 4.15. A simple scene rendered with diffuse shading (blue sphere), Blinn-Phong shading (green sphere), and shadows from three light sources. 
+图4.15。用漫反射着色（蓝色球）、Blinn-Phong着色（绿色球)和来自三个光源的阴影渲染的简单场景。
 
 We can tell how close we are to a mirror configuration by comparing the half vector $\bold{h}$ (the bisector of the angle between $\bold{v}$ and $\bold{l}$) to the surface normal (Figure 4.16). If the half vector is near the surface normal, the specular component  should be bright; if it is far away it should be dim. This result is achieved by computing the dot product between $\bold{h}$ and $\bold{n}$ (remember they are unit vectors, so  $\bold{n} · \bold{h}$ reaches its maximum of 1 when the vectors are equal), then taking the result to a power $p > 1$ to make it decrease faster. The power, or Phong exponent, controls the apparent shininess of the surface. The half vector itself is easy to compute: since $\bold{v}$ and $\bold{l}$ are the same length, their sum is a vector that bisects the angle between them, which only needs to be normalized to produce $\bold{h}$. 
-我们可以通过比较半向量 $\bold{h}$ （$\bold{v}$ 和 $\bold{l}$ 之间的角度平分线）与表面法线来判断我们与镜像配置的接近程度 （图 4.16）。 如果半向量接近表面法线，则镜面反射分量应该是明亮的； 如果距离较远，则应该是昏暗的。 这个结果是通过计算 $\bold{h}$ 和 $\bold{n}$ 之间的点积来实现的（记住它们是单位向量，因此 $\bold{n} · \bold{h}$ 达到其最大值 1（当向量相等时），然后对结果进行 $p > 1$ 次方，使其减少得更快。 功率或 Phong 指数控制表面的表观光泽度。 半向量本身很容易计算：由于 $\bold{v}$ 和 $\bold{l}$ 长度相同，因此它们的和是平分它们之间角度的向量，只需对其进行归一化即可产生 $\bold{h}$。
+通过将半向量$\bold{h}$（$\bold{v}$和$\bold{l}$之间角度的角平分线）与表面法线进行比较，我们可以判断离镜面配置有多近（见图4.16）。如果半向量接近表面法线，那么镜面成分应该较亮；如果远离，则应该较暗。这一结果通过计算$\bold{h}$和$\bold{n}$的点积来实现（请记住它们都是单位向量，因此当向量相等时，$\bold{n} · \bold{h}$达到最大值1），然后将结果取幂$p > 1$以使其更快地减小。幂，或称为Phong指数，控制着表面的明显光泽度。半向量本身很容易计算：由于$\bold{v}$和$\bold{l}$的长度相同，它们的和是一个将它们之间角度平分的向量，只需对其进行归一化即可得到$\bold{h}$。
 ![Figure 4.16](.\Images\Figure 4.16.png)
 Figure 4.16. Geometry for Blinn-Phong shading. 
 图 4.16  Blinn-Phong 着色的几何形状。
@@ -491,10 +535,10 @@ where $k_s$ is the specular coefficient, or the specular color, of the surface.
 > 10—“eggshell”;
 > 100—mildly shiny;
 > 1000—really glossy;
-> 10,000—nearly mirror-like.  
+> 10,000—nearly mirror-like. 
 > p 的典型值： 10——“蛋壳”； 100——轻微光泽； 1000——非常有光泽； 10,000——几乎像镜子一样。
 
-> When in doubt, make the specular color gray, with equal red, green, and blue values.  
+> When in doubt, make the specular color gray, with equal red, green, and blue values. 
 > 如有疑问，请将镜面反射颜色设置为灰色，并具有相同的红色、绿色和蓝色值。
 
 ### 4.5.3 Ambient Shading 环境着色
@@ -507,27 +551,28 @@ $$
 where $k_a$ is the surface’s ambient coefficient, or “ambient color,” and $I_a$ is the  ambient light intensity.
 其中 $k_a$ 是表面的环境系数或“环境颜色”，$I_a$ 是环境光强度。
 
-> In the real world, surfaces that are not illuminated by light sources are illuminated by indirect reflections from other surfaces.  
+> In the real world, surfaces that are not illuminated by light sources are illuminated by indirect reflections from other surfaces. 
 > 在现实世界中，未被光源照亮的表面会被其他表面的间接反射照亮。
 
-> When in doubt set the ambient color to be the same as the diffuse color.  
+> When in doubt set the ambient color to be the same as the diffuse color. ·
 > 如果有疑问，请将环境颜色设置为与漫反射颜色相同。
 
-### 4.5.4 Multiple Point Lights  
+### 4.5.4 Multiple Point Lights  多点光源
 
-A very useful property of light is superposition—the effect caused by more than one light source is simply the sum of the effects of the light sources individually. For this reason, our simple shading model can easily be extended to handle $N$ light sources:  
+A very useful property of light is superposition—the effect caused by more than one light source is simply the sum of the effects of the light sources individually. For this reason, our simple shading model can easily be extended to handle $N$ light sources: 
+光的一个非常有用的特性是叠加性——由多个光源引起的效果仅仅是各个光源效果的总和。因此，基于这一原因，我们简单的着色模型可以轻松地扩展以处理$N$个光源：
 $$
 L = k_a I_a + \sum^N_{i = 1}[k_d I_i max(0, \bold{n} · \bold{l}_i) + k_s I_i max(0, \bold{n} · \bold{h}_i)^p] \ \ \  \ \ (4.4)
 $$
-where $I_i$, $l_i$, and $h_i$ are the intensity, direction, and half vector of the $i^{th}$ light source.  
-其中$I_i$、$l_i$和$h_i$是$i^{th}$光源的强度、方向和半矢量。
+where $I_i$, $l_i$, and $h_i$ are the intensity, direction, and half vector of the $i^{th}$ light source. 
+其中，$I_i$、$l_i$和$h_i$分别表示第$i$个光源的强度、方向和半向量。
 
 
 
 ## 4.6 A Ray-Tracing Program 光线追踪程序
 
-We now know how to generate a viewing ray for a given pixel, how to find the closest intersection with an object, and how to shade the resulting intersection. These are all the parts required for a program that produces shaded images with hidden surfaces removed.  
-我们现在知道如何为给定像素生成视线，如何找到与对象最近的交点，以及如何对所得交点进行着色。 这些是生成删除了隐藏表面的着色图像的程序所需的所有部分。
+We now know how to generate a viewing ray for a given pixel, how to find the closest intersection with an object, and how to shade the resulting intersection. These are all the parts required for a program that produces shaded images with hidden surfaces removed. 
+我们现在知道了如何为给定像素生成观察射线，如何找到与物体的最近交点，以及如何着色生成的交点。这些都是生成具有隐藏表面的着色图像所需的所有组成部分。
 
 ```lua
 for each pixel do
@@ -543,12 +588,12 @@ Here the statement “if ray hits an object . . . ” can be implemented using t
 这里的陈述“如果光线击中一个物体 . . . ”可以使用4.4.4节的算法来实现。
 
 In an actual implementation, the surface intersection routine needs to somehow return either a reference to the object that is hit, or at least its normal vector and shading-relevant material properties. This is often done by passing a record/structure with such information. In an object-oriented implementation, it is a good idea to have a class called something like surface with derived classes triangle, sphere, group, etc. Anything that a ray can intersect would be under that class. The ray-tracing program would then have one reference to a “surface” for the whole model, and new types of objects and efficiency structures can be added transparently.
-在实际实现中，表面相交例程需要以某种方式返回对被击中的对象的引用，或者至少返回其法线向量和与着色相关的材质属性。 这通常是通过传递包含此类信息的记录/结构来完成的。 在面向对象的实现中，最好有一个名为 Surface 的类，其派生类为三角形、球体、组等。任何光线可以相交的东西都将位于该类下。 然后，光线追踪程序将对整个模型的“表面”进行一次引用，并且可以透明地添加新类型的对象和效率结构。
+在实际的实现中，表面相交例程需要以某种方式返回击中的物体的引用，或者至少返回其法向量和与着色相关的材质属性。通常通过传递包含此类信息的记录/结构来实现。在面向对象的实现中，有一个名为surface的类是一个不错的选择，它可以派生出triangle、sphere、group等类。射线可以相交的任何物体都将属于这个类。然后，射线跟踪程序可以对整个模型引用一个“surface”，而新类型的对象和效率结构可以在其中透明地添加。
 
 ### 4.6.1 Object-Oriented Design for a Ray-Tracing Program 光线追踪程序的面向对象设计
 
 As mentioned earlier, the key class hierarchy in a ray tracer are the geometric objects that make up the model. These should be subclasses of some geometric object class, and they should support a hit function (Kirk & Arvo, 1988). To avoid confusion from use of the word “object,” surface is the class name often used. With such a class, you can create a ray tracer that has a general interface that assumes little about modeling primitives and debug it using only spheres. An important point is that anything that can be “hit” by a ray should be part of this class hierarchy, e.g., even a collection of surfaces should be considered a subclass of the surface class. This includes efficiency structures, such as bounding volume hierarchies; they can be hit by a ray, so they are in the class. 
-如前所述，光线追踪器中的关键类层次结构是构成模型的几何对象。 这些应该是某些几何对象类的子类，并且它们应该支持命中函数（Kirk & Arvo，1988）。 为了避免使用“对象”一词造成混淆，表面是经常使用的类名称。 使用这样的类，您可以创建一个具有通用接口的光线追踪器，该接口对建模基元几乎不做任何假设，并且仅使用球体对其进行调试。 重要的一点是，任何可以被光线“击中”的东西都应该是这个类层次结构的一部分，例如，即使是表面的集合也应该被视为表面类的子类。 这包括效率结构，例如包围体层次结构； 他们可以被射线击中，所以他们在班级里。
+如前所述，在射线追踪器中的关键类层次结构是组成模型的几何对象。这些应该是某个几何对象类的子类，并且它们应该支持一个撞击函数（Kirk & Arvo, 1988）。为了避免使用“对象”一词引起混淆，通常会使用surface作为类名。有了这样一个类，你可以创建一个射线追踪器，它具有一个假定对建模原语了解较少的通用接口，并且只使用球体进行调试。一个重要的观点是，任何可以被射线“击中”的东西都应该是这个类层次结构的一部分，例如，即使是一组表面也应该被视为surface类的子类。这包括效率结构，如包围体层次结构；它们可以被射线击中，因此它们属于这个类。
 
 For example, the “abstract” or “base” class would specify the hit function as well as a bounding box function that will prove useful later: 
 例如，“抽象”或“基”类将指定命中函数以及稍后将证明有用的边界框函数：
@@ -559,8 +604,8 @@ class surface
 	virtual box bounding-box()
 ```
 
-Here $(t_0, t_1)$ is the interval on the ray where hits will be returned, and rec is are cord that is passed by reference; it contains data such as the t at the intersection when hit returns true. The type box is a 3D “bounding box,” that is two points that define an axis-aligned box that encloses the surface. For example, for a sphere,t he function would be implemented by  
-这里$(t_0, t_1)$是射线上将返回命中的间隔，而rec是通过引用传递的绳索； 它包含诸如当 hit 返回 true 时交点处的 t 之类的数据。 类型框是一个 3D“边界框”，即定义包围曲面的轴对齐框的两个点。 例如，对于一个球体，该函数将通过以下方式实现
+Here $(t_0, t_1)$ is the interval on the ray where hits will be returned, and rec is are cord that is passed by reference; it contains data such as the t at the intersection when hit returns true. The type box is a 3D “bounding box,” that is two points that define an axis-aligned box that encloses the surface. For example, for a sphere,t he function would be implemented by 
+这里，$(t_0, t_1)$ 表示射线上返回相交的区间，而 rec 是通过引用传递的记录；它包含诸如当 hit 返回 true 时相交处的 t 值等数据。类型 box 是一个3D的“包围盒”，即定义一个轴对齐的盒子的两个点，用于包裹表面。例如，对于一个球体，该函数会被实现为：
 
 ```python
 box sphere::bounding-box()
@@ -570,55 +615,66 @@ box sphere::bounding-box()
 ```
 
 Another class that is useful is material. This allows you to abstract the material behavior and later add materials transparently. A simple way to link objects and materials is to add a pointer to a material in the surface class, although more programmable behavior might be desirable. A big question is what to do with textures; are they part of the material class or do they live outside of the material class? This will be discussed more in Chapter 11.
-另一个有用的类别是材料。 这使您可以抽象材质行为，然后透明地添加材质。 链接对象和材质的一种简单方法是在表面类中添加指向材质的指针，尽管可能需要更多的可编程行为。 一个大问题是如何处理纹理； 他们是物质阶层的一部分还是生活在物质阶层之外？ 这将在第 11 章中详细讨论。
+另一个有用的类是材质（material）。这使你能够抽象出材质的行为，并且之后能够透明地添加材质。将对象和材质关联的一种简单方式是在surface类中添加一个指向材质的指针，尽管可能希望有更可编程的行为。一个重要的问题是如何处理纹理；它们是材质类的一部分，还是存在于材质类之外？这将在第11章中进行更详细的讨论。
 
 ## 4.7 Shadows 阴影
 
-Once you have a basic ray tracing program, shadows can be added very easily. Recall from Section 4.5 that light comes from some direction $\bold{l}$. If we imagine ourselves at a point $\bold{p}$ on a surface being shaded, the point is in shadow if we “look” in direction $\bold{l}$ and see an object. If there are no objects, then the light is not blocked.  
+Once you have a basic ray tracing program, shadows can be added very easily. Recall from Section 4.5 that light comes from some direction $\bold{l}$. If we imagine ourselves at a point $\bold{p}$ on a surface being shaded, the point is in shadow if we “look” in direction $\bold{l}$ and see an object. If there are no objects, then the light is not blocked. 
 一旦有了基本的光线追踪程序，就可以非常轻松地添加阴影。 回想一下 4.5 节，光来自某个方向 $\bold{l}$。 如果我们想象自己位于被阴影表面上的一个点 $\bold{p}$ 处，那么如果我们向 $\bold{l}$ 方向“看”并看到一个物体，则该点处于阴影中。 如果没有物体，那么光线就不会被阻挡。
 
-This is shown in Figure 4.17, where the ray $\bold{p} + t\bold{l}$ does not hit any objects and is thus not in shadow. The point $\bold{q}$ is in shadow because the ray $\bold{q} + t\bold{l}$ does hit an object. The vector $\bold{l}$ is the same for both points because the light is “far” away. This assumption will later be relaxed. The rays that determine in or out of shadow are called shadow rays to distinguish them from viewing rays.  
+This is shown in Figure 4.17, where the ray $\bold{p} + t\bold{l}$ does not hit any objects and is thus not in shadow. The point $\bold{q}$ is in shadow because the ray $\bold{q} + t\bold{l}$ does hit an object. The vector $\bold{l}$ is the same for both points because the light is “far” away. This assumption will later be relaxed. The rays that determine in or out of shadow are called shadow rays to distinguish them from viewing rays. 
 如图 4.17 所示，其中光线 $\bold{p} + t\bold{l}$ 没有击中任何物体，因此不在阴影中。 点 $\bold{q}$ 位于阴影中，因为光线 $\bold{q} + t\bold{l}$ 确实击中了物体。 两个点的向量 $\bold{l}$ 是相同的，因为光距离“很远”。 这个假设稍后会被放宽。 确定阴影内或阴影外的光线称为阴影光线，以区别于观察光线。
 ![Figure 4.17](.\Images\Figure 4.17.png)
-Figure 4.17. The point $\bold{p}$ is not in shadow, while the point $\bold{q}$  is in shadow.  
+Figure 4.17. The point $\bold{p}$ is not in shadow, while the point $\bold{q}$  is in shadow. 
 图 4.17  点 $\bold{p}$ 不在阴影中，而点 $\bold{q}$ 在阴影中
 
-To get the algorithm for shading, we add an if statement to determine whether the point is in shadow. In a naive implementation, the shadow ray will check for $t ∈ [0, ∞)$, but because of numerical imprecision, this can result in an intersection with the surface on which $\bold{p}$ lies. Instead, the usual adjustment to avoid that problem is to test for $t ∈ [\epsilon, ∞)$ where $\epsilon$ is some small positive constant (Figure 4.18).  
+To get the algorithm for shading, we add an if statement to determine whether the point is in shadow. In a naive implementation, the shadow ray will check for $t ∈ [0, ∞)$, but because of numerical imprecision, this can result in an intersection with the surface on which $\bold{p}$ lies. Instead, the usual adjustment to avoid that problem is to test for $t ∈ [\epsilon, ∞)$ where $\epsilon$ is some small positive constant (Figure 4.18). 
 为了获得阴影算法，我们添加一个 if 语句来确定该点是否处于阴影中。 在简单的实现中，阴影光线将检查 $t ∈ [0, ∞)$，但由于数值不精确，这可能会导致与 $\bold{p}$ 所在的表面相交。 相反，避免该问题的通常调整是测试 $t ∈ [\epsilon, ∞)$，其中 $\epsilon$ 是一些小的正常数（图 4.18）。
 ![Figure 4.18](.\Images\Figure 4.18.png)
 Figure 4.18. By testing in the interval starting at $\epsilon$, we avoid numerical imprecision causing the ray to hit the surface $\bold{p}$ is on. 
 图 4.18  通过在从 $\epsilon$ 开始的间隔中进行测试，我们可以避免数值不精确导致光线撞击 $\bold{p}$ 所在的表面
 
-If we implement shadow rays for Phong lighting with Equation 4.3 then we have the following:  
+If we implement shadow rays for Phong lighting with Equation 4.3 then we have the following: 
 如果我们使用公式 4.3 实现 Phong 照明的阴影光线，则我们有以下结果：
-<img src=".\Images\Figure 4.18_1.png" alt="Figure 4.18" style="zoom:80%;" />
+
+> **function** raycolor(ray $\bold{e} + t\bold{d}$, real $t_0$, real $t_1$)
+> 	hit-record rec, srec
+> 	**if** (scene$\rightarrow$hit($\bold{e} + t\bold{d}$, $t_0$, $t_1$, rec)) **then**
+> 		$\bold{p} = \bold{e} + (rec.t)\bold{d}$
+> 		color c = $rec.k_a I_a$
+> 		**if** (not scene $\rightarrow$ hit($\bold{p} + s\bold{l}$, $\epsilon$, $\infty$, srec)) **then**
+> 			vector3 **h** = normalized(normalized(**l**) + normalized(-**d**))
+> 			c = c + rec.$k_d I$ max($0, rec.\bold{n} \cdot \bold{l}$) + (rec.$k_s$)$I$$(rec.\bold{n} \cdot \bold{h})^{rec.p}$
+> 		**return** c
+> 	**else**
+> 		**return** background-color
 
 Note that the ambient color is added whether $\bold{p}$ is in shadow or not. If there are multiple light sources, we can send a shadow ray before evaluating the shading model for each light. The code above assumes that $\bold{d}$ and $\bold{l}$ are not necessarily unit vectors. This is crucial for $\bold{d}$, in particular, if we wish to cleanly add instancing later (see Section 13.2).
 请注意，无论 $\bold{p}$ 是否处于阴影中，都会添加环境颜色。 如果有多个光源，我们可以在评估每个光源的着色模型之前发送阴影光线。 上面的代码假设 $\bold{d}$ 和 $\bold{l}$ 不一定是单位向量。 这对于 $\bold{d}$ 至关重要，特别是如果我们希望稍后干净地添加实例（参见第 13.2 节）。
 
 ## 4.8 Ideal Specular Reflection 理想的镜面反射
 
-It is straightforward to add ideal specular reflection, or mirror reflection, to a raytracing program. The key observation is shown in Figure 4.19 where a viewer looking from direction $\bold{e}$ sees what is in direction $\bold{r}$ as seen from the surface. The vector $\bold{r}$ is found using a variant of the Phong lighting reflection Equation (10.6). There are sign changes because the vector $\bold{d}$ points toward the surface in this case, so,  
+It is straightforward to add ideal specular reflection, or mirror reflection, to a raytracing program. The key observation is shown in Figure 4.19 where a viewer looking from direction $\bold{e}$ sees what is in direction $\bold{r}$ as seen from the surface. The vector $\bold{r}$ is found using a variant of the Phong lighting reflection Equation (10.6). There are sign changes because the vector $\bold{d}$ points toward the surface in this case, so, 
 将理想的镜面反射或镜面反射添加到光线跟踪程序中非常简单。 关键观察结果如图 4.19 所示，其中从 $\bold{e}$ 方向观看的观看者看到的是从表面看到的 $\bold{r}$ 方向的内容。 向量 $\bold{r}$ 是使用 Phong 光照反射方程 (10.6) 的变体找到的。 符号发生变化，因为在这种情况下向量 $\bold{d}$ 指向表面，因此，
 $$
 \bold{r} = \bold{d} − 2(\bold{d} · \bold{n})\bold{n}. \ \ \ \ (4.5)
 $$
 ![Figure 4.19](.\Images\Figure 4.19.png)
 Figure 4.19. When looking into a perfect mirror, the viewer looking in direction $\bold{d}$ will see whatever the viewer “below” the surface would see in direction $\bold{r}$. 
-图 4.19  当观察完美的镜子时，朝 $\bold{d}$ 方向看的观看者将看到表面“下方”的观看者在 $\bold{r}$ 方向上看到的任何内容。
+图4.19。当注视一个完美的镜子时，向着方向$\bold{d}$的观察者将看到与表面“下方”观察者在方向$\bold{r}$中所看到的相同。
 
 In the real world, some energy is lost when the light reflects from the surface, and this loss can be different for different colors. For example, gold reflects yellow more efficiently than blue, so it shifts the colors of the objects it reflects. This can be implemented by adding a recursive call in raycolor: 
-在现实世界中，当光从表面反射时，会损失一些能量，并且对于不同的颜色，这种损失可能不同。 例如，金色比蓝色更有效地反射黄色，因此它会改变所反射物体的颜色。 这可以通过在raycolor中添加递归调用来实现：
+在现实世界中，当光线从表面反射时会有一些能量损失，而这种损失对不同颜色可能是不同的。例如，金材料比蓝色更有效地反射黄色，因此它会改变所反射对象的颜色。这可以通过在raycolor中添加递归调用来实现：
 $color\ c = c + k_m raycolor(\bold{p} + s\bold{r}, \epsilon, ∞)  $
 
 where $k_m$ (for “mirror reflection”) is the specular RGB color. We need to make sure we test for $s ∈ [	\epsilon, ∞)$ for the same reason as we did with shadow rays; we don’t want the reflection ray to hit the object that generates it. 
 其中 $k_m$（“镜面反射”）是镜面 RGB 颜色。 我们需要确保测试 $s ∈ [ \epsilon, ∞)$ 的原因与我们测试阴影光线的原因相同； 我们不希望反射光线击中产生它的物体。
 
 The problem with the recursive call above is that it may never terminate. For example, if a ray starts inside a room, it will bounce forever. This can be fixed by adding a maximum recursion depth. The code will be more efficient if a reflection ray is generated only if $k_m$ is not zero (black). 
-上面的递归调用的问题是它可能永远不会终止。 例如，如果光线从房间内开始，它将永远反弹。 这可以通过添加最大递归深度来解决。 如果仅当 $k_m$ 不为零（黑色）时才生成反射光线，则代码将会更有效。
+上述递归调用的问题在于它可能永远不会终止。例如，如果一条射线从房间内开始，它将永远反弹。可以通过添加最大递归深度来解决这个问题。如果$k_m$不为零（黑色），则仅在这种情况下生成反射射线将使代码更加高效。
 ![Figure 4.20](.\Images\Figure 4.20.png)
 Figure 4.20. A simple scene rendered with diffuse and Blinn-Phong shading, shadows from three light sources, and specular reflection from the floor.
-图 4.20  使用漫反射和 Blinn-Phong 着色、来自三个光源的阴影以及来自地板的镜面反射渲染的简单场景。
+图4.20。用漫反射和Blinn-Phong着色、来自三个光源的阴影以及地板的镜面反射渲染的简单场景。
 
 ## 4.9 Historical Notes 历史笔记
 
@@ -643,7 +699,7 @@ For sufficiently small models and images, any modern PC is sufficiently powerful
 ### Is ray tracing useful in a hardware graphics program? 光线追踪在硬件图形程序中有用吗？
 
 Ray tracing is frequently used for picking. When the user clicks the mouse on a pixel in a 3D graphics program, the program needs to determine which object is visible within that pixel. Ray tracing is an ideal way to determine that. 
-光线追踪经常用于拾取。 当用户在 3D 图形程序中的像素上单击鼠标时，程序需要确定该像素内哪个对象是可见的。 光线追踪是确定这一点的理想方法。
+射线追踪经常用于拾取操作。当用户在3D图形程序中点击鼠标的一个像素时，程序需要确定在该像素内哪个物体是可见的。射线追踪是确定这一点的理想方式。
 
 ## Exercises
 

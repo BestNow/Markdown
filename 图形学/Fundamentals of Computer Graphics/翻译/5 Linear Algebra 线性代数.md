@@ -1,16 +1,16 @@
 # 5 Linear Algebra 线性代数
 
 Perhaps the most universal tools of graphics programs are the matrices that change or transform points and vectors. In the next chapter, we will see how a vector can be represented as a matrix with a single column, and how the vector can be represented in a different basis via multiplication with a square matrix. We will also describe how we can use such multiplications to accomplish changes in the vector such as scaling, rotation, and translation. In this  chapter, we review basic linear algebra from a geometric perspective, focusing on intuition and algorithms that work well in the two- and three-dimensional case. This chapter can be skipped by readers comfortable with linear algebra. However, there may be some enlightening tidbits even for such readers, such as the development of determinants and the discussion of singular and eigenvalue decomposition. 
-也许图形程序最通用的工具是改变或变换点和向量的矩阵。 在下一章中，我们将看到如何将向量表示为具有单列的矩阵，以及如何通过与方阵相乘来将向量表示为不同的基。 我们还将描述如何使用此类乘法来完成向量的变化，例如缩放、旋转和平移。 在本章中，我们从几何角度回顾基本线性代数，重点关注在二维和三维情况下运行良好的直觉和算法。 熟悉线性代数的读者可以跳过本章。 然而，即使对于这样的读者来说，也可能有一些启发性的花絮，例如行列式的发展以及奇异值和特征值分解的讨论。
+或许图形程序中最普遍的工具之一是能够改变或转换点和向量的矩阵。在下一章中，我们将看到如何将一个向量表示为具有单列的矩阵，以及如何通过与方阵相乘将向量表示在不同的基底中。我们还将描述如何利用这样的乘法来实现向量的缩放、旋转和平移等变化。在这一章中，我们从几何的角度回顾基本的线性代数，专注于在二维和三维情况下效果良好的直观理解和算法。熟悉线性代数的读者可以跳过这一章。然而，对于这类读者，也可能会有一些启发性的信息，例如行列式的发展以及奇异值分解和特征值分解的讨论。
 
 ## 5.1 Determinants 行列式
 
 We usually think of determinants as arising in the solution of linear equations. However, for our purposes, we will think of determinants as another way to multiply vectors. For 2D vectors $\bold{a}$ and $\bold{b}$, the determinant $|\bold{a}\bold{b}|$ is the area of the  parallelogram formed by $\bold{a}$ and $\bold{b}$ (Figure 5.1). This is a signed area, and the sign is positive if $\bold{a}$ and $\bold{b}$ are right-handed and negative if they are left-handed. This means $|\bold{a}\bold{b}|$ = -$|\bold{b}\bold{a}|$. In 2D we can interpret “right-handed” as meaning we rotate the first vector counterclockwise to close the smallest angle to the second vector. In 3D, the determinant must be taken with three vectors at a time. For  three 3D vectors, $\bold{a}$, $\bold{b}$, and $\bold{c}$, the determinant $|\bold{a}\bold{b}\bold{c}|$ is the signed volume of the parallelepiped (3D parallelogram; a sheared 3D box) formed by the three vectors (Figure 5.2). To compute a 2D determinant, we first need to establish a few of its properties. We note that scaling one side of a parallelogram scales its area by the same fraction (Figure 5.3): 
-我们通常认为行列式是在线性方程的解中产生的。 然而，出于我们的目的，我们将把行列式视为向量相乘的另一种方式。 对于二维向量 $\bold{a}$ 和 $\bold{b}$，行列式 $|\bold{a}\bold{b}|$ 是由 $\bold{a}$ 形成的平行四边形的面积 和$\bold{b}$（图5.1）。 这是一个有符号区域，如果 $\bold{a}$ 和 $\bold{b}$ 是右撇子，则符号为正；如果它们是左撇子，则符号为负。 这意味着 $|\bold{a}\bold{b}|$ = -$|\bold{b}\bold{a}|$。 在二维中，我们可以将“右手”解释为逆时针旋转第一个向量以接近第二个向量的最小角度。 在 3D 中，行列式必须同时采用三个向量。 对于三个 3D 向量 $\bold{a}$、$\bold{b}$ 和 $\bold{c}$，行列式 $|\bold{a}\bold{b}\bold{c}| $ 是由三个向量形成的平行六面体（3D 平行四边形；剪切的 3D 盒子）的带符号体积（图 5.2）。 为了计算二维行列式，我们首先需要建立它的一些属性。 我们注意到，缩放平行四边形的一侧会以其相同的分数缩放其面积（图 5.3）：
+通常我们将行列式看作是解线性方程的一种方法。然而，对于我们的目的，我们将行列式视为向量相乘的另一种方式。对于2D向量$\bold{a}$和$\bold{b}$，行列式$|\bold{a}\bold{b}|$是由$\bold{a}$和$\bold{b}$形成的平行四边形的面积（见图5.1）。这是一个有符号的面积，如果$\bold{a}$和$\bold{b}$是右手坐标系，则符号为正，如果它们是左手坐标系，则符号为负。这意味着$|\bold{a}\bold{b}|$ = -$|\bold{b}\bold{a}|$。在2D中，我们可以将“右手坐标系”解释为将第一个向量逆时针旋转以尽可能接近第二个向量的最小角度。在3D中，行列式必须同时涉及三个向量。对于三个3D向量$\bold{a}$，$\bold{b}$和$\bold{c}$，行列式$|\bold{a}\bold{b}\bold{c}|$是由这三个向量形成的平行六面体（3D平行四边形；扭曲的3D立方体）的有符号体积（见图5.2）。要计算2D行列式，我们首先需要确定其一些性质。我们注意到，扩展平行四边形的一边会以相同的比例扩大其面积（见图5.3）：
 $|(k\bold{a})\bold{b}| = |\bold{a}(k\bold{b})| = k|\bold{a}\bold{b}|  $
 
 ![Figure 5.1](.\Images\Figure 5.1.png)
-Figure 5.1. The signed area of the parallelogram is $|\bold{a}\bold{b}|$, and in this case the area is positive.  
+Figure 5.1. The signed area of the parallelogram is $|\bold{a}\bold{b}|$, and in this case the area is positive. 
 图 5.1 平行四边形的有符号面积为 $|\bold{a}\bold{b}|$，在这种情况下面积为正。
 
 ![Figure 5.2](.\Images\Figure 5.2.png)
@@ -28,7 +28,7 @@ $|(\bold{a} + k\bold{b})\bold{b}| = |\bold{a}(\bold{b} + k\bold{a})| = |\bold{a}
 Figure 5.4. Shearing a parallelogram does not change its area. These four parallelograms have the same length base and thus the same area. 
 图 5.4  剪切平行四边形不会改变其面积。 这四个平行四边形具有相同的底边长度，因此面积也相同。
 
-Finally, we see that the determinant has the following property:  
+Finally, we see that the determinant has the following property: 
 最后，我们看到行列式具有以下性质：
 $$
 |\bold{a}(\bold{b} + \bold{c})| = |\bold{a}\bold{b}| + |\bold{a}\bold{c}|, \ \ \ \ \ (5.1)
@@ -47,7 +47,7 @@ $$
 = x_ax_b(0) + x_ay_b(+1) + y_ax_b(−1) + y_ay_b(0) \\
 = x_ay_b − y_ax_b.
 $$
-This simplification uses the fact that $|\bold{v}\bold{v}| = 0$ for any vector $\bold{v}$, because the parallelograms would all be collinear with $\bold{v}$ and thus without area.  
+This simplification uses the fact that $|\bold{v}\bold{v}| = 0$ for any vector $\bold{v}$, because the parallelograms would all be collinear with $\bold{v}$ and thus without area. 
 这种简化利用了以下事实： $|\bold{v}\bold{v}| = 0$ 对于任何向量 $\bold{v}$，因为平行四边形都与 $\bold{v}$ 共线，因此没有面积。
 
 In three dimensions, the determinant of three 3D vectors $\bold{a}$, $\bold{b}$, and $\bold{c}$ is denoted $|\bold{a}\bold{b}\bold{c}|$. With Cartesian representations for the vectors, there are analogous rules for parallelepipeds as there are for parallelograms, and we can do an analogous expansion as we did for 2D: 
@@ -55,7 +55,7 @@ In three dimensions, the determinant of three 3D vectors $\bold{a}$, $\bold{b}$,
 $|\bold{a}\bold{b}\bold{c}| = |(x_a\bold{x} + y_a\bold{y} + z_a\bold{z})(x_b\bold{x} + y_b\bold{y} + z_b\bold{z})(x_c\bold{x} + y_c\bold{y} + z_c\bold{z})| \\
 = x_ay_bz_c - x_az_by_c - y_ax_bz_c + y_az_bx_c + z_ax_by_c - z_ay_bx_c.  $
 
-As you can see, the computation of determinants in this fashion gets uglier as the dimension increases. We will discuss less error-prone ways to compute determinants in Section 5.3.  
+As you can see, the computation of determinants in this fashion gets uglier as the dimension increases. We will discuss less error-prone ways to compute determinants in Section 5.3. 
 正如您所看到的，随着维度的增加，以这种方式计算行列式会变得更加难看。 我们将在 5.3 节中讨论计算行列式的不易出错的方法。
 
 **Example**. Determinants arise naturally when computing the expression for one vector as a linear combination of two others—for example, if we wish to express a vector $\bold{c}$ as a combination of vectors $\bold{a}$ and $\bold{b}$:
@@ -154,7 +154,7 @@ $$
 p_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} +\ ···\ + a_{im}b_{mj}. \ \ \ \ (5.2)
 $$
 Taking a product of two matrices is only possible if the number of columns of the left matrix is the same as the number of rows of the right matrix. For example, 
-仅当左矩阵的列数与右矩阵的行数相同时，才可能对两个矩阵进行乘积。 例如，
+**仅当左矩阵的列数与右矩阵的行数相同**时，才可能对两个矩阵进行乘积。 例如，
 $$
 \begin{bmatrix}
 0 & 1 \\ 
@@ -171,7 +171,7 @@ $$
 24 & 33 & 42 & 51 \\
 \end{bmatrix}
 $$
-Matrix multiplication is not commutative in most instances:  
+Matrix multiplication is not commutative in most instances: 
 在大多数情况下，矩阵乘法是不可交换的:
 $$
 \bold{A}\bold{B} \ne \bold{B}\bold{A}. \ \ \ \ (5.3)
@@ -187,7 +187,7 @@ $$
 ### 5.2.2 Operations on Matrices 矩阵的运算
 
 We would like a matrix analog of the inverse of a real number. We know the inverse of a real number $x$ is $1/x$ and that the product of $x$ and its inverse is 1. We need a matrix $\bold{I}$ that we can think of as a “matrix one.” This exists only for square matrices and is known as the identity matrix; it consists of ones down the diagonal and zeroes elsewhere. For example, the four by four identity matrix is
-我们想要一个实数倒数的矩阵模拟。 我们知道实数 $x$ 的倒数是 $1/x$，并且 $x$ 与其倒数的乘积是 1。我们需要一个矩阵 $\bold{I}$，我们可以将其视为“矩阵一”。 这只存在于方阵中，称为单位矩阵； 它由对角线下方的 1 和其他地方的 0 组成。 例如，四乘四单位矩阵是
+我们希望得到矩阵中类似于实数的倒数的概念。我们知道实数$x$的倒数是$1/x$，而$x$和它的倒数的乘积是1。我们需要一个矩阵$\bold{I}$，可以将其视为“矩阵一”。这仅适用于方阵，被称为单位矩阵；它在对角线上有1，其他地方都是0。例如，四阶单位矩阵是：
 $$
 \bold{I} = \begin{bmatrix}
 1 & 0 & 0 & 0 \\
@@ -196,7 +196,7 @@ $$
 0 & 0 & 0 & 1 \\
 \end{bmatrix}
 $$
-The inverse matrix $\bold{A}^{-1}$ of a matrix $\bold{A}$ is the matrix that ensures $\bold{A}\bold{A}^{-1} = \bold{I}$. For example,  
+The inverse matrix $\bold{A}^{-1}$ of a matrix $\bold{A}$ is the matrix that ensures $\bold{A}\bold{A}^{-1} = \bold{I}$. For example, 
 矩阵$\bold{A}$的逆矩阵$\bold{A}^{-1}$是保证$\bold{A}\bold{A}^{-1} = \bold{I}$的矩阵。例如,
 $$
 \begin{bmatrix}
@@ -297,7 +297,7 @@ We also can use matrix formalism to encode operations on just vectors. If we con
 我们还可以使用矩阵形式来编码向量上的运算。 如果我们将点积的结果视为 1 × 1 矩阵，则可以写成
 $\bold{a} · \bold{b} = \bold{a}^T\bold{b}  $
 
-For example, if we take two 3D vectors we get  
+For example, if we take two 3D vectors we get 
 例如，如果我们采用两个 3D 向量，我们会得到
 $$
 \begin{bmatrix}
@@ -312,8 +312,8 @@ z_b
 x_ax_b + y_ay_b + z_az_b
 \end{bmatrix}
 $$
-A related vector product is the outer product between two vectors, which can be expressed as a matrix multiplication with a column vector on the left and a row vector on the right: $\bold{a}\bold{b}^T$. The result is a matrix consisting of products of all pairs of an entry of a with an entry of $\bold{b}$. For 3D vectors, we have
-相关向量积是两个向量之间的外积，可以表示为左侧为列向量、右侧为行向量的矩阵乘法：$\bold{a}\bold{b}^T$。 结果是一个由 a 条目与 $\bold{b}$ 条目的所有对的乘积组成的矩阵。 对于 3D 向量，我们有
+A related vector product is the outer product between two vectors, which can be expressed as a matrix multiplication with a column vector on the left and a row vector on the right: $\bold{a}\bold{b}^T$. The result is a matrix consisting of products of all pairs of an entry of $\bold{a}$ with an entry of $\bold{b}$. For 3D vectors, we have
+一个相关的向量积是两个向量之间的外积，可以表示为在左侧使用列向量，在右侧使用行向量进行矩阵乘法：$\bold{a}\bold{b}^T$。其结果是一个矩阵，由$\bold{a}$的每个条目与$\bold{b}$的每个条目的乘积组成。对于3D向量，我们有：
 $$
 \begin{bmatrix}
 x_a \\
@@ -330,7 +330,7 @@ z_ax_b & z_ay_b & z_az_b \\
 \end{bmatrix}
 $$
 It is often useful to think of matrix multiplication in terms of vector operations. To illustrate using the three-dimensional case, we can think of a 3 × 3 matrix as a collection of three 3D vectors in two ways: either it is made up of three column vectors side-by-side, or it is made up of three row vectors stacked up. For instance, the result of a matrix-vector multiplication $y = \bold{A}x$ can be interpreted as a vector whose entries are the dot products of $x$ with the rows of $\bold{A}$. Naming these row vectors $\bold{r}_i$, we have 
-从向量运算的角度考虑矩阵乘法通常很有用。 为了说明使用三维情况，我们可以将 3 × 3 矩阵视为三个 3D 向量的集合，有两种方式：要么由三个并排的列向量组成，要么由 三个行向量堆叠起来。 例如，矩阵向量乘法 $y = \bold{A}x$ 的结果可以解释为一个向量，其条目是 $x$ 与 $\bold{A}$ 行的点积。 将这些行向量命名为$\bold{r}_i$，我们有
+从向量运算的角度考虑矩阵乘法通常很有用。 为了说明这一点，我们可以以三维情况为例，将一个3 × 3矩阵看作三个3D向量的集合，有两种方式：它要么由三个列向量并排组成，要么由三个行向量堆叠而成。例如，矩阵-向量乘法的结果$y = \bold{A}x$可以解释为一个向量，其条目是$x$与$\bold{A}$的各行的点积。将这些行向量命名为$\bold{r}_i$，我们有：
 $$
 \\\begin{bmatrix}
 | \\
@@ -349,7 +349,7 @@ $$
 \end{bmatrix} \\ \\
 y_i = \bold{r}_i · \bold{x}.
 $$
-Alternatively, we can think of the same product as a sum of the three columns $\bold{c}_i$ of $\bold{A}$, weighted by the entries of $\bold{x}$:  
+Alternatively, we can think of the same product as a sum of the three columns $\bold{c}_i$ of $\bold{A}$, weighted by the entries of $\bold{x}$: 
 或者，我们可以将相同的乘积视为 $\bold{A}$ 的三列 $\bold{c}_i$ 的总和，并由 $\bold{x}$ 的条目加权：
 $$
 \\\begin{bmatrix}
@@ -369,8 +369,8 @@ x_3
 \end{bmatrix} \\ \\
 \bold{y} = x_1\bold{c}_1 + x_2\bold{c}_2 + x_3\bold{c}_3.
 $$
-Using the same ideas, one can understand a matrix-matrix product $\bold{A}\bold{B}$ as an array containing the pairwise dot products of all rows of $\bold{A}$ with all columns of $\bold{B}$ (cf. (5.2)); as a collection of products of the matrix $\bold{A}$ with all the column vectors of $\bold{B}$, arranged left to right; as a collection of products of all the row vectors of $\bold{A}$ with the matrix $\bold{B}$, stacked top to bottom; or as the sum of the pairwise outer products of all columns of $\bold{A}$ with all rows of $\bold{B}$. (See Exercise 8.)  
-使用同样的思想，可以将矩阵-矩阵乘积$\bold{A}\bold{B}$理解为包含$\bold{A}$的所有行与$\bold{B}$的所有列的成对点积的数组(参见(5.2));作为矩阵$\bold{A}$与$\bold{B}$的所有列向量的乘积的集合，从左到右排列;作为$\bold{A}$的所有行向量与矩阵$\bold{B}$乘积的集合，从上到下堆叠;或者作为$\bold{A}$的所有列与$\bold{B}$的所有行对外积的和。(见练习8)
+Using the same ideas, one can understand a matrix-matrix product $\bold{A}\bold{B}$ as an array containing the pairwise dot products of all rows of $\bold{A}$ with all columns of $\bold{B}$ (cf. (5.2)); as a collection of products of the matrix $\bold{A}$ with all the column vectors of $\bold{B}$, arranged left to right; as a collection of products of all the row vectors of $\bold{A}$ with the matrix $\bold{B}$, stacked top to bottom; or as the sum of the pairwise outer products of all columns of $\bold{A}$ with all rows of $\bold{B}$. (See Exercise 8.) 
+运用相同的思想，我们可以将矩阵-矩阵乘积$\bold{A}\bold{B}$理解为一个包含$\bold{A}$的所有行与$\bold{B}$的所有列的成对点积的数组（参见（5.2））；作为矩阵$\bold{A}$与$\bold{B}$的所有列向量的乘积的集合，从左到右排列；作为矩阵$\bold{A}$的所有行向量与$\bold{B}$的乘积的集合，从上到下堆叠；或者作为$\bold{A}$的所有列与$\bold{B}$的所有行的成对外积的和。（参见习题8。）
 
 These interpretations of matrix multiplication can often lead to valuable geometric interpretations of operations that may otherwise seem very abstract. 
 对矩阵乘法的这些解释通常会导致对运算的有价值的几何解释，否则这些解释可能看起来非常抽象。
@@ -386,10 +386,10 @@ The identity matrix also has the property that it is the same as its transpose. 
 The identity matrix is also an orthogonal matrix, because each of its columns considered as a vector has length 1 and the columns are orthogonal to one another. The same is true of the rows (see Exercise 2). The determinant of any orthogonal matrix is either $+1$ or $−1$.
 单位矩阵也是一个正交矩阵，因为它的每一列都被视为向量，长度为 1，并且各列彼此正交。 行也是如此（参见练习 2）。 任何正交矩阵的行列式要么是$+1$，要么是$−1$。
 
-> The idea of an orthogonal matrix corresponds to the idea of an orthonormal basis, not just a set of orthogonal vectors—an unfortunate glitch in terminology.  
+> The idea of an orthogonal matrix corresponds to the idea of an orthonormal basis, not just a set of orthogonal vectors—an unfortunate glitch in terminology. 
 > 正交矩阵的概念对应于标准正交基的概念，而不仅仅是一组正交向量——这是术语中的一个不幸的小故障。
 
-A very useful property of orthogonal matrices is that they are nearly their own inverses. Multiplying an orthogonal matrix by its transpose results in the identity,  
+A very useful property of orthogonal matrices is that they are nearly their own inverses. Multiplying an orthogonal matrix by its transpose results in the identity, 
 正交矩阵的一个非常有用的性质是它们几乎是自己的逆矩阵。正交矩阵乘以它的转置得到单位矩阵，
 $\bold{R}^T\bold{R} = I = \bold{R}\bold{R}^T\ for\ orthogonal\ \bold{R} $
 
@@ -415,7 +415,7 @@ $$
 2 & 7 & 1
 \end{bmatrix}
 $$
-is symmetric, but not diagonal or orthogonal.  
+is symmetric, but not diagonal or orthogonal. 
 矩阵是对称的，但不是对角的或正交的。
 
 The matrix  
@@ -426,15 +426,16 @@ $$
 1 & 0 & 0
 \end{bmatrix}
 $$
-is orthogonal, but neither diagonal nor symmetric.  
+is orthogonal, but neither diagonal nor symmetric. 
 这个矩阵是正交的，但既不是对角的，也不是对称的。
 
 ## 5.3 Computing with Matrices and Determinants 计算与矩阵和行列式
 
 Recall from Section 5.1 that the determinant takes n n-dimensional vectors and combines them to get a signed n-dimensional volume of the n-dimensional parallelepiped defined by the vectors. For example, the determinant in 2D is the area of the parallelogram formed by the vectors. We can use matrices to handle the mechanics of computing determinants.
-回想一下第5.1节，行列式取n个n维向量并将它们组合以得到由这些向量定义的n维平行六面体的带符号n维体积。例如，二维中的行列式是由向量构成的平行四边形的面积。我们可以用矩阵来处理计算行列式的机制。
+回顾第5.1节，行列式将n个n维向量组合在一起，得到由这些向量定义的n维平行六面体的有符号n维体积。例如，在2D中，行列式是由这些向量形成的平行四边形的面积。我们可以使用矩阵来处理计算行列式的机制。
 
-If we have 2D vectors $\bold{r}$ and $\bold{s}$, we denote the determinant $|\bold{r}\bold{s}|$; this value is the signed area of the parallelogram formed by the vectors. Suppose we have two 2D vectors with Cartesian coordinates $(a, b)$ and $(A, B)$ (Figure 5.7). The determinant can be written in terms of column vectors or as a shorthand:  
+If we have 2D vectors $\bold{r}$ and $\bold{s}$, we denote the determinant $|\bold{r}\bold{s}|$; this value is the signed area of the parallelogram formed by the vectors. Suppose we have two 2D vectors with Cartesian coordinates $(a, b)$ and $(A, B)$ (Figure 5.7). The determinant can be written in terms of column vectors or as a shorthand: 
+如果我们有2D向量$\bold{r}$和$\bold{s}$，我们用$|\bold{r}\bold{s}|$表示行列式；这个值是由这两个向量形成的平行四边形的有符号面积。假设我们有两个具有笛卡尔坐标$(a, b)$和$(A, B)$的2D向量（见图5.7）。行列式可以用列向量表示，也可以用一种简化的方式写成：
 $$
 \begin{vmatrix}
 	\begin{bmatrix}
@@ -470,7 +471,7 @@ A & B
 \end{vmatrix} = aB - Ab.
 $$
 This means that for any parallelogram in 2D there is a “sibling” parallelogram that has the same area but a different shape (Figure 5.8). For example, the parallelogram defined by vectors (3, 1) and (2, 4) has area 10, as does the parallelogram defined by vectors (3, 2) and (1, 4). 
-这意味着对于任何二维平行四边形，都存在一个具有相同面积但形状不同的“兄弟”平行四边形（图 5.8）。 例如，由向量 (3, 1) 和 (2, 4) 定义的平行四边形的面积为 10，由向量 (3, 2) 和 (1, 4) 定义的平行四边形的面积也是如此。
+这意味着在2D中，对于任何平行四边形，都存在一个具有相同面积但形状不同的“姊妹”平行四边形（见图5.8）。例如，由向量（3, 1）和（2, 4）定义的平行四边形的面积为10，与由向量（3, 2）和（1, 4）定义的平行四边形相同。
 
 ![Figure 5.8](.\Images\Figure 5.8.png)
 Figure 5.8. The sibling parallelogram has the same area as the parallelogram in Figure 5.7. 
@@ -486,10 +487,10 @@ z − z_0 & z − z_1 & z − z_2
 \end{vmatrix} = 0 
 $$
 Each column is a vector from point $(x_i, y_i, z_i)$ to point $(x, y, z)$. The volume of the parallelepiped with those vectors as sides is zero only if $(x, y, z)$ is coplanar with the three other points. Almost all equations involving determinants have similarly simple underlying geometry. 
-每一列是一个从点$(x_i, y_i, z_i)$到点$(x, y, z)$的向量。只有当$(x, y, z)$与其他三个点共面时，以这些向量为边的平行六面体的体积才为零。几乎所有涉及行列式的方程都有类似的简单基础几何。
+每一列都是从点$(x_i, y_i, z_i)$到点$(x, y, z)$的向量。以这些向量为边的平行六面体的体积仅当$(x, y, z)$与另外三个点共面时为零。几乎所有涉及行列式的方程都有类似简单的底层几何关系。
 
 As we saw earlier, we can compute determinants by a brute force expansion where most terms are zero, and there is a great deal of bookkeeping on plus and minus signs. The standard way to manage the algebra of computing determinants is to use a form of Laplace’s expansion. The key part of computing the determinant this way is to find cofactors of various matrix elements. Each element of a square matrix has a cofactor which is the determinant of a matrix with one fewer row and column possibly multiplied by minus one. The smaller matrix is obtained by eliminating the row and column that the element in question is in. For example, for a 10 ×10 matrix, the cofactor of $a_{82}$ is the determinant of the 9 × 9 matrix with the 8th row and 2nd column eliminated. The sign of a cofactor is positive if the sum of the row and column indices is even and negative otherwise. This can be remembered by a checkerboard pattern:
-正如我们前面看到的，我们可以通过蛮力展开来计算行列式，其中大多数项为零，并且有大量的正负号记录。处理计算行列式的代数的标准方法是使用拉普拉斯展开的一种形式。这种方法计算行列式的关键是求出各种矩阵元素的余因式。一个方阵的每个元素都有一个协因式它是一个矩阵的行列式它的行和列都少一个可能乘以- 1。较小的矩阵是通过消除所讨论的元素所在的行和列来获得的。例如，对于一个10 ×10矩阵，$a_{82}$的协因式是去掉第8行和第2列的9 × 9矩阵的行列式。如果行和列指标的和为偶数，则协因式的符号为正，否则为负。这可以通过棋盘模式来记住:
+正如我们之前所看到的，我们可以通过一种蛮力展开的方法来计算行列式，其中大多数项都是零，而且需要大量的加减号记录。计算行列式代数的标准方法是使用一种拉普拉斯展开形式。以这种方式计算行列式的关键部分是找到各种矩阵元素的余子式。方阵的每个元素都有一个余子式，即可能乘以负一的、省去一行一列后的矩阵的行列式。获得较小矩阵的方法是消去涉及的元素所在的行和列。例如，对于一个10×10的矩阵，$a_{82}$的余子式是省去第8行和第2列的9×9矩阵的行列式。如果行和列的索引之和为偶数，则余子式的符号为正，否则为负。这可以通过国际象棋棋盘图案来记忆：
 $$
 \begin{bmatrix}
 + & − & + & − & \cdots \\
@@ -535,7 +536,7 @@ a_{31} & a_{32} & a_{33} \\
 a_{41} & a_{42} & a_{43} \\
 \end{vmatrix}
 $$
-The determinant of a matrix is found by taking the sum of products of the elements of any row or column with their cofactors. For example, the determinant of the 4 × 4 matrix above taken about its second column is  
+The determinant of a matrix is found by taking the sum of products of the elements of any row or column with their cofactors. For example, the determinant of the 4 × 4 matrix above taken about its second column is 
 矩阵的行列式是通过取任意行或列的元素与其余因式的乘积的和得到的。例如，上面的4 × 4矩阵的第二列的行列式是
 $|\bold{A}| = a_{12}a^c_{12} + a_{22}a^c_{22} + a_{32}a^c_{32} + a_{42}a^c_{42}.  $
 
@@ -569,7 +570,7 @@ We can deduce that the volume of the parallelepiped formed by the vectors define
 
 ### 5.3.1 Computing Inverses 计算逆
 
-Determinants give us a tool to compute the inverse of a matrix. It is a very inefficient method for large matrices, but often in graphics our matrices are small. A key to developing this method is that the determinant of a matrix with two identical rows is zero. This should be clear because the volume of the n-dimensional parallelepiped is zero if two of its sides are the same. Suppose we have a 4 × 4 $\bold{A}$ and we wish to find its inverse $\bold{A}^{-1}$. The inverse is  
+Determinants give us a tool to compute the inverse of a matrix. It is a very inefficient method for large matrices, but often in graphics our matrices are small. A key to developing this method is that the determinant of a matrix with two identical rows is zero. This should be clear because the volume of the n-dimensional parallelepiped is zero if two of its sides are the same. Suppose we have a 4 × 4 $\bold{A}$ and we wish to find its inverse $\bold{A}^{-1}$. The inverse is 
 行列式为我们提供了计算矩阵逆的工具。 对于大型矩阵来说，这是一种非常低效的方法，但在图形中，我们的矩阵通常很小。 开发这种方法的关键是具有两个相同行的矩阵的行列式为零。 这应该很清楚，因为如果 n 维平行六面体的两条边相同，则其体积为零。 假设我们有一个 4 × 4 $\bold{A}$ 并且我们希望找到它的逆 $\bold{A}^{-1}$。 其倒数是
 $$
 \bold{A}^{-1} = \frac{1}{|\bold{A}|} = \begin{vmatrix}
@@ -580,7 +581,7 @@ a^c_{14} & a^c_{24} & a^c_{34} & a^c_{44} \\
 \end{vmatrix}
 $$
 Note that this is just the transpose of the matrix where elements of $\bold{A}$ are replaced by their respective cofactors multiplied by the leading constant (1 or -1). This matrix is called the adjoint of $\bold{A}$. The adjoint is the transpose of the cofactor matrix of $\bold{A}$. We can see why this is an inverse. Look at the product $\bold{A}\bold{A}^{-1}$ which we expect to be the identity. If we multiply the first row of A by the first column of the adjoint matrix we need to get $|\bold{A}|$ (remember the leading constant above divides by $|\bold{A}|$: 
-请注意，这只是矩阵的转置，其中 $\bold{A}$ 的元素被替换为它们各自的辅因子乘以前导常数（1 或 -1）。 该矩阵称为 $\bold{A}$ 的伴随矩阵。 伴随矩阵是 $\bold{A}$ 的辅因子矩阵的转置。 我们可以明白为什么这是一个逆矩阵。 看看产品 $\bold{A}\bold{A}^{-1}$ 我们期望它是恒等式。 如果我们将 A 的第一行乘以伴随矩阵的第一列，我们需要得到 $|\bold{A}|$ （记住上面的前导常数除以 $|\bold{A}|$：
+请注意，这只是矩阵的转置，其中$\bold{A}$的元素被它们各自的余子式乘以主导常数（1或-1）替换。这个矩阵被称为$\bold{A}$的伴随矩阵。伴随矩阵是$\bold{A}$的余子式矩阵的转置。我们可以看到这为什么是一个逆矩阵。看一下乘积$\bold{A}\bold{A}^{-1}$，我们期望得到单位矩阵。如果我们将$\bold{A}$的第一行乘以伴随矩阵的第一列，我们需要得到$|\bold{A}|$（请记住上面的主导常数除以$|\bold{A}|$：
 $$
 \begin{bmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} \\
@@ -623,7 +624,7 @@ a^c_{14} & \cdot & \cdot & \cdot
 \cdot  & \cdot & \cdot & \cdot \\
 \end{bmatrix}
 $$
-Note that this product is a determinant of some matrix:  
+Note that this product is a determinant of some matrix: 
 请注意，该乘积是某个矩阵的行列式：
 $a_{21}a^c_{11} + a_{22}a^c_{12} + a_{23}a^c_{13} + a_{24}a^c_{14}.  $
 
@@ -643,7 +644,7 @@ Because the first two rows are identical, the matrix is singular, and thus, its 
 The argument above does not apply just to four by four matrices; using that size just simplifies typography. For any matrix, the inverse is the adjoint matrix divided by the determinant of the matrix being inverted. The adjoint is the transpose of the cofactor matrix, which is just the matrix whose elements have been replaced by their cofactors. 
 上述论点不仅仅适用于四乘四矩阵； 使用这个尺寸只会简化排版。 对于任何矩阵，逆矩阵是伴随矩阵除以被求逆矩阵的行列式。 伴随矩阵是辅因子矩阵的转置，即元素被辅因子替换的矩阵。
 
-**Example**. The inverse of one particular three by three matrix whose determinant is 6 is  
+**Example**. The inverse of one particular three by three matrix whose determinant is 6 is 
 **例子**  行列式为 6 的一个特定三乘三矩阵的逆矩阵为
 $$
 \begin{bmatrix}
@@ -699,12 +700,13 @@ $$
 	2 & −2 & 2 \\
 \end{bmatrix}
 $$
-You can check this yourself by multiplying the matrices and making sure you get the identity.  
+You can check this yourself by multiplying the matrices and making sure you get the identity. 
 您可以通过将矩阵相乘并确保获得恒等式来自行检查。
 
-### 5.3.2 Linear Systems
+### 5.3.2 Linear Systems 线性系统
 
 We often encounter linear systems in graphics with “$n$ equations and $n$ unknowns,” usually for $n = 2$ or $n = 3$. For example, 
+在图形学中，我们经常会遇到“$n$个方程和$n$个未知数”的线性系统，通常情况下$n$为2或3。例如，
 $$
 3x + 7y + 2z = 4, \\
 2x − 4y − 3z = −1, \\
