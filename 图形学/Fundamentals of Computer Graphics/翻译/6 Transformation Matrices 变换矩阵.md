@@ -3,8 +3,8 @@
 The machinery of linear algebra can be used to express many of the operations required to arrange objects in a 3D scene, view them with cameras, and get them onto the screen. Geometric transformations like rotation, translation, scaling, and projection can be accomplished with matrix multiplication, and the transformation matrices used to do this are the subject of this chapter.
 线性代数机制可用于表达在 3D 场景中排列对象、使用相机查看它们并将它们显示到屏幕上所需的许多操作。 旋转、平移、缩放和投影等几何变换可以通过矩阵乘法来完成，用于执行此操作的变换矩阵是本章的主题。
 
-We will show how a set of points transforms if the points are represented as offset vectors from the origin, and we will use the clock shown in Figure 6.1 as an example of a point set. So think of the clock as a bunch of points that are the ends of vectors whose tails are at the origin. We also discuss how these transforms operate differently on locations (points), displacement vectors, and surface normal vectors.  
-我们将展示如果将点表示为距原点的偏移向量，则一组点将如何变换，并且我们将使用图 6.1 中所示的时钟作为点集的示例。 因此，可以将时钟视为一堆点，这些点是尾部位于原点的向量的末端。 我们还讨论了这些变换如何对位置（点）、位移向量和表面法线向量进行不同的操作。我们将展示如果将点表示为距原点的偏移向量，则一组点将如何变换，并且我们将使用图 6.1 中所示的时钟作为点集的示例。 因此，可以将时钟视为一堆点，这些点是尾部位于原点的向量的末端。 我们还讨论了这些变换如何对位置（点）、位移向量和表面法线向量进行不同的操作。
+We will show how a set of points transforms if the points are represented as offset vectors from the origin, and we will use the clock shown in Figure 6.1 as an example of a point set. So think of the clock as a bunch of points that are the ends of vectors whose tails are at the origin. We also discuss how these transforms operate differently on locations (points), displacement vectors, and surface normal vectors. 
+我们将展示一组点在以偏移向量形式表示时的变换过程，而我们将以图 6.1 中显示的时钟作为点集的示例。因此，可以将时钟视为一群点，这些点是向量的端点，而这些向量的起点位于原点。我们还将讨论这些变换如何在位置（点）、位移向量和表面法向量上产生不同的效果。
 
 ## 6.1 2D Linear Transformations 二维线性变换
 
@@ -25,15 +25,15 @@ y
  \end{bmatrix}
 $$
 This kind of operation, which takes in a 2-vector and produces another 2-vector by a simple matrix multiplication, is a linear transformation. 
-这种采用一个 2 向量并通过简单的矩阵乘法产生另一个 2 向量的运算是线性变换。
+这种操作接受一个二维向量，并通过简单的矩阵乘法生成另一个二维向量，被称为线性变换。
 
 By this simple formula we can achieve a variety of useful transformations, depending on what we put in the entries of the matrix, as will be discussed in the following sections. For our purposes, consider moving along the x-axis a horizontal move and along the y-axis, a vertical move.
-通过这个简单的公式，我们可以实现各种有用的变换，具体取决于我们在矩阵条目中放入的内容，这将在以下各节中讨论。 出于我们的目的，考虑沿 x 轴移动为水平移动，沿 y 轴移动为垂直移动。
+通过这个简单的公式，我们可以实现各种有用的变换，取决于我们在矩阵的各个元素中输入了什么，这将在接下来的章节中进行讨论。在我们的讨论中，沿着 x 轴的移动被视为水平移动，沿着 y 轴的移动被视为垂直移动。
 
 ### 6.1.1 Scaling 缩放
 
 The most basic transform is a scale along the coordinate axes. This transform can change length and possibly direction: 
-最基本的变换是沿坐标轴的缩放。 这种变换可以改变长度和可能的方向：
+最基本的变换是沿坐标轴的缩放。这种变换可以改变长度，可能也会影响方向：
 $$
 scale(s_x, s_y) = \begin{bmatrix}
 s_x & 0 \\
@@ -57,7 +57,7 @@ s_yy
 \end{bmatrix}
 $$
 So, just by looking at the matrix of an axis-aligned scale, we can read off the two scale factors. 
-因此，只需查看轴对齐比例的矩阵，我们就可以读出两个比例因子。
+因此，仅仅通过观察轴对齐缩放的矩阵，我们就能够读取出两个缩放因子。
 
 Example. The matrix that shrinks x and y uniformly by a factor of two is (Figure 6.1) 
 例子  将 x 和 y 均匀缩小两倍的矩阵为（图 6.1）
@@ -69,10 +69,10 @@ scale(0.5, 0.5) = \begin{bmatrix}
 $$
 <img src=".\Images\Figure 6.1.png" alt="Figure 6.1" style="zoom:50%;" />
 Figure 6.1. Scaling uniformly by half for each axis: The axis-aligned scale matrix has the proportion of change in each of the diagonal elements and zeroes in the off-diagonal elements. 
-图 6.1 每个轴统一缩放一半：轴对齐的缩放矩阵具有每个对角线元素的变化比例以及非对角线元素的零。
+图 6.1：每个轴均匀缩小一半的比例尺度。与轴对齐的比例矩阵在对角元素中反映了变化的比例，而在非对角元素中则保持为零。
 
 A matrix which halves in the horizontal and increases by three-halves in the vertical is (see Figure 6.2) 
-水平方向减半、垂直方向增加三半的矩阵是（见图 6.2）
+一个矩阵，在水平方向减半，垂直方向增加二分之一，详见（见图6.2）。
 $$
 scale(0.5, 1.5) = \begin{bmatrix}
 0.5 & 0 \\
@@ -86,7 +86,7 @@ Figure 6.2. Scaling nonuniformly in x and y: The scaling matrix is diagonal with
 ### 6.1.2 Shearing 剪切
 
 A shear is something that pushes things sideways, producing something like a deck of cards across which you push your hand; the bottom card stays put and cards move more the closer they are to the top of the deck. The horizontal and vertical shear matrices are 
-剪刀是将物体向侧面推的东西，产生类似于一副纸牌的东西，你可以用手推过它； 底部的牌保持原状，并且离牌堆顶部越近的牌移动得越多。 水平和垂直剪切矩阵是
+剪切是一种使物体侧向移动的变换，犹如你在卡牌堆上推动手的动作；底部的卡片保持原位，而越靠近牌堆顶部的卡片移动得越多。水平和垂直剪切矩阵分别是
 $$
 shear-x(s) = \begin{bmatrix}
 1 & s \\
@@ -143,14 +143,14 @@ $$
 
 ### 6.1.3 Rotation 旋转
 
-Suppose we want to rotate a vector $\bold{a}$ by an angle $φ$ counterclockwise to get vector $\bold{b}$ (Figure 6.5). If a makes an angle $α$ with the x-axis, and its length is $r = \sqrt{x^2_a + y^2_a}$, then we know that
-假设我们想将向量 $\bold{a}$ 逆时针旋转角度 $φ$ 得到向量 $\bold{b}$ （图 6.5）。 如果 a 与 x 轴形成角度 $α$，且其长度为 $r = \sqrt{x^2_a + y^2_a}$，那么我们知道
+Suppose we want to rotate a vector $\bold{a}$ by an angle $φ$ counterclockwise to get vector $\bold{b}$ (Figure 6.5). If $\bold{a}$ makes an angle $α$ with the x-axis, and its length is $r = \sqrt{x^2_a + y^2_a}$, then we know that
+假设我们想要逆时针旋转向量 $\bold{a}$ 以得到向量 $\bold{b}$（见图6.5）。如果 $\bold{a}$ 与 x 轴的夹角为 $α$，且其长度为 $r = \sqrt{x^2_a + y^2_a}$，那么我们知道
 $$
 x_a = r \cos α, \\
 y_a = r \sin α
 $$
 <img src=".\Images\Figure 6.5.png" alt="Figure 6.5" style="zoom:67%;" />
-Figure 6.5. The geometry for Equation (6.1).  
+Figure 6.5. The geometry for Equation (6.1). 
 图 6.5  方程（6.1）的几何形状。
 
 Because $\bold{b}$ is a rotation of $\bold{a}$, it also has length $r$. Because it is rotated an angle $φ$ from $\bold{a}$, $\bold{b}$ makes an angle $(α + φ)$ with the x-axis. Using the trigonometric addition identities (Section 2.3.3):
@@ -207,15 +207,15 @@ Figure 6.7. A rotation by –30 degrees. Note that the rotation is clockwise and
 图 6.7.  旋转 –30 度。 请注意，旋转为顺时针方向，并且 $cos(–30°) ≈ .866$ 且 $sin(–30°) = –.5$。
 
 Because the norm of each row of a rotation matrix is one $(sin^2 φ+cos^2 φ = 1)$, and the rows are orthogonal $(cos φ(- sin φ) + sin φ cos φ = 0)$, we see that rotation matrices are orthogonal matrices (Section 5.2.4). By looking at the matrix we can read off two pairs of orthonormal vectors: the two columns, which are the vectors to which the transformation sends the canonical basis vectors $(1, 0)$ and $(0, 1)$; and the rows, which are the vectors that the transformations sends to the canonical basis vectors. 
-因为旋转矩阵每行的范数为 1 $(sin^2 φ+cos^2 φ = 1)$，并且各行是正交的 $(cos φ(- sin φ) + sin φ cos φ = 0) $，我们看到旋转矩阵是正交矩阵（第 5.2.4 节）。 通过查看矩阵，我们可以读出两对正交向量：两列，它们是变换将规范基向量 $(1, 0)$ 和 $(0, 1)$ 发送到的向量； 和行，它们是变换发送到规范基向量的向量。
+因为旋转矩阵每行的范数都为一 $(\sin^2 φ + \cos^2 φ = 1)$，而且行之间正交 $(\cos φ(-\sin φ) + \sin φ \cos φ = 0)$，我们可以得知旋转矩阵是正交矩阵（详见5.2.4节）。通过观察矩阵，我们可以推断出两组正交归一的向量：首先是两列，它们分别是变换送至规范基向量 $(1, 0)$ 和 $(0, 1)$ 的向量；其次是行，它们是变换送至规范基向量的向量。
 
-> Said briefly, $\bold{R}\bold{e}_i = \bold{u}_i$ and $\bold{R}\bold{v}_i = \bold{u}i$, for a rotation with columns $\bold{u}_i$ and rows $\bold{v}_i$. 
-> 简单地说，$\bold{R}\bold{e}_i = \bold{u}_i$ 和 $\bold{R}\bold{v}_i = \bold{u}i$，用于列旋转 $\bold{u}_i$ 和行 $\bold{v}_i$。
+> Said briefly, $\bold{R}\bold{e}_i = \bold{u}_i$ and $\bold{R}\bold{v}_i = \bold{u}_i$, for a rotation with columns $\bold{u}_i$ and rows $\bold{v}_i$. 
+> 简单地说，$\bold{R}\bold{e}_i = \bold{u}_i$ 和 $\bold{R}\bold{v}_i = \bold{u}_i$，用于列旋转 $\bold{u}_i$ 和行 $\bold{v}_i$。
 
 ### 6.1.4 Reflection 反射
 
 We can reflect a vector across either of the coordinate axes by using a scale with one negative scale factor (see Figures 6.8 and 6.9): 
-我们可以通过使用具有一个负比例因子的比例来反映跨任一坐标轴的矢量（见图 6.8 和 6.9）：
+我们可以通过使用一个负的比例因子来沿着坐标轴的任一方向对向量进行反射（参见图6.8和6.9）：
 $$
 reflect-y = \begin{bmatrix}
 -1 & 0 \\
@@ -227,7 +227,7 @@ reflect-x = \begin{bmatrix}
 \end{bmatrix}
 $$
 ![Figure 6.8](.\Images\Figure 6.8.png)
-Figure 6.8. A reflection about the y-axis is achieved by multiplying all x-coordinates by $–1$.  
+Figure 6.8. A reflection about the y-axis is achieved by multiplying all x-coordinates by $–1$. 
 图 6.8 通过将所有 x 坐标乘以 $–1$ 来实现关于 y 轴的反射。
 
 <img src=".\Images\Figure 6.9.png" alt="Figure 6.9" style="zoom:67%;" />
@@ -244,7 +244,7 @@ While one might expect that the matrix with $-1$ in both elements of the diagona
 
 It is common for graphics programs to apply more than one transformation to an object. For example, we might want to first apply a scale $\bold{S}$, and then a rotation $\bold{R}$. This would be done in two steps on a 2D vector $\bold{v}_1$: 
 图形程序对一个对象应用多个变换是很常见的。 例如，我们可能想首先应用缩放 $\bold{S}$，然后应用旋转 $\bold{R}$。 这可以在 2D 矢量 $\bold{v}_1$ 上分两步完成：
-$first,\bold{v}_2 = \bold{S}\bold{v}_1, then,\bold{v}_3 = \bold{R}\bold{v}2.  $
+$first,\bold{v}_2 = \bold{S}\bold{v}_1, then,\bold{v}_3 = \bold{R}\bold{v}_2.  $
 
 Another way to write this is
 另一种写法是
@@ -257,8 +257,8 @@ $\bold{v}_3 = (\bold{R}\bold{S})\bold{v}_1 $
 In other words, we can represent the effects of transforming a vector by two matrices in sequence using a single matrix of the same size, which we can compute by multiplying the two matrices: $\bold{M} = \bold{R}\bold{S}$ (Figure 6.10).
 换句话说，我们可以使用相同大小的单个矩阵来表示按顺序将向量变换为两个矩阵的效果，我们可以通过将两个矩阵相乘来计算： $\bold{M} = \bold{R}\bold{S}$（图6.10）。
 <img src=".\Images\Figure 6.10.png" alt="Figure 6.10" style="zoom:67%;" />
-Figure 6.10. Applying the two transform matrices in sequence is the same as applying the product of those matrices once. This is a key concept that underlies most graphics hardware and software.  
-图 6.10  按顺序应用两个变换矩阵与应用一次这些矩阵的乘积相同。 这是大多数图形硬件和软件的关键概念。
+Figure 6.10. Applying the two transform matrices in sequence is the same as applying the product of those matrices once. This is a key concept that underlies most graphics hardware and software. 
+图 6.10  按顺序应用两个变换矩阵与应用一次这些矩阵的乘积相同。这是大多数图形硬件和软件的关键概念。
 
 It is very important to remember that these transforms are applied from the right side first. So the matrix $\bold{M} = \bold{R}\bold{S}$ first applies $\bold{S}$ and then $\bold{R}$. 
 请记住，这些变换首先从右侧应用，这一点非常重要。 因此矩阵 $\bold{M} = \bold{R}\bold{S}$ 首先应用 $\bold{S}$，然后应用 $\bold{R}$。
@@ -280,7 +280,7 @@ $$
 \end{bmatrix}
 $$
 It is important to always remember that matrix multiplication is not commutative. So the order of transforms does matter. In this example, rotating first, and then scaling, results in a different matrix (see Figure 6.11): 
-重要的是要始终记住矩阵乘法是不可交换的。 所以转换的顺序很重要。 在此示例中，先旋转，然后缩放，会产生不同的矩阵（参见图 6.11）：
+重要的是要始终记住矩阵乘法是**不可交换**的。 所以转换的顺序很重要。 在此示例中，先旋转，然后缩放，会产生不同的矩阵（参见图 6.11）：
 $$
 \begin{bmatrix}
 1 & 0 \\
@@ -300,17 +300,15 @@ $$
 Figure 6.11. The order in which two transforms are applied is usually important. In this example, we do a scale by one-half in y and then rotate by $45◦$. Reversing the order in which these two transforms are applied yields a different result. 
 图 6.11  应用两个变换的顺序通常很重要。 在此示例中，我们将 y 缩放二分之一，然后旋转 $45°$。 颠倒这两个变换的应用顺序会产生不同的结果。
 
-Example. Using the scale matrices we have presented, nonuniform scaling can only be done along the coordinate axes. If we wanted to stretch our clock by 50% along one of its diagonals, so that 8:00 through 1:00 move to the northwest and 2:00 through 7:00 move to the southeast, we can use rotation matrices in
-combination with an axis-aligned scaling matrix to get the result we want. The idea is to use a rotation to align the scaling axis with a coordinate axis, then scale along that axis, then rotate back. In our example, the scaling axis is the “backslash” diagonal of the square, and we can make it parallel to the x-axis with  a rotation by $+45◦$. Putting these operations together, the full transformation is
-例子。 使用我们提出的尺度矩阵，非均匀缩放只能沿着坐标轴完成。 如果我们想沿着其中一条对角线拉伸时钟 50%，以便 8:00 到 1:00 向西北方向移动，2:00 到 7:00 向东南方向移动，我们可以使用旋转矩阵
-与轴对齐缩放矩阵组合以获得我们想要的结果。 这个想法是使用旋转将缩放轴与坐标轴对齐，然后沿该轴缩放，然后向后旋转。 在我们的示例中，缩放轴是正方形的“反斜杠”对角线，我们可以使其与 x 轴平行，旋转 $+45°$。 将这些操作放在一起，完整的转换是
+Example. Using the scale matrices we have presented, nonuniform scaling can only be done along the coordinate axes. If we wanted to stretch our clock by 50% along one of its diagonals, so that 8:00 through 1:00 move to the northwest and 2:00 through 7:00 move to the southeast, we can use rotation matrices in combination with an axis-aligned scaling matrix to get the result we want. The idea is to use a rotation to align the scaling axis with a coordinate axis, then scale along that axis, then rotate back. In our example, the scaling axis is the “backslash” diagonal of the square, and we can make it parallel to the x-axis with  a rotation by $+45◦$. Putting these operations together, the full transformation is
+举例说明：利用我们提供的比例矩阵，非均匀缩放只能沿坐标轴进行。如果我们想要沿钟表的对角线之一将其拉伸50%，使8:00到1:00的部分向西北移动，而2:00到7:00的部分向东南移动，我们可以使用旋转矩阵与与轴对齐的缩放矩阵相结合，以获得我们想要的结果。思路是使用旋转将缩放轴与坐标轴对齐，然后沿着该轴进行缩放，最后再旋转回来。在我们的例子中，缩放轴是正方形的“反斜杠”对角线，我们可以通过+45度的旋转使其与x轴平行。将这些操作组合在一起，完整的变换是：
 $rotate(-45◦) scale(1.5, 1) rotate(45◦)  $
 
 > Remember to read the transformations from right to left. 
 > 请记住从右到左阅读转换。
 
 In mathematical notation, this can be written $\bold{R}\bold{S}\bold{R}^T$. The result of multiplying the three matrices together is
-用数学符号来说，这可以写成RSRT。 三个矩阵相乘的结果是
+用数学符号来说，这可以写成$\bold{R}\bold{S}\bold{R}^T$。 三个矩阵相乘的结果是
 $$
 \begin{bmatrix}
 1.25 & -0.25 \\
@@ -327,10 +325,10 @@ Building up a transformation from rotation and scaling transformations actually 
 ### 6.1.6 Decomposition of Transformations  变换的分解
 
 Sometimes it’s necessary to “undo” a composition of transformations, taking a transformation apart into simpler pieces. For instance, it’s often useful to present a transformation to the user for manipulation in terms of separate rotations and scale factors, but a transformation might be represented internally simply as a  matrix, with the rotations and scales already mixed together. This kind of manipulation can be achieved if the matrix can be computationally disassembled into the desired pieces, the pieces adjusted, and the matrix reassembled by multiplying the pieces together again.
-有时有必要“撤消”变换的组合，将变换分解成更简单的部分。 例如，向用户呈现一个变换以便根据单独的旋转和缩放因子进行操作通常很有用，但变换可能在内部简单地表示为矩阵，其中旋转和缩放已经混合在一起。 如果可以通过计算将矩阵分解为所需的部分，调整这些部分，然后通过将这些部分再次相乘来重新组合矩阵，则可以实现这种操作。
+有时候，需要“撤销”一系列的变换，将一个变换分解为更简单的部分。例如，通常有必要将一个变换呈现给用户以便通过单独的旋转和缩放因子进行操作，但在内部，一个变换可能被简单地表示为一个矩阵，其中旋转和缩放已经混合在一起。这种操作可以通过将矩阵计算上解构成所需的部分，调整这些部分，然后通过再次相乘这些部分来重新组装矩阵。
 
 It turns out that this decomposition, or factorization, is possible, regardless of the entries in the matrix—and this fact provides a fruitful way of thinking about transformations and what they do to geometry that is transformed by them.
-事实证明，无论矩阵中的条目如何，这种分解或因式分解都是可能的，这一事实提供了一种富有成效的方式来思考变换以及它们对变换后的几何图形的作用。
+事实证明，这种分解或因式分解是可能的，而与矩阵中的条目无关——这一事实为思考变换及其对所受变换的几何形状产生的影响提供了一种富有成果的方式。
 
 #### Symmetric Eigenvalue Decomposition 对称特征值分解
 
@@ -339,27 +337,27 @@ Let’s start with symmetric matrices. Recall from Section 5.4 that a symmetric 
 $\bold{A} = \bold{R}\bold{S}\bold{R}^T  $
 
 where $\bold{R}$ is an orthogonal matrix and $\bold{S}$ is a diagonal matrix; we will call the columns of $\bold{R}$ (the eigenvectors) by the names $\bold{v}_1$ and $\bold{v}_2$, and we’ll call the diagonal entries of $\bold{S}$ (the eigenvalues) by the names $λ_1$ and $λ_2$. 
-其中$\bold{R}$是正交矩阵，$\bold{S}$是对角矩阵； 我们将通过名称 $\bold{v}_1$ 和 $\bold{v}_2$ 来调用 $\bold{R}$ 的列（特征向量），我们将 $\bold{S}$ （特征值）的对角线条目命名为 $λ_1$ 和 $λ_2$。
+其中，$\bold{R}$ 是一个正交矩阵，$\bold{S}$ 是一个对角矩阵；我们将称$\bold{R}$的列（特征向量）为$\bold{v}_1$和$\bold{v}_2$，而将$\bold{S}$的对角元素（特征值）称为$λ_1$和$λ_2$。
 
 In geometric terms we can now recognize $\bold{R}$ as a rotation and $\bold{S}$ as a scale, sot his is just a multi-step geometric transformation (Figure 6.13): 
-用几何术语来说，我们现在可以将 $\bold{R}$ 识别为旋转，将 $\bold{S}$ 识别为缩放，因此他只是一个多步几何变换（图 6.13）：
+从几何学的角度来看，我们现在可以将$\bold{R}$识别为旋转，而$\bold{S}$则为缩放，因此这只是一个多步的几何变换（见图6.13）：
 
 1. Rotate $\bold{v}_1$ and $\bold{v}_2$ to the x- and y-axes (the transform by $R^T$).
    将 $\bold{v}_1$ 和 $\bold{v}_2$ 旋转到 x 轴和 y 轴（通过 $R^T$ 进行变换）。
-2. Scale in $x$ and $y$ by $(λ1, λ2)$ (the transform by $\bold{S}$).
-   按 $(λ1, λ2)$ 缩放 $x$ 和 $y$（通过 $\bold{S}$ 进行变换）。
-3. Rotate the x- and y-axes back to $\bold{v}_1$ and $\bold{v}2$ (the transform by $\bold{R}$). 
-   将 x 轴和 y 轴旋转回 $\bold{v}_1$ 和 $\bold{v}2$（通过 $\bold{R}$ 进行变换）。
+2. Scale in $x$ and $y$ by $(λ_1, λ_2)$ (the transform by $\bold{S}$).
+   按 $(λ_1, λ_2)$ 缩放 $x$ 和 $y$（通过 $\bold{S}$ 进行变换）。
+3. Rotate the x- and y-axes back to $\bold{v}_1$ and $\bold{v}_2$ (the transform by $\bold{R}$). 
+   将 x 轴和 y 轴旋转回 $\bold{v}_1$ 和 $\bold{v}_2$（通过 $\bold{R}$ 进行变换）。
 
 > If you like to count dimensions: a symmetric 2 × 2 matrix has 3 degrees of freedom, and the eigenvalue decomposition rewrites them as a rotation angle and two scale factors. 
 > 如果你喜欢计算维度：对称的 2 × 2 矩阵有 3 个自由度，特征值分解将它们重写为旋转角度和两个比例因子。
 
 <img src=".\Images\Figure 6.13.png" alt="Figure 6.13" style="zoom:67%;" />
 Figure 6.13. What happens when the unit circle is transformed by an arbitrary symmetric matrix $\bold{A}$, also known as a non–axis-aligned, nonuniform scale. The two perpendicular vectors $\bold{v}_1$ and $\bold{v}_2$, which are the eigenvectors of $\bold{A}$, remain fixed in direction but get scaled. In terms of elementary transformations, this can be seen as first rotating the eigenvectors to the canonical basis, doing an axis-aligned scale, and then rotating the canonical basis back to the eigenvectors. 
-图 6.13。 当单位圆被任意对称矩阵 $\bold{A}$（也称为非轴对齐、非均匀尺度）变换时会发生什么。 两个垂直向量 $\bold{v}_1$ 和 $\bold{v}_2$ 是 $\bold{A}$ 的特征向量，其方向保持固定，但会进行缩放。 就初等变换而言，这可以看作是首先将特征向量旋转到规范基，进行轴对齐缩放，然后将规范基旋转回特征向量。
+图6.13：当单位圆被一个任意对称矩阵$\bold{A}$（也被称为非轴对齐、非均匀缩放）变换时会发生什么。两个垂直的向量$\bold{v}_1$和$\bold{v}_2$，它们是$\bold{A}$的特征向量，方向保持不变但发生了缩放。从基本的变换角度来看，这可以看作是首先将特征向量旋转到规范基，进行一个轴对齐的缩放，然后将规范基旋转回特征向量。
 
 Looking at the effect of these three transforms together, we can see that they have the effect of a nonuniform scale along a pair of axes. As with an axis-aligned scale, the axes are perpendicular, but they aren’t the coordinate axes; instead they  are the eigenvectors of $\bold{A}$. This tells us something about what it means to be a symmetric matrix: symmetric matrices are just scaling operations—albeit potentially nonuniform and non–axis-aligned ones. 
-一起查看这三个变换的效果，我们可以看到它们具有沿一对轴的非均匀缩放效果。 与轴对齐比例一样，轴是垂直的，但它们不是坐标轴； 相反，它们是 $\bold{A}$ 的特征向量。 这告诉我们对称矩阵的含义：对称矩阵只是缩放操作——尽管可能是不均匀和非轴对齐的。
+观察这三种变换的综合效果，我们可以看到它们产生了沿着一对轴的非均匀缩放的效果。与轴对齐缩放一样，这些轴是垂直的，但它们不是坐标轴；相反，它们是$\bold{A}$的特征向量。这告诉我们一些关于对称矩阵的特性：对称矩阵实质上就是缩放操作——尽管可能是非均匀和非轴对齐的。
 
 Example. Recall the example from Section 5.4: 
 例子。 回想一下 5.4 节中的例子：
@@ -387,13 +385,12 @@ $$
 = rotate (31.7◦) scale (2.618, 0.382) rotate (−31.7◦).
 $$
 The matrix above, then, according to its eigenvalue decomposition, scales in a direction $31.7◦$ counterclockwise from three o’clock (the x-axis). This is a touch before 2 p.m. on the clockface as is confirmed by Figure 6.14. 
-然后，根据其特征值分解，上面的矩阵从三点钟（x 轴）开始沿逆时针方向 $31.7°$ 缩放。 这是下午 2 点之前的触摸。 如图 6.14 所示。
-<img src=".\Images\Figure 6.14.png" alt="Figure 6.14" style="zoom:80%;" />
-Figure 6.14. A symmetric matrix is always a scale along some axis. In this case it is along the $φ = 31.7◦$ direction which means the real eigenvector for this matrix is in that direction.  
+因此，根据其特征值分解，上述矩阵在一个距离三点钟（x轴）逆时针$31.7◦$的方向上进行缩放。这对应时钟表上稍早于下午2点的位置，如图6.14所示所证实的那样。<img src=".\Images\Figure 6.14.png" alt="Figure 6.14" style="zoom:80%;" />
+Figure 6.14. A symmetric matrix is always a scale along some axis. In this case it is along the $φ = 31.7◦$ direction which means the real eigenvector for this matrix is in that direction. 
 图 6.14  对称矩阵始终是沿某个轴的尺度。 在这种情况下，它沿着 $φ = 31.7°$ 方向，这意味着该矩阵的真实特征向量在该方向上。
 
 We can also reverse the diagonalization process; to scale by $(λ_1, λ_2)$ with the first scaling direction an angle $φ$ clockwise from the x-axis, we have
-我们还可以反转对角化过程； 要按 $(λ_1, λ_2)$ 缩放，并且第一个缩放方向与 x 轴顺时针旋转 $φ$ 角度，我们有
+我们同样可以逆转对角化的过程；要按照$(λ_1, λ_2)$的比例进行缩放，其中第一个缩放方向与x轴逆时针形成一个角度$φ$，我们可以如下操作：
 $$
 \ \begin{bmatrix}
 \cos φ & \sin φ \\
@@ -413,16 +410,16 @@ $$
 \end{bmatrix}
 $$
 We should take heart that this is a symmetric matrix as we know must be true since we constructed it from a symmetric eigenvalue decomposition. 
-我们应该放心，这是一个对称矩阵，因为我们知道它一定是真的，因为我们是通过对称特征值分解构造它的。
+我们应该振奋起来，因为这是一个对称矩阵，正如我们所知，因为我们是从对称的特征值分解中构造出它的。
 
 #### Singular Value Decomposition 奇异值分解
 
 A very similar kind of decomposition can be done with nonsymmetric matrices as well: it’s the Singular Value Decomposition (SVD), also discussed in Section 5.4.1. The difference is that the matrices on either side of the diagonal matrix are no longer the same: 
-非对称矩阵也可以进行一种非常相似的分解：它是奇异值分解（SVD），也在第 5.4.1 节中讨论。 不同之处在于对角矩阵两侧的矩阵不再相同：
+同样，对于非对称矩阵，我们也可以进行一种非常相似的分解：这就是奇异值分解（Singular Value Decomposition，SVD），在第5.4.1节中也有讨论。区别在于对角矩阵两侧的矩阵不再相同：
 $\bold{A} = \bold{U}\bold{S}\bold{V}^T  $
 
 The two orthogonal matrices that replace the single rotation $\bold{R}$ are called $\bold{U}$ and $\bold{V}$, and their columns are called $\bold{u}_i$ (the left singular vectors) and $\bold{v}_i$ (the right singular vectors), respectively. In this context, the diagonal entries of $\bold{S}$ are called singular values rather than eigenvalues. The geometric interpretation is very similar to that of the symmetric eigenvalue decomposition (Figure 6.15): 
-代替单个旋转$\bold{R}$的两个正交矩阵称为$\bold{U}$和$\bold{V}$，它们的列称为$\bold{u}_i$（左边 分别是奇异向量）和 $\bold{v}_i$ （右奇异向量）。 在这种情况下，$\bold{S}$ 的对角线条目称为奇异值而不是特征值。 几何解释与对称特征值分解非常相似（图 6.15）：
+取代单一旋转$\bold{R}$的两个正交矩阵分别被称为$\bold{U}$和$\bold{V}$，它们的列分别被称为$\bold{u}_i$（左奇异向量）和$\bold{v}_i$（右奇异向量）。在这个背景下，$\bold{S}$的对角元素被称为奇异值，而非特征值。几何解释与对称特征值分解非常相似（见图6.15）：
 
 1. Rotate $\bold{v}_1$ and $\bold{v}_2$ to the x- and y-axes (the transform by $\bold{V}^T$).
    将 $\bold{v}_1$ 和 $\bold{v}_2$ 旋转到 x 轴和 y 轴（通过 $\bold{V}^T$ 进行变换）。
@@ -432,14 +429,14 @@ The two orthogonal matrices that replace the single rotation $\bold{R}$ are call
    将 x 轴和 y 轴旋转到 $\bold{u}_1$ 和 $\bold{u}_2$（通过 $\bold{U}$ 进行变换）。
 
 > For dimension counters: a general 2 × 2 matrix has 4 degrees of freedom, and the SVD rewrites them as two rotation angles and two scale factors. One more bit is needed to keep track of reflections, but that doesn’t add a dimension. 
-> 对于维度计数器：一般的 2 × 2 矩阵有 4 个自由度，SVD 将它们重写为两个旋转角度和两个比例因子。 还需要一位来跟踪反射，但这并不会增加维度。
+> 对于维度计数：一般的2 × 2矩阵有4个自由度，而奇异值分解将其重新表示为两个旋转角度和两个缩放因子。需要额外的一个位来跟踪反射，但这并不增加一个维度。
 
 ![Figure 6.15](.\Images\Figure 6.15.png)
 Figure 6.15. What happens when the unit circle is transformed by an arbitrary matrix $\bold{A}$. The two perpendicular vectors $\bold{v}_1$ and $\bold{v}_2$, which are the right singular vectors of $\bold{A}$, get scaled and changed in direction to match the left singular vectors, $\bold{u}_1$ and $\bold{u}_2$. In terms of elementary transformations, this can be seen as first rotating the right singular vectors to the canonical basis, doing an axis-aligned scale, and then rotating the canonical basis to the left singular vectors. 
-图 6.15  当单位圆被任意矩阵 $\bold{A}$ 变换时会发生什么。 两个垂直向量 $\bold{v}_1$ 和 $\bold{v}_2$ 是 $\bold{A}$ 的右奇异向量，它们被缩放并改变方向以匹配左奇异向量， $\bold{u}_1$ 和 $\bold{u}_2$。 就初等变换而言，这可以看作是首先将右奇异向量旋转到规范基，进行轴对齐缩放，然后将规范基旋转到左奇异向量。
+图6.15：当单位圆被任意矩阵$\bold{A}$变换时会发生什么。两个垂直的向量$\bold{v}_1$和$\bold{v}_2$，它们是$\bold{A}$的右奇异向量，发生了缩放并改变方向以匹配左奇异向量$\bold{u}_1$和$\bold{u}_2$。从基本的变换角度来看，这可以理解为首先将右奇异向量旋转到规范基，进行一个轴对齐的缩放，然后将规范基旋转到左奇异向量。
 
 The principal difference is between a single rotation and two different orthogonal matrices. This difference causes another, less important, difference. Because the SVD has different singular vectors on the two sides, there is no need for negative singular values: we can always flip the sign of a singular value, reverse the direction of one of the associated singular vectors, and end up with the same transformation again. For this reason, the SVD always produces a diagonal matrix with all positive entries, but the matrices $\bold{U}$ and $\bold{V}$ are not guaranteed to be rotations—they could include reflection as well. In geometric applications like graphics this is an inconvenience, but a minor one: it is easy to differentiate rotations from reflections by checking the determinant, which is +1 for rotations and −1 for reflections, and if rotations are desired, one of the singular values can be negated, resulting in a rotation–scale–rotation sequence where the reflection is rolled in with the scale, rather than with one of the rotations.
-主要区别在于单个旋转和两个不同的正交矩阵之间。 这种差异导致了另一个不太重要的差异。 由于 SVD 两侧具有不同的奇异向量，因此不需要负奇异值：我们始终可以翻转奇异值的符号，反转相关奇异向量之一的方向，并最终得到相同的变换 再次。 因此，SVD 总是生成一个所有正项的对角矩阵，但矩阵 $\bold{U}$ 和 $\bold{V}$ 不保证是旋转，它们也可能包含反射。 在图形等几何应用中，这是一个不便，但只是一个小问题：通过检查行列式很容易区分旋转和反射，行列式对于旋转为+1，对于反射为-1，如果需要旋转，则奇异值之一 值可以取反，从而产生旋转-缩放-旋转序列，其中反射随缩放滚动，而不是随旋转之一滚动。
+主要的区别在于单一旋转和两个不同的正交矩阵之间。这种差异导致了另一个较不重要的区别。由于SVD在两侧具有不同的奇异向量，因此不需要负奇异值：我们始终可以改变奇异值的符号，反转相关奇异向量之一的方向，从而再次得到相同的变换。因此，SVD总是产生一个具有全部正数元素的对角矩阵，但不能保证矩阵$\bold{U}$和$\bold{V}$是旋转矩阵——它们也可能包含反射。在图形等几何应用中，这可能有些不便，但不是很大的问题：可以通过检查行列式来轻松区分旋转和反射，旋转的行列式为+1，反射的行列式为−1，如果需要旋转，则可以否定其中一个奇异值，从而得到旋转-缩放-旋转的顺序，其中反射被包含在缩放中，而不是在其中一个旋转中。
 
 Example. The example used in Section 5.4.1 is in fact a shear matrix (Figure 6.12): 
 例子。 5.4.1 节中使用的示例实际上是一个剪切矩阵（图 6.12）：
@@ -467,7 +464,7 @@ $$
 $$
 <img src=".\Images\Figure 6.12.png" alt="Figure 6.12" style="zoom:50%;" />
 Figure 6.12. Singular Value Decomposition (SVD) for a shear matrix. Any 2D matrix can be decomposed into a product of rotation, scale, rotation. Note that the circular face of the clock must become an ellipse because it is just a rotated and scaled circle. 
-图 6.12。 剪切矩阵的奇异值分解 (SVD)。 任何二维矩阵都可以分解为旋转、缩放、旋转的乘积。 请注意，时钟的圆形面必须变成椭圆形，因为它只是一个旋转和缩放的圆。
+图 6.12。 剪切矩阵的奇异值分解 (SVD)。任何二维矩阵都可以分解为旋转、缩放、旋转的乘积。请注意，时钟的圆形面必须变成椭圆形，因为它只是一个旋转和缩放的圆。
 
 An immediate consequence of the existence of SVD is that all the 2D transformation matrices we have seen can be made from rotation matrices and scale matrices. Shear matrices are a convenience, but they are not required for expressing transformations. 
 SVD 存在的直接后果是我们所看到的所有 2D 变换矩阵都可以由旋转矩阵和缩放矩阵组成。 剪切矩阵很方便，但它们不是表达变换所必需的。
@@ -475,10 +472,10 @@ SVD 存在的直接后果是我们所看到的所有 2D 变换矩阵都可以由
 In summary, every matrix can be decomposed via SVD into a rotation times a scale times another rotation. Only symmetric matrices can be decomposed via eigenvalue diagonalization into a rotation times a scale times the inverse-rotation, and such matrices are a simple scale in an arbitrary direction. The SVD of a symmetric matrix will yield the same triple product as eigenvalue decomposition via a slightly more complex algebraic manipulation. 
 总之，每个矩阵都可以通过 SVD 分解为一个旋转乘以一个尺度乘以另一个旋转。 只有对称矩阵可以通过特征值对角化分解为旋转乘以尺度乘以逆旋转，并且这样的矩阵是任意方向上的简单尺度。 对称矩阵的 SVD 将通过稍微复杂的代数运算产生与特征值分解相同的三重积。
 
-#### Paeth Decomposition of Rotations 旋转的 Paeth 分解
+#### Paeth Decomposition of Rotations Paeth分解旋转
 
 Another decomposition uses shears to represent nonzero rotations (Paeth, 1990). The following identity allows this: 
-另一种分解使用剪切来表示非零旋转（Paeth，1990）。 以下身份允许这样做：
+另一种分解方法采用剪切来表示非零旋转（Paeth，1990）。以下等式支持这一方法：
 $$
 \begin{bmatrix}
 \cos φ & -\sin φ \\
@@ -518,7 +515,7 @@ Figure 6.16. Any 2D rotation can be accomplished by three shears in sequence. In
 图 6.16。 任何二维旋转都可以通过依次进行三个剪切来完成。 在这种情况下，45° 的旋转被分解，如公式 6.2 所示。
 
 This particular transform is useful for raster rotation because shearing is a very efficient raster operation for images; it introduces some jagginess, but will  leave no holes. The key observation is that if we take a raster position $(i, j)$ and apply a horizontal shear to it, we get 
-这种特殊的变换对于光栅旋转很有用，因为剪切对于图像来说是一种非常有效的光栅操作； 它会引入一些锯齿，但不会留下任何洞。 关键的观察是，如果我们采用栅格位置 $(i, j)$ 并对它应用水平剪切，我们会得到
+这种特定的变换对于光栅旋转很有用，因为剪切是图像的一种非常高效的光栅操作；它引入了一些锯齿状，但不会留下空洞。关键观察是，如果我们取一个光栅位置$(i, j)$并对其进行水平剪切，我们得到的是
 $$
 \begin{bmatrix}
 1 & s \\

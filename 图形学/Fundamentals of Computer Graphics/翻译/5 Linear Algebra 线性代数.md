@@ -432,7 +432,7 @@ is orthogonal, but neither diagonal nor symmetric.
 ## 5.3 Computing with Matrices and Determinants 计算与矩阵和行列式
 
 Recall from Section 5.1 that the determinant takes n n-dimensional vectors and combines them to get a signed n-dimensional volume of the n-dimensional parallelepiped defined by the vectors. For example, the determinant in 2D is the area of the parallelogram formed by the vectors. We can use matrices to handle the mechanics of computing determinants.
-回顾第5.1节，行列式将n个n维向量组合在一起，得到由这些向量定义的n维平行六面体的有符号n维体积。例如，在2D中，行列式是由这些向量形成的平行四边形的面积。我们可以使用矩阵来处理计算行列式的机制。
+回顾一下第5.1节的内容，行列式将n个n维向量相结合，以获得由这些向量定义的n维平行多面体的有符号体积。以2维为例，行列式即为由这些向量构成的平行四边形的面积。我们可以借助矩阵来处理计算行列式的机制。
 
 If we have 2D vectors $\bold{r}$ and $\bold{s}$, we denote the determinant $|\bold{r}\bold{s}|$; this value is the signed area of the parallelogram formed by the vectors. Suppose we have two 2D vectors with Cartesian coordinates $(a, b)$ and $(A, B)$ (Figure 5.7). The determinant can be written in terms of column vectors or as a shorthand: 
 如果我们有2D向量$\bold{r}$和$\bold{s}$，我们用$|\bold{r}\bold{s}|$表示行列式；这个值是由这两个向量形成的平行四边形的有符号面积。假设我们有两个具有笛卡尔坐标$(a, b)$和$(A, B)$的2D向量（见图5.7）。行列式可以用列向量表示，也可以用一种简化的方式写成：
@@ -471,7 +471,7 @@ A & B
 \end{vmatrix} = aB - Ab.
 $$
 This means that for any parallelogram in 2D there is a “sibling” parallelogram that has the same area but a different shape (Figure 5.8). For example, the parallelogram defined by vectors (3, 1) and (2, 4) has area 10, as does the parallelogram defined by vectors (3, 2) and (1, 4). 
-这意味着在2D中，对于任何平行四边形，都存在一个具有相同面积但形状不同的“姊妹”平行四边形（见图5.8）。例如，由向量（3, 1）和（2, 4）定义的平行四边形的面积为10，与由向量（3, 2）和（1, 4）定义的平行四边形相同。
+这意味着在二维空间中，对于任何平行四边形，都存在一个“姐妹”平行四边形，它们拥有相同的面积但形状不同（见图5.8）。例如，由向量（3，1）和（2，4）定义的平行四边形面积为10，与由向量（3，2）和（1，4）定义的平行四边形的面积相同。
 
 ![Figure 5.8](.\Images\Figure 5.8.png)
 Figure 5.8. The sibling parallelogram has the same area as the parallelogram in Figure 5.7. 
@@ -490,7 +490,7 @@ Each column is a vector from point $(x_i, y_i, z_i)$ to point $(x, y, z)$. The v
 每一列都是从点$(x_i, y_i, z_i)$到点$(x, y, z)$的向量。以这些向量为边的平行六面体的体积仅当$(x, y, z)$与另外三个点共面时为零。几乎所有涉及行列式的方程都有类似简单的底层几何关系。
 
 As we saw earlier, we can compute determinants by a brute force expansion where most terms are zero, and there is a great deal of bookkeeping on plus and minus signs. The standard way to manage the algebra of computing determinants is to use a form of Laplace’s expansion. The key part of computing the determinant this way is to find cofactors of various matrix elements. Each element of a square matrix has a cofactor which is the determinant of a matrix with one fewer row and column possibly multiplied by minus one. The smaller matrix is obtained by eliminating the row and column that the element in question is in. For example, for a 10 ×10 matrix, the cofactor of $a_{82}$ is the determinant of the 9 × 9 matrix with the 8th row and 2nd column eliminated. The sign of a cofactor is positive if the sum of the row and column indices is even and negative otherwise. This can be remembered by a checkerboard pattern:
-正如我们之前所看到的，我们可以通过一种蛮力展开的方法来计算行列式，其中大多数项都是零，而且需要大量的加减号记录。计算行列式代数的标准方法是使用一种拉普拉斯展开形式。以这种方式计算行列式的关键部分是找到各种矩阵元素的余子式。方阵的每个元素都有一个余子式，即可能乘以负一的、省去一行一列后的矩阵的行列式。获得较小矩阵的方法是消去涉及的元素所在的行和列。例如，对于一个10×10的矩阵，$a_{82}$的余子式是省去第8行和第2列的9×9矩阵的行列式。如果行和列的索引之和为偶数，则余子式的符号为正，否则为负。这可以通过国际象棋棋盘图案来记忆：
+正如我们之前所看到的，我们可以通过一种蛮力展开的方法来计算行列式，其中大多数项都是零，而且需要大量的加减号记录。计算行列式代数的标准方法是使用一种拉普拉斯展开形式。以这种方式计算行列式的关键部分是找到各种矩阵元素的余子式。方阵的每个元素都有一个余子式，即可能乘以负一的、省去一行一列后的矩阵的行列式。获得较小矩阵的方法是消去涉及的元素所在的行和列。例如，对于一个10×10的矩阵，$a_{82}$的余子式是省去第8行和第2列的9×9矩阵的行列式。如果**行和列的索引之和为偶数，则余子式的符号为正，否则为负**。这可以通过国际象棋棋盘图案来记忆：
 $$
 \begin{bmatrix}
 + & − & + & − & \cdots \\
@@ -566,12 +566,12 @@ $$
 = 0(32 − 35) − 1(24 − 30) + 2(21 − 24) = 0
 $$
 We can deduce that the volume of the parallelepiped formed by the vectors defined by the columns (or rows since the determinant of the transpose is the same) is zero. This is equivalent to saying that the columns (or rows) are not linearly independent. Note that the sum of the first and third rows is twice the second row, which implies linear dependence.
-我们可以推断，由列（或行，因为转置的行列式相同）定义的向量形成的平行六面体的体积为零。 这相当于说列（或行）不是线性独立的。 请注意，第一行和第三行的总和是第二行的两倍，这意味着线性相关。
+我们可以推断，由矩阵的列（或行，因为转置的行列式相同）所定义的向量形成的平行多面体的体积为零。这等同于表明这些列（或行）不是线性独立的。值得注意的是，第一行与第三行的和正好是第二行的两倍，这意味着它们存在线性相关性。
 
 ### 5.3.1 Computing Inverses 计算逆
 
 Determinants give us a tool to compute the inverse of a matrix. It is a very inefficient method for large matrices, but often in graphics our matrices are small. A key to developing this method is that the determinant of a matrix with two identical rows is zero. This should be clear because the volume of the n-dimensional parallelepiped is zero if two of its sides are the same. Suppose we have a 4 × 4 $\bold{A}$ and we wish to find its inverse $\bold{A}^{-1}$. The inverse is 
-行列式为我们提供了计算矩阵逆的工具。 对于大型矩阵来说，这是一种非常低效的方法，但在图形中，我们的矩阵通常很小。 开发这种方法的关键是具有两个相同行的矩阵的行列式为零。 这应该很清楚，因为如果 n 维平行六面体的两条边相同，则其体积为零。 假设我们有一个 4 × 4 $\bold{A}$ 并且我们希望找到它的逆 $\bold{A}^{-1}$。 其倒数是
+行列式为我们提供了计算矩阵逆的工具。对于大矩阵而言，这是一种效率较低的方法，但在图形处理中，我们通常处理的矩阵规模较小。一个关键点是，具有两行相同的矩阵的行列式为零。这一点很明显，因为如果平行多面体的两边相同，其n维体积就为零。假设我们有一个4 × 4的矩阵 $\bold{A}$，我们希望找到它的逆矩阵 $\bold{A}^{-1}$。逆矩阵是
 $$
 \bold{A}^{-1} = \frac{1}{|\bold{A}|} = \begin{vmatrix}
 a^c_{11} & a^c_{21} & a^c_{31} & a^c_{41} \\
@@ -581,7 +581,7 @@ a^c_{14} & a^c_{24} & a^c_{34} & a^c_{44} \\
 \end{vmatrix}
 $$
 Note that this is just the transpose of the matrix where elements of $\bold{A}$ are replaced by their respective cofactors multiplied by the leading constant (1 or -1). This matrix is called the adjoint of $\bold{A}$. The adjoint is the transpose of the cofactor matrix of $\bold{A}$. We can see why this is an inverse. Look at the product $\bold{A}\bold{A}^{-1}$ which we expect to be the identity. If we multiply the first row of A by the first column of the adjoint matrix we need to get $|\bold{A}|$ (remember the leading constant above divides by $|\bold{A}|$: 
-请注意，这只是矩阵的转置，其中$\bold{A}$的元素被它们各自的余子式乘以主导常数（1或-1）替换。这个矩阵被称为$\bold{A}$的伴随矩阵。伴随矩阵是$\bold{A}$的余子式矩阵的转置。我们可以看到这为什么是一个逆矩阵。看一下乘积$\bold{A}\bold{A}^{-1}$，我们期望得到单位矩阵。如果我们将$\bold{A}$的第一行乘以伴随矩阵的第一列，我们需要得到$|\bold{A}|$（请记住上面的主导常数除以$|\bold{A}|$：
+请注意，这只是矩阵的转置，其中矩阵 $\bold{A}$ 的元素被它们各自的余子式乘以前导常数（1或-1）所替代。这个矩阵被称为 $\bold{A}$ 的伴随矩阵。伴随矩阵是 $\bold{A}$ 的余子式矩阵的转置。我们可以看出为何这是一个逆矩阵。观察乘积 $\bold{A}\bold{A}^{-1}$，我们期望得到单位矩阵。如果我们将 $\bold{A}$ 的第一行乘以伴随矩阵的第一列，我们应该得到 $|\bold{A}|$（请记住上面的前导常数除以 $|\bold{A}|$）：
 $$
 \begin{bmatrix}
 a_{11} & a_{12} & a_{13} & a_{14} \\
@@ -603,7 +603,7 @@ a^c_{14} & \cdot & \cdot & \cdot
 \end{bmatrix}
 $$
 This is true because the elements in the first row of $\bold{A}$ are multiplied exactly by their cofactors in the first column of the adjoint matrix which is exactly the determinant. The other values along the diagonal of the resulting matrix are $|\bold{A}|$ for analogous reasons. The zeros follow a similar logic: 
-这是正确的，因为 $\bold{A}$ 第一行中的元素恰好乘以伴随矩阵第一列中的辅因子，而伴随矩阵第一列正是行列式。 出于类似的原因，结果矩阵对角线上的其他值是 $|\bold{A}|$ 。 零遵循类似的逻辑：
+这是正确的，因为 $\bold{A}$ 第一行中的元素恰好乘以伴随矩阵第一列中的辅因子，而伴随矩阵第一列正是行列式。 出于类似的原因，结果矩阵对角线上的其他值是 $|\bold{A}|$ 。零遵循类似的逻辑：
 $$
 \begin{bmatrix}
 \cdot & \cdot & \cdot & \cdot \\
@@ -642,7 +642,7 @@ Because the first two rows are identical, the matrix is singular, and thus, its 
 由于前两行相同，因此该矩阵是奇异的，因此其行列式为零。
 
 The argument above does not apply just to four by four matrices; using that size just simplifies typography. For any matrix, the inverse is the adjoint matrix divided by the determinant of the matrix being inverted. The adjoint is the transpose of the cofactor matrix, which is just the matrix whose elements have been replaced by their cofactors. 
-上述论点不仅仅适用于四乘四矩阵； 使用这个尺寸只会简化排版。 对于任何矩阵，逆矩阵是伴随矩阵除以被求逆矩阵的行列式。 伴随矩阵是辅因子矩阵的转置，即元素被辅因子替换的矩阵。
+上述论点不仅仅适用于四乘四矩阵； 使用这个尺寸只会简化排版。对于任何矩阵，逆矩阵是伴随矩阵除以被求逆矩阵的行列式。 伴随矩阵是辅因子矩阵的转置，即元素被辅因子替换的矩阵。
 
 **Example**. The inverse of one particular three by three matrix whose determinant is 6 is 
 **例子**  行列式为 6 的一个特定三乘三矩阵的逆矩阵为
@@ -734,7 +734,7 @@ $$
 A common shorthand for such systems is $\bold{A}x = \bold{b}$ where it is assumed that $\bold{A}$ is a square matrix with known constants, $x$ is an unknown column vector (with elements $x$, $y$, and $z$ in our example), and $\bold{b}$ is a column matrix of known constants.
 此类系统的常见简写是 $\bold{A}x = \bold{b}$，其中假设 $\bold{A}$ 是具有已知常数的方阵，$x$ 是未知的列向量（ 在我们的示例中，元素为 $x$、$y$ 和 $z$），而 $\bold{b}$ 是已知常量的列矩阵。
 
-There are many ways to solve such systems, and the appropriate method depends on the properties and dimensions of the matrix $\bold{A}$. Because in graphics we so frequently work with systems of size $n ≤ 4$, we’ll discuss here a method appropriate for these systems, known as Cramer’s rule, which we saw earlier, from a 2D geometric viewpoint, in the example on page 90. Here, we show this algebraically. The solution to the above equation is  
+There are many ways to solve such systems, and the appropriate method depends on the properties and dimensions of the matrix $\bold{A}$. Because in graphics we so frequently work with systems of size $n ≤ 4$, we’ll discuss here a method appropriate for these systems, known as Cramer’s rule, which we saw earlier, from a 2D geometric viewpoint, in the example on page 90. Here, we show this algebraically. The solution to the above equation is 
 解决此类系统的方法有很多种，适当的方法取决于矩阵 $\bold{A}$ 的属性和维数。因为在图形中我们经常使用大小为 $n ≤ 4$ 的系统，所以我们将在这里讨论一种适用于 这些系统被称为克莱默法则，我们之前在第 90 页的示例中从 2D 几何角度看到过该法则。在这里，我们用代数方式展示了这一点。 上式的解为
 $$
 x = \frac{
@@ -779,21 +779,21 @@ z = \frac{
 \end{vmatrix}
 } \\
 $$
-The rule here is to take a ratio of determinants, where the denominator is $|\bold{A}|$ and the numerator is the determinant of a matrix created by replacing a column of $\bold{A}$ with the column vector b. The column replaced corresponds to the position of the unknown in vector $x$. For example, $y$ is the second unknown and the second column is replaced. Note that if $|\bold{A}| = 0$, the division is undefined and there is no solution. This is just another version of the rule that if $\bold{A}$ is singular (zero determinant) then there is no unique solution to the equations.  
-这里的规则是取行列式的比率，其中分母是 $|\bold{A}|$ ，分子是将 $\bold{A}$ 的列替换为列向量而创建的矩阵的行列式 b. 被替换的列对应于向量 $x$ 中未知数的位置。 例如，$y$ 是第二个未知数，第二列被替换。 请注意，如果 $|\bold{A}| = 0$，除法未定义，无解。 这只是该规则的另一个版本：如果 $\bold{A}$ 是奇异的（行列式为零），则方程没有唯一解。
+The rule here is to take a ratio of determinants, where the denominator is $|\bold{A}|$ and the numerator is the determinant of a matrix created by replacing a column of $\bold{A}$ with the column vector b. The column replaced corresponds to the position of the unknown in vector $x$. For example, $y$ is the second unknown and the second column is replaced. Note that if $|\bold{A}| = 0$, the division is undefined and there is no solution. This is just another version of the rule that if $\bold{A}$ is singular (zero determinant) then there is no unique solution to the equations. 
+这里的规则是取行列式的比值，其中分母是 $|\bold{A}|$，而分子是通过用列向量 b 替换 $\bold{A}$ 的一列而创建的矩阵的行列式。被替换的列对应于向量 $x$ 中未知数的位置。例如，$y$ 是第二个未知数，第二列被替换。需要注意的是，如果 $|\bold{A}| = 0$，则除法是未定义的，因此没有解。这只是规则的另一种表述，即如果 $\bold{A}$ 是奇异的（行列式为零），那么方程组没有唯一解。
 
 ## 5.4 Eigenvalues and Matrix Diagonalization  特征值与矩阵对角化
 
 Square matrices have eigenvalues and eigenvectors associated with them. The eigenvectors are those nonzero vectors whose directions do not change when multiplied by the matrix. For example, suppose for a matrix $\bold{A}$ and vector $\bold{a}$, we have 
-方阵具有与其相关的特征值和特征向量。 特征向量是那些与矩阵相乘时方向不改变的非零向量。 例如，假设对于矩阵 $\bold{A}$ 和向量 $\bold{a}$，我们有
+方阵具有与其相关的特征值和特征向量。特征向量是那些与矩阵相乘时方向不改变的非零向量。例如，假设对于矩阵 $\bold{A}$ 和向量 $\bold{a}$，我们有
 $$
 \bold{A}\bold{a} = λ\bold{a}. (5.9)
 $$
 This means we have stretched or compressed $\bold{a}$, but its direction has not changed. The scale factor $λ$ is called the eigenvalue associated with eigenvector $\bold{a}$. Knowing  the eigenvalues and eigenvectors of matrices is helpful in a variety of practical applications. We will describe them to gain insight into geometric transformation matrices and as a step toward singular values and vectors described in the next section.
-这意味着我们拉伸或压缩了$\bold{a}$，但它的方向没有改变。 比例因子 $λ$ 称为与特征向量 $\bold{a}$ 相关的特征值。 了解矩阵的特征值和特征向量对于各种实际应用都有帮助。 我们将描述它们以深入了解几何变换矩阵，并作为迈向下一节中描述的奇异值和向量的一步。
+这意味着我们已经对 $\bold{a}$ 进行了拉伸或压缩，但其方向并未改变。与特征向量 $\bold{a}$ 相关联的比例因子 $λ$ 被称为特征值。了解矩阵的特征值和特征向量在多种实际应用中都具有帮助。我们将描述它们，以深入理解几何变换矩阵，并为下一节中描述的奇异值和向量迈出一步。
 
 If we assume a matrix has at least one eigenvector, then we can do a standard manipulation to find it. First, we write both sides as the product of a square matrix with the vector $\bold{a}$:
-如果我们假设一个矩阵至少有一个特征向量，那么我们可以进行标准操作来找到它。 首先，我们将两边写成方阵与向量 $\bold{a}$ 的乘积：
+如果我们假设一个矩阵至少有一个特征向量，那么我们可以进行标准操作来找到它。首先，我们将两边写成方阵与向量 $\bold{a}$ 的乘积：
 $$
 \bold{A}\bold{a} = λ\bold{I}\bold{a}, (5.10)
 $$
@@ -807,7 +807,7 @@ Because matrix multiplication is distributive, we can group the matrices:
 $$
 (\bold{A} − λ\bold{I})\bold{a} = 0. (5.12)
 $$
-This equation can only be true if the matrix $(\bold{A} - λ\bold{I})$ is singular, and thus its determinant is zero. The elements in this matrix are the numbers in $\bold{A}$ except along the diagonal. For example, for a 2 × 2 matrix the eigenvalues obey  
+This equation can only be true if the matrix $(\bold{A} - λ\bold{I})$ is singular, and thus its determinant is zero. The elements in this matrix are the numbers in $\bold{A}$ except along the diagonal. For example, for a 2 × 2 matrix the eigenvalues obey 
 仅当矩阵 $(\bold{A} - λ\bold{I})$ 为奇异矩阵且行列式为零时，该方程才成立。 该矩阵中的元素是 $\bold{A}$ 中除对角线以外的数字。 例如，对于 2 × 2 矩阵，特征值服从
 $$
 \begin{vmatrix}
@@ -817,17 +817,17 @@ a_{21} & a_{22} − λ
 λ^2 − (a_{11} + a_{22})λ + (a_{11}a_{22} − a_{12}a_{21}) = 0. \ \ \ (5.13)
 $$
 Because this is a quadratic equation, we know there are exactly two solutions for $λ$. These solutions may or may not be unique or real. A similar manipulation for an n × n matrix will yield an nth-degree polynomial in λ. Because it is not possible, in general, to find exact explicit solutions of polynomial equations of degree greater than four, we can only compute eigenvalues of matrices 4 × 4 or smaller by analytic methods. For larger matrices, numerical methods are the only option. 
-因为这是一个二次方程，所以我们知道 $λ$ 恰好有两个解。 这些解决方案可能是也可能不是唯一或真实的。 对 n × n 矩阵进行类似的操作将产生 λ 的 n 次多项式。 由于一般不可能找到大于四次的多项式方程的精确显式解，因此我们只能通过解析方法计算 4 × 4 或更小的矩阵的特征值。 对于较大的矩阵，数值方法是唯一的选择。
+由于这是一个二次方程，我们知道 $λ$ 存在确切的两个解。这些解可能是唯一的，也可能是实数。对于一个 n × n 的矩阵进行类似的操作将得到一个关于 $λ$ 的n次多项式。由于通常无法找到高于四次的多项式方程的确切显式解，我们只能通过解析方法计算 4 × 4 或更小矩阵的特征值。对于较大的矩阵，数值方法是唯一的选择。
 
 An important special case where eigenvalues and eigenvectors are particularly simple is symmetric matrices (where $\bold{A} = \bold{A}^T$). The eigenvalues of real symmetric matrices are always real numbers, and if they are also distinct, their eigenvectors are mutually orthogonal. Such matrices can be put into diagonal form: 
-特征值和特征向量特别简单的一个重要特殊情况是对称矩阵（其中 $\bold{A} = \bold{A}^T$）。 实对称矩阵的特征值始终是实数，如果它们也是不同的，则它们的特征向量相互正交。 这样的矩阵可以写成对角形式：
+在矩阵理论中，一个重要而特殊的情形是当特征值和特征向量呈现特别简洁的形式，即对称矩阵（其中 $\bold{A} = \bold{A}^T$）。实对称矩阵的特征值始终为实数，而且如果这些特征值彼此不同，它们的特征向量就是相互正交的。这样的矩阵可以被对角化，形成对角矩阵：
 $$
 \bold{A} = \bold{Q}\bold{D}\bold{Q}^T, (5.14)
 $$
 where $\bold{Q}$ is an orthogonal matrix and $\bold{D}$ is a diagonal matrix. The columns of $\bold{Q}$  are the eigenvectors of $\bold{A}$ and the diagonal elements of $\bold{D}$ are the eigenvalues of $\bold{A}$. Putting $\bold{A}$ in this form is also called the eigenvalue decomposition, because it decomposes $\bold{A}$ into a product of simpler matrices that reveal its eigenvectors and eigenvalues. 
 其中 $\bold{Q}$ 是正交矩阵，$\bold{D}$ 是对角矩阵。 $\bold{Q}$ 的列是 $\bold{A}$ 的特征向量，$\bold{D}$ 的对角线元素是 $\bold{A}$ 的特征值。 以这种形式放置 $\bold{A}$ 也称为特征值分解，因为它将 $\bold{A}$ 分解为更简单的矩阵的乘积，从而揭示其特征向量和特征值。
 
-> Recall that an orthogonal matrix has orthonormal rows and orthonormal columns.  
+> Recall that an orthogonal matrix has orthonormal rows and orthonormal columns. 
 > 回想一下，一个正交矩阵有标准正交行和标准正交列。
 
 **Example**. Given the matrix 
@@ -885,24 +885,24 @@ $$
 -0.5257 & 0.8507
 \end{bmatrix}
 $$
-We will revisit the geometry of this matrix as a transform in the next chapter.  
+We will revisit the geometry of this matrix as a transform in the next chapter. 
 我们将在下一章中重新讨论这个矩阵的几何变换。
 
 ### 5.4.1 Singular Value Decomposition 奇异值分解
 
 We saw in the last section that any symmetric matrix can be diagonalized, or decomposed into a convenient product of orthogonal and diagonal matrices. However, most matrices we encounter in graphics are not symmetric, and the eigenvalue decomposition for nonsymmetric matrices is not nearly so convenient or illuminating, and in general involves complex-valued eigenvalues and eigenvectors even for real-valued inputs. 
-我们在上一节中看到，任何对称矩阵都可以对角化，或者分解为正交矩阵和对角矩阵的便捷乘积。 然而，我们在图形中遇到的大多数矩阵都不是对称的，并且非对称矩阵的特征值分解并不是那么方便或具有启发性，并且通常涉及复值特征值和特征向量，即使对于实值输入也是如此。
+在上一节中，我们了解到任何对称矩阵都可以被对角化，或者说可以分解成便于处理的正交和对角矩阵的乘积。然而，在图形处理中，我们大多数时候会遇到非对称矩阵，而非对称矩阵的特征值分解并不如对称矩阵那样方便或具有启发性。一般而言，这涉及到复数值的特征值和特征向量，即使输入是实数值。
 
 There is another generalization of the symmetric eigenvalue decomposition to nonsymmetric (and even non-square) matrices; it is the singular value decomposition (SVD). The main difference between the eigenvalue decomposition of a symmetric matrix and the SVD of a nonsymmetric matrix is that the orthogonal matrices on the left and right sides are not required to be the same in the SVD: 
 对称特征值分解还有另一种推广到非对称（甚至非方）矩阵的方法； 这就是奇异值分解（SVD）。 对称矩阵的特征值分解与非对称矩阵的 SVD 的主要区别在于 SVD 中不要求左右两侧的正交矩阵相同：
 
 > We would recommend learning in this order: symmetric eigenvalues/vectors, singular values/vectors, and then nonsymmetric eigenvalues, which are much trickier. 
-> 我们建议按以下顺序学习：对称特征值/向量、奇异值/向量，然后是非对称特征值，这要棘手得多。
+> 我们建议按照以下顺序学习：首先是对称矩阵的特征值和特征向量，接着是奇异值和奇异向量，最后是非对称矩阵的特征值，这部分要复杂得多。
 
 $\bold{A} = \bold{U}\bold{S}\bold{V}^T.  $
 
-Here $\bold{U}$ and $\bold{V}$ are two, potentially different, orthogonal matrices, whose columns are known as the left and right singular vectors of $\bold{A}$, and S is a diagonal matrix whose entries are known as the singular values of $\bold{A}$. When $\bold{A}$ is symmetric and has all nonnegative eigenvalues, the SVD and the eigenvalue decomposition are the same.
-这里 $\bold{U}$ 和 $\bold{V}$ 是两个可能不同的正交矩阵，其列称为 $\bold{A}$ 的左右奇异向量，S 是对角线 矩阵，其条目被称为 $\bold{A}$ 的奇异值。 当 $\bold{A}$ 是对称的并且具有所有非负特征值时，SVD 和特征值分解是相同的。
+Here $\bold{U}$ and $\bold{V}$ are two, potentially different, orthogonal matrices, whose columns are known as the left and right singular vectors of $\bold{A}$, and $\bold{S}$ is a diagonal matrix whose entries are known as the singular values of $\bold{A}$. When $\bold{A}$ is symmetric and has all nonnegative eigenvalues, the SVD and the eigenvalue decomposition are the same.
+这里的 $\bold{U}$ 和 $\bold{V}$ 是两个可能不同的正交矩阵，它们的列被称为矩阵 $\bold{A}$ 的左奇异向量和右奇异向量，而 $\bold{S}$ 则是一个对角矩阵，其元素被称为矩阵 $\bold{A}$ 的奇异值。当矩阵 $\bold{A}$ 是对称的且具有全部非负特征值时，奇异值分解（SVD）和特征值分解是相同的。
 
 There is another relationship between singular values and eigenvalues that can be used to compute the SVD (though this is not the way an industrial-strength SVD implementation works). First we define $\bold{M} = \bold{A}\bold{A}^T$. We assume that we can perform a SVD on $\bold{M}$:
 奇异值和特征值之间还有另一种关系，可用于计算 SVD（尽管这不是工业级 SVD 实现的工作方式）。 首先我们定义$\bold{M} = \bold{A}\bold{A}^T$。 我们假设我们可以对 $\bold{M}$ 执行 SVD：
@@ -924,7 +924,7 @@ $$
 1 & 1
 \end{bmatrix}
 $$
-We saw the eigenvalue decomposition for this matrix in the previous section. We observe immediately  
+We saw the eigenvalue decomposition for this matrix in the previous section. We observe immediately 
 我们在上一节中看到了该矩阵的特征值分解。 我们立即观察
 $$
 \begin{bmatrix}
@@ -967,31 +967,32 @@ $$
  \end{bmatrix}
 $$
 This form used the standard symbol σi for the $ith$ singular value. Again, for a symmetric matrix, the eigenvalues and the singular values are the same ($σ_i = λ_i$). We will examine the geometry of SVD further in Section 6.1.6.
-这种形式使用标准符号 σi 来表示 $ith$ 奇异值。 同样，对于对称矩阵，特征值和奇异值是相同的 ($σ_i = λ_i$)。 我们将在 6.1.6 节中进一步研究 SVD 的几何结构。
+这种形式使用了标准符号 $σ_i$ 表示第 $i$ 个奇异值。同样，对于对称矩阵，特征值和奇异值是相同的（$σ_i = λ_i$）。我们将在6.1.6节进一步探讨奇异值分解的几何性质。
 
 ## Frequently Asked Questions 经常问的问题
 
 ### Why is matrix multiplication defined the way it is rather than just element by element? 为什么矩阵乘法是这样定义的，而不是逐个元素地定义？
 
-Element by element multiplication is a perfectly good way to define matrix multiplication, and indeed it has nice properties. However, in practice it is not very useful. Ultimately, most matrices are used to transform column vectors, e.g., in 3D you might have  逐个元素乘法是定义矩阵乘法的完美方法，而且它确实具有很好的属性。 然而，在实践中它并不是很有用。 最终，大多数矩阵用于变换列向量，例如，在 3D 中，您可能有
+Element by element multiplication is a perfectly good way to define matrix multiplication, and indeed it has nice properties. However, in practice it is not very useful. Ultimately, most matrices are used to transform column vectors, e.g., in 3D you might have 
+逐个元素乘法是定义矩阵乘法的完美方法，而且它确实具有很好的属性。 然而，在实践中它并不是很有用。 最终，大多数矩阵用于变换列向量，例如，在 3D 中，您可能有
 $\bold{b} = \bold{M}\bold{a}$
 
-where $\bold{a}$ and $\bold{b}$ are vectors and $\bold{M}$ is a 3×3 matrix. To allow geometric operations such as rotation, combinations of all three elements of $\bold{a}$ must go into each element of $\bold{b}$. That requires us to either go row-by-row or column-by-column through $\bold{M}$. That choice is made based on composition of matrices having the desired property,  
-其中 $\bold{a}$ 和 $\bold{b}$ 是向量，$\bold{M}$ 是 3×3 矩阵。 为了允许旋转等几何操作，$\bold{a}$ 的所有三个元素的组合必须放入 $\bold{b}$ 的每个元素中。 这需要我们逐行或逐列地遍历$\bold{M}$。 该选择是根据具有所需属性的矩阵的组成做出的，
+where $\bold{a}$ and $\bold{b}$ are vectors and $\bold{M}$ is a 3×3 matrix. To allow geometric operations such as rotation, combinations of all three elements of $\bold{a}$ must go into each element of $\bold{b}$. That requires us to either go row-by-row or column-by-column through $\bold{M}$. That choice is made based on composition of matrices having the desired property, 
+其中 $\bold{a}$ 和 $\bold{b}$ 是向量，$\bold{M}$ 是 3×3 矩阵。为了允许旋转等几何操作，$\bold{a}$ 的所有三个元素的组合必须放入 $\bold{b}$ 的每个元素中。 这需要我们逐行或逐列地遍历$\bold{M}$。该选择是根据具有所需属性的矩阵的组成做出的，
 $\bold{M}_2(\bold{M}_1\bold{a}) = (\bold{M}_2\bold{M}_1)\bold{a}  $
 
-which allows us to use one composite matrix $\bold{C} = \bold{M}_2\bold{M}_1$ to transform our vector. This is valuable when many vectors will be transformed by the same composite matrix. So, in summary, the somewhat weird rule for matrix multiplication is engineered to have these desired properties.  
-这允许我们使用一个复合矩阵 $\bold{C} = \bold{M}_2\bold{M}_1$ 来转换我们的向量。 当许多向量将由同一复合矩阵变换时，这很有价值。 因此，总而言之，矩阵乘法有点奇怪的规则被设计为具有这些所需的属性。
+which allows us to use one composite matrix $\bold{C} = \bold{M}_2\bold{M}_1$ to transform our vector. This is valuable when many vectors will be transformed by the same composite matrix. So, in summary, the somewhat weird rule for matrix multiplication is engineered to have these desired properties. 
+这允许我们使用一个复合矩阵 $\bold{C} = \bold{M}_2\bold{M}_1$ 来转换我们的向量。当许多向量将由同一复合矩阵变换时，这很有价值。因此，总而言之，矩阵乘法有点奇怪的规则被设计为具有这些所需的属性。
 
-### Sometimes I hear that eigenvalues and singular values are the same thing and sometimes that one is the square of the other. Which is right?  有时我听说特征值和奇异值是同一回事，有时一个是另一个的平方。 哪个是对的？
+### Sometimes I hear that eigenvalues and singular values are the same thing and sometimes that one is the square of the other. Which is right?  有时我听说特征值和奇异值是相同的东西，有时又听说它们之间是平方关系。哪一个说法是正确的呢？
 
 If a real matrix $\bold{A}$ is symmetric, and its eigenvalues are nonnegative, then its eigenvalues and singular values are the same. If $\bold{A}$ is not symmetric, the matrix $\bold{M} = \bold{A}\bold{A}^T$ is symmetric and has nonnegative real eignenvalues. The singular values of $\bold{A}$ and $\bold{A}^T$ are the same and are the square roots of the singular/eigenvalues of $\bold{M}$. Thus, when the square root statement is made, it is because two different matrices (with a very particular relationship) are being talked about: $\bold{M} = \bold{A}\bold{A}^T$. 
-如果实数矩阵 $\bold{A}$ 是对称的，并且其特征值非负，则其特征值和奇异值相同。 如果 $\bold{A}$ 不对称，则矩阵 $\bold{M} = \bold{A}\bold{A}^T$ 是对称的并且具有非负实特征值。 $\bold{A}$ 和 $\bold{A}^T$ 的奇异值相同，并且是 $\bold{M}$ 的奇异值/特征值的平方根。 因此，当进行平方根陈述时，这是因为正在讨论两个不同的矩阵（具有非常特殊的关系）：$\bold{M} = \bold{A}\bold{A}^T$。
+如果一个实矩阵 $\bold{A}$ 是对称的，并且其特征值为非负数，则它的特征值和奇异值是相同的。如果 $\bold{A}$ 不是对称的，那么矩阵 $\bold{M} = \bold{A}\bold{A}^T$ 是对称的，并且具有非负实特征值。矩阵 $\bold{A}$ 和 $\bold{A}^T$ 的奇异值是相同的，且是矩阵 $\bold{M}$ 的奇异值的平方根。因此，当提到平方根时，实际上是在讨论两个不同的矩阵（具有特定关系）：$\bold{M} = \bold{A}\bold{A}^T$。
 
 ## Notes 注释
 
-The discussion of determinants as volumes is based on A Vector Space Approach to Geometry (Hausner, 1998). Hausner has an excellent discussion of vector analysis and the fundamentals of geometry as well. The geometric derivation of Cramer’s rule in 2D is taken from Practical Linear Algebra: A Geometry Toolbox (Farin & Hansford, 2004). That book also has geometric interpretations of other linear algebra operations such as Gaussian elimination. The discussion of eigenvalues and singular values is based primarily on Linear Algebra and Its Applications (Strang, 1988). The example of SVD of the shear matrix is based on a discussion in Computer Graphics and Geometric Modeling (Salomon, 1999).  
-将行列式作为体积的讨论基于向量空间几何方法（Hausner，1998）。 豪斯纳对矢量分析和几何基础进行了精彩的讨论。 二维克莱默法则的几何推导取自《实用线性代数：几何工具箱》（Farin & Hansford，2004）。 该书还对其他线性代数运算（例如高斯消去法）进行了几何解释。 对特征值和奇异值的讨论主要基于线性代数及其应用（Strang，1988）。 剪切矩阵的 SVD 示例基于计算机图形学和几何建模（Salomon，1999）中的讨论。
+The discussion of determinants as volumes is based on A Vector Space Approach to Geometry (Hausner, 1998). Hausner has an excellent discussion of vector analysis and the fundamentals of geometry as well. The geometric derivation of Cramer’s rule in 2D is taken from Practical Linear Algebra: A Geometry Toolbox (Farin & Hansford, 2004). That book also has geometric interpretations of other linear algebra operations such as Gaussian elimination. The discussion of eigenvalues and singular values is based primarily on Linear Algebra and Its Applications (Strang, 1988). The example of SVD of the shear matrix is based on a discussion in Computer Graphics and Geometric Modeling (Salomon, 1999). 
+对行列式作为体积的讨论基于《A Vector Space Approach to Geometry》（Hausner, 1998）。Hausner在向量分析和几何基础方面有出色的论述。二维情况下对克拉默法则的几何推导取自《Practical Linear Algebra: A Geometry Toolbox》（Farin & Hansford, 2004）。该书还提供了其他线性代数运算的几何解释，如高斯消元法。特征值和奇异值的讨论主要基于《Linear Algebra and Its Applications》（Strang, 1988）。关于剪切矩阵的奇异值分解的例子参考了《Computer Graphics and Geometric Modeling》（Salomon, 1999）中的讨论。
 
 ## Exercises  练习
 
@@ -1037,3 +1038,57 @@ function mat-mult(in a[m][p], in b[p][n], out c[m][n]) {
     1 & 1 & 1
     \end{bmatrix}
     $$
+
+## Chat-GPT
+
+### 矩阵的特征值和特征向量是什么？怎么求？
+
+矩阵的特征值和特征向量是线性代数中的重要概念，它们在许多数学和科学领域中都有广泛的应用。让我简要解释一下这两个概念以及如何求解它们。
+
+1. **特征值（Eigenvalues）**：
+
+   对于一个方阵 $ A $，如果存在一个标量 $ \lambda $ 和一个非零向量 $ \mathbf{v} $，使得 $ A\mathbf{v} = \lambda \mathbf{v} $，则 $ \lambda $ 是矩阵 $ A $ 的特征值，$ \mathbf{v} $ 是对应于特征值 $ \lambda $ 的特征向量。
+
+   特征值描述了线性变换中**向量拉伸或压缩的比例**，而特征向量则是**在该变换下保持方向不变的向量**。
+
+2. **特征向量（Eigenvectors）**：
+
+   特征向量是矩阵 $ A $ 的零空间中的非零向量，它们在线性变换后只被拉伸或压缩，而不改变方向。对于特征值 $ \lambda $，特征向量 $ \mathbf{v} $ 满足 $ A\mathbf{v} = \lambda \mathbf{v} $。
+
+   特征向量是在许多应用中都具有重要意义，例如在图像处理、物理学、机器学习等领域中。
+
+3. **求解特征值和特征向量**：
+
+   要找到矩阵的特征值，需要解矩阵的特征方程，即 $ \text{det}(A - \lambda I) = 0 $，其中 $ \text{det} $ 表示行列式，$ I $ 是单位矩阵。解这个方程将给出矩阵的特征值。
+
+   一旦找到特征值，可以通过求解 $ (A - \lambda I)\mathbf{v} = \mathbf{0} $ 来找到对应于每个特征值的特征向量，其中 $ \mathbf{v} $ 是非零向量。
+
+总体而言，特征值和特征向量是矩阵在线性变换中的重要性质，它们有助于理解矩阵的行为和性质。
+
+### 矩阵的奇异值和奇异向量是什么？怎么求？
+
+奇异值和奇异向量是矩阵的另一组重要性质，与特征值和特征向量有关，但更适用于非方阵。让我简要解释一下这两个概念以及如何求解它们。
+
+1. **奇异值（Singular Values）**：
+
+   对于任意矩阵 $ A $，它的奇异值是矩阵 $ A $ 与其转置矩阵 $ A^T $ 的乘积的非负平方根。如果 $ A $ 是一个大小为 m × n 的矩阵，那么奇异值通常表示为 $ \sigma_i $（i = 1, 2, ..., min(m, n)）。
+
+   奇异值是矩阵的一组非负实数，它们提供了关于矩阵的信息，类似于特征值。
+
+2. **奇异向量（Singular Vectors）**：
+
+   奇异向量分为左奇异向量和右奇异向量，与对应的奇异值一起构成了矩阵的奇异值分解（Singular Value Decomposition，SVD）。
+
+   - **左奇异向量**：是矩阵 $ A A^T $ 的特征向量，对应于奇异值分解中的左奇异向量矩阵 $ U $。
+   - **右奇异向量**：是矩阵 $ A^T A $ 的特征向量，对应于奇异值分解中的右奇异向量矩阵 $ V $。
+
+3. **求解奇异值和奇异向量**：
+
+   要找到矩阵 $ A $ 的奇异值和奇异向量，可以使用奇异值分解（SVD）算法。SVD 将矩阵 $ A $ 分解为三个矩阵的乘积：$ A = U \Sigma V^T $
+
+   其中：
+   - $ U $ 是 $ A A^T $ 的左奇异向量矩阵。
+   - $ \Sigma $ 是一个对角矩阵，对角线上的元素为 $ A $ 的奇异值，按从大到小排列。
+   - $ V $ 是 $ A^T A $ 的右奇异向量矩阵。
+
+奇异值和奇异向量在许多应用中都非常有用，包括数据压缩、降维、矩阵逆运算等。数值计算方法通常用于计算奇异值和奇异向量。
