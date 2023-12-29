@@ -1,7 +1,7 @@
 # 7  Viewing 视图
 
 In the previous chapter, we saw how to use matrix transformations as a tool for arranging geometric objects in 2D or 3D space. A second important use of geometric transformations is in moving objects between their 3D locations and their positions in a 2D view of the 3D world. This 3D to 2D mapping is called a viewing transformation, and it plays an important role in object-order rendering, in which we need to rapidly find the image-space location of each object in the scene. 
-在上一章中，我们了解了如何使用矩阵变换作为在 2D 或 3D 空间中排列几何对象的工具。 几何变换的第二个重要用途是在 3D 位置和 3D 世界的 2D 视图中的位置之间移动对象。 这种 3D 到 2D 的映射称为视图变换，它在对象顺序渲染中发挥着重要作用，其中我们需要快速找到场景中每个对象的图像空间位置。
+在前一章中，我们了解了如何利用矩阵变换作为在二维或三维空间中排列几何对象的工具。几何变换的第二个重要应用是在将物体从其三维位置移动到它们在三维世界的二维视图中。这种从三维到二维的映射被称为视图变换，它在对象顺序渲染中扮演着重要的角色，因为我们需要快速找到场景中每个物体在图像空间中的位置。
 
 When we studied ray tracing in Chapter 4, we covered the different types of perspective and orthographic views and how to generate viewing rays according to any given view. This chapter is about the inverse of that process. Here we explain how to use matrix transformations to express any parallel or perspective view. The transformations in this chapter project 3D points in the scene (world space) to 2D points in the image (image space), and they will project any point on a given pixel’s viewing ray back to that pixel’s position in image space. 
 当我们在第 4 章中学习光线追踪时，我们介绍了不同类型的透视和正交视图以及如何根据任何给定视图生成观察光线。 本章讨论的是该过程的逆过程。 在这里，我们解释如何使用矩阵变换来表达任何平行视图或透视图。 本章中的变换将场景（世界空间）中的 3D 点投影到图像（图像空间）中的 2D 点，并且它们会将给定像素的视线上的任何点投影回该像素在图像空间中的位置。

@@ -568,8 +568,8 @@ rotate-y(φ) =\begin{bmatrix}
 \end{bmatrix}
 $$
 
-> To understand why the minus sign is in the lower left for the y-axis rotation, think of the three axes in a circular sequence: y after x; z after y; x after z.  
-> 要理解为什么负号位于 y 轴旋转的左下角，请考虑按循环顺序排列的三个轴：y 在 x 之后； z 在 y 之后； z 之后的 x。
+> To understand why the minus sign is in the lower left for the y-axis rotation, think of the three axes in a circular sequence: y after x; z after y; x after z. 
+> 为了理解为什么在y轴旋转中减号位于左下方，可以思考一下三个轴在一个循环序列中的位置：y在x之后，z在y之后，x在z之后。
 
 We will discuss rotations about arbitrary axes in the next section.
 我们将在下一节中讨论绕任意轴的旋转。
@@ -584,7 +584,7 @@ shear-x(d_y, d_z) = \begin{bmatrix}
 \end{bmatrix}
 $$
 As with 2D transforms, any 3D transformation matrix can be decomposed using SVD into a rotation, scale, and another rotation. Any symmetric 3D matrix has an eigenvalue decomposition into rotation, scale, and inverse-rotation. Finally, a 3D rotation can be decomposed into a product of 3D shear matrices. 
-与 2D 变换一样，任何 3D 变换矩阵都可以使用 SVD 分解为旋转、缩放和另一个旋转。 任何对称 3D 矩阵都可以将特征值分解为旋转、缩放和逆旋转。 最后，3D 旋转可以分解为 3D 剪切矩阵的乘积。
+与2D变换一样，任何3D变换矩阵均可通过奇异值分解（SVD）拆解为旋转、缩放和另一次旋转。对于任何对称的3D矩阵，都存在特征值分解，包括旋转、缩放和逆旋转。最后，一个3D旋转可以分解为一系列3D剪切矩阵的乘积。
 
 ### 6.2.1 Arbitrary 3D Rotations 任意 3D 旋转
 
@@ -641,7 +641,7 @@ Similarly, $\bold{R}_{uvw}\bold{v} = \bold{y}$, and $\bold{R}_{uvw}\bold{w} = \b
 类似地，$\bold{R}_{uvw}\bold{v} = \bold{y}$，$\bold{R}_{uvw}\bold{w} = \bold{z}$。 所以 $\bold{R}_{uvw}$ 通过旋转将基 $\bold{u}\bold{v}\bold{w}$ 带到相应的笛卡尔轴上。
 
 If $\bold{R}_{uvw}$ is a rotation matrix with orthonormal rows, then $R^T_{uvw}$ is also a rotation matrix with orthonormal columns, and in fact is the inverse of $\bold{R}_{uvw}$ (the inverse of an orthogonal matrix is always its transpose). An important point is that for transformation matrices, the algebraic inverse is also the geometric inverse. So if $\bold{R}_{uvw}$ takes $\bold{u}$ to $\bold{x}$, then $\bold{R}^T_{uvw}$ takes $\bold{x}$ to $\bold{u}$. The same should be true of $\bold{v}$ and $\bold{y}$ as we can confirm: 
-如果 $\bold{R}_{uvw}$ 是一个具有正交行的旋转矩阵，则 $R^T_{uvw}$也是一个具有正交列的旋转矩阵，并且实际上是 $\bold{R}_{uvw}$的逆（正交矩阵的逆始终是其转置）。一个重要的观点是，对于变换矩阵，代数逆矩阵也是几何逆矩阵。因此，如果 $\bold{R}_{uvw}$将 $\bold{u}$ 映射到 $\bold{x}$，则 $\bold{R}^T_{uvw}$将 $\bold{x}$ 映射到$\bold{u}$。我们可以确认，对于 $\bold{v}$ 和 $\bold{y}$，情况也应该是如此：
+如果$\bold{R}_{uvw}$是一个具有正交行的旋转矩阵，那么$R^T_{uvw}$也是一个具有正交列的旋转矩阵，实际上是$\bold{R}_{uvw}$的逆矩阵（正交矩阵的逆矩阵总是其转置）。一个重要的观点是对于变换矩阵，代数逆矩阵也是几何逆矩阵。因此，如果$\bold{R}_{uvw}$将$\bold{u}$映射到$\bold{x}$，那么$\bold{R}^T_{uvw}$将$\bold{x}$映射回$\bold{u}$。我们可以验证，对于$\bold{v}$和$\bold{y}$也是如此：
 $$
 \bold{R}^T_{uvw}\bold{y} = \begin{bmatrix}
 x_u & x_v & x_w \\
@@ -691,10 +691,10 @@ If we have a rotation matrix and we wish to have the rotation in axis-angle form
 See Chapter 16 for a comparison of the few most-used ways to represent rotations, besides rotation matrices.
 请参阅第 16 章，了解除旋转矩阵之外的几种最常用的表示旋转的方法的比较。
 
-#### 6.2.2 Transforming Normal Vectors 变换法线向量
+### 6.2.2 Transforming Normal Vectors 变换法线向量
 
 While most 3D vectors we use represent positions (offset vectors from the origin) or directions, such as where light comes from, some vectors represent surface normals. Surface normal vectors are perpendicular to the tangent plane of a surface. These normals do not transform the way we would like when the underlying surface is transformed. For example, if the points of a surface are transformed by a matrix $\bold{M}$, a vector $\bold{t}$ that is tangent to the surface and is multiplied by $\bold{M}$ will be tangent to the transformed surface. However, a surface normal vector $\bold{v}$ that is transformed by $\bold{M}$ may not be normal to the transformed surface (Figure 6.17). 
-虽然我们使用的大多数 3D 矢量表示位置（距原点的偏移矢量）或方向，例如光线的来源，但某些矢量表示表面法线。 表面法向量垂直于表面的切平面。 当底层表面变换时，这些法线不会按照我们想要的方式变换。 例如，如果曲面上的点通过矩阵 $\bold{M}$ 进行变换，则与曲面相切并乘以 $\bold{M}$ 的向量 $\bold{t}$ 将与变换后的曲面相切。 然而，由 $\bold{M}$ 变换的表面法线向量 $\bold{v}$ 可能不垂直于变换后的表面（图 6.17）。
+虽然我们使用的大多数3D向量表示位置（相对于原点的偏移向量）或方向，比如光线的来向，但有些向量代表表面法线。表面法线向量垂直于表面的切平面。当底层表面发生变换时，这些法线并不按照我们期望的方式进行变换。例如，如果表面的点通过矩阵$\bold{M}$进行变换，与表面切线相切的向量$\bold{t}$经过$\bold{M}$相乘后仍然与变换后的表面相切。然而，一个表面法线向量$\bold{v}$经过$\bold{M}$变换后可能不再垂直于变换后的表面（见图6.17）。
 <img src=".\Images\Figure 6.17.png" alt="Figure 6.17" style="zoom:80%;" />
 
 Figure 6.17. When a normal vector is transformed using the same matrix that transforms the points on an object, the resulting vector may not be perpendicular to the surface as is shown here for the sheared rectangle. The tangent vector, however, does transform to a vector tangent to the transformed surface.  
@@ -765,7 +765,7 @@ m_{21} & m_{22} & y_t \\
 0 & 0 & 1
 \end{bmatrix}
 $$
-The fixed third row serves to copy the 1 into the transformed vector, so that all vectors have a 1 in the last place, and the first two rows compute $x'$ and $y'$ as linear combinations of $x$, $y$, and $1$:  
+The fixed third row serves to copy the 1 into the transformed vector, so that all vectors have a 1 in the last place, and the first two rows compute $x'$ and $y'$ as linear combinations of $x$, $y$, and $1$: 
 固定的第三行用于将1复制到转换后的向量中，这样所有向量的最后一个位置都有一个1，前两行计算$x'$和$y'$作为$x$， $y$和$1$的线性组合:
 $$
 \begin{bmatrix}
@@ -790,10 +790,10 @@ m_{21}x + m_{22}y + y_t \\
 \end{bmatrix}
 $$
 The single matrix implements a linear transformation followed by a translation! This kind of transformation is called an affine transformation, and this way of implementing affine transformations by adding an extra dimension is called homogeneous coordinates (Roberts, 1965; Riesenfeld, 1981; Penna & Patterson, 1986). Homogeneous coordinates not only clean up the code for transformations,  but this scheme also makes it obvious how to compose two affine transformations: simply multiply the matrices.
-单个矩阵实现了一个线性变换，然后是一个平移!这种变换被称为仿射变换，这种通过增加一个额外维度来实现仿射变换的方式被称为齐次坐标(Roberts, 1965; Riesenfeld, 1981;Penna & Patterson, 1986)。齐次坐标不仅清理了转换的代码，而且该方案还使如何组合两个仿射转换变得很明显:只需将矩阵相乘。
+这个单矩阵实现了线性变换后跟随着一次平移！这种类型的变换被称为仿射变换，而通过增加额外维度实现仿射变换的方式被称为齐次坐标（Roberts, 1965; Riesenfeld, 1981; Penna & Patterson, 1986）。齐次坐标不仅使得变换的代码更为清晰，而且这种方案还清晰地展示了如何组合两个仿射变换：简单地将两个矩阵相乘即可。
 
 A problem with this new formalism arises when we need to transform vectors that are not supposed to be positions—they represent directions, or offsets between positions. Vectors that represent directions or offsets should not change when we translate an object. Fortunately, we can arrange for this by setting the third coordinate to zero:
-当我们需要变换不应该是位置的向量时，这种新形式主义就会出现问题——它们代表方向或位置之间的偏移。 当我们平移对象时，表示方向或偏移的向量不应改变。 幸运的是，我们可以通过将第三个坐标设置为零来做到这一点：
+这一新的形式主义面临的问题在于，当我们需要转换那些并非位置而是代表方向或位置之间偏移的向量时。那些代表方向或偏移的向量在我们对物体进行平移时不应发生改变。幸运的是，我们可以通过将第三坐标设定为零来实现这一点：
 $$
 \begin{bmatrix}
 1 & 0 & x_t \\
@@ -1024,7 +1024,7 @@ All of the previous discussion has been in terms of using transformation matrice
 前面的所有讨论都是关于使用变换矩阵来移动点。 我们也可以将它们视为简单地更改表示点的坐标系。 例如，在图 6.19 中，我们看到两种可视化运动的方法。 在不同的背景下，任何一种解释都可能更合适。
 ![Figure 6.19](.\Images\Figure 6.19.png)
 Figure 6.19. The point (2,1) has a transform “translate by (-1,0)” applied to it. On the top right is our mental image if we view this transformation as a physical movement, and on the bottom right is our mental image if we view it as a change of coordinates (a movement of the origin in this case). The artificial boundary is just an artifice, and the relative position of the axes and the point are the same in either case. 
-图6.19 点(2,1)有一个变换“translate by(-1,0)”应用于它。右上方是我们的心理图像，如果我们把这个变换看作是一个物理运动，右下方是我们的心理图像，如果我们把它看作是坐标的变化(在这种情况下是原点的运动)。人工边界只是一种技巧，在任何一种情况下，轴和点的相对位置都是相同的。
+图6.19。点(2,1)经历了一次“平移(-1,0)”的变换。右上方是我们将这个变换视为实际移动时的心理想象，而右下方则是我们将其视为坐标变换时的心理想象（在这种情况下是原点的移动)。人为设定的边界仅仅是一种技巧，不论哪种情况，坐标轴和点的相对位置都是一样的。
 
 For example, a driving game may have a model of a city and a model of a car. If the player is presented with a view out the windshield, objects inside the car are always drawn in the same place on the screen, while the streets and buildings appear to move backward as the player drives. On each frame, we apply a transformation to these objects that moves them farther back than on the previous frame. One way to think of this operation is simply that it moves the buildings backward; another way to think of it is that the buildings are staying put but the coordinate system in which we want to draw them—which is attached to the car—is moving. In the second interpretation, the transformation is changing the coordinates of the city geometry, expressing them as coordinates in the car’s coordinate system. Both ways will lead to exactly the same matrix that is applied to the geometry outside the car.
 例如，驾驶游戏可能有城市模型和汽车模型。 如果玩家看到挡风玻璃外的景色，车内的物体总是被绘制在屏幕上的同一位置，而街道和建筑物似乎随着玩家驾驶而向后移动。 在每一帧上，我们对这些对象应用变换，使它们比前一帧向后移动得更远。 思考这一操作的一种方式是简单地将建筑物向后移动。 另一种思考方式是，建筑物保持不动，但我们想要绘制它们的坐标系（连接到汽车上）正在移动。 在第二种解释中，变换是改变城市几何的坐标，将它们表示为汽车坐标系中的坐标。 两种方法都会产生应用于汽车外部几何形状的完全相同的矩阵。
@@ -1231,7 +1231,7 @@ Yes, but in practice it is harder to derive, harder to debug, and not any more e
 
 ### The bottom row of the matrix is always (0,0,0,1). Do I have to store it?矩阵的底行始终为 (0,0,0,1)。 我必须储存它吗？
 
-You do not have to store it unless you include perspective transforms (Chapter 7).  
+You do not have to store it unless you include perspective transforms (Chapter 7). 
 除非包含透视变换（第 7 章），否则不必存储它。
 
 ## Notes
@@ -1288,3 +1288,182 @@ The derivation of the transformation properties of normals is based on Propertie
 
 11. What is the inverse matrix for the answer to the previous problem?
     上一个问题的答案的逆矩阵是什么？
+
+
+
+## Chat-GPT
+
+### 变换矩阵分类
+
+1. **平移矩阵（Translation Matrix）：**
+   平移矩阵用于实现平移变换，将对象沿着坐标轴的方向移动。
+   $$
+   T = \begin{bmatrix} 1 & 0 & \Delta x \\ 0 & 1 & \Delta y \\ 0 & 0 & 1 \end{bmatrix}
+   $$
+
+2. **缩放矩阵（Scaling Matrix）：**
+   缩放矩阵用于实现缩放变换，可以分别在 x 和 y 方向上进行缩放。
+   $$
+   S = \begin{bmatrix} s_x & 0 \\ 0 & s_y \end{bmatrix}
+   $$
+
+3. **旋转矩阵（Rotation Matrix）：**
+   旋转矩阵用于实现旋转变换，可以围绕原点旋转对象。
+   $$
+   R = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}
+   $$
+
+4. **剪切矩阵（Shear Matrix）：**
+   剪切矩阵用于实现剪切变换，可以在 x 或 y 方向上进行剪切。
+   $$
+   H_x = \begin{bmatrix} 1 & \lambda_x & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+   $$
+   $$
+   H_y = \begin{bmatrix} 1 & 0 & 0 \\ \lambda_y & 1 & 0 \\ 0 & 0 & 1 \end{bmatrix}
+   $$
+
+5. **投影矩阵（Projection Matrix）：**
+   投影矩阵用于实现投影变换，将三维物体投影到二维平面上。透视投影和正交投影分别使用不同的矩阵。
+
+这些矩阵可以组合使用，以实现复杂的几何变换。例如，通过将平移、旋转和缩放矩阵相乘，可以实现任意线性变换。
+
+### 平移矩阵
+
+2D 平移矩阵和3D 平移矩阵的表示如下：
+
+#### 2D 平移矩阵
+
+2D 平移矩阵形如：
+$
+T_{2D} = \begin{bmatrix} 1 & 0 & \Delta x \\ 0 & 1 & \Delta y \\ 0 & 0 & 1 \end{bmatrix}
+$
+
+其中，$\Delta x$ 和 $\Delta y$ 是平移的水平和垂直距离。
+
+#### 3D 平移矩阵
+
+3D 平移矩阵形如：
+$
+T_{3D} = \begin{bmatrix} 1 & 0 & 0 & \Delta x \\ 0 & 1 & 0 & \Delta y \\ 0 & 0 & 1 & \Delta z \\ 0 & 0 & 0 & 1 \end{bmatrix}
+$
+
+其中，$\Delta x$、$\Delta y$ 和 $\Delta z$ 是平移的三个方向上的距离。
+
+这些矩阵用于实现对象在空间中的平移，可以通过与其他变换矩阵相乘，实现复合变换。
+
+### 缩放矩阵
+
+缩放矩阵用于实现对象在空间中的缩放。2D 缩放矩阵和 3D 缩放矩阵的表示如下：
+
+#### 2D 缩放矩阵
+
+2D 缩放矩阵形如：
+$$
+S_{2D} = \begin{bmatrix} s_x & 0 \\ 0 & s_y \end{bmatrix}
+$$
+
+其中，$s_x$ 和 $s_y$ 分别是水平和垂直方向上的缩放因子。
+
+#### 3D 缩放矩阵
+
+3D 缩放矩阵形如：
+$$
+S_{3D} = \begin{bmatrix} s_x & 0 & 0 \\ 0 & s_y & 0 \\ 0 & 0 & s_z \end{bmatrix}
+$$
+
+其中，$s_x$、$s_y$ 和 $s_z$ 分别是 x、y 和 z 方向上的缩放因子。
+
+这些矩阵通过缩放因子对对象的坐标进行相应方向的缩放。缩放因子大于1表示放大，小于1表示缩小，等于1表示保持原大小。
+
+#### 示例
+
+假设有一个点 $(x, y)$，对其进行缩放，可以使用下列公式：
+
+- 对于 2D 缩放：
+  $$
+  \begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} s_x & 0 \\ 0 & s_y \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}
+  $$
+
+- 对于 3D 缩放：
+  $$
+  \begin{bmatrix} x' \\ y' \\ z' \end{bmatrix} = \begin{bmatrix} s_x & 0 & 0 \\ 0 & s_y & 0 \\ 0 & 0 & s_z \end{bmatrix} \begin{bmatrix} x \\ y \\ z \end{bmatrix}
+  $$
+
+这样，通过矩阵与坐标向量的乘法，可以实现相应维度上的缩放。
+
+
+
+### 旋转矩阵
+
+旋转矩阵用于实现对象在空间中的旋转。我将分别详解 2D 旋转矩阵和 3D 旋转矩阵。
+
+#### 2D 旋转矩阵
+
+2D 旋转矩阵形如：
+$$
+R_{2D} = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix}
+$$
+
+其中，$\theta$ 是旋转的角度。
+
+#### 3D 旋转矩阵
+
+3D 旋转矩阵有多种表示方式，其中最常见的是绕坐标轴的旋转。以下是绕 x、y 和 z 轴的旋转矩阵：
+
+##### 绕 x 轴旋转
+$$
+R_{3D_x} = \begin{bmatrix} 1 & 0 & 0 \\ 0 & \cos(\alpha) & -\sin(\alpha) \\ 0 & \sin(\alpha) & \cos(\alpha) \end{bmatrix}
+$$
+
+##### 绕 y 轴旋转
+$$
+R_{3D_y} = \begin{bmatrix} \cos(\beta) & 0 & \sin(\beta) \\ 0 & 1 & 0 \\ -\sin(\beta) & 0 & \cos(\beta) \end{bmatrix}
+$$
+
+##### 绕 z 轴旋转
+$$
+R_{3D_z} = \begin{bmatrix} \cos(\gamma) & -\sin(\gamma) & 0 \\ \sin(\gamma) & \cos(\gamma) & 0 \\ 0 & 0 & 1 \end{bmatrix}
+$$
+
+其中，$\alpha$、$\beta$ 和 $\gamma$ 分别是绕 x、y 和 z 轴的旋转角度。
+
+##### 绕任意轴
+
+绕任意轴旋转的 3D 旋转矩阵可以通过 Rodrigues' rotation formula（罗德里格斯旋转公式）来表示。该公式通过旋转轴的单位向量$ \mathbf{u} = (a, b, c) $ 和旋转角度 $ \theta $ 来计算旋转矩阵。
+
+公式如下：
+
+$$
+R_{\text{任意轴}} = \begin{bmatrix} \cos(\theta) + u_x^2(1-\cos(\theta)) & u_xu_y(1-\cos(\theta)) - u_z\sin(\theta) & u_xu_z(1-\cos(\theta)) + u_y\sin(\theta) \\ 
+u_yu_x(1-\cos(\theta)) + u_z\sin(\theta) & \cos(\theta) + u_y^2(1-\cos(\theta)) & u_yu_z(1-\cos(\theta)) - u_x\sin(\theta) \\ 
+u_zu_x(1-\cos(\theta)) - u_y\sin(\theta) & u_zu_y(1-\cos(\theta)) + u_x\sin(\theta) & \cos(\theta) + u_z^2(1-\cos(\theta)) \end{bmatrix}
+$$
+其中，$ \mathbf{u} = (u_x, u_y, u_z) $ 是旋转轴的单位向量，$ \theta $ 是旋转角度。再次感谢您的理解。
+
+这个矩阵可以将一个点 $ (x, y, z) $ 绕任意轴旋转。通过与原始坐标点的矩阵相乘，可以得到旋转后的新坐标。这种通用的旋转矩阵适用于绕任意轴的旋转。
+
+#### 示例
+
+假设有一个点 $(x, y)$，对其进行旋转，可以使用下列公式：
+
+- 对于 2D 旋转：
+  $$
+  \begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos(\theta) & -\sin(\theta) \\ \sin(\theta) & \cos(\theta) \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix}
+  $$
+
+- 对于 3D 旋转：
+  $$
+  \begin{bmatrix} x' \\ y' \\ z' \end{bmatrix} = R_{3D} \begin{bmatrix} x \\ y \\ z \end{bmatrix}
+  $$
+
+通过矩阵与坐标向量的乘法，可以实现相应轴向的旋转。
+
+
+
+### 剪切矩阵
+
+
+
+
+
+### 投影矩阵
