@@ -10,7 +10,7 @@ If you have not looked at it recently, it is advisable to review the discussion 
 如果你最近没有看过它，建议在阅读本章之前回顾一下第 4 章中关于透视和光线生成的讨论。
 
 By itself, the ability to project points from the world to the image is only good for producing wireframe renderings—renderings in which only the edges of objects are drawn, and closer surfaces do not occlude more distant surfaces (Figure 7.1). Just as a ray tracer needs to find the closest surface intersection along each viewing ray, an object-order renderer displaying solid-looking objects has to work out which of the (possibly many) surfaces drawn at any given point on the screen is closest and display only that one. In this chapter, we assume we are drawing a model consisting only of 3D line segments that are specified by the $(x, y, z)$ coordinates of their two endpoints. Later chapters will discuss the machinery needed to produce renderings of solid surfaces. 
-就其本身而言，将点从世界投影到图像的能力仅适用于生成线框渲染，即仅绘制对象边缘的渲染，并且较近的表面不会遮挡较远的表面（图 7.1）。 正如光线追踪器需要沿着每条观察光线找到最近的表面交点一样，显示实体外观对象的对象顺序渲染器也必须计算出在屏幕上的任何给定点绘制的哪个（可能是多个）表面最接近，并且 只显示那个。 在本章中，我们假设我们正在绘制一个仅由 3D 线段组成的模型，这些线段由其两个端点的 $(x, y, z)$ 坐标指定。 后面的章节将讨论生成实体表面渲染所需的机械。
+单纯地，将点从世界投影到图像仅适用于生成线框渲染——一种只绘制对象边缘，较近表面不会遮挡较远表面的渲染方式（见图7.1）。就像光线追踪器需要沿每条视线找到最近的表面交点一样，显示具有实体外观的物体的对象顺序渲染器必须确定在屏幕上的任何给定点上绘制的（可能有很多）表面中哪个最近，并仅显示该表面。在本章中，我们假设正在绘制仅由其两个端点的$(x, y, z)$坐标指定的3D线段模型。后续章节将讨论生成实体表面渲染所需的机制。
 <img src=".\Images\Figure 7.1.png" alt="Figure 7.1" style="zoom:67%;" />
 Figure 7.1. Left: wireframe cube in orthographic projection. Middle: wireframe cube in perspective projection. Right: perspective projection with hidden lines removed. 
 图 7.1.  左：正交投影中的线框立方体。 中：透视投影中的线框立方体。 右：删除隐藏线的透视投影。
@@ -20,17 +20,17 @@ Figure 7.1. Left: wireframe cube in orthographic projection. Middle: wireframe c
 ## 7.1 Viewing Transformations 视图变换
 
 The viewing transformation has the job of mapping 3D locations, represented as $(x, y, z)$ coordinates in the canonical coordinate system, to coordinates in the image, expressed in units of pixels. It is a complicated beast that depends on  many different things, including the camera position and orientation, the type of projection, the field of view, and the resolution of the image. As with all complicated transformations it is best approached by breaking it up into a product of several simpler transformations. Most graphics systems do this by using a sequence of three transformations: 
-视图变换的任务是将 3D 位置（在规范坐标系中表示为 $(x, y, z)$ 坐标）映射到图像中的坐标（以像素为单位表示）。 它是一个复杂的野兽，取决于许多不同的因素，包括相机的位置和方向、投影类型、视野和图像的分辨率。 与所有复杂的转换一样，最好的方法是将其分解为几个更简单的转换的产物。 大多数图形系统通过使用三个转换序列来实现此目的：
+视图变换的任务是将以规范坐标系中的$(x, y, z)$坐标表示的三维位置映射到以像素为单位表达的图像坐标。这是一项复杂的任务，它依赖于许多不同的因素，包括相机的位置和方向、投影类型、视野范围以及图像的分辨率。与所有复杂的变换一样，最好的方法是将其分解为几个较简单变换的乘积。大多数图形系统通过使用三个变换的序列来实现这一点：
 
 > Some APIs use “viewing transformation” for just the piece of our viewing transformation that we call the camera transformation. 
 > 一些 API 将“视图变换”仅用于我们称为相机变换的视图变换部分。
 
 - A camera transformation or eye transformation, which is a rigid body transformation that places the camera at the origin in a convenient orientation. It depends only on the position and orientation, or pose, of the camera.
-  相机变换或眼睛变换，这是一种刚体变换，它将相机以方便的方向放置在原点。 它仅取决于相机的位置和方向或姿势。
+  相机变换或视角变换，是一种刚体变换，将相机放置在原点并使其处于方便的方向。它仅依赖于相机的位置和方向，或称为姿态。
 - A projection transformation, which projects points from camera space so that all visible points fall in the range -1 to 1 in x and y. It depends only on the type of projection desired.
-  投影变换，从相机空间投影点，以便所有可见点都落在 x 和 y 的 -1 到 1 范围内。 这仅取决于所需的投影类型。
+  投影变换，将点从相机空间投影，以使所有可见点都落在 x 和 y 的范围内，即 -1 到 1。它仅取决于所需的投影类型。
 - A viewport transformation or windowing transformation, which maps this unit image rectangle to the desired rectangle in pixel coordinates. It depends only on the size and position of the output image. 
-  视口变换或窗口变换，将单位图像矩形映射到像素坐标中所需的矩形。 它仅取决于输出图像的大小和位置。
+  视口变换或窗口变换，将这个单位图像矩形映射到像素坐标中所需的矩形。它仅仅取决于输出图像的大小和位置。
 
 To make it easy to describe the stages of the process (Figure 7.2), we give names to the coordinate systems that are the inputs and output of these transformations.  The camera transformation converts points in canonical coordinates (or world space) to camera coordinates or places them in camera space. The projection transformation moves points from camera space to the canonical view volume.  Finally, the viewport transformation maps the canonical view volume to screen space. 
 为了便于描述该过程的各个阶段（图 7.2），我们为作为这些变换的输入和输出的坐标系命名。 相机变换将规范坐标（或世界空间）中的点转换为相机坐标或将它们放置在相机空间中。 投影变换将点从相机空间移动到规范视图体积。 最后，视口变换将规范视图体积映射到屏幕空间。
@@ -40,7 +40,7 @@ Figure 7.2. The sequence of spaces and transformations that gets objects from th
 图 7.2. 将对象从原始坐标转换到屏幕空间的空间和变换序列。
 
 > Other names: camera space is also “eye space” and the camera transformation is sometimes the “viewing transformation;” the canonical view volume is also “clip space” or “normalized device coordinates;” screen space is also “pixel coordinates.” 
-> 其他名称：相机空间也是“眼睛空间”，相机变换有时是“观看变换”； 规范视图体积也是“剪辑空间”或“标准化设备坐标”； 屏幕空间也是“像素坐标”。
+> 其他名称：相机空间也被称为“视角空间”，而相机变换有时被称为“视图变换”；规范视体积也被称为“裁剪空间”或“归一化设备坐标”；屏幕空间也被称为“像素坐标”。
 
 Each of these transformations is individually quite simple. We’ll discuss them in detail for the orthographic case beginning with the viewport transformation, then cover the changes required to support perspective projection.
 这些转换中的每一个都非常简单。 我们将从视口转换开始详细讨论正交案例，然后介绍支持透视投影所需的更改。
@@ -48,25 +48,25 @@ Each of these transformations is individually quite simple. We’ll discuss them
 ### 7.1.1 The Viewport Transformation 视口变换
 
 We begin with a problem whose solution will be reused for any viewing condition. We assume that the geometry we want to view is in the canonical view volume,  and we wish to view it with an orthographic camera looking in the $-z$ direction. The canonical view volume is the cube containing all 3D points whose Cartesian coordinates are between $-1$ and $+1$—that is, $(x, y, z) ∈ [-1, 1]^3$ (Figure 7.3) We project $x = -1$ to the left side of the screen, $x = +1$ to the right side of the screen, $y = -1$ to the bottom of the screen, and $y = +1$ to the top of the screen. 
-我们从一个问题开始，其解决方案将在任何观看条件下重复使用。 我们假设我们想要查看的几何图形位于规范视图体积中，并且我们希望使用正交相机在 $-z$ 方向上查看它。 规范视图体积是包含笛卡尔坐标在 $-1$ 和 $+1$ 之间的所有 3D 点的立方体，即 $(x, y, z) ∈ [-1, 1]^3$（图 7.3 ）我们将 $x = -1$ 投影到屏幕左侧，$x = +1$ 投影到屏幕右侧，$y = -1$ 投影到屏幕底部，$y = +1 $ 到屏幕顶部。
+我们从一个问题开始，其解决方案将在任何视图条件下被重复使用。我们假设我们要查看的几何形状位于规范视体积中，我们希望使用一个朝着$-z$方向的正交相机查看它。规范视体积是一个立方体，包含所有三维点，其笛卡尔坐标在$-1$和$+1$之间——即，$(x, y, z) ∈ [-1, 1]^3$（见图7.3）。我们将$x = -1$投影到屏幕的左侧，$x = +1$投影到屏幕的右侧，$y = -1$投影到屏幕的底部，$y = +1$投影到屏幕的顶部。
 ![Figure 7.3](.\Images\Figure 7.3.png)
 Figure 7.3. The canonical view volume is a cube with side of length two centered at the origin. 
 图 7.3. 规范视图体积是一个边长为 2、以原点为中心的立方体。
 
 > The word “canonical” crops up again—it means something arbitrarily chosen for convenience. For instance, the unit circle could be called the “canonical circle.”
-> “规范”这个词再次出现——它的意思是为了方便而任意选择的东西。 例如，单位圆可以称为“规范圆”。
+> 再次出现了“规范”这个词，它意味着出于方便而任意选择的事物。例如，单位圆可以被称为“规范圆”。
 
 Recall the conventionsfor pixel coordinates from Chapter 3: each pixel “owns” a unit square centered at integer coordinates; the image boundaries have a half-unit overshoot from the pixel centers; and the smallest pixel center coordinates are $(0, 0)$. If we are drawing into an image (or window on the screen) that has $n_x$ by $n_y$ pixels, we need to map the square $[−1, 1]^2$ to the rectangle $[−0.5, n_x − 0.5] × [−0.5, n_y − 0.5]$.
-回想一下第 3 章中像素坐标的约定：每个像素“拥有”一个以整数坐标为中心的单位正方形； 图像边界与像素中心有半个单位的超调； 最小像素中心坐标为$(0, 0)$。 如果我们要绘制具有 $n_x$ x $n_y$ 像素的图像（或屏幕上的窗口），我们需要将正方形 $[−1, 1]^2$ 映射到矩形 $[−0.5, n_x − 0.5] × [−0.5, n_y − 0.5]$。
+回想一下第三章中有关像素坐标的约定：每个像素“拥有”一个以整数坐标为中心的单位正方形；图像边界从像素中心有一个半单位的偏移；最小的像素中心坐标为$(0, 0)$。如果我们要绘制到一个有$n_x$乘$n_y$像素的图像（或屏幕上的窗口），我们需要将区间$[−1, 1]^2$映射到矩形$[−0.5, n_x − 0.5] × [−0.5, n_y − 0.5]$。
 
 > Mapping a square to a potentially non-square rectangle is not a problem; x and y just end up with different scale factors going from canonical to pixel coordinates.
 > 将正方形映射到潜在的非正方形矩形不是问题； x 和 y 最终会得到从规范坐标到像素坐标的不同比例因子。
 
 For now, we will assume that all line segments to be drawn are completely inside the canonical view volume. Later we will relax that assumption when we discuss clipping.
-现在，我们假设所有要绘制的线段都完全位于规范视图体积内。 稍后，当我们讨论裁剪时，我们将放宽这一假设。
+目前，我们将假设所有要绘制的线段完全位于规范视体积内。在讨论裁剪时，我们将放宽这一假设。
 
 Since the viewport transformation maps one axis-aligned rectangle to another, it is a case of the windowing transform given by Equation (6.6):
-由于视口变换将一个轴对齐的矩形映射到另一个轴对齐的矩形，因此它是等式（6.6）给出的窗口变换的一种情况：
+由于视口变换将一个轴对齐的矩形映射到另一个，这是由方程（6.6）给出的窗口变换的一种情况：
 $$
 \begin{bmatrix}
 x_{screen} \\
@@ -85,7 +85,7 @@ y_{canonical} \\
 \end{bmatrix} \ \ \ \ \ (7.1)
 $$
 Note that this matrix ignores the z-coordinate of the points in the canonical view volume, because a point’s distance along the projection direction doesn’t affect where that point projects in the image. But before we officially call this the viewport matrix, we add a row and column to carry along the z-coordinate without changing it. We don’t need it in this chapter, but eventually we will need the z values because they can be used to make closer surfaces hide more distant surfaces (see Section 8.2.3).
-请注意，该矩阵忽略了规范视图体积中点的 z 坐标，因为点沿投影方向的距离不会影响该点在图像中的投影位置。 但在我们正式将其称为视口矩阵之前，我们添加一行和一列来携带 z 坐标而不更改它。 在本章中我们不需要它，但最终我们将需要 z 值，因为它们可以用来使更近的曲面隐藏更远的曲面（参见第 8.2.3 节）。
+请注意，这个矩阵忽略了规范视体积中点的z坐标，因为点沿投影方向的距离不会影响该点在图像中的投影位置。但在我们正式称之为视口矩阵之前，我们添加了一行和一列，以携带z坐标而不改变它。在本章中我们不需要它，但最终我们将需要z值，因为它们可以用来使较近的表面遮挡较远的表面（参见第8.2.3节）。
 $$
 M_{vp} = \begin{bmatrix}
 \frac{n_x}{2} & 0 & 0 & \frac{n_x - 1}{2} \\
@@ -98,7 +98,7 @@ $$
 ### 7.1.2 The Orthographic Projection Transformation正交投影变换
 
 Of course, we usually want to render geometry in some region of space other than the canonical view volume. Our first step in generalizing the view will keep the view direction and orientation fixed looking along -z with +y up, but will allow arbitrary rectangles to be viewed. Rather than replacing the viewport matrix, we’ll augment it by multiplying it with another matrix on the right. 
-当然，我们通常希望在规范视图体积之外的某些空间区域中渲染几何图形。 我们概括视图的第一步将保持视图方向和方向固定，沿着 -z 和 +y 向上看，但允许查看任意矩形。 我们不是替换视口矩阵，而是通过将其与右侧的另一个矩阵相乘来增强它。
+当然，通常我们希望在规范视体积之外的某个空间区域渲染几何形状。我们在推广视图的第一步将保持视图方向和方向不变，沿着-z方向观察，+y朝上，但允许查看任意矩形。我们不是替换视口矩阵，而是通过在右侧与另一个矩阵相乘来扩展它。
 
 Under these constraints, the view volume is an axis-aligned box, and we’ll name the coordinates of its sides so that the view volume is $[l, r] × [b, t] × [f, n]$ shown in Figure 7.4. We call this box the orthographic view volume and refer to the bounding planes as follows:
 在这些约束下，视图体积是一个轴对齐的盒子，我们将命名其边的坐标，以便视图体积为 $[l, r] × [b, t] × [f, n]$ 所示 如图 7.4 所示。 我们将此框称为正交视图体积，并按如下方式引用边界平面： 
@@ -113,12 +113,11 @@ y = t ≡ top\ plane, \\
 z = n ≡ near\ plane, \\
 z = f ≡ far\ plane. \\
 $$
-That vocabulary assumes a viewer who is looking along the minus z-axis with  his head pointing in the y-direction(Most programmers find it intuitive to have the x-axis pointing right and the y-axis pointing up. In
-a right-handed coordinate system, this implies that we are looking in the -z direction. Some systems use a left-handed coordinate system for viewing so that the gaze direction is along +z. Which is best is a matter of taste, and this text assumes a right-handed coordinate system. A reference that argues for the left-handed system instead is given in the notes at the end of the chapter.  ). This implies that $n > f$, which may be unintuitive, but if you assume the entire orthographic view volume has negative $z$ values then the $z = n$ “near” plane is closer to the viewer if and only if $n > f$; here $f$ is a smaller number than $n$, i.e., a negative number of larger absolute value than $n$. 
-该词汇假设观看者沿着负 z 轴观看，头指向 y 方向（大多数程序员认为 x 轴指向右侧，y 轴指向上方是直观的。右手坐标系，这意味着我们正在朝 -z 方向看。 一些系统使用左手坐标系进行观察，以便注视方向沿着+z。 哪个最好取决于个人喜好，本文假设使用右手坐标系。 本章末尾的注释中给出了支持左手系统的参考文献。 ）。 这意味着 $n > f$，这可能不直观，但如果假设整个正交视图体积具有负 $z$ 值，则 $z = n$ “近”平面更接近观察者当且仅当 $ n > f$; 这里$f$是比$n$小的数，即绝对值比$n$大的负数。
+That vocabulary assumes a viewer who is looking along the minus z-axis with  his head pointing in the y-direction(Most programmers find it intuitive to have the x-axis pointing right and the y-axis pointing up. In a right-handed coordinate system, this implies that we are looking in the -z direction. Some systems use a left-handed coordinate system for viewing so that the gaze direction is along +z. Which is best is a matter of taste, and this text assumes a right-handed coordinate system. A reference that argues for the left-handed system instead is given in the notes at the end of the chapter.  ). This implies that $n > f$, which may be unintuitive, but if you assume the entire orthographic view volume has negative $z$ values then the $z = n$ “near” plane is closer to the viewer if and only if $n > f$; here $f$ is a smaller number than $n$, i.e., a negative number of larger absolute value than $n$. 
+这一词汇假定观察者沿着负z轴观察，头部指向y方向（大多数程序员习惯于将x轴指向右侧，y轴指向上方。在右手坐标系中，这意味着我们是沿着-z方向观察的。一些系统使用左手坐标系进行观察，以便凝视方向沿着+z。哪种方式更好是个人口味问题，本文采用右手坐标系。关于支持左手坐标系的参考资料可在本章末尾的注释中找到）。这意味着$n > f$，这可能有些不直观，但如果假设整个正交视体积具有负的$z$值，那么$z = n$的“近”平面只有在$n > f$时距离观察者更近；这里$f$是一个比$n$小的数字，即绝对值较大的负数。
 
 This concept is shown in Figure 7.5. The transform from orthographic view volume to the canonical view volume is another windowing transform, so we can simply substitute the bounds of the orthographic and canonical view volumes into Equation (6.7) to obtain the matrix for this transformation:
-这个概念如图 7.5 所示。 从正交视图体积到规范视图体积的变换是另一种加窗变换，因此我们可以简单地将正交视图体积和规范视图体积的边界代入方程（6.7）以获得该变换的矩阵：
+这一概念在图7.5中有所展示。从正交视体积到规范视体积的转换是另一种窗口变换，因此我们可以简单地将正交视体积和规范视体积的边界代入方程（6.7）以获得这一变换的矩阵：
 $$
 \bold{M}_{orth} = \begin{bmatrix}
 \frac{2}{r - l} & 0 & 0 & -\frac{r + l}{r - l} \\
@@ -156,7 +155,14 @@ z 坐标现在位于 [-1, 1] 中。 我们现在不利用这一点，但当我�
 
 The code to draw many 3D lines with endpoints $\bold{a}_i$ and $\bold{b}_i$ thus becomes both simple and efficient: 
 因此，绘制许多带有端点 $\bold{a}_i$ 和 $\bold{b}_i$ 的 3D 线的代码变得既简单又高效：
-<img src=".\Images\Figure 7.5_1.png" alt="Figure 7.5_1" style="zoom:67%;" />
+
+> construct $\bold{M}_{vp}$
+> construct $\bold{M}_{orth}$
+> $\bold{M} = \bold{M}_{vp}\bold{M}_{orth}$
+> **for** each line segment $(\bold{a}_i, \bold{b}_i)$ **do**
+> 	$\bold{p} = \bold{M}\bold{a}_i$
+> 	$\bold{q} = \bold{M}\bold{b}_i$
+> 	drawline$(x_p, y_p, x_q, y_q)$
 
 > This is a first example of how matrix transformation machinery makes graphics programs clean and efficient.
 > 这是矩阵变换机制如何使图形程序变得干净和高效的第一个例子。
@@ -164,27 +170,27 @@ The code to draw many 3D lines with endpoints $\bold{a}_i$ and $\bold{b}_i$ thus
 ### 7.1.3 The Camera Transformation  相机转换
 
 We’d like to be able to change the viewpoint in 3D and look in any direction. There are a multitude of conventions for specifying viewer position and orientation. We will use the following one (see Figure 7.6):
-我们希望能够改变 3D 视角并朝任意方向观看。 有多种用于指定观看者位置和方向的约定。 我们将使用以下一个（见图 7.6）：
+我们希望能够在三维空间中改变视点并朝任何方向观察。有许多关于指定观察者位置和方向的约定。我们将采用以下的一种（见图7.6）：
 <img src=".\Images\Figure 7.6.png" alt="Figure 7.6" style="zoom:80%;" />
 Figure 7.6. The user specifies viewing as an eye position $\bold{e}$, a gaze direction $\bold{g}$, and an up vector $\bold{t}$. We construct a right-handed basis with $\bold{w}$ pointing opposite to the gaze and $\bold{v}$ being in the same plane as $\bold{g}$ and $\bold{t}$.
-图 7.6. 用户将观看指定为眼睛位置 $\bold{e}$、注视方向 $\bold{g}$ 和向上向量 $\bold{t}$。 我们构造一个右手基础，其中 $\bold{w}$ 指向凝视方向，并且 $\bold{v}$ 与 $\bold{g}$ 和 $\bold{t}$ 在同一平面上。
+图7.6。用户通过眼睛位置$\bold{e}$、凝视方向$\bold{g}$和上方向矢量$\bold{t}$来指定视图。我们构建一个右手坐标系，其中$\bold{w}$指向凝视方向的相反方向，而$\bold{v}$位于与$\bold{g}$和$\bold{t}$在同一平面上。
 
 - the eye position $\bold{e}$,
   眼睛位置$\bold{e}$,
 - the gaze direction $\bold{g}$,
   凝视方向$\bold{g}$,
 - the view-up vector $\bold{t}$. 
-  视图向上向量$\bold{t}$。
+  视图的上方向矢量$\bold{t}$。
 
 The eye position is a location that the eye “sees from.” If you think of graphics as a photographic process, it is the center of the lens. The gaze direction is any vector in the direction that the viewer is looking. The view-up vector is any vector in the plane that both bisects the viewer’s head into right and left halves and points “to the sky” for a person standing on the ground. These vectors provide us with enough information to set up a coordinate system with origin $\bold{e}$ and a $\bold{uvw}$ basis, using the construction of Section 2.4.7:
-眼睛位置是眼睛“观看”的位置。 如果您将图形视为摄影过程，那么它就是镜头的中心。 注视方向是观察者注视方向上的任意向量。 视图向上向量是平面中的任何向量，它将观看者的头部平分为左右两半，并且对于站在地面上的人来说指向“天空”。 这些向量为我们提供了足够的信息来建立一个以原点 $\bold{e}$ 和 $\bold{uvw}$ 为基础的坐标系，使用第 2.4.7 节的构造：
+眼睛位置是眼睛“观察”的位置。如果将图形视为摄影过程，它相当于镜头的中心。凝视方向是指观察者所看方向的任何矢量。而上方向矢量则**是平面内的任何矢量**，该平面既将观察者的头部平分为左右两半，又指向站在地面上的人所谓的“天空”。这些矢量为我们提供了足够的信息，以建立一个以原点$\bold{e}$和$\bold{uvw}$基向量为基础的坐标系，这是通过第2.4.7节的构建实现的：
 $$
 \bold{w} = -\frac{\bold{g}}{\|\bold{g}\|}, \\
 \bold{u} = \frac{\bold{t}\cross \bold{w}}{\|\bold{t}\cross \bold{w}\|} \\
 \bold{v} = \bold{w} \cross \bold{u}
 $$
-Our job would be done if all points we wished to transform were stored in coordinates with origin $\bold{e}$ and basis vectors $\bold{u}$, $\bold{v}$, and $\bold{w}$. But as shown in Figure 7.7, the coordinates of the model are stored in terms of the canonical (or world) origin o and the x-, y-, and z-axes. To use the machinery we have already developed, we just need to convert the coordinates of the line segment endpoints we wish to draw from xyz-coordinates into uvw-coordinates. This kind of transformation was discussed in Section 6.5, and the matrix that enacts this transformation is the canonical-to-basis matrix of the camera’s coordinate frame:
-如果我们希望变换的所有点都存储在具有原点 $\bold{e}$ 和基向量 $\bold{u}$、$\bold{v}$ 和 $\bold{w}$ 的坐标中，我们的工作就完成了。 但如图 7.7 所示，模型的坐标是根据规范（或世界）原点 o 以及 x、y 和 z 轴存储的。 要使用我们已经开发的机制，我们只需要将要绘制的线段端点的坐标从 xyz 坐标转换为 uvw 坐标。 这种变换在 6.5 节中讨论过，执行这种变换的矩阵是相机坐标系的规范基矩阵：
+Our job would be done if all points we wished to transform were stored in coordinates with origin $\bold{e}$ and basis vectors $\bold{u}$, $\bold{v}$, and $\bold{w}$. But as shown in Figure 7.7, the coordinates of the model are stored in terms of the canonical (or world) origin $\bold{o}$ and the x-, y-, and z-axes. To use the machinery we have already developed, we just need to convert the coordinates of the line segment endpoints we wish to draw from xyz-coordinates into uvw-coordinates. This kind of transformation was discussed in Section 6.5, and the matrix that enacts this transformation is the canonical-to-basis matrix of the camera’s coordinate frame:
+如果我们希望进行变换的所有点都以原点$\bold{e}$和基向量$\bold{u}$、$\bold{v}$和$\bold{w}$的坐标存储，那么我们的工作就已经完成了。但正如图7.7所示，模型的坐标是以规范（或世界）原点$\bold{o}$和x、y和z轴为基础存储的。为了使用我们已经开发的机制，我们只需要将希望绘制的线段端点的坐标从xyz坐标转换为uvw坐标。这种类型的转换在第6.5节中已经讨论过，实现这种转换的矩阵是相机坐标系的规范到基向量的矩阵：
 $$
 \bold{M}_{cam} = \begin{bmatrix}
 \bold{u} & \bold{v} & \bold{w} & \bold{e} \\
@@ -205,25 +211,33 @@ x_w & y_w & z_w & 0 \\
 $$
 <img src=".\Images\Figure 7.7.png" alt="Figure 7.7" style="zoom:67%;" />
 Figure 7.7. For arbitrary viewing, we need to change the points to be stored in the “appropriate” coordinate system. In this case it has origin e and offset coordinates in terms of $\bold{u}\bold{v}\bold{w}$.
-图 7.7. 为了任意查看，我们需要更改要存储在“适当”坐标系中的点。 在这种情况下，它具有原点 e 和以 $\bold{u}\bold{v}\bold{w}$ 表示的偏移坐标。
+图7.7。对于任意的观察，我们需要将要存储的点改变为“适当”的坐标系。在这种情况下，它以$\bold{u}\bold{v}\bold{w}$为基础，具有原点$\bold{e}$和偏移坐标。
 
 Alternatively, we can think of this same transformation as first moving $\bold{e}$ to the origin, then aligning $\bold{u}$, $\bold{v}$, $\bold{w}$ to $\bold{x}$, $\bold{y}$, $\bold{z}$.
 或者，我们可以将相同的转换视为首先将 $\bold{e}$ 移动到原点，然后将 $\bold{u}$、$\bold{v}$、$\bold{w}$ 与 $  \bold{x}$、$\bold{y}$、$\bold{z}$对齐。
 
 To make our previously z-axis-only viewing algorithm work for cameras with any location and orientation, we just need to add this camera transformation to  the product of the viewport and projection transformations, so that it converts the incoming points from world to camera coordinates before they are projected:
-为1了使我们之前的仅 z 轴查看算法适用于任何位置和方向的相机，我们只需将此相机变换添加到视口和投影变换的乘积中，以便它将输入点从世界坐标转换为相机坐标 在预测之前：
-<img src=".\Images\Figure 7.6_1.png" alt="Figure 7.6_1" style="zoom:67%;" />
+为了使我们之前仅适用于z轴的观察算法适用于任何位置和方向的相机，我们只需要将相机变换添加到视口和投影变换的乘积中，以在投影之前将输入点从世界坐标转换为相机坐标：
+
+> construct $\bold{M}_{vp}$
+> construct $\bold{M}_{orth}$
+> construct $\bold{M}_{cam}$
+> $\bold{M} = \bold{M}_{vp}\bold{M}_{orth}\bold{M}_{cam}$
+> **for** each line segment $(\bold{a}_i, \bold{b}_i)$ **do**
+> 	$\bold{p} = \bold{M}\bold{a}_i$
+> 	$\bold{q} = \bold{M}\bold{b}_i$
+> 	drawline$(x_p, y_p, x_q, y_q)$
 
 Again, almost no code is needed once the matrix infrastructure is in place. 
-同样，一旦矩阵基础设施就位，几乎不需要任何代码。
+同样，一旦矩阵基础设施就位，几乎不需要编写额外的代码。
 
 ## 7.2 Projective Transformations 投影变换
 
 We have left perspective for last because it takes a little bit of cleverness to make it fit into the system of vectors and matrix transformations that has served us so well up to now. To see what we need to do, let’s look at what the perspective projection transformation needs to do with points in camera space. Recall that the  viewpoint is positioned at the origin and the camera is looking along the z-axis.
-我们把透视图留到最后，因为它需要一点点聪明才智才能使其适应迄今为止为我们提供良好服务的向量和矩阵变换系统。 为了了解我们需要做什么，让我们看看透视投影变换需要对相机空间中的点做什么。 回想一下，视点位于原点，相机沿着 z 轴观察。
+我们将透视投影放在最后，因为需要一些巧妙的方法将其融入到迄今为止为我们提供了很好服务的向量和矩阵变换系统中。为了了解我们需要做什么，让我们看一看透视投影变换在相机空间中对点的需求。回想一下，视点位于原点，相机沿着z轴观察。
 
 > For the moment we will ignore the sign of z to keep the equations simpler, but it will return on page 150. 
-> 目前我们将忽略 z 的符号以使方程更简单，但它将在第 150 页返回。
+> 暂时我们将忽略z的符号，以保持方程的简洁，但它将在第7,3节重新出现。
 
 The key property of perspective is that the size of an object on the screen is proportional to $1/z$ for an eye at the origin looking up the negative z-axis. This can be expressed more precisely in an equation for the geometry in Figure 7.8: 
 透视的关键属性是，对于在原点处向上看负 z 轴的眼睛，屏幕上对象的大小与 $1/z$ 成正比。 这可以用图 7.8 中的几何方程更精确地表达：
@@ -238,7 +252,7 @@ where $y$ is the distance of the point along the $y$-axis, and $y_s$ is where th
 其中 $y$ 是点沿 $y$ 轴的距离，$y_s$ 是应在屏幕上绘制点的位置。
 
 We would really like to use the matrix machinery we developed for orthographic projection to draw perspective images; we could then just multiply another matrix into our composite matrix and use the algorithm we already have. However, this type of transformation, in which one of the coordinates of the input vector appears in the denominator, can’t be achieved using affine transformations. 
-我们真的很想使用我们为正交投影开发的矩阵机制来绘制透视图像； 然后我们可以将另一个矩阵乘以我们的复合矩阵并使用我们已有的算法。 然而，这种类型的变换（其中输入向量的坐标之一出现在分母中）无法使用仿射变换来实现。
+我们真的希望能够利用我们为正交投影开发的矩阵工具来绘制透视图像；这样一来，我们只需将另一个矩阵乘到我们的复合矩阵中，然后使用我们已经拥有的算法。然而，这种类型的变换，其中输入矢量的坐标之一出现在分母中，无法通过仿射变换实现。
 
 We can allow for division with a simple generalization of the mechanism of homogeneous coordinates that we have been using for affine transformations. We have agreed to represent the point $(x, y, z)$ using the homogeneous vector $[x\ y\ z\ 1]^T$; the extra coordinate, $w$, is always equal to 1, and this is ensured by always using $[0\ 0\ 0\ 1]^T$ as the fourth row of an affine transformation matrix. 
 我们可以通过对我们一直用于仿射变换的齐次坐标机制的简单概括来允许除法。 我们同意使用齐次向量 $[x\ y\ z\ 1]^T$ 来表示点 $(x, y, z)$； 额外的坐标 $w$ 始终等于 1，这是通过始终使用 $[0\ 0\ 0\ 1]^T$ 作为仿射变换矩阵的第四行来确保的。
