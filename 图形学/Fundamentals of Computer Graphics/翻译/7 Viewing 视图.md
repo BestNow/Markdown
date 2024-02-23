@@ -4,13 +4,13 @@ In the previous chapter, we saw how to use matrix transformations as a tool for 
 在前一章中，我们了解了如何利用矩阵变换作为在二维或三维空间中排列几何对象的工具。几何变换的第二个重要应用是在将物体从其三维位置移动到它们在三维世界的二维视图中。这种从三维到二维的映射被称为视图变换，它在对象顺序渲染中扮演着重要的角色，因为我们需要快速找到场景中每个物体在图像空间中的位置。
 
 When we studied ray tracing in Chapter 4, we covered the different types of perspective and orthographic views and how to generate viewing rays according to any given view. This chapter is about the inverse of that process. Here we explain how to use matrix transformations to express any parallel or perspective view. The transformations in this chapter project 3D points in the scene (world space) to 2D points in the image (image space), and they will project any point on a given pixel’s viewing ray back to that pixel’s position in image space. 
-当我们在第 4 章中学习光线追踪时，我们介绍了不同类型的透视和正交视图以及如何根据任何给定视图生成观察光线。 本章讨论的是该过程的逆过程。 在这里，我们解释如何使用矩阵变换来表达任何平行视图或透视图。 本章中的变换将场景（世界空间）中的 3D 点投影到图像（图像空间）中的 2D 点，并且它们会将给定像素的视线上的任何点投影回该像素在图像空间中的位置。
+当我们在第四章学习光线追踪时，我们涵盖了不同类型的透视和正交视图以及如何根据给定的视图生成视线。本章是关于该过程的逆过程。在这里，我们解释如何使用矩阵变换来表达任何平行或透视视图。本章中的变换将场景中的三维点（世界空间）投影到图像中的二维点（图像空间），它们将把给定像素的观察射线上的任何点投影回到图像空间中该像素的位置。
 
 If you have not looked at it recently, it is advisable to review the discussion of perspective and ray generation in Chapter 4 before reading this chapter. 
 如果你最近没有看过它，建议在阅读本章之前回顾一下第 4 章中关于透视和光线生成的讨论。
 
 By itself, the ability to project points from the world to the image is only good for producing wireframe renderings—renderings in which only the edges of objects are drawn, and closer surfaces do not occlude more distant surfaces (Figure 7.1). Just as a ray tracer needs to find the closest surface intersection along each viewing ray, an object-order renderer displaying solid-looking objects has to work out which of the (possibly many) surfaces drawn at any given point on the screen is closest and display only that one. In this chapter, we assume we are drawing a model consisting only of 3D line segments that are specified by the $(x, y, z)$ coordinates of their two endpoints. Later chapters will discuss the machinery needed to produce renderings of solid surfaces. 
-单纯地，将点从世界投影到图像仅适用于生成线框渲染——一种只绘制对象边缘，较近表面不会遮挡较远表面的渲染方式（见图7.1）。就像光线追踪器需要沿每条视线找到最近的表面交点一样，显示具有实体外观的物体的对象顺序渲染器必须确定在屏幕上的任何给定点上绘制的（可能有很多）表面中哪个最近，并仅显示该表面。在本章中，我们假设正在绘制仅由其两个端点的$(x, y, z)$坐标指定的3D线段模型。后续章节将讨论生成实体表面渲染所需的机制。
+单独来说，从世界到图像的投影能力仅适用于生成线框渲染——即仅绘制对象的边缘，并且更近的表面不会遮挡更远处的表面（图7.1）。就像光线追踪器需要沿着每个视线找到最近的表面交点一样，显示实心对象的对象顺序渲染器必须确定在屏幕上的任何给定点上绘制的（可能有很多）表面中哪一个最接近，并且仅显示该表面。在本章中，我们假设正在绘制一个仅由由其两个端点的$(x, y, z)$坐标指定的三维线段模型。后续章节将讨论产生实体表面渲染所需的机制。
 <img src=".\Images\Figure 7.1.png" alt="Figure 7.1" style="zoom:67%;" />
 Figure 7.1. Left: wireframe cube in orthographic projection. Middle: wireframe cube in perspective projection. Right: perspective projection with hidden lines removed. 
 图 7.1.  左：正交投影中的线框立方体。 中：透视投影中的线框立方体。 右：删除隐藏线的透视投影。
