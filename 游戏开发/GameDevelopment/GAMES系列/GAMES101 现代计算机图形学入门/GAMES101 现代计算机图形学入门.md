@@ -69,7 +69,7 @@ GAMES101 is NOT about GAMES101**不是关于**
 - The syntax of Shaders 着色器的语法
 - We learn Graphics， not Graphics APIs! 我们学习图形，而不是图形api ! 
 - After this course.you'll be able to learn theseby yourself (l promise) 在这门课之后。你可以自己学会这些(我保证)
-- 3D modeling using Maya / 3DS MAX / Bender, orVR / game development using Unity / Unreal Engine(where can Ilearn them?) 使用Maya / 3DS MAX / Bender进行3D建模，或使用Unity /虚幻引擎进行vr /游戏开发(我在哪里可以学到它们?)
+- 3D modeling using Maya / 3DS MAX / Bender, or VR / game development using Unity / Unreal Engine(where can I learn them?) 使用Maya / 3DS MAX / Bender进行3D建模，或使用Unity /虚幻引擎进行VR/游戏开发(我在哪里可以学到它们?)
 - Computer Vision / Deep Learning topics, e.g.XYZ-GAN(where can i learn them?) 计算机视觉/深度学习主题，例如xyz - gan(我可以在哪里学习它们?)
 
 ### The difference between computer graphics and computer vision
